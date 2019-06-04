@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faces-config
+    xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd"
+    version="2.2">
+    
+    <application>
+       <el-resolver>
+            cdi.managed.CustomELResolver
+        </el-resolver>
+        <navigation-handler>
+            cdi.managed.CustomNavigationHandler
+        </navigation-handler>
+        
+        <system-event-listener>
+           <system-event-listener-class>cdi.managed.CustomSystemEventListener</system-event-listener-class>
+           <system-event-class> javax.faces.event.PostConstructApplicationEvent </system-event-class>
+        </system-event-listener>  
+        
+        
+		 <resource-handler>
+		   cdi.managed.CustomResourceHandler
+		 </resource-handler> 
+		
+		  <state-manager>
+           cdi.managed.CustomStateManager
+		 </state-manager>  
+    </application>
+    
+       <factory>
+    
+  
+	   <tag-handler-delegate-factory>
+	      cdi.managed.factories.CustomTagHandlerDelegateFactory
+	   </tag-handler-delegate-factory>
+	   
+	   <application-factory>  
+          cdi.managed.factories.CustomApplicationFactory
+       </application-factory>  
+      
+       <exception-handler-factory>
+          cdi.managed.factories.CustomExceptionHandlerFactory
+       </exception-handler-factory>
+      
+       <external-context-factory>
+        cdi.managed.factories.CustomExternalContextFactory
+       </external-context-factory>
+       
+       <faces-context-factory>
+         cdi.managed.factories.CustomFacesContextFactory
+       </faces-context-factory>
+      
+       <lifecycle-factory>
+         cdi.managed.factories.CustomLifecycleFactory
+       </lifecycle-factory>
+       
+       <partial-view-context-factory>
+         cdi.managed.factories.CustomPartialViewContextFactory
+       </partial-view-context-factory>
+      
+       <render-kit-factory>
+         cdi.managed.factories.CustomRenderKitFactory
+       </render-kit-factory>
+       
+       <view-declaration-language-factory>
+        cdi.managed.factories.CustomViewDeclarationLanguageFactory     
+       </view-declaration-language-factory>
+      
+      
+       <visit-context-factory>
+        cdi.managed.factories.CustomVisitContextFactory
+       </visit-context-factory>      
+   
+       
+       
+       <!--      
+           Class not found on this one for some reason
+           <facelet-cache-factory>
+              cdi.managed.factories.CustomFaceletCacheFactory;
+            </facelet-cache-factory>    -->
+      
+        <!-- Fixed in 2.3 - https://java.net/jira/browse/JAVASERVERFACES_SPEC_PUBLIC-1277 
+            <client-window-factory>
+                  cdi.managed.factories.CustomClientWindowFactory
+             </client-window-factory>  -->
+    
+	</factory>
+	
+	<lifecycle>
+       <phase-listener>cdi.managed.CustomPhaseListener</phase-listener>
+    </lifecycle> 
+	
+
+</faces-config>
