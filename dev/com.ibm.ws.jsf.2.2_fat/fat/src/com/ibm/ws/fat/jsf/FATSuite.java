@@ -42,7 +42,7 @@ import com.ibm.ws.fat.jsf.tests.JSF22ResourceLibraryContractHtmlUnit;
 // import com.ibm.ws.fat.jsf.tests.JSF22ViewPoolingTests;
 import com.ibm.ws.fat.jsf.tests.JSFCompELTests;
 import com.ibm.ws.fat.jsf.tests.JSFDummyTest;
-// import com.ibm.ws.fat.jsf.tests.JSFHtml5Tests;
+import com.ibm.ws.fat.jsf.tests.JSFHtml5Tests;
 import com.ibm.ws.fat.jsf.tests.JSFHtmlUnit;//
 import com.ibm.ws.fat.jsf.tests.JSFSimpleHtmlUnit;
 import com.ibm.ws.fat.jsf.tests.JSFServerTest;
@@ -76,19 +76,19 @@ import com.ibm.ws.fat.util.FatLogHandler;
  */
 @RunWith(Suite.class)
 @SuiteClasses({
-                    JSFDummyTest.class,
-                    JSFServerTest.class,
-                    JSFHtmlUnit.class,
-                    JSFSimpleHtmlUnit.class,
+                //     JSFDummyTest.class,
+                //     JSFServerTest.class,
+                //     JSFHtmlUnit.class,
+                //     JSFSimpleHtmlUnit.class,
             //    JSF22StatelessViewTests.class,
-            //    JSFHtml5Tests.class,
-                    JSF22ResourceLibraryContractHtmlUnit.class,
+                    JSFHtml5Tests.class,
+                //     JSF22ResourceLibraryContractHtmlUnit.class,
             //    JSF22ComponentTesterTests.class,
             //    JSF22ClientWindowTests.class,
             //    JSF22LocalizationTesterTests.class,
             //    JSF22ComponentRendererTests.class,
             //    JSF22JSF20SingletonFeatureTest.class,
-                    JSFCompELTests.class,
+                //     JSFCompELTests.class,
             //    JSF22FlowsTests.class,
             //    CDIFlowsTests.class,
             //    JSF22MiscellaneousTests.class,
@@ -100,11 +100,11 @@ import com.ibm.ws.fat.util.FatLogHandler;
             //    CDIConfigByACPTests.class,
             //    CDIFacesInMetaInfTests.class,
             //    CDIFacesInWebXMLTests.class,
-                    CDITests.class,
+                //     CDITests.class,
             //    JSF22JPA20Test.class,
             //    JSF22BeanValidationTests.class,
             //    JSF22ViewPoolingTests.class,
-                    JSF22IncludeTest.class
+                //     JSF22IncludeTest.class
             //    JSF22InputFileTests.class,
             //    JSF22AparTests.class
 })
