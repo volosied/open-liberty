@@ -157,7 +157,7 @@ public class JSF22ResourceLibraryContractHtmlUnit {
     @Test
     @Mode(TestMode.LITE)
     public void Test1_Contract_viaURL_MapDirectory() throws Exception {
-        assertTrue(getPageForURL("/TestResourceContracts", "faces/user/index.xhtml").asText().contains("This must be template for team"));
+        assertTrue(getPageForURL("TestResourceContracts", "faces/user/index.xhtml").asText().contains("This must be template for team"));
 
         // the following messages should not appear in logs when jsf2.2 feature is enabled on server
 
@@ -189,7 +189,7 @@ public class JSF22ResourceLibraryContractHtmlUnit {
     @Test
     @Mode(TestMode.FULL)
     public void Test2_Contract_viaURL_MapDirectory() throws Exception {
-        assertTrue(getPageForURL("/TestResourceContracts", "faces/management/index.xhtml").asText().contains("This must be template for manager"));
+        assertTrue(getPageForURL("TestResourceContracts", "faces/management/index.xhtml").asText().contains("This must be template for manager"));
     }
 
     /**
@@ -201,7 +201,7 @@ public class JSF22ResourceLibraryContractHtmlUnit {
     @Test
     @Mode(TestMode.LITE)
     public void Test3_Contract_viaMultipleURL_MapSpecific() throws Exception {
-        assertTrue(getPageForURL("/TestResourceContracts", "faces/developers/index.xhtml").asText().contains("This must be template for team"));
+        assertTrue(getPageForURL("TestResourceContracts", "faces/developers/index.xhtml").asText().contains("This must be template for team"));
     }
 
     /**
@@ -212,7 +212,7 @@ public class JSF22ResourceLibraryContractHtmlUnit {
     @Test
     @Mode(TestMode.LITE)
     public void Test4_Contract_viaURL_MapSpecific() throws Exception {
-        assertTrue(getPageForURL("/TestResourceContracts", "faces/developers/index2.xhtml").asText().contains("This must be template for test1"));
+        assertTrue(getPageForURL("TestResourceContracts", "faces/developers/index2.xhtml").asText().contains("This must be template for test1"));
     }
 
     /**
@@ -254,7 +254,7 @@ public class JSF22ResourceLibraryContractHtmlUnit {
     @Test
     @Mode(TestMode.LITE)
     public void Test6_Contract_viaURL_withfView() throws Exception {
-        assertTrue(getPageForURL("/TestResourceContracts", "faces/others/index.xhtml").asText().contains("This must be template for manager"));
+        assertTrue(getPageForURL("TestResourceContracts", "faces/others/index.xhtml").asText().contains("This must be template for manager"));
     }
 
     /**
@@ -265,7 +265,7 @@ public class JSF22ResourceLibraryContractHtmlUnit {
     @Test
     @Mode(TestMode.LITE)
     public void Test7_Contract_viaURL_StarMapping() throws Exception {
-        assertTrue(getPageForURL("/TestResourceContracts", "faces/forall/index.xhtml").asText().contains("This must be template for test1"));
+        assertTrue(getPageForURL("TestResourceContracts", "faces/forall/index.xhtml").asText().contains("This must be template for test1"));
     }
 
     /**
@@ -279,7 +279,7 @@ public class JSF22ResourceLibraryContractHtmlUnit {
      */
     @Test
     public void Test8_Contract_viaURL_MultipleContract() throws Exception {
-        assertTrue(getPageForURL("/TestResourceContracts", "faces/user/index1.xhtml").asText().contains("This must be template for test1"));
+        assertTrue(getPageForURL("TestResourceContracts", "faces/user/index1.xhtml").asText().contains("This must be template for test1"));
     }
 
     /**
@@ -290,7 +290,7 @@ public class JSF22ResourceLibraryContractHtmlUnit {
     @Test
     @Mode(TestMode.FULL)
     public void Test9_MyContract_viaURL_MapDirectory() throws Exception {
-        assertTrue(getPageForURL("/TestResourceContractsDirectory", "faces/user/index.xhtml").asText().contains("This must be template for team in MyContracts"));
+        assertTrue(getPageForURL("TestResourceContractsDirectory", "faces/user/index.xhtml").asText().contains("This must be template for team in MyContracts"));
     }
 
     /**
@@ -301,7 +301,7 @@ public class JSF22ResourceLibraryContractHtmlUnit {
     @Test
     @Mode(TestMode.LITE)
     public void Test10_MyContract_viaURL_MapDirectory() throws Exception {
-        assertTrue(getPageForURL("/TestResourceContractsDirectory", "faces/management/index.xhtml").asText().contains("This must be template for manager in MyContracts"));
+        assertTrue(getPageForURL("TestResourceContractsDirectory", "faces/management/index.xhtml").asText().contains("This must be template for manager in MyContracts"));
     }
 
     /**
@@ -313,7 +313,7 @@ public class JSF22ResourceLibraryContractHtmlUnit {
     @Test
     @Mode(TestMode.LITE)
     public void Test11_MyContract_viaMultipleURL_MapSpecific() throws Exception {
-        assertTrue(getPageForURL("/TestResourceContractsDirectory", "faces/developers/index.xhtml").asText().contains("This must be template for team in MyContracts"));
+        assertTrue(getPageForURL("TestResourceContractsDirectory", "faces/developers/index.xhtml").asText().contains("This must be template for team in MyContracts"));
     }
 
     /**
@@ -324,7 +324,7 @@ public class JSF22ResourceLibraryContractHtmlUnit {
     @Test
     @Mode(TestMode.LITE)
     public void Test12_Contract_viaURL_MapSpecific() throws Exception {
-        assertTrue(getPageForURL("/TestResourceContractsDirectory", "faces/developers/index2.xhtml").asText().contains("This must be template for test1 in MyContracts"));
+        assertTrue(getPageForURL("TestResourceContractsDirectory", "faces/developers/index2.xhtml").asText().contains("This must be template for test1 in MyContracts"));
     }
 
     /**
