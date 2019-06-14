@@ -63,12 +63,7 @@ public class JSF22ViewPoolingTests {
     
         @BeforeClass
         public static void setup() throws Exception {
-            WebArchive poolingWar = ShrinkHelper.buildDefaultApp("JSF22ViewPooling.war");
-
-            EnterpriseArchive poolingEar = ShrinkWrap.create(EnterpriseArchive.class, "JSF22ViewPooling.ear")
-            .addAsModule(poolingWar);
-
-            ShrinkHelper.exportDropinAppToServer(jsfTestServer2, poolingEar);
+            ShrinkHelper.defaultDropinApp(jsfTestServer2, "JSF22ViewPooling.war");
 
             jsfTestServer2.startServer(JSF22ViewPoolingTests.class.getSimpleName() + ".log");
         }

@@ -10,17 +10,11 @@
  */
 package com.ibm.ws.fat.jsf.tests;
 
-import com.ibm.websphere.simplicity.log.Log;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
-import com.ibm.websphere.simplicity.ShrinkHelper;
-import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import com.ibm.ws.fat.jsf.JSFUtils;
-import java.net.URL;
-
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
+import java.net.URL;
+import java.util.regex.Pattern;
 import java.util.List;
 
 import org.junit.AfterClass;
@@ -30,17 +24,24 @@ import org.junit.Test;
 import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
 
+import org.jboss.shrinkwrap.api.spec.WebArchive;
+import com.ibm.websphere.simplicity.ShrinkHelper;
+
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlForm;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.html.HtmlSubmitInput;
 
-import componenttest.annotation.MinimumJavaLevel;
-import componenttest.custom.junit.runner.Mode;
-import componenttest.custom.junit.runner.FATRunner;
-import componenttest.custom.junit.runner.Mode.TestMode;
+import com.ibm.websphere.simplicity.ShrinkHelper;
+import com.ibm.websphere.simplicity.log.Log;
+import com.ibm.ws.fat.jsf.JSFUtils;
+
 import componenttest.annotation.Server;
+import componenttest.annotation.MinimumJavaLevel;
+import componenttest.custom.junit.runner.FATRunner;
+import componenttest.custom.junit.runner.Mode;
+import componenttest.custom.junit.runner.Mode.TestMode;
 import componenttest.topology.impl.LibertyServer;
 
 
@@ -55,9 +56,9 @@ public class JSFSimpleHtmlUnit {
     @Rule
     public TestName name = new TestName();
 
-    String contextRoot = "TestJSF2.2";
-
     protected static final Class<?> c = JSFSimpleHtmlUnit.class;
+
+    String contextRoot = "TestJSF2.2";
 
     @Server("jsfTestServer1")
     public static LibertyServer jsfTestServer1;
@@ -65,50 +66,19 @@ public class JSFSimpleHtmlUnit {
     @BeforeClass
     public static void setup() throws Exception {
 
-            WebArchive testWar = ShrinkHelper.buildDefaultApp("TestJSF2.2.war", "com.ibm.ws.fat.jsf.bean",
-                                                            "com.ibm.ws.fat.jsf.cforeach",
-                                                            "com.ibm.ws.fat.jsf.externalContext",
-                                                            "com.ibm.ws.fat.jsf.html5",
-                                                            "com.ibm.ws.fat.jsf.listener");
-
-            WebArchive TestResourceContractsWar = ShrinkHelper.buildDefaultApp("TestResourceContracts.war");
-
-            WebArchive TestResourceContractsDirectoryWar = ShrinkHelper.buildDefaultApp("TestResourceContractsDirectory.war");
-
-            WebArchive TestResourceContractsFromJarWar = ShrinkHelper.buildDefaultApp("TestResourceContractsFromJar.war", "beans");
-
-            WebArchive flashWar = ShrinkHelper.buildDefaultApp("JSF22FlashEvents.war", "com.ibm.ws.fat.jsf.factory",
-                                                            "com.ibm.ws.fat.jsf.flash",
-                                                            "com.ibm.ws.fat.jsf.listener");
-
-            WebArchive viewActionWar = ShrinkHelper.buildDefaultApp("TestJSF22ViewAction.war", "com.ibm.ws.fat.jsf.viewAction",
-                                                                    "com.ibm.ws.fat.jsf.viewAction.phaseListener");
-
-            WebArchive ResourceResolverWar = ShrinkHelper.buildDefaultApp("JSF22FaceletsResourceResolverAnnotation.war", "com.ibm.ws.jsf");
-
-            EnterpriseArchive ear = ShrinkWrap.create(EnterpriseArchive.class, "TestJSF2.2.ear")
-                                    .addAsModule(testWar)
-                                    .addAsModule(viewActionWar)
-                                    .addAsModule(ResourceResolverWar)
-                                    .addAsModule(TestResourceContractsWar)
-                                    .addAsModule(TestResourceContractsDirectoryWar)
-                                    .addAsModule(TestResourceContractsFromJarWar)
-                                    .addAsModule(flashWar);
-
-            String testAppResourcesDir = "test-applications/" + "TestJSF2.2.ear" + "/resources/";
-
-            ShrinkHelper.addDirectory(ear, testAppResourcesDir);
-            ShrinkHelper.exportDropinAppToServer(jsfTestServer1, ear);
-
-            jsfTestServer1.startServer(JSFServerTest.class.getSimpleName() + ".log");
+        // Create the TestJSF2.2.war application
+        ShrinkHelper.defaultDropinApp(jsfTestServer1, "TestJSF2.2.war", "com.ibm.ws.fat.*");
+        
+        // Start the server and use the class name so we can find logs easily.
+        jsfTestServer1.startServer(JSFServerTest.class.getSimpleName() + ".log");
     }
 
     @AfterClass
     public static void tearDown() throws Exception {
-            // Stop the server
-            if (jsfTestServer1 != null && jsfTestServer1.isStarted()) {
-                    jsfTestServer1.stopServer();
-            }
+        // Stop the server
+        if (jsfTestServer1 != null && jsfTestServer1.isStarted()) {
+            jsfTestServer1.stopServer();
+        }
     }
 
     /*
@@ -118,9 +88,11 @@ public class JSFSimpleHtmlUnit {
      */
     @Test
     public void sampleTest() throws Exception {
+
         WebClient webClient = new WebClient();
         URL url = JSFUtils.createHttpUrl(jsfTestServer1, contextRoot, "");
         HtmlPage page = (HtmlPage) webClient.getPage(url);
+
         assertTrue(page.asText().contains("Hello World"));
     }
 
@@ -133,6 +105,8 @@ public class JSFSimpleHtmlUnit {
     public void testEditableValueHoldergetSubmittedValue() throws Exception {
 
         WebClient webClient = new WebClient();
+
+        // Construct the URL for the test
         URL url = JSFUtils.createHttpUrl(jsfTestServer1, contextRoot, "testValue.jsf");
         HtmlPage page = (HtmlPage) webClient.getPage(url);
         // Log.info(c, name.getMethodName(), "testEditableValueHoldergetSubmittedValue:: page " + page.asXml());
@@ -153,12 +127,13 @@ public class JSFSimpleHtmlUnit {
     public void testDatainCdataSectionWorks() throws Exception {
 
         WebClient webClient = new WebClient();
+
+        // Construct the URL for the test
         URL url = JSFUtils.createHttpUrl(jsfTestServer1, contextRoot, "testCdata.jsf");
         HtmlPage page = (HtmlPage) webClient.getPage(url);
-         Log.info(c, name.getMethodName(), "testEditableValueHoldergetSubmittedValue:: page --> " + page.asText());
+        Log.info(c, name.getMethodName(), "testEditableValueHoldergetSubmittedValue:: page --> " + page.asText());
 
         assertTrue(page.asText().contains("Hello World!"));
-
     }
 
     /**
@@ -172,8 +147,10 @@ public class JSFSimpleHtmlUnit {
      */
     @Test
     public void testCForEachWithCustomEqualsAndNonSerializableObjects() throws Exception {
+
         WebClient webClient = new WebClient();
 
+        // Construct the URL for the test
         URL url = JSFUtils.createHttpUrl(jsfTestServer1, contextRoot, "forEach-equals.jsf");
         HtmlPage page = (HtmlPage) webClient.getPage(url);
 
@@ -234,8 +211,10 @@ public class JSFSimpleHtmlUnit {
      */
     @Test
     public void testHCommandButtonWithCompositeComponentOnFirstClick() throws Exception {
+
         WebClient webClient = new WebClient();
 
+        // Construct the URL for the test
         URL url = JSFUtils.createHttpUrl(jsfTestServer1, contextRoot, "testCommandButton.jsf");
         HtmlPage page = (HtmlPage) webClient.getPage(url);
 
@@ -280,6 +259,7 @@ public class JSFSimpleHtmlUnit {
      */
     @Test
     public void check_defaultLogging_AUTOCOMPLETE_OFF_VIEW_STATE() throws Exception {
+
         WebClient webClient = new WebClient();
 
         // Make a request to a dummy page to ensure that MyFaces initializes if it has not done so already
@@ -302,15 +282,16 @@ public class JSFSimpleHtmlUnit {
      */
     @Test
     public void testifExceptionThrown_nullInitParam() throws Exception {
+
         WebClient webClient = new WebClient();
 
+        // Construct the URL for the test
         URL url = JSFUtils.createHttpUrl(jsfTestServer1, contextRoot, "getInitParam.jsf");
         HtmlPage page = webClient.getPage(url);
 
         Log.info(c, name.getMethodName(), "Response: " + page.asText());
 
         assertTrue(page.asText().contains("Check NPE: true"));
-
     }
 
     /**
@@ -322,9 +303,11 @@ public class JSFSimpleHtmlUnit {
      */
     @Test
     public void testCForEachWithVarStatusAssigned() throws Exception {
+
         WebClient webClient = new WebClient();
         webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
 
+        // Construct the URL for the test
         URL url = JSFUtils.createHttpUrl(jsfTestServer1, contextRoot, "forEach-varStatus.jsf");
         HtmlPage page = webClient.getPage(url);
 

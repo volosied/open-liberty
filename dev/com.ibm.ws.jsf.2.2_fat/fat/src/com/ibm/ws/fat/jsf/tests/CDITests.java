@@ -77,26 +77,18 @@ public class CDITests extends CDITestBase {
         @BeforeClass
         public static void setup() throws Exception {
 
-            WebArchive cdiCommon = ShrinkHelper.buildDefaultApp("test-application-common", "cdi.*");
+            //WebArchive CommonCDIFiles = ShrinkHelper.buildDefaultApp("test-application-common", "cdi.*");
+            WebArchive CDITestsWar = ShrinkHelper.buildDefaultApp("CDITests.war", "cdi.beans.*",
+                                                                                "cdi.beans",
+                                                                                "cdi.beans.factory",
+                                                                                "cdi.beans.injected",
+                                                                                "cdi.managed",
+                                                                                "cdi.managed.factories",
+                                                                                "cdi.interceptors");
 
-            System.out.println(cdiCommon);
+            //CDITestsWar.merge(CommonCDIFiles);
 
-            WebArchive cdiWar = ShrinkHelper.buildDefaultApp("CDITests.war", "cdi.beans.*");
-
-            System.out.println(cdiWar);
-
-            cdiWar.merge(cdiCommon);
-
-            System.out.println(cdiWar);
-
-            EnterpriseArchive cdiEar = ShrinkWrap.create(EnterpriseArchive.class, "CDITests.ear")
-            .addAsModule(cdiWar);
-
-            String resources = "test-applications/" + "CDITests.ear" + "/resources/";
-
-            cdiEar = (EnterpriseArchive) ShrinkHelper.addDirectory(cdiEar, resources);
-
-            ShrinkHelper.exportDropinAppToServer(jsfCDIServer, cdiEar);
+            ShrinkHelper.exportDropinAppToServer(jsfCDIServer, CDITestsWar);
 
             jsfCDIServer.startServer(CDITests.class.getSimpleName() + ".log");
         }
@@ -353,7 +345,7 @@ public class CDITests extends CDITestBase {
         // Restart the app so that preDestory gets called;
         // make sure we reset log offsets correctly
         jsfCDIServer.setMarkToEndOfLog();
-        jsfCDIServer.restartDropinsApplication("CDITests.ear");
+        jsfCDIServer.restartDropinsApplication("CDITests.war");
         jsfCDIServer.resetLogOffsets();
 
         // Now check the preDestoys

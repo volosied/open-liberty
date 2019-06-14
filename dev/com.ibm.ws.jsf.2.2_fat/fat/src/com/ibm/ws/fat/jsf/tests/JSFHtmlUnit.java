@@ -10,19 +10,11 @@
  */
 package com.ibm.ws.fat.jsf.tests;
 
-import com.ibm.websphere.simplicity.log.Log;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
-import com.ibm.websphere.simplicity.ShrinkHelper;
-import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import com.ibm.ws.fat.jsf.JSFUtils;
-import java.net.URL;
-
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
-import java.util.List;
+import java.net.URL;
+import java.util.regex.Pattern;
 import java.util.Calendar;
 
 import org.junit.AfterClass;
@@ -32,6 +24,10 @@ import org.junit.Test;
 import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
 
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
+import com.ibm.websphere.simplicity.ShrinkHelper;
+
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlForm;
@@ -39,11 +35,16 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.html.HtmlSubmitInput;
 import com.gargoylesoftware.htmlunit.html.HtmlTextInput;
 
-import componenttest.annotation.MinimumJavaLevel;
-import componenttest.custom.junit.runner.Mode;
-import componenttest.custom.junit.runner.FATRunner;
-import componenttest.custom.junit.runner.Mode.TestMode;
+import com.ibm.websphere.simplicity.ShrinkHelper;
+import com.ibm.websphere.simplicity.log.Log;
+import com.ibm.ws.fat.jsf.JSFUtils;
+
 import componenttest.annotation.Server;
+import componenttest.annotation.MinimumJavaLevel;
+import componenttest.custom.junit.runner.FATRunner;
+import componenttest.custom.junit.runner.Mode;
+import componenttest.custom.junit.runner.Mode.TestMode;
+import componenttest.custom.junit.runner.RunUnlessFeatureBeingTested;
 import componenttest.topology.impl.LibertyServer;
 
 /**
@@ -54,52 +55,40 @@ import componenttest.topology.impl.LibertyServer;
 public class JSFHtmlUnit {
     @Rule
     public TestName name = new TestName();
-    
-        String contextRoot = "JSF22TestResources";
-    
-        protected static final Class<?> c = JSF22ResourceLibraryContractHtmlUnit.class;
-    
-        @Server("jsfTestServer2")
-        public static LibertyServer jsfTestServer2;
-    
-        @BeforeClass
-        public static void setup() throws Exception {
 
-            WebArchive resourceWar = ShrinkHelper.buildDefaultApp("JSF22TestResources.war", "com.ibm.ws.fat.jsf.beans");
+    String contextRoot = "JSF22TestResources";
 
-            JavaArchive resourceJar = ShrinkHelper.buildJavaArchive("JSF22TestResources.jar", "");
+    protected static final Class<?> c = JSF22ResourceLibraryContractHtmlUnit.class;
 
-            String resourceJarDir = "test-applications" + "/JSF22TestResources.jar";
+    @Server("jsfTestServer2")
+    public static LibertyServer jsfTestServer2;
 
-            resourceJar = (JavaArchive) ShrinkHelper.addDirectory(resourceJar, resourceJarDir);
+    @BeforeClass
+    public static void setup() throws Exception {
+        // Create the JSF22TestResourcesJar that is used in JSF22TestResourcesWar
+        JavaArchive JSF22TestResourcesJar = ShrinkHelper.buildJavaArchive("JSF22TestResources.jar", "");
 
-            resourceWar.addAsLibraries(resourceJar);
+        // Create the JSF22TestResources.war application
+        WebArchive JSF22TestResourcesWar = ShrinkHelper.buildDefaultApp("JSF22TestResources.war", "com.ibm.ws.fat.jsf.beans");
+        JSF22TestResourcesWar.addAsLibraries(JSF22TestResourcesJar);
+        ShrinkHelper.addDirectory(JSF22TestResourcesWar, "test-applications" + "/JSF22TestResources.jar");
 
-            EnterpriseArchive resourceEar = ShrinkWrap.create(EnterpriseArchive.class, "JSF22TestResources.ear")
-            .addAsModule(resourceWar);
+        // Create the JSF22BackwardCompatibilityTests.war application
+        WebArchive JSF22BackwardCompatibilityTestsWar = ShrinkHelper.buildDefaultApp("JSF22BackwardCompatibilityTests.war", "com.ibm.ws.fat.jsf.*");
 
-            /* **************** */
+        // Add both wars to the server
+        ShrinkHelper.exportDropinAppToServer(jsfTestServer2, JSF22BackwardCompatibilityTestsWar);
+        ShrinkHelper.exportDropinAppToServer(jsfTestServer2, JSF22TestResourcesWar);
 
-
-            WebArchive compatibilityWar = ShrinkHelper.buildDefaultApp("JSF22BackwardCompatibilityTests.war", "com.ibm.ws.fat.jsf.*");
-
-            EnterpriseArchive compatibilityEar = ShrinkWrap.create(EnterpriseArchive.class, "JSF22BackwardCompatibilityTests.ear")
-            .addAsModule(compatibilityWar);
-
-            ShrinkHelper.exportDropinAppToServer(jsfTestServer2, compatibilityEar);
-
-            ShrinkHelper.exportDropinAppToServer(jsfTestServer2, resourceEar);
-
-            jsfTestServer2.startServer(JSFHtmlUnit.class.getSimpleName() + ".log");
-        }
-    
+        jsfTestServer2.startServer(JSFHtmlUnit.class.getSimpleName() + ".log");
+    }
 
     @AfterClass
     public static void tearDown() throws Exception {
-            // Stop the server
-            if (jsfTestServer2 != null && jsfTestServer2.isStarted()) {
-                    jsfTestServer2.stopServer();
-            }
+        // Stop the server
+        if (jsfTestServer2 != null && jsfTestServer2.isStarted()) {
+            jsfTestServer2.stopServer();
+        }
     }
 
     /**
@@ -112,7 +101,7 @@ public class JSFHtmlUnit {
      */
     @Test
     public void testNewResourceDirectory() throws Exception {
-
+        
         WebClient webClient = new WebClient();
         URL url = JSFUtils.createHttpUrl(jsfTestServer2, contextRoot, "personInformation.jsf");
         HtmlPage personInfoPage = (HtmlPage) webClient.getPage(url);
@@ -183,7 +172,7 @@ public class JSFHtmlUnit {
 
         assertTrue(page.asText().contains("Using a template loaded from external location using class-path /META-INF/resources/templates"));
         assertTrue(page.asText().contains("This template is working as expected!"));
-        assertTrue(page.asText().contains("JSF22TestResources.war/WEB-INF/lib/JSF22TestResources.jar!/META-INF/resources/templates/basicTemplate.xhtml"));
+        assertTrue(page.asText().contains("/WEB-INF/lib/JSF22TestResources.jar!/META-INF/resources/templates/basicTemplate.xhtml"));
     }
 
     /**

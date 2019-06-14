@@ -85,12 +85,7 @@ public class JSFCompELTests {
     
         @BeforeClass
         public static void setup() throws Exception {
-            WebArchive elWar = ShrinkHelper.buildDefaultApp("TestJSFEL.war", "com.ibm.ws.jsf.*");
-
-            EnterpriseArchive elEar = ShrinkWrap.create(EnterpriseArchive.class, "TestJSFEL.ear")
-            .addAsModule(elWar);
-
-            ShrinkHelper.exportDropinAppToServer(jsfTestServer2, elEar);
+            ShrinkHelper.defaultDropinApp(jsfTestServer2, "TestJSFEL.war", "com.ibm.ws.jsf.*");
 
             jsfTestServer2.startServer(JSFCompELTests.class.getSimpleName() + ".log");
         }

@@ -69,48 +69,19 @@ public class JSF22ResourceLibraryContractHtmlUnit {
     
         @BeforeClass
         public static void setup() throws Exception {
-            WebArchive testWar = ShrinkHelper.buildDefaultApp("TestJSF2.2.war", "com.ibm.ws.fat.jsf.bean",
-            "com.ibm.ws.fat.jsf.cforeach",
-            "com.ibm.ws.fat.jsf.externalContext",
-            "com.ibm.ws.fat.jsf.html5",
-            "com.ibm.ws.fat.jsf.listener");
 
-            WebArchive TestResourceContractsWar = ShrinkHelper.buildDefaultApp("TestResourceContracts.war");
-
-            WebArchive TestResourceContractsDirectoryWar = ShrinkHelper.buildDefaultApp("TestResourceContractsDirectory.war");
+            JavaArchive ContractsJar = ShrinkHelper.buildJavaArchive("Contracts.jar", "");
+            ShrinkHelper.addDirectory(ContractsJar, "test-applications" + "/Contracts.jar");
 
             WebArchive TestResourceContractsFromJarWar = ShrinkHelper.buildDefaultApp("TestResourceContractsFromJar.war", "beans");
+            TestResourceContractsFromJarWar.addAsLibraries(ContractsJar);
 
-            String contactsResourcesDir = "test-applications" + "/Contracts.jar";
-            
-            JavaArchive contractsJar = ShrinkHelper.buildJavaArchive("Contracts.jar", "");
+            WebArchive TestResourceContractsWar = ShrinkHelper.buildDefaultApp("TestResourceContracts.war");
+            WebArchive TestResourceContractsDirectoryWar = ShrinkHelper.buildDefaultApp("TestResourceContractsDirectory.war");
 
-            contractsJar = (JavaArchive) ShrinkHelper.addDirectory(contractsJar, contactsResourcesDir);
-
-            TestResourceContractsFromJarWar.addAsLibraries(contractsJar);
-
-            WebArchive flashWar = ShrinkHelper.buildDefaultApp("JSF22FlashEvents.war", "com.ibm.ws.fat.jsf.factory",
-                        "com.ibm.ws.fat.jsf.flash",
-                        "com.ibm.ws.fat.jsf.listener");
-
-            WebArchive viewActionWar = ShrinkHelper.buildDefaultApp("TestJSF22ViewAction.war", "com.ibm.ws.fat.jsf.viewAction",
-                                "com.ibm.ws.fat.jsf.viewAction.phaseListener");
-                                
-            WebArchive ResourceResolverWar = ShrinkHelper.buildDefaultApp("JSF22FaceletsResourceResolverAnnotation.war", "com.ibm.ws.jsf");
-
-            EnterpriseArchive ear = ShrinkWrap.create(EnterpriseArchive.class, "TestJSF2.2.ear")
-            .addAsModule(testWar)
-            .addAsModule(viewActionWar)
-            .addAsModule(ResourceResolverWar)
-            .addAsModule(TestResourceContractsWar)
-            .addAsModule(TestResourceContractsDirectoryWar)
-            .addAsModule(TestResourceContractsFromJarWar)
-            .addAsModule(flashWar);
-
-            String testAppResourcesDir = "test-applications/" + "TestJSF2.2.ear" + "/resources/";
-
-            ear = (EnterpriseArchive) ShrinkHelper.addDirectory(ear, testAppResourcesDir);
-            ShrinkHelper.exportDropinAppToServer(jsfTestServer1, ear);
+            ShrinkHelper.exportDropinAppToServer(jsfTestServer1, TestResourceContractsWar);
+            ShrinkHelper.exportDropinAppToServer(jsfTestServer1, TestResourceContractsDirectoryWar);
+            ShrinkHelper.exportDropinAppToServer(jsfTestServer1, TestResourceContractsFromJarWar);
 
             jsfTestServer1.startServer(JSF22ResourceLibraryContractHtmlUnit.class.getSimpleName() + ".log");
         }
@@ -120,7 +91,7 @@ public class JSF22ResourceLibraryContractHtmlUnit {
         public static void tearDown() throws Exception {
                 // Stop the server
                 if (jsfTestServer1 != null && jsfTestServer1.isStarted()) {
-                        /*Passed in SESN0066E and SRVE8114W to avoid the two errors below during the checkLogsForErrorsAndWarnings step. 
+                        /* Avoiding the two errors below during the checkLogsForErrorsAndWarnings step. 
                         * [WARNING ] SESN0066E: The response is already committed to the client. The session cookie cannot be set.
                         * [WARNING ] SRVE8114W: WARNING Cannot set session cookie. Response already committed.
                         */

@@ -10,19 +10,13 @@
  */
 package com.ibm.ws.fat.jsf.tests;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 
-
-import static com.ibm.websphere.simplicity.ShrinkHelper.DeployOptions.OVERWRITE;
-
-import org.jboss.shrinkwrap.api.spec.WebArchive;
-import com.ibm.websphere.simplicity.ShrinkHelper;
-import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import com.ibm.ws.fat.jsf.JSFUtils;
 import java.net.URL;
+import java.util.regex.Pattern;
+import java.util.List;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -31,7 +25,8 @@ import org.junit.Test;
 import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
 
-import com.ibm.websphere.simplicity.log.Log;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
+import com.ibm.websphere.simplicity.ShrinkHelper;
 
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
@@ -39,12 +34,16 @@ import com.gargoylesoftware.htmlunit.html.HtmlForm;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.html.HtmlSubmitInput;
 
+import com.ibm.websphere.simplicity.ShrinkHelper;
+import com.ibm.websphere.simplicity.log.Log;
+import com.ibm.ws.fat.jsf.JSFUtils;
+
+import componenttest.annotation.Server;
 import componenttest.annotation.MinimumJavaLevel;
-import componenttest.custom.junit.runner.Mode;
 import componenttest.custom.junit.runner.FATRunner;
+import componenttest.custom.junit.runner.Mode;
 import componenttest.custom.junit.runner.Mode.TestMode;
 import componenttest.custom.junit.runner.RunUnlessFeatureBeingTested;
-import componenttest.annotation.Server;
 import componenttest.topology.impl.LibertyServer;
 
 /*
@@ -57,8 +56,8 @@ import componenttest.topology.impl.LibertyServer;
 @MinimumJavaLevel(javaLevel = 7)
 @RunWith(FATRunner.class)
 public class JSFServerTest {
-@Rule
-public TestName name = new TestName();
+    @Rule
+    public TestName name = new TestName();
 
     String contextRoot = "TestJSF2.2";
 
@@ -70,72 +69,35 @@ public TestName name = new TestName();
     @BeforeClass
     public static void setup() throws Exception {
 
-            WebArchive testWar = ShrinkHelper.buildDefaultApp("TestJSF2.2.war", "com.ibm.ws.fat.jsf.bean",
-            "com.ibm.ws.fat.jsf.cforeach",
-            "com.ibm.ws.fat.jsf.externalContext",
-            "com.ibm.ws.fat.jsf.html5",
-            "com.ibm.ws.fat.jsf.listener");
+        // Create the TestJSF2.2.war and JSF22FaceletsResourceResolverAnnotation.war applications
+        ShrinkHelper.defaultDropinApp(jsfTestServer1, "TestJSF2.2.war", "com.ibm.ws.fat.jsf.*");
+        ShrinkHelper.defaultDropinApp(jsfTestServer1, "JSF22FaceletsResourceResolverAnnotation.war", "com.ibm.ws.jsf");
 
-            WebArchive TestResourceContractsWar = ShrinkHelper.buildDefaultApp("TestResourceContracts.war");
+        // Start the server and use the class name so we can find logs easily.
+        // Many tests use the same server
+        jsfTestServer1.startServer(JSFServerTest.class.getSimpleName() + ".log");
 
-            WebArchive TestResourceContractsDirectoryWar = ShrinkHelper.buildDefaultApp("TestResourceContractsDirectory.war");
-
-            WebArchive TestResourceContractsFromJarWar = ShrinkHelper.buildDefaultApp("TestResourceContractsFromJar.war", "beans");
-
-            String contactsResourcesDir = "test-applications" + "/Contracts.jar";
-            
-            JavaArchive contractsJar = ShrinkHelper.buildJavaArchive("Contracts.jar", "");
-
-            contractsJar = (JavaArchive) ShrinkHelper.addDirectory(contractsJar, contactsResourcesDir);
-
-            TestResourceContractsFromJarWar.addAsLibraries(contractsJar);
-
-            WebArchive flashWar = ShrinkHelper.buildDefaultApp("JSF22FlashEvents.war", "com.ibm.ws.fat.jsf.factory",
-                        "com.ibm.ws.fat.jsf.flash",
-                        "com.ibm.ws.fat.jsf.listener");
-
-            WebArchive viewActionWar = ShrinkHelper.buildDefaultApp("TestJSF22ViewAction.war", "com.ibm.ws.fat.jsf.viewAction",
-                                "com.ibm.ws.fat.jsf.viewAction.phaseListener");
-                                
-            WebArchive ResourceResolverWar = ShrinkHelper.buildDefaultApp("JSF22FaceletsResourceResolverAnnotation.war", "com.ibm.ws.jsf");
-
-            EnterpriseArchive ear = ShrinkWrap.create(EnterpriseArchive.class, "TestJSF2.2.ear")
-            .addAsModule(testWar)
-            .addAsModule(viewActionWar)
-            .addAsModule(ResourceResolverWar)
-            .addAsModule(TestResourceContractsWar)
-            .addAsModule(TestResourceContractsDirectoryWar)
-            .addAsModule(TestResourceContractsFromJarWar)
-            .addAsModule(flashWar);
-
-            String testAppResourcesDir = "test-applications/" + "TestJSF2.2.ear" + "/resources/";
-
-            ear = (EnterpriseArchive) ShrinkHelper.addDirectory(ear, testAppResourcesDir);
-            ShrinkHelper.exportDropinAppToServer(jsfTestServer1, ear);
-
-            jsfTestServer1.startServer(JSFServerTest.class.getSimpleName() + ".log");
-            }
-
+    }
 
     @AfterClass
     public static void tearDown() throws Exception {
-            // Stop the server
-            if (jsfTestServer1 != null && jsfTestServer1.isStarted()) {
-                    jsfTestServer1.stopServer();
-            }
+        // Stop the server
+        if (jsfTestServer1 != null && jsfTestServer1.isStarted()) {
+            jsfTestServer1.stopServer();
+        }
     }
 
     /**
      * Sample test
-     *
+     * Ensure nothing has gone horribly wrong. 
      * @throws Exception
-     *             if something goes horribly wrong
      */
     @Test
     public void testServlet() throws Exception {
         WebClient webClient = new WebClient();
         URL url = JSFUtils.createHttpUrl(jsfTestServer1, contextRoot, "");
         HtmlPage page = (HtmlPage) webClient.getPage(url);
+
         assertTrue(page.asText().contains("Hello World"));
     }
 

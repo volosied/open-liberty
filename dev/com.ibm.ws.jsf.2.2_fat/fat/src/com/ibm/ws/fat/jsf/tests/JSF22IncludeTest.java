@@ -49,17 +49,12 @@ public class JSF22IncludeTest {
     protected static final Class<?> c = JSF22IncludeTest.class;
 
     @Server("jsf22IncludeTestServer")
-   // @TestServlet(servlet = MyTestServlet.class, contextRoot = "com")
+
     public static LibertyServer jsf22IncludeTestServer;
 
     @BeforeClass
     public static void setup() throws Exception {
-        ShrinkHelper.defaultDropinApp(jsf22IncludeTestServer, "TestJSF2.2.war", 
-                                    "com.ibm.ws.fat.jsf.bean",
-                                    "com.ibm.ws.fat.jsf.cforeach",
-                                    "com.ibm.ws.fat.jsf.externalContext",
-                                    "com.ibm.ws.fat.jsf.html5",
-                                    "com.ibm.ws.fat.jsf.listener");
+        ShrinkHelper.defaultDropinApp(jsf22IncludeTestServer, "TestJSF2.2.war", "com.ibm.ws.fat.jsf.*");
         jsf22IncludeTestServer.startServer(JSF22IncludeTest.class.getSimpleName() + ".log");
     }
 

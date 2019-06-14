@@ -11,5 +11,6 @@
     <javaPermission className="java.lang.RuntimePermission" name="getClassLoader"/>
     <javaPermission className="java.lang.RuntimePermission" name="accessDeclaredMembers"/>
     <javaPermission className="java.lang.reflect.ReflectPermission" name="suppressAccessChecks"/>
+    <javaPermission className="java.io.FilePermission" name="${server.config.dir}/-" actions="read"/>
     
 </server>

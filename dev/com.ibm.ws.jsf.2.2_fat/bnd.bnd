@@ -11,7 +11,10 @@ src: \
     test-applications/JSF22BackwardCompatibilityTests.war/src,\
     test-applications/CDITests.war/src,\
     test-applications/TestJSFEL.war/src,\
-    test-application-common/src,\
+    test-applications/JSF22StatelessView.war/src,\
+    test-applications/JSF22TestResources.war/src,\
+    test-applications/JSF22HTML5.war/src,\
+    test-applications/CDICommon/src,\
 
 fat.project: true
 

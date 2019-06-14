@@ -56,7 +56,7 @@ public class JSFHtml5Tests {
     @Rule
     public TestName name = new TestName();
     
-        String contextRoot = "TestJSF2.2";
+        String contextRoot = "JSF22HTML5";
     
         protected static final Class<?> c = JSFHtml5Tests.class;
     
@@ -66,48 +66,7 @@ public class JSFHtml5Tests {
         @BeforeClass
         public static void setup() throws Exception {
     
-                WebArchive testWar = ShrinkHelper.buildDefaultApp("TestJSF2.2.war", "com.ibm.ws.fat.jsf.bean",
-                "com.ibm.ws.fat.jsf.cforeach",
-                "com.ibm.ws.fat.jsf.externalContext",
-                "com.ibm.ws.fat.jsf.html5",
-                "com.ibm.ws.fat.jsf.listener");
-    
-                WebArchive TestResourceContractsWar = ShrinkHelper.buildDefaultApp("TestResourceContracts.war");
-    
-                WebArchive TestResourceContractsDirectoryWar = ShrinkHelper.buildDefaultApp("TestResourceContractsDirectory.war");
-    
-                WebArchive TestResourceContractsFromJarWar = ShrinkHelper.buildDefaultApp("TestResourceContractsFromJar.war", "beans");
-    
-                String contactsResourcesDir = "test-applications" + "/Contracts.jar";
-                
-                JavaArchive contractsJar = ShrinkHelper.buildJavaArchive("Contracts.jar", "");
-    
-                contractsJar = (JavaArchive) ShrinkHelper.addDirectory(contractsJar, contactsResourcesDir);
-    
-                TestResourceContractsFromJarWar.addAsLibraries(contractsJar);
-    
-                WebArchive flashWar = ShrinkHelper.buildDefaultApp("JSF22FlashEvents.war", "com.ibm.ws.fat.jsf.factory",
-                            "com.ibm.ws.fat.jsf.flash",
-                            "com.ibm.ws.fat.jsf.listener");
-    
-                WebArchive viewActionWar = ShrinkHelper.buildDefaultApp("TestJSF22ViewAction.war", "com.ibm.ws.fat.jsf.viewAction",
-                                    "com.ibm.ws.fat.jsf.viewAction.phaseListener");
-                                    
-                WebArchive ResourceResolverWar = ShrinkHelper.buildDefaultApp("JSF22FaceletsResourceResolverAnnotation.war", "com.ibm.ws.jsf");
-    
-                EnterpriseArchive ear = ShrinkWrap.create(EnterpriseArchive.class, "TestJSF2.2.ear")
-                .addAsModule(testWar)
-                .addAsModule(viewActionWar)
-                .addAsModule(ResourceResolverWar)
-                .addAsModule(TestResourceContractsWar)
-                .addAsModule(TestResourceContractsDirectoryWar)
-                .addAsModule(TestResourceContractsFromJarWar)
-                .addAsModule(flashWar);
-    
-                String testAppResourcesDir = "test-applications/" + "TestJSF2.2.ear" + "/resources/";
-    
-                ear = (EnterpriseArchive) ShrinkHelper.addDirectory(ear, testAppResourcesDir);
-                ShrinkHelper.exportDropinAppToServer(jsfTestServer1, ear);
+                ShrinkHelper.defaultDropinApp(jsfTestServer1, "JSF22HTML5.war", "com.ibm.ws.fat.jsf.*");
     
                 jsfTestServer1.startServer(JSFHtml5Tests.class.getSimpleName() + ".log");
                 }
