@@ -26,7 +26,7 @@ import com.ibm.ws.fat.jsf.tests.CDITests;
 // import com.ibm.ws.fat.jsf.tests.JSF22ClientWindowTests;
 // import com.ibm.ws.fat.jsf.tests.JSF22ComponentRendererTests;
 // import com.ibm.ws.fat.jsf.tests.JSF22ComponentTesterTests;
-// import com.ibm.ws.fat.jsf.tests.JSF22FlashEventsTests;
+import com.ibm.ws.fat.jsf.tests.JSF22FlashEventsTests;
 // import com.ibm.ws.fat.jsf.tests.JSF22FlowsTests;
 import com.ibm.ws.fat.jsf.tests.JSF22IncludeTest;
 // import com.ibm.ws.fat.jsf.tests.JSF22InputFileTests;
@@ -94,9 +94,9 @@ import com.ibm.ws.fat.util.FatLogHandler;
             // // //    JSF22MiscellaneousTests.class,
             //             JSF22ViewActionAndPhaseIdTests.class,
             // // //    JSF22ResetValuesAndAjaxDelayTests.class,
-                        JSF22MiscLifecycleTests.class
+                        // JSF22MiscLifecycleTests.class,
             // // //    JSF22AppConfigPopTests.class,
-            // // //    JSF22FlashEventsTests.class,
+                            JSF22FlashEventsTests.class,
             // // //    CDIConfigByACPTests.class,
             // // //    CDIFacesInMetaInfTests.class,
             // // //    CDIFacesInWebXMLTests.class,
