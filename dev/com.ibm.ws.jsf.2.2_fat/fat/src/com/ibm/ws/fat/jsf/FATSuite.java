@@ -33,7 +33,7 @@ import com.ibm.ws.fat.jsf.tests.JSF22IncludeTest;
 // import com.ibm.ws.fat.jsf.tests.JSF22JPA20Test;
 // import com.ibm.ws.fat.jsf.tests.JSF22JSF20SingletonFeatureTest;
 // import com.ibm.ws.fat.jsf.tests.JSF22LocalizationTesterTests;
-// import com.ibm.ws.fat.jsf.tests.JSF22MiscLifecycleTests;
+import com.ibm.ws.fat.jsf.tests.JSF22MiscLifecycleTests;
 // import com.ibm.ws.fat.jsf.tests.JSF22MiscellaneousTests;
 // import com.ibm.ws.fat.jsf.tests.JSF22ResetValuesAndAjaxDelayTests;
 import com.ibm.ws.fat.jsf.tests.JSF22ResourceLibraryContractHtmlUnit;
@@ -76,35 +76,35 @@ import com.ibm.ws.fat.util.FatLogHandler;
  */
 @RunWith(Suite.class)
 @SuiteClasses({
-                        // JSFDummyTest.class,
-                        // JSFServerTest.class,
-                        // JSFHtmlUnit.class,
-                        // JSFSimpleHtmlUnit.class,
-                        // JSF22StatelessViewTests.class,
-                        // JSFHtml5Tests.class,
-                        // JSF22ResourceLibraryContractHtmlUnit.class,
-            // //    JSF22ComponentTesterTests.class,
-            // //    JSF22ClientWindowTests.class,
-            // //    JSF22LocalizationTesterTests.class,
-            // //    JSF22ComponentRendererTests.class,
-            // //    JSF22JSF20SingletonFeatureTest.class,
-                        // JSFCompELTests.class,
-            // //    JSF22FlowsTests.class,
-            // //    CDIFlowsTests.class,
-            // //    JSF22MiscellaneousTests.class,
-                        // JSF22ViewActionAndPhaseIdTests.class,
-            // //    JSF22ResetValuesAndAjaxDelayTests.class,
-               JSF22MiscLifecycleTests.class,
-            // //    JSF22AppConfigPopTests.class,
-            // //    JSF22FlashEventsTests.class,
-            // //    CDIConfigByACPTests.class,
-            // //    CDIFacesInMetaInfTests.class,
-            // //    CDIFacesInWebXMLTests.class,
-                        // CDITests.class,
-            // //    JSF22JPA20Test.class,
-            // //    JSF22BeanValidationTests.class,
-                        // JSF22ViewPoolingTests.class,
-                        // JSF22IncludeTest.class,
+            //             JSFDummyTest.class,
+            //             JSFServerTest.class,
+            //             JSFHtmlUnit.class,
+            //             JSFSimpleHtmlUnit.class,
+            //             JSF22StatelessViewTests.class,
+            //             JSFHtml5Tests.class,
+            //             JSF22ResourceLibraryContractHtmlUnit.class,
+            // // //    JSF22ComponentTesterTests.class,
+            // // //    JSF22ClientWindowTests.class,
+            // // //    JSF22LocalizationTesterTests.class,
+            // // //    JSF22ComponentRendererTests.class,
+            // // //    JSF22JSF20SingletonFeatureTest.class,
+            //             JSFCompELTests.class,
+            // // //    JSF22FlowsTests.class,
+            // // //    CDIFlowsTests.class,
+            // // //    JSF22MiscellaneousTests.class,
+            //             JSF22ViewActionAndPhaseIdTests.class,
+            // // //    JSF22ResetValuesAndAjaxDelayTests.class,
+                        JSF22MiscLifecycleTests.class
+            // // //    JSF22AppConfigPopTests.class,
+            // // //    JSF22FlashEventsTests.class,
+            // // //    CDIConfigByACPTests.class,
+            // // //    CDIFacesInMetaInfTests.class,
+            // // //    CDIFacesInWebXMLTests.class,
+            //             CDITests.class,
+            // // //    JSF22JPA20Test.class,
+            // // //    JSF22BeanValidationTests.class,
+            //             JSF22ViewPoolingTests.class,
+            //             JSF22IncludeTest.class,
             // //    JSF22InputFileTests.class,
             // //    JSF22AparTests.class
 })
