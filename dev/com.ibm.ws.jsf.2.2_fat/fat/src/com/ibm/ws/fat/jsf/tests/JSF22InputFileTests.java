@@ -65,7 +65,7 @@ public class JSF22InputFileTests {
 
     @BeforeClass
     public static void setup() throws Exception {
-        ShrinkHelper.defaultDropinApp(jsfTestServer2, "JSF22InputFile.war", "com.test.*");
+        ShrinkHelper.defaultDropinApp(jsfTestServer2, "JSF22InputFile.war", "src.com.test");
 
         jsfTestServer2.startServer(JSF22InputFileTests.class.getSimpleName() + ".log");
     }
@@ -93,6 +93,8 @@ public class JSF22InputFileTests {
         String projectRoot = System.getProperty("user.dir");
 
         jsfTestServer2.copyFileToLibertyServerRoot("JSF22InputFileCONTENT.txt");
+
+        Log.info(c, name.getMethodName(), jsfTestServer2.getServerRoot());
 
         File fileToUpload = new File(jsfTestServer2.getServerRoot() + File.separator + "JSF22InputFileCONTENT.txt");
 

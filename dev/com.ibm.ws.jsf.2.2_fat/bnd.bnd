@@ -16,6 +16,8 @@ src: \
     test-applications/JSF22HTML5.war/src,\
     test-applications/JSF22ActionListener.war/src,\
     test-applications/CDICommon/src,\
+    test-applications/JSF22LocalizationTester.war/src,\
+    test-applications/JSF22InputFile.war/src,\
 
 fat.project: true
 
