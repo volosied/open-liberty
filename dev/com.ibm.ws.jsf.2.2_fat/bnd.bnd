@@ -18,6 +18,11 @@ src: \
     test-applications/CDICommon/src,\
     test-applications/JSF22LocalizationTester.war/src,\
     test-applications/JSF22InputFile.war/src,\
+    test-applications/JSF22ComponentTester.war/src,\
+    test-applications/JSF22ClientWindow.war/src,\
+    test-applications/JSF22ComponentRenderer.war/src,\
+    test-applications/JSF22FacesFlows.war/src,\
+    test-applications/CDIFacesFlows.war/src,\
 
 fat.project: true
 

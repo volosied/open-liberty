@@ -1,0 +1,12 @@
+<server description="Server for testing the jsf-2.0 and jsf-2.2 features together.  An error should occur since both features are singleton features.">
+
+    <include location="../fatTestPorts.xml"/>
+    
+    <featureManager>
+        <feature>jsf-2.0</feature>
+        <feature>jsf-2.2</feature>
+    </featureManager>
+    
+    <logging traceSpecification="*=info:org.apache.myfaces.*=all:com.ibm.ws.jsf*=all" maxFileSize="20" maxFiles="10" traceFormat="BASIC"/> 
+    
+</server>
