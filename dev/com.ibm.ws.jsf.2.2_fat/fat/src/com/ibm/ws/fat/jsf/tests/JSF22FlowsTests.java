@@ -77,14 +77,15 @@ public class JSF22FlowsTests {
     
         @BeforeClass
         public static void setup() throws Exception {
-            JavaArchive JSF22TestResourcesJar = ShrinkHelper.buildJavaArchive("JSF22FacesFlows.jar", "");
+            JavaArchive JSF22FacesFlowsJar = ShrinkHelper.buildJavaArchive("JSF22FacesFlows.jar", "");
 
             // Create the JSF22TestResources.war application
-            WebArchive JSF22TestResourcesWar = ShrinkHelper.buildDefaultApp("JSF22FacesFlows.war", "com.ibm.ws.jsf.fat.beans");
-            JSF22TestResourcesWar.addAsLibraries(JSF22TestResourcesJar);
-            ShrinkHelper.addDirectory(JSF22TestResourcesWar, "test-applications" + "/JSF22TestResources.jar");
+            WebArchive JSF22FacesFlowsWar = ShrinkHelper.buildDefaultApp("JSF22FacesFlows.war", "com.ibm.ws.jsf.fat.beans");
+            //ShrinkHelper.addDirectory(JSF22TestResourcesWar, "test-applications" + "/JSF22TestResources.jar");
+            JSF22FacesFlowsWar.addAsLibraries(JSF22FacesFlowsJar);
+           // ShrinkHelper.addDirectory(JSF22TestResourcesWar, "test-applications" + "/JSF22TestResources.jar");
     
-            ShrinkHelper.exportDropinAppToServer(jsfFacesFlowsServer, JSF22TestResourcesWar);
+            ShrinkHelper.exportDropinAppToServer(jsfFacesFlowsServer, JSF22FacesFlowsWar);
 
             // ShrinkHelper.defaultDropinApp(jsfFacesFlowsServer,"JSF22HTML5.war", "com.ibm.ws.fat.jsf.html5");
 
@@ -107,7 +108,8 @@ public class JSF22FlowsTests {
      */
     @Test
     public void JSF22Flows_TestSimple() throws Exception {
-        testSimpleCase("simple", contextRoot);
+        URL url = JSFUtils.createHttpUrl(jsfFacesFlowsServer, contextRoot, "");
+        testSimpleCase("simple", url);
     }
 
     /**
@@ -117,7 +119,8 @@ public class JSF22FlowsTests {
      */
     @Test
     public void JSF22Flows_TestSimpleFacesConfig() throws Exception {
-        testSimpleCase("simpleFacesConfig", contextRoot);
+        URL url = JSFUtils.createHttpUrl(jsfFacesFlowsServer, contextRoot, "");
+        testSimpleCase("simpleFacesConfig", url);
     }
 
     /**
@@ -128,7 +131,8 @@ public class JSF22FlowsTests {
      */
     @Test
     public void JSF22Flows_TestSimpleJar() throws Exception {
-        testSimpleCase("simple-jar", contextRoot);
+        URL url = JSFUtils.createHttpUrl(jsfFacesFlowsServer, contextRoot, "");
+        testSimpleCase("simple-jar", url);
     }
 
     /**
@@ -162,7 +166,8 @@ public class JSF22FlowsTests {
     public void JSF22Flows_TestDeclarativeNavigation() throws Exception {
         // Navigate to the 
         WebClient webClient = getWebClient();
-        HtmlPage page = getIndex(webClient, contextRoot);
+        URL url = JSFUtils.createHttpUrl(jsfFacesFlowsServer, contextRoot, "");
+        HtmlPage page = getIndex(webClient, url);
 
         String flowID = "simpleNavigationDeclarative";
 
@@ -214,17 +219,18 @@ public class JSF22FlowsTests {
      */
     @Test
     public void JSF22Flows_TestDeclarativeSwitch() throws Exception {
-        testFlowSwitch("declarativeSwitch", contextRoot);
+        URL url = JSFUtils.createHttpUrl(jsfFacesFlowsServer, contextRoot, "");
+        testFlowSwitch("declarativeSwitch", url);
     }
 
     /**
      * Tests that JSF flow switches are working correctly. Utilizes a switch to test a navigation outcome.
      * Accepts a string for the flow ID.
      */
-    protected static void testFlowSwitch(String flowID, String contextRoot) throws Exception {
+    protected static void testFlowSwitch(String flowID, URL url) throws Exception {
         // Navigate to the index
         WebClient webClient = getWebClient();
-        HtmlPage page = getIndex(webClient, contextRoot);
+        HtmlPage page = getIndex(webClient, url);
         //String flowID = "declarativeSwitch";
 
         /*
@@ -280,16 +286,17 @@ public class JSF22FlowsTests {
     @Test
     public void JSF22Flows_TestDeclarativeNestedFlows() throws Exception {
         // Navigate to the index
-        testNestedFlows("declarativeNested1", "declarativeNested2", "declarativeNested", contextRoot);
+        URL url = JSFUtils.createHttpUrl(jsfFacesFlowsServer, contextRoot, "");
+        testNestedFlows("declarativeNested1", "declarativeNested2", "declarativeNested", url);
     }
 
     /**
      * Helper method to verify that nested flows are working correctly.
      */
-    protected static void testNestedFlows(String flowID1, String flowID2, String ButtonID, String contextRoot) throws Exception {
+    protected static void testNestedFlows(String flowID1, String flowID2, String ButtonID, URL url) throws Exception {
         // Navigate to the index
         WebClient webClient = getWebClient();
-        HtmlPage page = getIndex(webClient, contextRoot);
+        HtmlPage page = getIndex(webClient, url);
 
         /*
          * Navigate into flow 1, verify a parameter is passed to flow 2, return to flow 1 and update
@@ -370,9 +377,10 @@ public class JSF22FlowsTests {
      * 
      * @throws Exception
      */
-    protected static void testSimpleCase(String flowID, String contextRoot) throws Exception {
+    protected static void testSimpleCase(String flowID, URL url) throws Exception {
         WebClient webClient = getWebClient();
-        HtmlPage page = getIndex(webClient, contextRoot);
+
+        HtmlPage page = getIndex(webClient, url);
 
         /*
          * 1: Enter flow, then verify exit
@@ -494,9 +502,7 @@ public class JSF22FlowsTests {
     /**
      * Return the test application index; make sure it's set up properly (not in a flow, etc.)
      */
-    protected static HtmlPage getIndex(WebClient wc, String contextRoot) throws Exception {
-
-        URL url = JSFUtils.createHttpUrl(jsfFacesFlowsServer, contextRoot, "");
+    protected static HtmlPage getIndex(WebClient wc, URL url) throws Exception {
         HtmlPage page = (HtmlPage) wc.getPage(url);
 
         if (page == null) {

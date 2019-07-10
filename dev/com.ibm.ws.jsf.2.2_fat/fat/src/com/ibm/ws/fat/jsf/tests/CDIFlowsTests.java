@@ -33,6 +33,9 @@ import com.ibm.websphere.simplicity.ShrinkHelper;
 
 import componenttest.annotation.MinimumJavaLevel;
 
+import com.ibm.ws.fat.jsf.JSFUtils;
+import java.net.URL;
+
 /**
  * A collection of tests for the JSF 2.2 Faces Flows feature
  * All of these tests make use of the programmatic/CDI facilities provided by JSF.
@@ -53,7 +56,7 @@ public class CDIFlowsTests {
     @Rule
     public TestName name = new TestName();
     
-        String contextRoot = "JSF22CDIFacesFlows";
+        String contextRoot = "CDIFacesFlows";
     
         protected static final Class<?> c = CDIFlowsTests.class;
     
@@ -67,7 +70,6 @@ public class CDIFlowsTests {
             jsfCDIFlowsServer.startServer(CDIFlowsTests.class.getSimpleName() + ".log");
         }
     
-
     @AfterClass
     public static void tearDown() throws Exception {
             // Stop the server
@@ -84,7 +86,8 @@ public class CDIFlowsTests {
      */
     @Test
     public void JSF22Flows_TestSimpleBean() throws Exception {
-        JSF22FlowsTests.testSimpleCase("simpleBean", contextRoot);
+        URL url = JSFUtils.createHttpUrl(jsfCDIFlowsServer, contextRoot, "");
+        JSF22FlowsTests.testSimpleCase("simpleBean", url);
     }
 
     /**
@@ -94,7 +97,8 @@ public class CDIFlowsTests {
      */
     @Test
     public void JSF22Flows_TestFlowBuilder() throws Exception {
-        JSF22FlowsTests.testSimpleCase("simpleFlowBuilder", contextRoot);
+        URL url = JSFUtils.createHttpUrl(jsfCDIFlowsServer, contextRoot, "");
+        JSF22FlowsTests.testSimpleCase("simpleFlowBuilder", url);
     }
 
     /**
@@ -105,7 +109,8 @@ public class CDIFlowsTests {
      */
     @Test
     public void JSF22Flows_TestMixedConfiguration() throws Exception {
-        JSF22FlowsTests.testNestedFlows("mixedNested1", "mixedNested2", "mixedNested", contextRoot);
+        URL url = JSFUtils.createHttpUrl(jsfCDIFlowsServer, contextRoot, "");
+        JSF22FlowsTests.testNestedFlows("mixedNested1", "mixedNested2", "mixedNested", url);
     }
 
     /**
@@ -116,7 +121,8 @@ public class CDIFlowsTests {
     //@Test
     public void JSF22Flows_TestCustomNavigationHandler() throws Exception {
         // Still running into an NPE here; we need to check for that in NavigationHandlerImpl
-        JSF22FlowsTests.testSimpleCase("customNavigationHandler", "/JSF22FacesFlowsNavigation/");
+        URL url = JSFUtils.createHttpUrl(jsfCDIFlowsServer, "JSF22FacesFlowsNavigation", "");
+        JSF22FlowsTests.testSimpleCase("customNavigationHandler", url);
     }
 
     /**
@@ -144,7 +150,8 @@ public class CDIFlowsTests {
      */
     @Test
     public void JSF22Flows_TestProgrammaticSwitch() throws Exception {
-        JSF22FlowsTests.testFlowSwitch("programmaticSwitch", contextRoot);
+        URL url = JSFUtils.createHttpUrl(jsfCDIFlowsServer, contextRoot, "");
+        JSF22FlowsTests.testFlowSwitch("programmaticSwitch", url);
     }
 
     /**
@@ -153,7 +160,8 @@ public class CDIFlowsTests {
     private void testInitializerAndFinalizer() throws Exception {
         // Navigate to the index
         WebClient webClient = JSF22FlowsTests.getWebClient();
-        HtmlPage page = JSF22FlowsTests.getIndex(webClient, contextRoot);
+        URL url = JSFUtils.createHttpUrl(jsfCDIFlowsServer, contextRoot, "");
+        HtmlPage page = JSF22FlowsTests.getIndex(webClient, url);
         String flowID = "initializeFinalize";
 
         /*

@@ -23,6 +23,9 @@ src: \
     test-applications/JSF22ComponentRenderer.war/src,\
     test-applications/JSF22FacesFlows.war/src,\
     test-applications/CDIFacesFlows.war/src,\
+    test-applications/JSF22Miscellaneous.jar/src,\
+    test-applications/JSF22Miscellaneous.war/src,\
+
 
 fat.project: true
 
