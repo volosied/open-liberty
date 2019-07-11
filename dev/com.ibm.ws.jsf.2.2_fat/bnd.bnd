@@ -25,7 +25,9 @@ src: \
     test-applications/CDIFacesFlows.war/src,\
     test-applications/JSF22Miscellaneous.jar/src,\
     test-applications/JSF22Miscellaneous.war/src,\
-
+    test-applications/TestJSF22Ajax.war/src,\
+    test-applications/JSF22AppConfigPop.jar/src,\
+    test-applications/JSF22AppConfigPop.war/src,\
 
 fat.project: true
 

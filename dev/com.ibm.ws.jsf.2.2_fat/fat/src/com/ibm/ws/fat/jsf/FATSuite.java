@@ -21,7 +21,7 @@ import org.junit.runners.Suite.SuiteClasses;
 import com.ibm.ws.fat.jsf.tests.CDIFlowsTests;
 import com.ibm.ws.fat.jsf.tests.CDITests;
 // import com.ibm.ws.fat.jsf.tests.JSF22AparTests;
-// import com.ibm.ws.fat.jsf.tests.JSF22AppConfigPopTests;
+import com.ibm.ws.fat.jsf.tests.JSF22AppConfigPopTests;
 // import com.ibm.ws.fat.jsf.tests.JSF22BeanValidationTests;
 import com.ibm.ws.fat.jsf.tests.JSF22ClientWindowTests;
 import com.ibm.ws.fat.jsf.tests.JSF22ComponentRendererTests;
@@ -35,7 +35,7 @@ import com.ibm.ws.fat.jsf.tests.JSF22JSF20SingletonFeatureTest;
 import com.ibm.ws.fat.jsf.tests.JSF22LocalizationTesterTests;
 import com.ibm.ws.fat.jsf.tests.JSF22MiscLifecycleTests;
 import com.ibm.ws.fat.jsf.tests.JSF22MiscellaneousTests;
-// import com.ibm.ws.fat.jsf.tests.JSF22ResetValuesAndAjaxDelayTests;
+import com.ibm.ws.fat.jsf.tests.JSF22ResetValuesAndAjaxDelayTests;
 import com.ibm.ws.fat.jsf.tests.JSF22ResourceLibraryContractHtmlUnit;
 import com.ibm.ws.fat.jsf.tests.JSF22StatelessViewTests;
 import com.ibm.ws.fat.jsf.tests.JSF22ViewActionAndPhaseIdTests;
@@ -91,15 +91,15 @@ import com.ibm.ws.fat.util.FatLogHandler;
                 // JSF22MiscLifecycleTests.class,
                 // CDITests.class,
                 // JSF22InputFileTests.class,
-                // JSF22ComponentTesterTests.class
+                // JSF22ComponentTesterTests.class,
                 // JSF22ClientWindowTests.class,
-                // JSF22ComponentRendererTests.class
+                // JSF22ComponentRendererTests.class,
                 // JSF22FlowsTests.class,
                 // CDIFlowsTests.class,
-                JSF22MiscellaneousTests.class
+                // JSF22MiscellaneousTests.class,
+                // JSF22ResetValuesAndAjaxDelayTests.class
+                JSF22AppConfigPopTests.class
 
-                // JSF22ResetValuesAndAjaxDelayTests.class,
-                // JSF22AppConfigPopTests.class,
                 // CDIConfigByACPTests.class,
                 // CDIFacesInMetaInfTests.class,
                 // CDIFacesInWebXMLTests.class,
