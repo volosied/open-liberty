@@ -63,9 +63,9 @@ public class JSF22MiscellaneousTests {
     @BeforeClass
     public static void setup() throws Exception {
 
-        JavaArchive JSF22MiscellaneousJar = ShrinkHelper.buildJavaArchive("JSF22Miscellaneous.jar", "com.ibm.test");
+        JavaArchive JSF22MiscellaneousJar = ShrinkHelper.buildJavaArchive("JSF22Miscellaneous.jar", "com.ibm.ws.jsf22.fat.miscbean.jar");
 
-        WebArchive JSF22MiscellaneousWar = ShrinkHelper.buildDefaultApp("JSF22Miscellaneous.war", "com.ibm.test");
+        WebArchive JSF22MiscellaneousWar = ShrinkHelper.buildDefaultApp("JSF22Miscellaneous.war", "com.ibm.ws.jsf22.fat.miscbean");
 
         WebArchive SerializeWar = ShrinkHelper.buildDefaultApp("JSF22MiscellaneousSerialize.war", "");
 

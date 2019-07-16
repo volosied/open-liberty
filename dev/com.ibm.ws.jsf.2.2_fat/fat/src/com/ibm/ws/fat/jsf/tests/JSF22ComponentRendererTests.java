@@ -63,7 +63,7 @@ public class JSF22ComponentRendererTests {
     
         @BeforeClass
         public static void setup() throws Exception {
-            WebArchive War = ShrinkHelper.defaultDropinApp(jsfTestServer2,"JSF22ComponentRenderer.war", "com.test.jsf479", "com.test.jsf599", "com.test.jsf703", "com.test.jsf943", "com.test.jsf997");
+            WebArchive War = ShrinkHelper.defaultDropinApp(jsfTestServer2,"JSF22ComponentRenderer.war", "com.ibm.ws.jsf22.fat.componentrenderer.*");
 
             jsfTestServer2.startServer(JSF22ComponentRendererTests.class.getSimpleName() + ".log");
         }

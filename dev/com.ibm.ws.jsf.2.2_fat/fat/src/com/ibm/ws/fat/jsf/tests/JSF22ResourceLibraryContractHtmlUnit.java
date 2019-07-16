@@ -73,7 +73,7 @@ public class JSF22ResourceLibraryContractHtmlUnit {
             JavaArchive ContractsJar = ShrinkHelper.buildJavaArchive("Contracts.jar", "");
             ShrinkHelper.addDirectory(ContractsJar, "test-applications" + "/Contracts.jar");
 
-            WebArchive TestResourceContractsFromJarWar = ShrinkHelper.buildDefaultApp("TestResourceContractsFromJar.war", "beans");
+            WebArchive TestResourceContractsFromJarWar = ShrinkHelper.buildDefaultApp("TestResourceContractsFromJar.war", "com.ibm.ws.jsf22.fat.contractsfromjar.beans");
             TestResourceContractsFromJarWar.addAsLibraries(ContractsJar);
 
             WebArchive TestResourceContractsWar = ShrinkHelper.buildDefaultApp("TestResourceContracts.war");

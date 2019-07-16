@@ -17,24 +17,24 @@
     
     <application>
        <el-resolver>
-            cdi.managed.CustomELResolver
+            com.ibm.ws.jsf22.fat.cdicommon.managed.CustomELResolver
         </el-resolver>
         <navigation-handler>
-            cdi.managed.CustomNavigationHandler
+           com.ibm.ws.jsf22.fat.cdicommon.managed.CustomNavigationHandler
         </navigation-handler>
         
         <system-event-listener>
-           <system-event-listener-class>cdi.managed.CustomSystemEventListener</system-event-listener-class>
+           <system-event-listener-class>com.ibm.ws.jsf22.fat.cdicommon.managed.CustomSystemEventListener</system-event-listener-class>
            <system-event-class> javax.faces.event.PostConstructApplicationEvent </system-event-class>
         </system-event-listener>  
         
         
 		 <resource-handler>
-		   cdi.managed.CustomResourceHandler
+		   com.ibm.ws.jsf22.fat.cdicommon.managed.CustomResourceHandler
 		 </resource-handler> 
 		
 		  <state-manager>
-           cdi.managed.CustomStateManager
+           com.ibm.ws.jsf22.fat.cdicommon.managed.CustomStateManager
 		 </state-manager>  
     </application>
     
@@ -42,44 +42,44 @@
     
   
 	   <tag-handler-delegate-factory>
-	      cdi.managed.factories.CustomTagHandlerDelegateFactory
+	      com.ibm.ws.jsf22.fat.cdicommon.managed.factories.CustomTagHandlerDelegateFactory
 	   </tag-handler-delegate-factory>
 	   
 	   <application-factory>  
-          cdi.managed.factories.CustomApplicationFactory
+          com.ibm.ws.jsf22.fat.cdicommon.managed.factories.CustomApplicationFactory
        </application-factory>  
       
        <exception-handler-factory>
-          cdi.managed.factories.CustomExceptionHandlerFactory
+          com.ibm.ws.jsf22.fat.cdicommon.managed.factories.CustomExceptionHandlerFactory
        </exception-handler-factory>
       
        <external-context-factory>
-        cdi.managed.factories.CustomExternalContextFactory
+        com.ibm.ws.jsf22.fat.cdicommon.managed.factories.CustomExternalContextFactory
        </external-context-factory>
        
        <faces-context-factory>
-         cdi.managed.factories.CustomFacesContextFactory
+         com.ibm.ws.jsf22.fat.cdicommon.managed.factories.CustomFacesContextFactory
        </faces-context-factory>
       
        <lifecycle-factory>
-         cdi.managed.factories.CustomLifecycleFactory
+         com.ibm.ws.jsf22.fat.cdicommon.managed.factories.CustomLifecycleFactory
        </lifecycle-factory>
        
        <partial-view-context-factory>
-         cdi.managed.factories.CustomPartialViewContextFactory
+         com.ibm.ws.jsf22.fat.cdicommon.managed.factories.CustomPartialViewContextFactory
        </partial-view-context-factory>
       
        <render-kit-factory>
-         cdi.managed.factories.CustomRenderKitFactory
+         com.ibm.ws.jsf22.fat.cdicommon.managed.factories.CustomRenderKitFactory
        </render-kit-factory>
        
        <view-declaration-language-factory>
-        cdi.managed.factories.CustomViewDeclarationLanguageFactory     
+        com.ibm.ws.jsf22.fat.cdicommon.managed.factories.CustomViewDeclarationLanguageFactory     
        </view-declaration-language-factory>
       
       
        <visit-context-factory>
-        cdi.managed.factories.CustomVisitContextFactory
+        com.ibm.ws.jsf22.fat.cdicommon.managed.factories.CustomVisitContextFactory
        </visit-context-factory>      
    
        
@@ -98,7 +98,7 @@
 	</factory>
 	
 	<lifecycle>
-       <phase-listener>cdi.managed.CustomPhaseListener</phase-listener>
+       <phase-listener>com.ibm.ws.jsf22.fat.cdicommon.managed.CustomPhaseListener</phase-listener>
     </lifecycle> 
 	
 

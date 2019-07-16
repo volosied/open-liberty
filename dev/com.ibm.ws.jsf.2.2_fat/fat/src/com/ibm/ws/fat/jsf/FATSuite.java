@@ -15,14 +15,14 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-// import com.ibm.ws.fat.jsf.tests.CDIConfigByACPTests;
-// import com.ibm.ws.fat.jsf.tests.CDIFacesInMetaInfTests;
-// import com.ibm.ws.fat.jsf.tests.CDIFacesInWebXMLTests;
+import com.ibm.ws.fat.jsf.tests.CDIConfigByACPTests;
+import com.ibm.ws.fat.jsf.tests.CDIFacesInMetaInfTests;
+import com.ibm.ws.fat.jsf.tests.CDIFacesInWebXMLTests;
 import com.ibm.ws.fat.jsf.tests.CDIFlowsTests;
 import com.ibm.ws.fat.jsf.tests.CDITests;
 // import com.ibm.ws.fat.jsf.tests.JSF22AparTests;
 import com.ibm.ws.fat.jsf.tests.JSF22AppConfigPopTests;
-// import com.ibm.ws.fat.jsf.tests.JSF22BeanValidationTests;
+import com.ibm.ws.fat.jsf.tests.JSF22BeanValidationTests;
 import com.ibm.ws.fat.jsf.tests.JSF22ClientWindowTests;
 import com.ibm.ws.fat.jsf.tests.JSF22ComponentRendererTests;
 import com.ibm.ws.fat.jsf.tests.JSF22ComponentTesterTests;
@@ -30,7 +30,7 @@ import com.ibm.ws.fat.jsf.tests.JSF22FlashEventsTests;
 import com.ibm.ws.fat.jsf.tests.JSF22FlowsTests;
 import com.ibm.ws.fat.jsf.tests.JSF22IncludeTest;
 import com.ibm.ws.fat.jsf.tests.JSF22InputFileTests;
-// import com.ibm.ws.fat.jsf.tests.JSF22JPA20Test;
+import com.ibm.ws.fat.jsf.tests.JSF22JPA20Test;
 import com.ibm.ws.fat.jsf.tests.JSF22JSF20SingletonFeatureTest;
 import com.ibm.ws.fat.jsf.tests.JSF22LocalizationTesterTests;
 import com.ibm.ws.fat.jsf.tests.JSF22MiscLifecycleTests;
@@ -76,17 +76,19 @@ import com.ibm.ws.fat.util.FatLogHandler;
  */
 @RunWith(Suite.class)
 @SuiteClasses({
+                // JSF22ResourceLibraryContractHtmlUnit.class,
+                // JSFCompELTests.class,
+                // JSF22ViewActionAndPhaseIdTests.class,
+                // JSF22ResetValuesAndAjaxDelayTests.class,
+                // JSF22IncludeTest.class,
                 // JSFDummyTest.class,
                 // JSFServerTest.class,
                 // JSFHtmlUnit.class,
                 // JSFSimpleHtmlUnit.class,
-                // JSF22StatelessViewTests.class,
+                // JSF22FlowsTests.class,
                 // JSFHtml5Tests.class,
-                // JSF22ResourceLibraryContractHtmlUnit.class,
+                // JSF22StatelessViewTests.class,
                 // JSF22ViewPoolingTests.class,
-                // JSF22IncludeTest.class,
-                // JSFCompELTests.class,
-                // JSF22ViewActionAndPhaseIdTests.class,
                 // JSF22FlashEventsTests.class,
                 // JSF22MiscLifecycleTests.class,
                 // CDITests.class,
@@ -94,23 +96,19 @@ import com.ibm.ws.fat.util.FatLogHandler;
                 // JSF22ComponentTesterTests.class,
                 // JSF22ClientWindowTests.class,
                 // JSF22ComponentRendererTests.class,
-                // JSF22FlowsTests.class,
                 // CDIFlowsTests.class,
                 // JSF22MiscellaneousTests.class,
-                // JSF22ResetValuesAndAjaxDelayTests.class
-                JSF22AppConfigPopTests.class
-
-                // CDIConfigByACPTests.class,
+                // JSF22AppConfigPopTests.class,
+                // CDIConfigByACPTests.class
                 // CDIFacesInMetaInfTests.class,
                 // CDIFacesInWebXMLTests.class,
-                // JSF22JPA20Test.class,
+                // JSF22JPA20Test.class, // jpa-2.0 is not found..
                 // JSF22BeanValidationTests.class,
-                // JSF22AparTests.class
 
-                //JSF22LocalizationTesterTests.class,
+                JSF22LocalizationTesterTests.class,
                 //JSF22JSF20SingletonFeatureTest.class
 
-
+                // JSF22AparTests.class
 })
 public class FATSuite {
 

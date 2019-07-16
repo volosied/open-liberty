@@ -65,7 +65,7 @@ public class JSF22InputFileTests {
 
     @BeforeClass
     public static void setup() throws Exception {
-        ShrinkHelper.defaultDropinApp(jsfTestServer2, "JSF22InputFile.war", "src.com.test");
+        ShrinkHelper.defaultDropinApp(jsfTestServer2, "JSF22InputFile.war", "com.ibm.ws.jsf22.fat.input");
 
         jsfTestServer2.startServer(JSF22InputFileTests.class.getSimpleName() + ".log");
     }

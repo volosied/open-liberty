@@ -63,7 +63,7 @@ public class JSF22ClientWindowTests {
     
         @BeforeClass
         public static void setup() throws Exception {
-            WebArchive War = ShrinkHelper.defaultDropinApp(jsfTestServer2,"JSF22ClientWindow.war", "com.ibm.test");
+            WebArchive War = ShrinkHelper.defaultDropinApp(jsfTestServer2,"JSF22ClientWindow.war", "com.ibm.ws.jsf22.fat.clientwindow");
 
             jsfTestServer2.startServer(JSF22ClientWindowTests.class.getSimpleName() + ".log");
         }

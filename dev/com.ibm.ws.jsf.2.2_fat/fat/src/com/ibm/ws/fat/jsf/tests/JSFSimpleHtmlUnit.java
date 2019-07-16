@@ -58,7 +58,7 @@ public class JSFSimpleHtmlUnit {
 
     protected static final Class<?> c = JSFSimpleHtmlUnit.class;
 
-    String contextRoot = "TestJSF2.2";
+    String contextRoot = "JSF22SimpleHTML";
 
     @Server("jsfTestServer1")
     public static LibertyServer jsfTestServer1;
@@ -66,8 +66,9 @@ public class JSFSimpleHtmlUnit {
     @BeforeClass
     public static void setup() throws Exception {
 
-        // Create the TestJSF2.2.war application
-        ShrinkHelper.defaultDropinApp(jsfTestServer1, "TestJSF2.2.war", "com.ibm.ws.fat.*");
+        // Create the JSF22SimpleHTML.war application
+        ShrinkHelper.defaultDropinApp(jsfTestServer1, "JSF22SimpleHTML.war", "com.ibm.ws.jsf22.fat.simple.bean", "com.ibm.ws.jsf22.fat.simple.cforeach", "com.ibm.ws.jsf22.fat.simple.externalContext");
+        // ShrinkHelper.defaultDropinApp(jsfTestServer1, "JSF22HTML5.war", "com.ibm.ws.fat.jsf.*");
         
         // Start the server and use the class name so we can find logs easily.
         jsfTestServer1.startServer(JSFServerTest.class.getSimpleName() + ".log");
@@ -114,6 +115,7 @@ public class JSFSimpleHtmlUnit {
         // Click the commandButton to execute the methods and update the page
         HtmlElement button = (HtmlElement) page.getElementById("testForm:test");
         page = button.click();
+
         Log.info(c, name.getMethodName(), "testEditableValueHoldergetSubmittedValue:: page now " + page.asXml());
         assertTrue(page.asXml().contains("getSubmittedValue PASS"));
     }

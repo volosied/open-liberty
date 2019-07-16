@@ -54,7 +54,7 @@ public class JSF22IncludeTest {
 
     @BeforeClass
     public static void setup() throws Exception {
-        ShrinkHelper.defaultDropinApp(jsf22IncludeTestServer, "TestJSF2.2.war", "com.ibm.ws.fat.jsf.*");
+        ShrinkHelper.defaultDropinApp(jsf22IncludeTestServer, "TestJSF2.2.war", "com.ibm.ws.fat.jsf22.fat.basic.*");
         jsf22IncludeTestServer.startServer(JSF22IncludeTest.class.getSimpleName() + ".log");
     }
 

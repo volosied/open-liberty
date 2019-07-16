@@ -9,7 +9,7 @@
     
 	<managed-bean>
 		<managed-bean-name>existingBean</managed-bean-name>
-		<managed-bean-class>AppConfigPop.ExistingBean</managed-bean-class>
+		<managed-bean-class>com.ibm.ws.jsf22.fat.appconfigpop.ExistingBean</managed-bean-class>
 		<managed-bean-scope>request</managed-bean-scope>
 	</managed-bean>
 	

@@ -70,8 +70,7 @@ public class JSF22FlashEventsTests {
 
     @BeforeClass
     public static void setup() throws Exception {
-        WebArchive War = ShrinkHelper.defaultDropinApp(jsfTestServer1, "JSF22FlashEvents.war", "com.ibm.ws.fat.jsf.factory", "com.ibm.ws.fat.jsf.flash",
-                                                       "com.ibm.ws.fat.jsf.listener");
+        WebArchive War = ShrinkHelper.defaultDropinApp(jsfTestServer1, "JSF22FlashEvents.war", "com.ibm.ws.jsf22.fat.flashevents.*");
 
         jsfTestServer1.startServer(JSF22FlashEventsTests.class.getSimpleName() + ".log");
 
@@ -150,11 +149,11 @@ public class JSF22FlashEventsTests {
 
         HtmlElement outputFlash = (HtmlElement) page.getElementById("testFormPage2:flashImpl");
         Log.info(c, name.getMethodName(), "Check that the custom Flash implementation was used: " + outputFlash.asText());
-        assertEquals("class com.ibm.ws.fat.jsf.factory.TestFlashImpl", outputFlash.asText());
+        assertEquals("class com.ibm.ws.jsf22.fat.flashevents.factory.TestFlashImpl", outputFlash.asText());
 
         HtmlElement outputFactory = (HtmlElement) page.getElementById("testFormPage2:flashFactory");
         Log.info(c, name.getMethodName(), "Check that the custom FlashFactory implementation was used: " + outputFactory.asText());
-        assertEquals("class com.ibm.ws.fat.jsf.factory.TestFlashFactory", outputFactory.asText());
+        assertEquals("class com.ibm.ws.jsf22.fat.flashevents.factory.TestFlashFactory", outputFactory.asText());
 
         button = (HtmlElement) page.getElementById("testFormPage2:submitCommandButton2");
         page = button.click();
@@ -198,7 +197,7 @@ public class JSF22FlashEventsTests {
 
         outputFlash = (HtmlElement) page.getElementById("testFormPage2:flashImpl");
         Log.info(c, name.getMethodName(), "Check that the custom Flash implementation was used: " + outputFlash.asText());
-        assertEquals("class com.ibm.ws.fat.jsf.factory.TestFlashImpl", outputFlash.asText());
+        assertEquals("class com.ibm.ws.jsf22.fat.flashevents.factory.TestFlashImpl", outputFlash.asText());
 
         button = (HtmlElement) page.getElementById("testFormPage2:submitCommandButton2");
         page = button.click();

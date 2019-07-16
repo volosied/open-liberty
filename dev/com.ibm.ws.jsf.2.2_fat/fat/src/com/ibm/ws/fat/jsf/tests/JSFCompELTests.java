@@ -85,7 +85,7 @@ public class JSFCompELTests {
     
         @BeforeClass
         public static void setup() throws Exception {
-            ShrinkHelper.defaultDropinApp(jsfTestServer2, "TestJSFEL.war", "com.ibm.ws.jsf.*");
+            ShrinkHelper.defaultDropinApp(jsfTestServer2, "TestJSFEL.war", "com.ibm.ws.jsf22.el.*");
 
             jsfTestServer2.startServer(JSFCompELTests.class.getSimpleName() + ".log");
         }

@@ -20,18 +20,18 @@
      
     <managed-bean>
 		<managed-bean-name>appManagerBean</managed-bean-name>
-		<managed-bean-class>com.ibm.test.AppManagerBean</managed-bean-class>
+		<managed-bean-class>com.ibm.ws.jsf22.fat.miscbean.jar.AppManagerBean</managed-bean-class>
 		<managed-bean-scope>application</managed-bean-scope>
 	</managed-bean>
      
 	<managed-bean>
 		<managed-bean-name>emailBean</managed-bean-name>
-		<managed-bean-class>com.ibm.test.EmailBean</managed-bean-class>
+		<managed-bean-class>com.ibm.ws.jsf22.fat.miscbean.jar.EmailBean</managed-bean-class>
 		<managed-bean-scope>session</managed-bean-scope>
 	</managed-bean>
     <managed-bean>
         <managed-bean-name>viewScopedBean</managed-bean-name>
-        <managed-bean-class>com.ibm.test.ViewScopedManagedBean</managed-bean-class>
+        <managed-bean-class>com.ibm.ws.jsf22.fat.miscbean.jar.ViewScopedManagedBean</managed-bean-class>
         <managed-bean-scope>view</managed-bean-scope>
         
         <managed-property>

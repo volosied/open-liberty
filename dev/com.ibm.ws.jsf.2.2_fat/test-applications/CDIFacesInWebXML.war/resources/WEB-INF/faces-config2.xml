@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faces-config
+    xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd"
+    version="2.2">
+    
+    <application>
+
+        
+        
+		 <resource-handler>
+		   com.ibm.ws.jsf22.fat.cdicommon.managed.CustomResourceHandler
+		 </resource-handler> 
+		
+		  <state-manager>
+           com.ibm.ws.jsf22.fat.cdicommon.managed.CustomStateManager
+		 </state-manager>  
+    </application>
+    
+       <factory>
+    
+
+       
+       <partial-view-context-factory>
+         com.ibm.ws.jsf22.fat.cdicommon.managed.factories.CustomPartialViewContextFactory
+       </partial-view-context-factory>
+      
+       <render-kit-factory>
+         com.ibm.ws.jsf22.fat.cdicommon.managed.factories.CustomRenderKitFactory
+       </render-kit-factory>
+       
+       <view-declaration-language-factory>
+        com.ibm.ws.jsf22.fat.cdicommon.managed.factories.CustomViewDeclarationLanguageFactory     
+       </view-declaration-language-factory>
+      
+      
+       <visit-context-factory>
+        com.ibm.ws.jsf22.fat.cdicommon.managed.factories.CustomVisitContextFactory
+       </visit-context-factory>      
+   
+   </factory>
+	
+
+</faces-config>

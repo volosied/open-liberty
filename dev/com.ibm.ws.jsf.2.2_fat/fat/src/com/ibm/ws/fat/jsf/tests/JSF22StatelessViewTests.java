@@ -62,7 +62,7 @@ public class JSF22StatelessViewTests {
     
         @BeforeClass
         public static void setup() throws Exception {
-            ShrinkHelper.defaultDropinApp(jsf22StatelessViewServer, "JSF22StatelessView.war", "beans.*");
+            ShrinkHelper.defaultDropinApp(jsf22StatelessViewServer, "JSF22StatelessView.war", "com.ibm.ws.jsf22.fat.statelessview.beans");
 
             jsf22StatelessViewServer.startServer(JSF22StatelessViewTests.class.getSimpleName() + ".log");
         }

@@ -68,7 +68,7 @@ public class JSF22MiscLifecycleTests {
 
     @BeforeClass
     public static void setup() throws Exception {
-        ShrinkHelper.defaultDropinApp(jsfTestServer1, "JSF22ActionListener.war", "com.ibm.ws.fat.jsf.listener", "com.ibm.ws.fat.jsf.bean");
+        ShrinkHelper.defaultDropinApp(jsfTestServer1, "JSF22ActionListener.war", "com.ibm.ws.jsf22.fat.actionlistener.*");
 
         jsfTestServer1.startServer(JSF22MiscLifecycleTests.class.getSimpleName() + ".log");
     }

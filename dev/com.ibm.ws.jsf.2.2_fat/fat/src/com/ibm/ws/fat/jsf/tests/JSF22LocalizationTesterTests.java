@@ -65,18 +65,14 @@ public class JSF22LocalizationTesterTests {
     @BeforeClass
     public static void setup() throws Exception {
 
-       WebArchive war2 = ShrinkHelper.defaultDropinApp(jsfTestServer2,"JSF22LocalizationTester.war", "com.ibm.ws.jsf.props");
-    war2.addAsResource(new File("/Users/siedlecki/libertyGit/liberty/open-liberty/dev/com.ibm.ws.jsf.2.2_fat/test-applications/JSF22LocalizationTester.war/src/com/ibm/jsf/props/messages_zh_CN.properties"), "WEB-INF/src/com/ibm/jsf/props/messages_zh_CN.properties");
-       ShrinkHelper.exportToServer(jsfTestServer2, "dropins", war2);
+        WebArchive war2 = ShrinkHelper.defaultDropinApp(jsfTestServer2, "JSF22LocalizationTester.war", "com.ibm.ws.jsf22.fat.localprops", "com.ibm.ws.jsf22.fat.localtest");
+ 
+        //ShrinkHelper.addDirectory(war2, "test-applications/" + "JSF22LocalizationTester.war" + "/src/com/ibm/ws/jsf22/fat/localprops");
 
-    
-
-        // war.addAsResource("test-applications/JSF22LocalizationTester.war/src/com/ibm/jsf/props/messages_zh_CN.properties", "src/com/ibm/jsf/props/messages_zh_CN.properties");
-        //ShrinkHelper.defaultDropinApp(jsfTestServer2, "JSF22LocalizationTester.war", "com.ibm.ws.jsf.props", "com.ibm.ws.jsf.test");
+        war2 = war2.addAsResource(new File("src/com/ibm/ws/jsf22/fat/localprops/messages_zh_CN.properties"), "messages_zh_CN.properties");
 
         jsfTestServer2.startServer(JSF22LocalizationTesterTests.class.getSimpleName() + ".log");
 
-       // jsfTestServer2.startServer(JSF22LocalizationTesterTests.class.getSimpleName() + ".log");
     }
 
     @AfterClass

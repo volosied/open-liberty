@@ -12,7 +12,7 @@
      	</locale-config>
      	
 		<resource-bundle>
-			<base-name>com.ibm.jsf.props.messages</base-name>
+			<base-name>com.ibm.jsf22.fat.localprops.messages</base-name>
 			<var>msg</var>
 		</resource-bundle>
 

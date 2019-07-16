@@ -64,7 +64,7 @@ public class JSF22ViewActionAndPhaseIdTests {
     @BeforeClass
     public static void setup() throws Exception {
 
-            ShrinkHelper.defaultDropinApp(jsfTestServer1, "TestJSF22ViewAction.war", "com.ibm.ws.fat.jsf.*");
+            ShrinkHelper.defaultDropinApp(jsfTestServer1, "TestJSF22ViewAction.war", "com.ibm.ws.jsf22.fat.viewaction.*");
                                                                     
             jsfTestServer1.startServer(JSF22ViewActionAndPhaseIdTests.class.getSimpleName() + ".log");
     }

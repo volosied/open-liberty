@@ -62,7 +62,7 @@ public class JSF22ResetValuesAndAjaxDelayTests {
 
     @BeforeClass
     public static void setup() throws Exception {
-        ShrinkHelper.defaultDropinApp(jsf22TracingServer,"TestJSF22Ajax.war", "com.ibm.ws.fat.jsf.ajaxDelay", "com.ibm.ws.fat.jsf.resetValue");
+        ShrinkHelper.defaultDropinApp(jsf22TracingServer, "TestJSF22Ajax.war", "com.ibm.ws.jsf22.fat.ajax.ajaxDelay", "com.ibm.ws.jsf22.fat.ajax.resetValue");
 
         jsf22TracingServer.startServer(JSF22ResetValuesAndAjaxDelayTests.class.getSimpleName() + ".log");
     }

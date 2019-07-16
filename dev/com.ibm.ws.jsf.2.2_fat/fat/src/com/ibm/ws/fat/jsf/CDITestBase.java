@@ -152,9 +152,9 @@ public abstract class CDITestBase {
 
         assertTrue(testBeanValue.asText().contains(":ActionListenerBean:"));
         assertTrue(testBeanValue.asText().contains(":ActionListener:"));
-        assertTrue(testBeanValue.asText().contains("cdi.beans.injected.ManagedBeanFieldBean"));
-        assertTrue(testBeanValue.asText().contains("cdi.beans.injected.ConstructorBean"));
-        assertTrue(testBeanValue.asText().contains("cdi.beans.injected.MethodBean"));
+        assertTrue(testBeanValue.asText().contains("com.ibm.ws.jsf22.fat.cdicommon.beans.injected.ManagedBeanFieldBean"));
+        assertTrue(testBeanValue.asText().contains("com.ibm.ws.jsf22.fat.cdicommon.beans.injected.ConstructorBean"));
+        assertTrue(testBeanValue.asText().contains("com.ibm.ws.jsf22.fat.cdicommon.beans.injected.MethodBean"));
         assertTrue(testBeanValue.asText().contains(":TestActionListenerInterceptor:"));
         assertTrue(testBeanValue.asText().contains(":PostConstructCalled:"));
     }
@@ -193,9 +193,9 @@ public abstract class CDITestBase {
 
         assertTrue(testBeanValue.asText().contains(":NavigationHandlerBean:"));
         assertTrue(testBeanValue.asText().contains(":NavigationHandler:"));
-        assertTrue(testBeanValue.asText().contains("cdi.beans.injected.ManagedBeanFieldBean"));
-        assertTrue(testBeanValue.asText().contains("cdi.beans.injected.ConstructorBean"));
-        assertTrue(testBeanValue.asText().contains("cdi.beans.injected.MethodBean"));
+        assertTrue(testBeanValue.asText().contains("com.ibm.ws.jsf22.fat.cdicommon.beans.injected.ManagedBeanFieldBean"));
+        assertTrue(testBeanValue.asText().contains("com.ibm.ws.jsf22.fat.cdicommon.beans.injected.ConstructorBean"));
+        assertTrue(testBeanValue.asText().contains("com.ibm.ws.jsf22.fat.cdicommon.beans.injected.MethodBean"));
         assertTrue(testBeanValue.asText().contains(":TestNavigationHandlerInterceptor:"));
         assertTrue(testBeanValue.asText().contains(":PostConstructCalled:"));
 
@@ -214,9 +214,9 @@ public abstract class CDITestBase {
         // Use the SharedServer to verify a response.
         verifyResponse(contextRoot, "TestResolver.jsf", server,
                         ":TestCustomBean:", ":CustomELResolver:",
-                        "cdi.beans.injected.ManagedBeanFieldBean",
-                        "cdi.beans.injected.ConstructorBean",
-                        "cdi.beans.injected.MethodBean",
+                        "com.ibm.ws.jsf22.fat.cdicommon.beans.injected.ManagedBeanFieldBean",
+                        "com.ibm.ws.jsf22.fat.cdicommon.beans.injected.ConstructorBean",
+                        "com.ibm.ws.jsf22.fat.cdicommon.beans.injected.MethodBean",
                         ":TestCustomResolverInterceptor:",
                         ":PostConstructCalled:");
     }
@@ -286,7 +286,7 @@ public abstract class CDITestBase {
         // Use the SharedServer to verify a response.
         this.verifyResponse(contextRoot, "index.jsf", "Hello Worldy world", server);
 
-        String msg = "JSF22: CustomResourceHandler libraryExists called: result- class cdi.beans.injected.MethodBean::class cdi.beans.injected.ManagedBeanFieldBean::PostConstructCalled:/"
+        String msg = "JSF22: CustomResourceHandler libraryExists called: result- class com.ibm.ws.jsf22.fat.cdicommon.beans.injected.MethodBean::class com.ibm.ws.jsf22.fat.cdicommon.beans.injected.ManagedBeanFieldBean::PostConstructCalled:/"
                      + contextRoot;
 
         // Check the trace.log to see if the proper InjectionProvider is being used.
@@ -318,7 +318,7 @@ public abstract class CDITestBase {
         }
 
         // The above request should cause the message below to be output in the log
-        String msg = "JSF22: CustomStateManager isSavingStateInClient called: result- class cdi.beans.injected.MethodBean::class cdi.beans.injected.ManagedBeanFieldBean::PostConstructCalled:/"
+        String msg = "JSF22: CustomStateManager isSavingStateInClient called: result- class com.ibm.ws.jsf22.fat.cdicommon.beans.injected.MethodBean::class com.ibm.ws.jsf22.fat.cdicommon.beans.injected.ManagedBeanFieldBean::PostConstructCalled:/"
                      + contextRoot;
 
         // Check the trace.log to see if the proper InjectionProvider is being used.

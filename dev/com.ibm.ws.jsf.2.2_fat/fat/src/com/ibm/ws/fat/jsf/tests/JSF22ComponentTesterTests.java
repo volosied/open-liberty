@@ -67,7 +67,7 @@ public class JSF22ComponentTesterTests {
     
         @BeforeClass
         public static void setup() throws Exception {
-            WebArchive JSF22ComponentTesterWar = ShrinkHelper.defaultDropinApp(jsfTestServer2,"JSF22ComponentTester.war", "com.ibm.ws.jsf.test");
+            WebArchive JSF22ComponentTesterWar = ShrinkHelper.defaultDropinApp(jsfTestServer2,"JSF22ComponentTester.war", "com.ibm.ws.jsf22.fat.componenttester.*");
 
             jsfTestServer2.startServer(JSF22ComponentTesterTests.class.getSimpleName() + ".log");
         }

@@ -47,9 +47,9 @@ import componenttest.custom.junit.runner.FATRunner;
 import componenttest.custom.junit.runner.Mode.TestMode;
 import componenttest.annotation.Server;
 import componenttest.topology.impl.LibertyServer;
+import componenttest.custom.junit.runner.RunUnlessFeatureBeingTested;
 
 import componenttest.annotation.MinimumJavaLevel;
-import componenttest.custom.junit.runner.RunUnlessFeatureBeingTested;
 import junit.framework.Assert;
 
 /**
@@ -77,16 +77,7 @@ public class CDITests extends CDITestBase {
         @BeforeClass
         public static void setup() throws Exception {
 
-            //WebArchive CommonCDIFiles = ShrinkHelper.buildDefaultApp("test-application-common", "cdi.*");
-            WebArchive CDITestsWar = ShrinkHelper.buildDefaultApp("CDITests.war", "cdi.beans.*",
-                                                                                "cdi.beans",
-                                                                                "cdi.beans.factory",
-                                                                                "cdi.beans.injected",
-                                                                                "cdi.managed",
-                                                                                "cdi.managed.factories",
-                                                                                "cdi.interceptors");
-
-            //CDITestsWar.merge(CommonCDIFiles);
+            WebArchive CDITestsWar = ShrinkHelper.buildDefaultApp("CDITests.war", "com.ibm.ws.jsf22.fat.cditests.beans.*", "com.ibm.ws.jsf22.fat.cdicommon.*");
 
             ShrinkHelper.exportDropinAppToServer(jsfCDIServer, CDITestsWar);
 
@@ -249,9 +240,9 @@ public class CDITests extends CDITestBase {
     public void testBeanInjection() throws Exception {
         // Use the SharedServer to verify a response.
         this.verifyResponse("CDITests", "TestBean.jsf", jsfCDIServer,
-                            ":TestBean:", "class cdi.beans.injected.TestBeanFieldBean",
-                            "class cdi.beans.injected.ConstructorBean",
-                            "cdi.beans.injected.MethodBean",
+                            ":TestBean:", "class com.ibm.ws.jsf22.fat.cdicommon.beans.injected.TestBeanFieldBean",
+                            "class com.ibm.ws.jsf22.fat.cdicommon.beans.injected.ConstructorBean",
+                            "com.ibm.ws.jsf22.fat.cdicommon.beans.injected.MethodBean",
                             ":TestPlainBeanInterceptor:",
                             ":PostConstructCalled:");
     }

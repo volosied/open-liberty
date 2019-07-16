@@ -78,16 +78,12 @@ public class JSF22FlowsTests {
         @BeforeClass
         public static void setup() throws Exception {
             JavaArchive JSF22FacesFlowsJar = ShrinkHelper.buildJavaArchive("JSF22FacesFlows.jar", "");
+           
+            WebArchive JSF22FacesFlowsWar = ShrinkHelper.buildDefaultApp("JSF22FacesFlows.war", "com.ibm.ws.jsf22.fat.flows.beans");
 
-            // Create the JSF22TestResources.war application
-            WebArchive JSF22FacesFlowsWar = ShrinkHelper.buildDefaultApp("JSF22FacesFlows.war", "com.ibm.ws.jsf.fat.beans");
-            //ShrinkHelper.addDirectory(JSF22TestResourcesWar, "test-applications" + "/JSF22TestResources.jar");
             JSF22FacesFlowsWar.addAsLibraries(JSF22FacesFlowsJar);
-           // ShrinkHelper.addDirectory(JSF22TestResourcesWar, "test-applications" + "/JSF22TestResources.jar");
     
             ShrinkHelper.exportDropinAppToServer(jsfFacesFlowsServer, JSF22FacesFlowsWar);
-
-            // ShrinkHelper.defaultDropinApp(jsfFacesFlowsServer,"JSF22HTML5.war", "com.ibm.ws.fat.jsf.html5");
 
             jsfFacesFlowsServer.startServer(JSF22FlowsTests.class.getSimpleName() + ".log");
         }

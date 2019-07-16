@@ -65,7 +65,7 @@ public class CDIFlowsTests {
     
         @BeforeClass
         public static void setup() throws Exception {
-            ShrinkHelper.defaultDropinApp(jsfCDIFlowsServer,"CDIFacesFlows.war", "com.ibm.ws.jsf.fat.beans");
+            ShrinkHelper.defaultDropinApp(jsfCDIFlowsServer,"CDIFacesFlows.war", "com.ibm.ws.jsf22.fat.cdiflows.beans");
 
             jsfCDIFlowsServer.startServer(CDIFlowsTests.class.getSimpleName() + ".log");
         }

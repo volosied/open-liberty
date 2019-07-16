@@ -14,6 +14,7 @@ src: \
     test-applications/JSF22StatelessView.war/src,\
     test-applications/JSF22TestResources.war/src,\
     test-applications/JSF22HTML5.war/src,\
+    test-applications/JSF22SimpleHTML.war/src,\
     test-applications/JSF22ActionListener.war/src,\
     test-applications/CDICommon/src,\
     test-applications/JSF22LocalizationTester.war/src,\
@@ -28,6 +29,9 @@ src: \
     test-applications/TestJSF22Ajax.war/src,\
     test-applications/JSF22AppConfigPop.jar/src,\
     test-applications/JSF22AppConfigPop.war/src,\
+    test-applications/CDIConfigByACP.war/src,\
+    test-applications/CDIConfigByACP.jar/src,\
+    test-applications/BeanValidationTests.war/src,\
 
 fat.project: true
 
