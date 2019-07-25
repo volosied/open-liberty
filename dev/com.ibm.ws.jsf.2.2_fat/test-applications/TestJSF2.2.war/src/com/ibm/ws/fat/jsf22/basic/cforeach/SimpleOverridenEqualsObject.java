@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  */
-package com.ibm.ws.fat.jsf22.fat.basic.cforeach;
+package com.ibm.ws.fat.jsf22.basic.cforeach;
 
 import java.io.Serializable;
 

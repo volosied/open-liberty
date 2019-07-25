@@ -69,12 +69,12 @@ public class JSFHtmlUnit {
         JavaArchive JSF22TestResourcesJar = ShrinkHelper.buildJavaArchive("JSF22TestResources.jar", "");
 
         // Create the JSF22TestResources.war application
-        WebArchive JSF22TestResourcesWar = ShrinkHelper.buildDefaultApp("JSF22TestResources.war", "com.ibm.ws.fat.jsf.beans");
+        WebArchive JSF22TestResourcesWar = ShrinkHelper.buildDefaultApp("JSF22TestResources.war", "com.ibm.ws.jsf22.fat.resources.*");
         JSF22TestResourcesWar.addAsLibraries(JSF22TestResourcesJar);
         ShrinkHelper.addDirectory(JSF22TestResourcesWar, "test-applications" + "/JSF22TestResources.jar");
 
         // Create the JSF22BackwardCompatibilityTests.war application
-        WebArchive JSF22BackwardCompatibilityTestsWar = ShrinkHelper.buildDefaultApp("JSF22BackwardCompatibilityTests.war", "com.ibm.ws.fat.jsf.*");
+        WebArchive JSF22BackwardCompatibilityTestsWar = ShrinkHelper.buildDefaultApp("JSF22BackwardCompatibilityTests.war", "com.ibm.ws.jsf22.fat.backwards.*");
 
         // Add both wars to the server
         ShrinkHelper.exportDropinAppToServer(jsfTestServer2, JSF22BackwardCompatibilityTestsWar);
@@ -301,21 +301,23 @@ public class JSFHtmlUnit {
         URL url = JSFUtils.createHttpUrl(jsfTestServer2, "JSF22BackwardCompatibilityTests", "testCompositeComponentAttribute.jsf");
         HtmlPage page = (HtmlPage) webClient.getPage(url);
 
+        Log.info(c, name.getMethodName(), "Response: " + page.asText());
+
         assertTrue(page.asText().contains("Untyped Literal From Map - Attribute: untypedXliteral, Type: Object"));
         assertTrue(page.asText().contains("Typed Literal From Map - Attribute: typedXliteral, Type: Integer"));
-
+        Log.info(c, name.getMethodName(), "one");
         assertTrue(page.asText().contains("Untyped Unset From Map - Attribute: untypedXunset, Type: Object"));
         assertTrue(page.asText().contains("Typed Unset From Map - Attribute: typedXunset, Type: Dog"));
-
+        Log.info(c, name.getMethodName(), "one");
         assertTrue(page.asText().contains("Untyped WideEL From Map - Attribute: untypedXwideEL, Type: Animal"));
         assertTrue(page.asText().contains("Typed WideEL From Map - Attribute: typedXwideEL, Type: Dog"));
-
+        Log.info(c, name.getMethodName(), "one");
         assertTrue(page.asText().contains("Untyped MediumEL From Map - Attribute: untypedXmediumEL, Type: Dog"));
         assertTrue(page.asText().contains("Typed MediumEL From Map - Attribute: typedXmediumEL, Type: Dog"));
-
+        Log.info(c, name.getMethodName(), "one");
         assertTrue(page.asText().contains("Untyped NarrowEL From Map - Attribute: untypedXnarrowEL, Type: Pitbull"));
         assertTrue(page.asText().contains("Typed NarrowEL From Map - Attribute: typedXnarrowEL, Type: Pitbull"));
-
+        Log.info(c, name.getMethodName(), "one");
         assertTrue(page.asText().contains("Untyped NullEL From Map - Attribute: untypedXnullEL, Type: Dog"));
         assertTrue(page.asText().contains("Typed NullEL From Map - Attribute: typedXnullEL, Type: Dog"));
 

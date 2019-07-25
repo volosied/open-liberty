@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  */
-package com.ibm.ws.fat.jsf.beans;
+package com.ibm.ws.jsf22.fat.backwards.beans;
 
 import java.util.Map;
 

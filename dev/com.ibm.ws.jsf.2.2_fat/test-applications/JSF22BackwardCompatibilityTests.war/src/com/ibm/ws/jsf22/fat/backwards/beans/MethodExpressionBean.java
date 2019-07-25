@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  */
-package com.ibm.ws.fat.jsf.beans;
+package com.ibm.ws.jsf22.fat.backwards.beans;
 
 import java.util.ArrayList;
 
@@ -19,7 +19,7 @@ import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ValueChangeEvent;
 
-import com.ibm.ws.fat.jsf.utilities.MethodExpressionHelper;
+import com.ibm.ws.jsf22.fat.backwards.utilities.MethodExpressionHelper;
 
 /**
  * Test exception thrown by processValueChange from MethodExpressionValueChangeListener

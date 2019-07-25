@@ -8,20 +8,17 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  */
-package com.ibm.ws.fat.jsf22.fat.basic.cforeach;
-
-import java.io.Serializable;
+package com.ibm.ws.fat.jsf22.basic.cforeach;
 
 /**
- * Class used to test the c:forEach tag when object is serializable
+ * Class used to test the c:forEach tag when object is not serializable
  */
-public class SimpleSerializableObject implements Serializable {
+public class SimpleNotSerializableObject {
 
-    private static final long serialVersionUID = 1L;
     private Long id;
     private String value;
 
-    public SimpleSerializableObject() {
+    public SimpleNotSerializableObject() {
         id = new Long(0L);
     }
 

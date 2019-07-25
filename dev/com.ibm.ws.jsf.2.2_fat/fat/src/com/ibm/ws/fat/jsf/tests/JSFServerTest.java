@@ -70,7 +70,7 @@ public class JSFServerTest {
     public static void setup() throws Exception {
 
         // Create the TestJSF2.2.war and JSF22FaceletsResourceResolverAnnotation.war applications
-        ShrinkHelper.defaultDropinApp(jsfTestServer1, "TestJSF2.2.war", "com.ibm.ws.fat.jsf22.fat.basic.*");
+        ShrinkHelper.defaultDropinApp(jsfTestServer1, "TestJSF2.2.war", "com.ibm.ws.fat.jsf22.basic.*");
         ShrinkHelper.defaultDropinApp(jsfTestServer1, "JSF22FaceletsResourceResolverAnnotation.war", "com.ibm.ws.jsf22.resourceresolver");
 
         // Start the server and use the class name so we can find logs easily.

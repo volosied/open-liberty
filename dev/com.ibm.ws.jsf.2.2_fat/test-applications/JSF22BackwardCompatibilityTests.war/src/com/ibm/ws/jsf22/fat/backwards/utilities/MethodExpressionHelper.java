@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  */
-package com.ibm.ws.fat.jsf.utilities;
+package com.ibm.ws.jsf22.fat.backwards.utilities;
 
 import javax.el.ELContext;
 import javax.el.ExpressionFactory;
@@ -23,7 +23,7 @@ import javax.faces.event.ValueChangeEvent;
 
 import org.apache.jasper.el.ELContextImpl;
 
-import com.ibm.ws.fat.jsf.beans.MethodExpressionBean;
+import com.ibm.ws.jsf22.fat.backwards.beans.MethodExpressionBean;
 
 /**
  * Helper class to invoke valueChangeListener and processAction methods

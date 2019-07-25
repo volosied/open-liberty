@@ -83,7 +83,7 @@ import com.ibm.ws.fat.util.FatLogHandler;
                 // JSF22IncludeTest.class,
                 // JSFDummyTest.class,
                 // JSFServerTest.class,
-                // JSFHtmlUnit.class,
+                JSFHtmlUnit.class,
                 // JSFSimpleHtmlUnit.class,
                 // JSF22FlowsTests.class,
                 // JSFHtml5Tests.class,
@@ -99,14 +99,14 @@ import com.ibm.ws.fat.util.FatLogHandler;
                 // CDIFlowsTests.class,
                 // JSF22MiscellaneousTests.class,
                 // JSF22AppConfigPopTests.class,
-                // CDIConfigByACPTests.class
+                // CDIConfigByACPTests.class,
                 // CDIFacesInMetaInfTests.class,
                 // CDIFacesInWebXMLTests.class,
                 // JSF22JPA20Test.class, // jpa-2.0 is not found..
                 // JSF22BeanValidationTests.class,
 
-                JSF22LocalizationTesterTests.class,
-                //JSF22JSF20SingletonFeatureTest.class
+                // JSF22LocalizationTesterTests.class,
+                // JSF22JSF20SingletonFeatureTest.class
 
                 // JSF22AparTests.class
 })
