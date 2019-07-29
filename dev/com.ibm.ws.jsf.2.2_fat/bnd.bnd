@@ -34,7 +34,12 @@ src: \
     test-applications/BeanValidationTests.war/src,\
     test-applications/PI47600.war/src,\
     test-applications/PI30335.jar/src,\
-    
+    test-applications/PI50108.war/src,\
+    test-applications/PI46218Flow1.war/src,\
+    test-applications/PI46218Flow2.war/src,\
+    test-applications/PI57255CDI.war/src,\
+    test-applications/PI57255Default.war/src,\
+
 fat.project: true
 
 javac.source: 1.8
