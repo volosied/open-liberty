@@ -32,7 +32,9 @@ src: \
     test-applications/CDIConfigByACP.war/src,\
     test-applications/CDIConfigByACP.jar/src,\
     test-applications/BeanValidationTests.war/src,\
-
+    test-applications/PI47600.war/src,\
+    test-applications/PI30335.jar/src,\
+    
 fat.project: true
 
 javac.source: 1.8

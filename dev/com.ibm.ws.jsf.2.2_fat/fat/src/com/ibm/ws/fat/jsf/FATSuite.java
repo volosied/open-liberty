@@ -20,7 +20,7 @@ import com.ibm.ws.fat.jsf.tests.CDIFacesInMetaInfTests;
 import com.ibm.ws.fat.jsf.tests.CDIFacesInWebXMLTests;
 import com.ibm.ws.fat.jsf.tests.CDIFlowsTests;
 import com.ibm.ws.fat.jsf.tests.CDITests;
-// import com.ibm.ws.fat.jsf.tests.JSF22AparTests;
+import com.ibm.ws.fat.jsf.tests.JSF22AparTests;
 import com.ibm.ws.fat.jsf.tests.JSF22AppConfigPopTests;
 import com.ibm.ws.fat.jsf.tests.JSF22BeanValidationTests;
 import com.ibm.ws.fat.jsf.tests.JSF22ClientWindowTests;
@@ -83,7 +83,7 @@ import com.ibm.ws.fat.util.FatLogHandler;
                 // JSF22IncludeTest.class,
                 // JSFDummyTest.class,
                 // JSFServerTest.class,
-                JSFHtmlUnit.class,
+                // JSFHtmlUnit.class,
                 // JSFSimpleHtmlUnit.class,
                 // JSF22FlowsTests.class,
                 // JSFHtml5Tests.class,
@@ -102,13 +102,13 @@ import com.ibm.ws.fat.util.FatLogHandler;
                 // CDIConfigByACPTests.class,
                 // CDIFacesInMetaInfTests.class,
                 // CDIFacesInWebXMLTests.class,
-                // JSF22JPA20Test.class, // jpa-2.0 is not found..
                 // JSF22BeanValidationTests.class,
 
                 // JSF22LocalizationTesterTests.class,
                 // JSF22JSF20SingletonFeatureTest.class
+                // JSF22JPA20Test.class, // jpa-2.0 is not found..
 
-                // JSF22AparTests.class
+                JSF22AparTests.class
 })
 public class FATSuite {
 

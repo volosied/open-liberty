@@ -1,0 +1,15 @@
+<server description="Server for testing JavaServer Faces 2.2">
+
+    <include location="../fatTestPorts.xml"/>
+    
+    <featureManager>
+        <feature>jsf-2.2</feature>
+        <feature>cdi-1.2</feature>
+        <feature>beanValidation-1.1</feature>
+    </featureManager>
+    
+    <logging traceSpecification="*=info:org.apache.myfaces.*=all:com.ibm.ws.jsf*=all" maxFileSize="20" maxFiles="10" traceFormat="BASIC"/> 
+ 
+    <!-- Automatically expand WAR files and EAR files.  Must be set to correctly test PI79562. -->
+    <applicationManager autoExpand="true"/>
+</server>

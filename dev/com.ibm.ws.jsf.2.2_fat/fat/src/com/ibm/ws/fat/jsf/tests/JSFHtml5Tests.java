@@ -66,7 +66,7 @@ public class JSFHtml5Tests {
         @BeforeClass
         public static void setup() throws Exception {
     
-                ShrinkHelper.defaultDropinApp(jsfTestServer1, "JSF22HTML5.war", "com.ibm.ws.fat.jsf.*");
+                ShrinkHelper.defaultDropinApp(jsfTestServer1, "JSF22HTML5.war", "com.ibm.ws.jsf22.fat.html5.*");
     
                 jsfTestServer1.startServer(JSFHtml5Tests.class.getSimpleName() + ".log");
                 }
