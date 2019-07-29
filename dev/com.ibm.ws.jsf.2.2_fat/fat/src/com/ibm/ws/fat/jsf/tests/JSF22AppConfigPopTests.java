@@ -66,11 +66,11 @@ public class JSF22AppConfigPopTests {
         @BeforeClass
         public static void setup() throws Exception {
 
-           JavaArchive jar = ShrinkHelper.buildJavaArchive("JSF22AppConfigPop.jar", "com.ibm.ws.jsf22.fat.appconfigpop.jar");
+            JavaArchive jar = ShrinkHelper.buildJavaArchive("JSF22AppConfigPop.jar", "com.ibm.ws.jsf22.fat.appconfigpop.jar");
 
             WebArchive war = ShrinkHelper.buildDefaultApp("JSF22AppConfigPop.war", "com.ibm.ws.jsf22.fat.appconfigpop");
 
-           war.addAsLibraries(jar);
+            war.addAsLibraries(jar);
 
             ShrinkHelper.exportDropinAppToServer(jsfTestServer2, war);
 

@@ -39,6 +39,7 @@ src: \
     test-applications/PI46218Flow2.war/src,\
     test-applications/PI57255CDI.war/src,\
     test-applications/PI57255Default.war/src,\
+    test-applications/PI59422.war/src,\
 
 fat.project: true
 

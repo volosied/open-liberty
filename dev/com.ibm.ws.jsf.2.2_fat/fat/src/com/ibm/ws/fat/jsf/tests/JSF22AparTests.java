@@ -111,6 +111,7 @@ public class JSF22AparTests {
 
             ShrinkHelper.defaultDropinApp(jsfAparServer,"PI57255Default.war", "");
 
+            ShrinkHelper.defaultDropinApp(jsfAparServer,"PI59422.war", "com.ibm.ws.jsf22.fat.PI59422");
 
             jsfAparServer.startServer(JSF22AparTests.class.getSimpleName() + ".log");
         }
@@ -236,11 +237,11 @@ public class JSF22AparTests {
         assertNotNull("The following message was not found in the logs: " + "Clicked!!", logReference);
     }
 
-//     /**
-//      * This tests PI51038: the EL 3.0 ImportHandler should function correctly.
-//      *
-//      * @throws Exception
-//      */
+    /**
+     * This tests PI51038: the EL 3.0 ImportHandler should function correctly.
+     *
+     * @throws Exception
+     */
     @Test
     public void testPI51038() throws Exception {
         WebClient webClient = new WebClient();
@@ -259,12 +260,12 @@ public class JSF22AparTests {
                    page.asText().contains("Is 5 gt 6: 0"));
     }
 
-//     /**
-//      * This tests PI51038 default behavior: the EL 3.0 ImportHandler should NOT function correctly,
-//      * since the new context parameter is left to its default value of false
-//      *
-//      * @throws Exception
-//      */
+    /**
+     * This tests PI51038 default behavior: the EL 3.0 ImportHandler should NOT function correctly,
+     * since the new context parameter is left to its default value of false
+     *
+     * @throws Exception
+     */
     @Test
     public void testPI51038_Default() throws Exception {
         WebClient webClient = new WebClient();
@@ -289,25 +290,25 @@ public class JSF22AparTests {
                    !page.asText().contains("0"));
     }
 
-//     /**
-//      * PI46218 tests
-//      *     (1) multiple beans can share the same name across different web modules, and
-//      *     (2) Faces Flows are discoverable in different WAR files of the same EAR file
-//      *
-//      * @throws Exception
-//      */
+    /**
+     * PI46218 tests
+     *     (1) multiple beans can share the same name across different web modules, and
+     *     (2) Faces Flows are discoverable in different WAR files of the same EAR file
+     *
+     * @throws Exception
+     */
     @Test
     public void testPI46218() throws Exception {
         testSimpleFlow("/PI46218Flow1", "test-flow-1");
         testSimpleFlow("/PI46218Flow2", "test-flow-2");
     }
 
-//     /***
-//      * Tests that CDI is available after a non-CDI application is loaded first.
-//      *
-//      * To load the non-CDI application first, a request is made to the non-CDI application
-//      * after a server restart.
-//      */
+    /***
+     * Tests that CDI is available after a non-CDI application is loaded first.
+     *
+     * To load the non-CDI application first, a request is made to the non-CDI application
+     * after a server restart.
+     */
     @Test
     public void testPI57255() throws Exception {
         URL url = JSFUtils.createHttpUrl(jsfAparServer, "PI57255Default", "");
