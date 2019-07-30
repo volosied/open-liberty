@@ -1,4 +1,14 @@
-<server description="Server for testing the jsf-2.0 and jsf-2.2 features together.  An error should occur since both features are singleton features.">
+<!--
+ * Copyright (c)  2015 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ -->
+ <server description="Server for testing the jsf-2.0 and jsf-2.2 features together.  An error should occur since both features are singleton features.">
 
     <include location="../fatTestPorts.xml"/>
     
