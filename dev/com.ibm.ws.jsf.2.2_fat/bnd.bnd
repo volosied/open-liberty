@@ -40,6 +40,15 @@ src: \
     test-applications/PI57255CDI.war/src,\
     test-applications/PI57255Default.war/src,\
     test-applications/PI59422.war/src,\
+    test-applications/PI63135.war/src,\
+    test-applications/ViewScopedCDIBean.war/src,\
+    test-applications/ViewScopedJSFBean.war/src,\
+    test-applications/PI64714.war/src,\
+    test-applications/PI64718.war/src,\  
+    test-applications/PI67525.war/src,\
+    test-applications/PI85492.war/src,\
+    test-applications/PI90507.war/src,\
+    test-applications/PH01566.war/src,\
 
 fat.project: true
 

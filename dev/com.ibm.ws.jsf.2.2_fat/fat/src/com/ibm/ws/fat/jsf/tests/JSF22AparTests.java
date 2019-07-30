@@ -53,6 +53,7 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import com.ibm.websphere.simplicity.ShrinkHelper;
+import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
 
 import com.ibm.ws.fat.jsf.JSFUtils;
 import java.net.URL;
@@ -67,62 +68,111 @@ import java.net.URL;
 public class JSF22AparTests {
     @Rule
     public TestName name = new TestName();
-    
-        protected static final Class<?> c = JSF22AparTests.class;
-    
-        @Server("jsfAparServer")
-        public static LibertyServer jsfAparServer;
-    
-        @BeforeClass
-        public static void setup() throws Exception {
-            ShrinkHelper.defaultDropinApp(jsfAparServer,"PI47600.war", "com.ibm.ws.jsf22.fat.tests.PI47600");
 
+    protected static final Class<?> c = JSF22AparTests.class;
 
+    @Server("jsfAparServer")
+    public static LibertyServer jsfAparServer;
 
-            JavaArchive PI30335Jar = ShrinkHelper.buildJavaArchive("PI30335.jar", "com.ibm.ws.jsf22.fat.tests.PI30335");
+    @BeforeClass
+    public static void setup() throws Exception {
+        ShrinkHelper.defaultDropinApp(jsfAparServer, "PI47600.war", "com.ibm.ws.jsf22.fat.tests.PI47600");
 
-            WebArchive PI30335_Default_War =  ShrinkHelper.buildDefaultApp("PI30335_Default.war", "");
+        JavaArchive PI30335Jar = ShrinkHelper.buildJavaArchive("PI30335.jar", "com.ibm.ws.jsf22.fat.tests.PI30335");
 
-            PI30335_Default_War.addAsLibraries(PI30335Jar);
+        WebArchive PI30335_Default_War = ShrinkHelper.buildDefaultApp("PI30335_Default.war", "");
 
-            ShrinkHelper.exportDropinAppToServer(jsfAparServer, PI30335_Default_War);
+        PI30335_Default_War.addAsLibraries(PI30335Jar);
 
+        WebArchive PI30335_False_War = ShrinkHelper.buildDefaultApp("PI30335_False.war", "");
+        PI30335_False_War.addAsLibraries(PI30335Jar);
 
-            WebArchive PI30335_False_War = ShrinkHelper.buildDefaultApp("PI30335_False.war", "");
-            PI30335_False_War.addAsLibraries(PI30335Jar);
-            ShrinkHelper.exportDropinAppToServer(jsfAparServer, PI30335_False_War);
+        ShrinkHelper.defaultDropinApp(jsfAparServer, "PI50108.war", "com.ibm.ws.jsf22.fat.tests.PI50108");
 
-            
+        ShrinkHelper.defaultDropinApp(jsfAparServer, "PI51038.war", "");
 
-            ShrinkHelper.defaultDropinApp(jsfAparServer,"PI50108.war", "com.ibm.ws.jsf22.fat.tests.PI50108");
+        ShrinkHelper.defaultDropinApp(jsfAparServer, "PI51038_Default.war", "");
 
-            ShrinkHelper.defaultDropinApp(jsfAparServer,"PI51038.war", "");
+        ShrinkHelper.defaultDropinApp(jsfAparServer, "PI46218Flow1.war", "com.ibm.ws.jsf22.fat.PI46218Flow1.*");
 
-            ShrinkHelper.defaultDropinApp(jsfAparServer,"PI51038_Default.war", "");
+        ShrinkHelper.defaultDropinApp(jsfAparServer, "PI46218Flow2.war", "com.ibm.ws.jsf22.fat.PI46218Flow2.*");
 
+        ShrinkHelper.defaultDropinApp(jsfAparServer, "PI57255CDI.war", "com.ibm.ws.jsf22.fat.PI57255.*");
 
-            ShrinkHelper.defaultDropinApp(jsfAparServer,"PI46218Flow1.war", "com.ibm.ws.jsf22.fat.PI46218Flow1.*");
+        ShrinkHelper.defaultDropinApp(jsfAparServer, "PI57255Default.war", "");
 
-            ShrinkHelper.defaultDropinApp(jsfAparServer,"PI46218Flow2.war", "com.ibm.ws.jsf22.fat.PI46218Flow2.*");
+        ShrinkHelper.defaultDropinApp(jsfAparServer, "PI59422.war", "com.ibm.ws.jsf22.fat.PI59422");
 
+        ShrinkHelper.defaultDropinApp(jsfAparServer, "PI63135.war", "com.ibm.ws.jsf22.fat.PI63135");
 
+        ShrinkHelper.defaultDropinApp(jsfAparServer, "ViewScopedCDIBean.war", "com.ibm.ws.jsf22.fat.viewscopedcdi");
 
-            ShrinkHelper.defaultDropinApp(jsfAparServer,"PI57255CDI.war", "com.ibm.ws.jsf22.fat.PI57255.*");
+        ShrinkHelper.defaultDropinApp(jsfAparServer, "ViewScopedJSFBean.war", "com.ibm.ws.jsf22.fat.viewscopedjsf");
 
-            ShrinkHelper.defaultDropinApp(jsfAparServer,"PI57255Default.war", "");
+        //PI64714.war
+        ShrinkHelper.defaultDropinApp(jsfAparServer, "PI64714.war", "com.ibm.ws.jsf22.fat.PI64714");
 
-            ShrinkHelper.defaultDropinApp(jsfAparServer,"PI59422.war", "com.ibm.ws.jsf22.fat.PI59422");
+        //PI64718.war
+        ShrinkHelper.defaultDropinApp(jsfAparServer, "PI64718.war", "com.ibm.ws.jsf22.fat.PI64718");
 
-            jsfAparServer.startServer(JSF22AparTests.class.getSimpleName() + ".log");
-        }
-    
+        //PI67525.war
+        ShrinkHelper.defaultDropinApp(jsfAparServer, "PI67525.war", "com.ibm.ws.jsf22.fat.PI67525");
+
+        //PI79562
+        ShrinkHelper.defaultDropinApp(jsfAparServer, "PI79562.war", "");
+
+        // PI85492
+        ShrinkHelper.defaultDropinApp(jsfAparServer, "PI85492.war", "com.ibm.ws.jsf22.fat.PI85492");
+
+        //PI89363
+        ShrinkHelper.defaultDropinApp(jsfAparServer, "PI89363.war", "com.ibm.ws.jsf22.fat.PI89363");
+
+        //PI89363StrictJSF2
+        ShrinkHelper.defaultDropinApp(jsfAparServer, "PI89363StrictJSF2.war", "");
+
+        //PI89168
+        ShrinkHelper.defaultDropinApp(jsfAparServer, "PI89168.war", "");
+
+        //PI79562.war
+        ShrinkHelper.defaultDropinApp(jsfAparServer, "PI79562.war", "");
+
+        //PI90507.war
+        WebArchive PI90507_War  = ShrinkHelper.buildDefaultApp("PI90507.war", "com.ibm.ws.jsf22.fat.PI90507");
+
+        //PI90391.war
+        WebArchive PI90391_War = ShrinkHelper.buildDefaultApp("PI90391.war", "");
+
+        //PH06008.war
+        WebArchive PH06008_War = ShrinkHelper.buildDefaultApp("PH06008.war", "");
+
+        //PH01566.war & PH01566.jar
+        JavaArchive PH01566Jar = ShrinkHelper.buildJavaArchive("PH01566.jar", "");
+        WebArchive PH01566_War = ShrinkHelper.buildDefaultApp("PH01566.war", "com.ibm.ws.jsf22.fat.PH01566");
+        PH01566_War.addAsLibraries(PH01566Jar);
+
+        ShrinkHelper.exportDropinAppToServer(jsfAparServer, PH01566_War);
+
+        ShrinkHelper.exportDropinAppToServer(jsfAparServer, PI30335_Default_War);
+
+        ShrinkHelper.exportDropinAppToServer(jsfAparServer, PI30335_False_War);
+
+        EnterpriseArchive ear = ShrinkWrap.create(EnterpriseArchive.class, "JSFAPARTests.ear");
+        ear.addAsModule(PI90507_War);
+        ear.addAsModule(PI90391_War);
+        ear.addAsModule(PH06008_War);
+
+        ShrinkHelper.exportDropinAppToServer(jsfAparServer, ear);
+
+        jsfAparServer.startServer(JSF22AparTests.class.getSimpleName() + ".log");
+
+    }
 
     @AfterClass
     public static void tearDown() throws Exception {
-            // Stop the server
-            if (jsfAparServer != null && jsfAparServer.isStarted()) {
-                jsfAparServer.stopServer();
-            }
+        // Stop the server
+        if (jsfAparServer != null && jsfAparServer.isStarted()) {
+            jsfAparServer.stopServer();
+        }
     }
 
     protected void verifyResponse(String contextRoot, String resource, String expectedResponse, LibertyServer server) throws Exception {
@@ -140,7 +190,6 @@ public class JSF22AparTests {
         }
 
     }
-
 
     /**
      * This will test that, in a facelet, a "class" attribute can be attached to a custom tag.
@@ -292,8 +341,8 @@ public class JSF22AparTests {
 
     /**
      * PI46218 tests
-     *     (1) multiple beans can share the same name across different web modules, and
-     *     (2) Faces Flows are discoverable in different WAR files of the same EAR file
+     * (1) multiple beans can share the same name across different web modules, and
+     * (2) Faces Flows are discoverable in different WAR files of the same EAR file
      *
      * @throws Exception
      */
@@ -320,7 +369,7 @@ public class JSF22AparTests {
         HtmlPage page;
 
         // Make a request to the non-CDI application first to make this application load first
-       Log.info(c, name.getMethodName(), "Making a request to " + url);
+        Log.info(c, name.getMethodName(), "Making a request to " + url);
         page = webClient.getPage(url);
         assertTrue("Page did not have expected response: Hello World", page.asText().contains("Hello World"));
 
@@ -328,39 +377,39 @@ public class JSF22AparTests {
         testSimpleFlow("/PI57255CDI", "sample-flow");
     }
 
-//     /***
-//      * Tests that the flow finalizer is called before the flows beans are destroyed as required
-//      * by the specification.
-//      *
-//      * @throws Exception
-//      */
-//     @Test
-//     public void testPI59422() throws Exception {
-//         final String url = SHARED_SERVER.getServerUrl(true, "/PI59422/index.xhtml");
+    /***
+     * Tests that the flow finalizer is called before the flows beans are destroyed as required
+     * by the specification.
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testPI59422() throws Exception {
+        URL url = JSFUtils.createHttpUrl(jsfAparServer, "PI59422", "index.xhtml");
 
-//         // The messages written to the logs need to occur in the following order:
-//         final String[] messages = new String[] {
-//             "PI59422: SampleFlow initialized.",
-//             "PI59422: PostConstruct was invoked!",
-//             "PI59422: SampleFlow finalized.",
-//             "PI59422: PreDestroy was invoked!"
-//         };
+        // The messages written to the logs need to occur in the following order:
+        final String[] messages = new String[] {
+                                                 "PI59422: SampleFlow initialized.",
+                                                 "PI59422: PostConstruct was invoked!",
+                                                 "PI59422: SampleFlow finalized.",
+                                                 "PI59422: PreDestroy was invoked!"
+        };
 
-//         WebClient webClient = new WebClient();
-//         HtmlPage page;
+        WebClient webClient = new WebClient();
+        HtmlPage page;
 
-//        Log.info(c, name.getMethodName(), "Making a request to " + url);
-//         page = webClient.getPage(url);
+        Log.info(c, name.getMethodName(), "Making a request to " + url);
+        page = webClient.getPage(url);
 
-//         page = findAndClickButton(page, "form1:enterTestFlowButton");
-//         page = findAndClickButton(page, "form1:homeButton");
+        page = findAndClickButton(page, "form1:enterTestFlowButton");
+        page = findAndClickButton(page, "form1:homeButton");
 
-//         // Search the logs to make sure the messages are logged in the correct order
-//         for (String str : messages) {
-//             String ret = jsfAparServer.waitForStringInLogUsingLastOffset(str);
-//             assertTrue("Did not find the log message in the expected order: " + str, ret != null);
-//         }
-//     }
+        // Search the logs to make sure the messages are logged in the correct order
+        for (String str : messages) {
+            String ret = jsfAparServer.waitForStringInLogUsingLastOffset(str);
+            assertTrue("Did not find the log message in the expected order: " + str, ret != null);
+        }
+    }
 
     /*
      * A helper method for PI46218 and PI57255 that will step through a flow and perform various checks.
@@ -406,708 +455,707 @@ public class JSF22AparTests {
         return ((HtmlElement) page.getElementById(buttonId)).click();
     }
 
-//     @Test
-//     public void testPI63135() throws Exception {
-//         WebClient webClient = new WebClient();
-//         HtmlPage page;
-
-//         final String url = SHARED_SERVER.getServerUrl(true, "/PI63135/index.xhtml");
-//        Log.info(c, name.getMethodName(), "Making a request to " + url);
-//         page = webClient.getPage(url);
-//         page = findAndClickButton(page, "form1:submitButton");
-
-//         // Search the response to make sure the message is null
-//         final String expectedResponse = "PI63135: Message is NULL!";
-//         final String response = page.asText();
-//         assertTrue("Did not find the expected message in the response. Expected \'" + expectedResponse + "\' but found: " + response, response.contains(expectedResponse));
-//     }
-
-//     /**
-//      * This test case will drive a request to a page that uses a ViewScoped JSF ManagedBean. A
-//      * button will then be clicked that will invalidate the session and the test will look to ensure
-//      * that the PreDestroy method on the JSF Managed Bean was invoked.
-//      *
-//      * @throws Exception
-//      */
-//     @Test
-//     public void testViewScopedJSFManagedBeanPreDestroy() throws Exception {
-//         WebClient webClient = new WebClient();
-//         final String url = SHARED_SERVER.getServerUrl(true, "/ViewScopedJSFBean/");
-
-//        Log.info(c, name.getMethodName(), "Making a request to " + url);
-
-//         HtmlPage page = webClient.getPage(url);
-
-//         page = findAndClickButton(page, "form1:button1");
-
-//         String str = "ViewScopedBean1 PreDestroy Invoked";
-//         String ret = jsfAparServer.waitForStringInLogUsingLastOffset(str);
-
-//        Log.info(c, name.getMethodName(), "Return value : " + ret);
-//         assertTrue("The PreDestroy method of the JSF ViewScoped bean was not invoked on session invalidation " + str, ret != null);
-
-//     }
-
-//     /**
-//      * This test case will drive a request to a page that uses a ViewScoped JSF ManagedBean and
-//      * a CDI Named ViewScoped Bean. A button will then be clicked that will invalidate the session
-//      * and the test will look to ensure that the PreDestroy method on the CDI bean and JSF bean are
-//      * invoked.
-//      *
-//      * @throws Exception
-//      */
-//     @Test
-//     public void testViewScopedCDIManagedBeanPreDestroy() throws Exception {
-//         WebClient webClient = new WebClient();
-//         final String url = SHARED_SERVER.getServerUrl(true, "/ViewScopedCDIBean/");
-
-//        Log.info(c, name.getMethodName(), "Making a request to " + url);
-
-//         HtmlPage page = webClient.getPage(url);
-
-//         page = findAndClickButton(page, "form1:button1");
-
-//         String str1 = "ViewScopedBean2 PreDestroy Invoked";
-//         String str2 = "ViewScopedCDIBean PreDestroy Invoked";
-
-//         String ret1 = jsfAparServer.waitForStringInLog(str1);
-//         String ret2 = jsfAparServer.waitForStringInLog(str2);
-
-//        Log.info(c, name.getMethodName(), "Return value 1: " + ret1);
-//        Log.info(c, name.getMethodName(), "Return value 2: " + ret2);
-
-//         assertTrue("The PreDestroy methods of the JSF ViewScoped bean and CDI "
-//                    + "ViewScoped bean were not invoked on session invalidation. "
-//                    + "JSF: " + str1 + " CDI: " + str2, (ret1 != null) && (ret2 != null));
-
-//     }
-
-//     /**
-//      * Inn the event of a validation error, JSF should not overwrite a user-configured message
-//      * severity. Previous behavior was that every message for the view would be overwritten to have a
-//      * severity of ERROR. In the case of this test, the message should retain its FATAL severity;
-//      * on the view, FATAL messages are assigned to a green text style, so we should find a green
-//      * message output
-//      *
-//      * If there is no text written to the form, a ValidatorException should be thrown. If text is
-//      * written, however, a Faces Message should be printed out.
-//      */
-//     @Test
-//     public void testPI64714() throws Exception {
-//         WebClient webClient = new WebClient();
-//         HtmlPage page;
-
-//         final String url = SHARED_SERVER.getServerUrl(true, "/PI64714/index.xhtml");
-//        Log.info(c, name.getMethodName(), "PI64714: Making a request to " + url);
-//         page = webClient.getPage(url);
-//         page = findAndClickButton(page, "form:execute");
-
-//         // we're expecting to find a green message on the page, with the given text
-//         final String color = "green";
-//         final String validatorException = "ValidatorException#SEVERITY_FATAL";
-//         String response = page.asXml();
-
-//         assertTrue("PI64714: A green validator exception should have been output, and it was not: \n\n"
-//                    + response, response.contains(color) && response.contains(validatorException));
-
-//         final String facesException = "FacesContext#SEVERITY_FATAL";
-
-//         // to get the faces message instead of the validator exception, we need to add some text
-//         HtmlInput intputBox = (HtmlInput) page.getHtmlElementById("form:input");
-//         intputBox.setValueAttribute("test string");
-//         page = findAndClickButton(page, "form:execute");
-//         response = page.asXml();
-
-//         assertTrue("PI64714: A green faces message should have been output, and it was not: \n"
-//                    + response, response.contains(color) && response.contains(facesException));
-//     }
-
-//     /**
-//      * Verifies that validators defined for a UISelectMany component are invoked when there
-//      * are no selections made.
-//      *
-//      * The test page has four UISelectMany components, and each has three checkboxes. Validation
-//      * should fail unless exactly two checkboxes are selected for each component.
-//      */
-//     @Test
-//     public void testPI64718() throws Exception {
-//         WebClient webClient = new WebClient();
-//         HtmlPage page;
-//         final String url = SHARED_SERVER.getServerUrl(true, "/PI64718/index.xhtml");
-//        Log.info(c, name.getMethodName(), "PI64718: Making a request to " + url);
-//         page = webClient.getPage(url);
-//         page = findAndClickButton(page, "form:execute");
-
-//         // we're expecting to find these validator exceptions, which are defined in the app's index bean
-//         final String validatorException1 = "form:DATA1: size must be between 2 and 2";
-//         final String validatorException2 = "form:DATA2: size must be between 2 and 2";
-//         final String validatorException3 = "form:DATA3: ListSize is not 2";
-//         final String validatorException4 = "form:DATA4: ArraySize is not 2";
-
-//         String response = page.asXml();
-
-//         assertTrue("PI64718: the page response did not contain " + validatorException1,
-//                    response.contains(validatorException1));
-//         assertTrue("PI64718: the page response did not contain " + validatorException2,
-//                    response.contains(validatorException2));
-//         assertTrue("PI64718: the page response did not contain " + validatorException3,
-//                    response.contains(validatorException3));
-//         assertTrue("PI64718: the page response did not contain " + validatorException4,
-//                    response.contains(validatorException4));
-
-//         // we'll now check 2/4 boxes on all components except for the last one
-//         HtmlCheckBoxInput input = page.getHtmlElementById("form:DATA1:0");
-//         input.setChecked(true);
-//         input = page.getHtmlElementById("form:DATA1:2");
-//         input.setChecked(true);
-//         input = page.getHtmlElementById("form:DATA2:0");
-//         input.setChecked(true);
-//         input = page.getHtmlElementById("form:DATA2:1");
-//         input.setChecked(true);
-//         input = page.getHtmlElementById("form:DATA3:1");
-//         input.setChecked(true);
-//         input = page.getHtmlElementById("form:DATA3:2");
-//         input.setChecked(true);
-//         input = page.getHtmlElementById("form:DATA4:1");
-//         input.setChecked(true);
-//         page = findAndClickButton(page, "form:execute");
-//         response = page.asXml();
-
-//         // There should only be one validation error - form:DATA4 was only checked once
-//         assertTrue("PI64718: the page response should not contain: " + validatorException1,
-//                    !response.contains(validatorException1));
-//         assertTrue("PI64718: the page response should not contain: " + validatorException2,
-//                    !response.contains(validatorException2));
-//         assertTrue("PI64718: the page response should not contain: " + validatorException3,
-//                    !response.contains(validatorException3));
-//         assertTrue("PI64718: the page response did not contain: " + validatorException4,
-//                    response.contains(validatorException4));
-
-//         // Set 2/4 boxes on the last component
-//         input = page.getHtmlElementById("form:DATA4:0");
-//         input.setChecked(true);
-//         page = findAndClickButton(page, "form:execute");
-//         response = page.asXml();
-
-//         // There should now be no validation errors
-//         assertTrue("PI64718: the page response should not contain: " + validatorException1,
-//                    !response.contains(validatorException1));
-//         assertTrue("PI64718: the page response should not contain: " + validatorException2,
-//                    !response.contains(validatorException2));
-//         assertTrue("PI64718: the page response should not contain: " + validatorException3,
-//                    !response.contains(validatorException3));
-//         assertTrue("PI64718: the page response should not contain: " + validatorException4,
-//                    !response.contains(validatorException4));
-//     }
-
-//     /**
-//      * This test case will drive a request to a page and verify that a Validation Error message is
-//      * shown when using the h:inputFile tag, the require attribute is set to true and
-//      * no file is attached.
-//      *
-//      * @throws Exception
-//      */
-//     @Test
-//     public void testPI67525() throws Exception {
-//         WebClient webClient = new WebClient();
-//         final String url = SHARED_SERVER.getServerUrl(true, "/PI67525/index.xhtml");
-
-//        Log.info(c, name.getMethodName(), "PI67525: Making a request to " + url);
-
-//         HtmlPage page = webClient.getPage(url);
-
-//         page = findAndClickButton(page, "form:execute");
-
-//         String validationErrorMsg = "Validation Error: Value is required";
-//         String response = page.asXml();
-
-//         assertTrue("PI67525: A validation error message should have been output, and it was not: \n"
-//                    + response, response.contains(validationErrorMsg));
-//     }
-
-//     /**
-//      * Tests APAR PI79562. When javax.faces.WEBAPP_RESOURCES_DIRECTORY is set with a param-value that has a leading "/",
-//      * ensure that a StringOutOfBoundsException is not thrown, and that the page renders correctly.
-//      *
-//      * Note that javax.faces.WEBAPP_RESOURCES_DIRECTORY is not valid in JSF 2.0, so this FAT only targets the jsf-2.2 feature.
-//      *
-//      * @throws Exception
-//      */
-//     @Test
-//     public void testPI79562() throws Exception {
-//         WebClient webClient = new WebClient();
-
-//         final String url = SHARED_SERVER.getServerUrl(true, "/PI79562/faces/index.xhtml");
-
-//        Log.info(c, name.getMethodName(), "PI79562: Making a request to " + url);
-
-//         HtmlPage page = (HtmlPage) webClient.getPage(url);
-
-//         // Make sure the test page was rendered correctly
-//         assertTrue("PI79562: the app output was null!", page != null);
-
-//         // Check response
-//         assertTrue("PI79562: The expected text was not printed!\n" + page.asXml(),
-//                    page.asText().contains("PI79562: test passed"));
-//     }
-
-//     /**
-//      * Tests APAR PI85492; make sure the output is not flushed too early in the RENDER_RESPONSE phase
-//      *
-//      * @throws Exception
-//      */
-//     @Test
-//     public void testPI85492() throws Exception {
-//         WebClient webClient = new WebClient();
-
-//         final String url = SHARED_SERVER.getServerUrl(true, "/PI85492/faces/index.xhtml");
-
-//        Log.info(c, name.getMethodName(), "PI85492: Making a request to " + url);
-
-//         HtmlPage page = (HtmlPage) webClient.getPage(url);
-
-//         // Make sure the test page was rendered correctly
-//         assertTrue("PI85492: the app output was null!", page != null);
-
-//         String msgToSearchFor = "PI85492 Resonse commited = false";
-
-//         // Check the logs to see if the message was found.
-//         String msgResult = jsfAparServer.waitForStringInLog(msgToSearchFor, 20000);
-//         assertNotNull("PI85492: the response was committed too early.", msgResult);
-//     }
-
-//     /**
-//      * Tests APAR PI89363; make sure a ProtectedViewException is NOT thrown
-//      * in Chrome browser when you are in a stateless view with
-//      * view protection set and Origin header is sent in the request.
-//      *
-//      * Context param STRICT_JSF_2_ORIGIN_HEADER_APP_PATH is set to false (default)
-//      * so we don't strictly want to follow JSF 2.x spec.
-//      *
-//      * @throws Exception
-//      */
-//     @Test
-//     public void testPI89363() throws Exception {
-//         WebClient webClient = new WebClient(BrowserVersion.CHROME);
-//         webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
-
-//         final String url = SHARED_SERVER.getServerUrl(true, "/PI89363/index.xhtml");
-
-//        Log.info(c, name.getMethodName(), "PI89363: Making a request to " + url);
-
-//         HtmlPage page = (HtmlPage) webClient.getPage(url);
-
-//         // Make sure the test page was rendered correctly
-//         assertTrue("PI89363: the app output was null!", page != null);
-
-//         // Log the page for debugging if necessary in the future.
-//        Log.info(c, name.getMethodName(), "testPI89363:: initial page --> " + page.asXml());
-
-//         // Get the anchor and click
-//         HtmlAnchor goToStatelessLink = (HtmlAnchor) page.getElementById("goToStateless");
-//         page = goToStatelessLink.click();
-
-//         // Log the page for debugging if necessary in the future.
-//        Log.info(c, name.getMethodName(), "testPI89363:: stateless page --> " + page.asXml());
-
-//         // Check response
-//         assertTrue("PI89363: Stateless View response message was not found!\n" + page.asText(),
-//                    page.asText().contains("Stateless View"));
-
-//         // Add Origin header to the request header map to manually trigger the issue in https://issues.apache.org/jira/browse/MYFACES-4058
-//         String originHeader = url.substring(0, url.indexOf("/PI89363"));
-//        Log.info(c, name.getMethodName(), "PI89363: Origin Header --> " + originHeader);
-//         webClient.addRequestHeader("Origin", originHeader);
-
-//         // Get the form
-//         HtmlForm statelessForm = page.getFormByName("statelessForm");
-
-//         // Get the button and then click it
-//         HtmlSubmitInput statelessSubmitButton = statelessForm.getInputByName("statelessForm:statelessSubmitButton");
-//         page = statelessSubmitButton.click();
-
-//         // Log the page for debugging if necessary in the future.
-//        Log.info(c, name.getMethodName(), "testPI89363:: final page --> " + page.asText());
-
-//         // Check that no ProtectedViewException was thrown
-//         assertTrue("PI89363: ProtectedViewException was thrown!\n" + page.asText(),
-//                    !page.asText().contains("ProtectedViewException"));
-//         // Check the final view response message
-//         assertTrue("PI89363: Final View response message was not found!\n" + page.asText(),
-//                    page.asText().contains("Final View"));
-//     }
-
-//     /**
-//      * Tests APAR PI89363; make sure a ProtectedViewException is thrown
-//      * in Chrome browser when you are in a stateless view with
-//      * view protection set and Origin header is sent in the request.
-//      *
-//      * Context param STRICT_JSF_2_ORIGIN_HEADER_APP_PATH is set to true
-//      * so we strictly want to follow JSF 2.x spec.
-//      *
-//      * @throws Exception
-//      */
-//     @Test
-//     @ExpectedFFDC({ "javax.servlet.ServletException" })
-//     public void testPI89363StrictJSF2() throws Exception {
-//         WebClient webClient = new WebClient(BrowserVersion.CHROME);
-//         webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
-
-//         jsfAparServer.addIgnoredErrors(Arrays.asList("SRVE0777E:.*"));
-//         final String url = SHARED_SERVER.getServerUrl(true, "/PI89363StrictJSF2/index.xhtml");
-
-//        Log.info(c, name.getMethodName(), "PI89363StrictJSF2: Making a request to " + url);
-
-//         HtmlPage page = (HtmlPage) webClient.getPage(url);
-
-//         // Make sure the test page was rendered correctly
-//         assertTrue("PI89363StrictJSF2: the app output was null!", page != null);
-
-//         // Log the page for debugging if necessary in the future.
-//        Log.info(c, name.getMethodName(), "testPI89363StrictJSF2:: initial page --> " + page.asXml());
-
-//         // Get the anchor and click
-//         HtmlAnchor goToStatelessLink = (HtmlAnchor) page.getElementById("goToStateless");
-//         page = goToStatelessLink.click();
-
-//         // Log the page for debugging if necessary in the future.
-//        Log.info(c, name.getMethodName(), "testPI89363StrictJSF2:: stateless page --> " + page.asXml());
-
-//         // Check response
-//         assertTrue("PI89363StrictJSF2: Stateless View response message was not found!\n" + page.asText(),
-//                    page.asText().contains("Stateless View"));
-
-//         // Add Origin header to the request header map to manually trigger the issue in https://issues.apache.org/jira/browse/MYFACES-4058
-//         String originHeader = url.substring(0, url.indexOf("/PI89363StrictJSF2"));
-//        Log.info(c, name.getMethodName(), "PI89363StrictJSF2: Origin Header --> " + originHeader);
-//         webClient.addRequestHeader("Origin", originHeader);
-
-//         // Get the form
-//         HtmlForm statelessForm = page.getFormByName("statelessForm");
-
-//         // Get the button and then click it
-//         HtmlSubmitInput statelessSubmitButton = statelessForm.getInputByName("statelessForm:statelessSubmitButton");
-//         page = statelessSubmitButton.click();
-
-//         // Log the page for debugging if necessary in the future.
-//        Log.info(c, name.getMethodName(), "testPI89363StrictJSF2:: final page --> " + page.asText());
-
-//         // Check that a ProtectedViewException was thrown
-//         assertTrue("PI89363StrictJSF2: ProtectedViewException was thrown!\n" + page.asText(),
-//                    page.asText().contains("ProtectedViewException"));
-//     }
-
-//     /**
-//      * Tests APAR PI89168; make sure a FacesException is thrown when
-//      * you are in a stateful view and the value of hidden input javax.faces.ViewState
-//      * is changed to "stateless".
-//      *
-//      * @throws Exception
-//      */
-//     @Test
-//     @ExpectedFFDC({ "javax.servlet.ServletException" })
-//     public void testPI89168() throws Exception {
-//         WebClient webClient = new WebClient();
-//         webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
-
-//         // Add expected ServletException
-//         String expectedSRVE0777E = "SRVE0777E";
-//         jsfAparServer.addIgnoredErrors(Arrays.asList(expectedSRVE0777E));
-
-//         final String url = SHARED_SERVER.getServerUrl(true, "/PI89168/index.xhtml");
-
-//        Log.info(c, name.getMethodName(), "PI89168: Making a request to " + url);
-
-//         HtmlPage page = (HtmlPage) webClient.getPage(url);
-
-//         // Make sure the test page was rendered correctly
-//         assertTrue("PI89168: the app output was null!", page != null);
-
-//         // Log the page for debugging if necessary in the future.
-//        Log.info(c, name.getMethodName(), "testPI89168:: initial page --> " + page.asXml());
-
-//         // Get the anchor and click
-//         HtmlAnchor goToStatefulLink = (HtmlAnchor) page.getElementById("goToStateful");
-//         page = goToStatefulLink.click();
-
-//         // Log the page for debugging if necessary in the future.
-//        Log.info(c, name.getMethodName(), "testPI89168:: stateful page --> " + page.asXml());
-
-//         // Get the form
-//         HtmlForm statefulForm = page.getFormByName("statefulForm");
-
-//         // Change the value of ViewState to stateless
-//         HtmlHiddenInput viewStateInput = (HtmlHiddenInput) statefulForm.getInputByName("javax.faces.ViewState");
-//         viewStateInput.setValueAttribute("stateless");
-
-//         // Get the button and then click it
-//         HtmlSubmitInput statefulSubmitButton = statefulForm.getInputByName("statefulForm:statefulSubmitButton");
-//         page = statefulSubmitButton.click();
-
-//         // Log the page for debugging if necessary in the future.
-//        Log.info(c, name.getMethodName(), "testPI89168:: final page --> " + page.asText());
-
-//         // Check that a FacesException is thrown
-//         assertTrue("PI89168: FacesException was not thrown!\n" + page.asText(),
-//                    page.asText().contains("javax.faces.FacesException: unable to create view \"/statefulView.xhtml\""));
-//     }
-
-//     private void verifyFlowScopeValue(HtmlPage page, String message) {
-//         assertTrue("The flowScope value was incorrect; expected " + message + "\n" + page.asText(),
-//             page.asText().contains(message));
-//     }
-
-//     /**
-//      * Tests APAR PI90391: that flow re-entry works.
-//      * This test navigates through two flows, making sure flow variables and IDs are retained correctly:
-//      * flow1 -> flow2 -> flow1 -> flow2
-//      * -> return (back in flow 1) -> return (back in flow2) -> return (back in flow 1) -> return (no flow)
-//      */
-//     @Test
-//     public void testPI90391() throws Exception {
-//         final String url = SHARED_SERVER.getServerUrl(true, "/PI90391/");
-//         WebClient webClient = new WebClient();
-//         HtmlPage page;
-//         String message;
-//         String value = "no flowscope value";
-
-//         // hit the index ("/PI90391/")
-//        Log.info(c, name.getMethodName(), "Making a request to " + url);
-//         page = webClient.getPage(url);
-//         verifyFlowId(page, "no flow ID");
-
-//         // enter flow 1 (flow1)
-//         page = findAndClickButton(page, "flow1");
-//         verifyFlowScopeValue(page, value);
-
-//         // enter "1" (inputValue)
-//         message = "1";
-//         ((HtmlTextInput) page.getElementById("inputValue")).type(message);
-
-//         // page 2 (page2)
-//         value = "value: 1";
-//         page = findAndClickButton(page, "page2");
-//         verifyFlowScopeValue(page, value);
-
-//         // call flow 2 (flow2)
-//         value = "no flowscope value";
-//         page = findAndClickButton(page, "flow2");
-//         verifyFlowId(page, "flow2");
-//         verifyFlowScopeValue(page, value);
-
-//         // enter "2" (inputValue)
-//         message = "2";
-//         ((HtmlTextInput) page.getElementById("inputValue")).type(message);
-
-//         // flow 2 page 2 (page2)
-//         value = "value: 2";
-//         page = findAndClickButton(page, "page2");
-//         verifyFlowScopeValue(page, value);
-
-//         // call flow 1 (flow1)
-//         value = "no flowscope value";
-//         page = findAndClickButton(page, "flow1");
-//         verifyFlowId(page, "flow1");
-//         verifyFlowScopeValue(page, value);
-
-//         // enter "3" (inputValue)
-//         message = "3";
-//         ((HtmlTextInput) page.getElementById("inputValue")).type(message);
-
-//         // page 2 (page2)
-//         value = "value: 3";
-//         page = findAndClickButton(page, "page2");
-//         verifyFlowScopeValue(page, value);
-
-//         // call flow 2 (flow2)
-//         value = "no flowscope value";
-//         page = findAndClickButton(page, "flow2");
-//         verifyFlowId(page, "flow2");
-//         verifyFlowScopeValue(page, value);
-
-//         // index (index)
-//         page = findAndClickButton(page, "index");
-
-//         // verify " Current flow ID: flow1", "Current flowscope value: 3"
-//         value = "value: 3";
-//         verifyFlowId(page, "flow1");
-//         verifyFlowScopeValue(page, value);
-
-//         // enter flow 1 (flow1)
-//         page = findAndClickButton(page, "flow1");
-
-//         // index (index)
-//         page = findAndClickButton(page, "index");
-
-//         // verify "Current flow ID: flow2", "Current flowscope value: 2"
-//         value = "value: 2";
-//         verifyFlowId(page, "flow2");
-//         verifyFlowScopeValue(page, value);
-
-//         // enter flow 1 (flow1)
-//         page = findAndClickButton(page, "flow1");
-
-//         // index (index)
-//         page = findAndClickButton(page, "index");
-
-//         // verify "Current flow ID: flow1", "Current flowscope value: 1"
-//         value = "value: 1";
-//         verifyFlowId(page, "flow1");
-//         verifyFlowScopeValue(page, value);
-
-//         // enter flow 1 (flow1)
-//         page = findAndClickButton(page, "flow1");
-
-//         // index (index)
-//         page = findAndClickButton(page, "index");
-
-//         // verify "Current flow ID: no flow ID", "Current flowscope value: no flowscope value"
-//         value = "no flowscope value";
-//         verifyFlowId(page, "no flow ID");
-//         verifyFlowScopeValue(page, value);
-//     }
-
-//     /**
-//      * Tests APAR PI90507: Facelet Action Listener without binding attribute
-//      *
-//      * Ensure that when com.ibm.ws.jsf.DisableFaceletActionListenerPreDestroy is set to true,
-//      * preDestroy is never called on the Action Listener registered via facelet.
-//      *
-//      * This prevents a list of injected JSF artifacts to grow.
-//      *
-//      * @throws Exception
-//      */
-//     @RunUnlessFeatureBeingTested("jsf-2.3")
-//     @Test
-//     public void testPI90507NonBindingCase() throws Exception {
-//         WebClient webClient = new WebClient();
-
-//         final String url = SHARED_SERVER.getServerUrl(true, "/PI90507/actionListenerNonBinding.xhtml");
-
-//        Log.info(c, name.getMethodName(), "PI90507: Making a request to " + url);
-
-//         HtmlPage page = (HtmlPage) webClient.getPage(url);
-
-//         // Make sure the test page was rendered correctly
-//         assertTrue("PI90507: the app output was null!", page != null);
-
-//         // Get the button to click
-//         HtmlSubmitInput submitButton = (HtmlSubmitInput) page.getElementById("form1:submitButton");
-//         submitButton.click();
-
-//         LibertyServer server = jsfAparServer;
-
-//         // Verify that PostConstruct is called
-//         assertTrue("PostConstruct was not called",
-//                    server.findStringsInLogs("Post construct from TestActionListener").size() == 1);
-
-//         // Stop the server but don't archive the logs (this should shutdown the app)
-//         server.stopServer(false);
-
-//         // Verify that PreDestroy is not being called
-//         assertTrue("PreDestroy was called",
-//                    server.findStringsInLogs("Pre destroy from TestActionListener").size() == 0);
-
-//         // Archive the logs
-//         server.postStopServerArchive();
-//     }
-
-//     /**
-//      * Tests APAR PI90507: Facelet Action Listener with binding attribute
-//      *
-//      * Ensure that when com.ibm.ws.jsf.DisableFaceletActionListenerPreDestroy is set to true,
-//      * preDestroy is never called on the Action Listener registered via facelet.
-//      *
-//      * This prevents a list of injected JSF artifacts to grow.
-//      *
-//      * @throws Exception
-//      */
-//     @RunUnlessFeatureBeingTested("jsf-2.3")
-//     @Test
-//     public void testPI90507BindingCase() throws Exception {
-//         WebClient webClient = new WebClient();
-
-//         final String url = SHARED_SERVER.getServerUrl(true, "/PI90507/actionListenerBinding.xhtml");
-
-//        Log.info(c, name.getMethodName(), "PI90507: Making a request to " + url);
-
-//         HtmlPage page = (HtmlPage) webClient.getPage(url);
-
-//         // Make sure the test page was rendered correctly
-//         assertTrue("PI90507: the app output was null!", page != null);
-
-//         // Get the button to click
-//         HtmlSubmitInput submitButton = (HtmlSubmitInput) page.getElementById("form1:submitButton");
-//         submitButton.click();
-
-//         LibertyServer server = jsfAparServer;
-
-//         // Verify that PostConstruct is called
-//         assertTrue("PostConstruct was not called",
-//                    server.findStringsInLogs("Post construct from TestActionListener").size() == 1);
-
-//         // Stop the server but don't archive the logs (this should shutdown the app)
-//         server.stopServer(false);
-
-//         // Verify that PreDestroy is not being called
-//         assertTrue("PreDestroy was called",
-//                    server.findStringsInLogs("Pre destroy from TestActionListener").size() == 0);
-
-//         // Archive the logs
-//         server.postStopServerArchive();
-//     }
-
-//   /**
-//      * Tests APAR PH01566: Faces Servlet mapping defined in web-fragment.xml does not work
-//      * Also tests PH09730: a regression caused by PH01566 wherein unloadable servlet definitions prevent initialization
-//      *
-//      * Make sure that a JSF application with and invalid servlet defined and its faces servlet mapping defined in a web fragment jar 
-//      * starts up correctly
-//      */
-//     @Test
-//     public void testPH01566_and_PH09730() throws Exception {
-
-//         WebClient webClient = new WebClient();
-//         final String url = SHARED_SERVER.getServerUrl(true, "/PH01566/index.xhtml");
-
-//        Log.info(c, name.getMethodName(), "PH01566: Making a request to " + url);
-//         HtmlPage page = (HtmlPage) webClient.getPage(url);
-
-//         // Make sure the test page was rendered correctly
-//         assertTrue("PH01566: the app output was null!", page != null);
-
-//         // Check for the expected text in the target page
-//         assertTrue("testPH01566:: Application did not start up correctly!",
-//             page.asText().contains("application initialization succeeded"));
-//     }
-
-//         /**
-//      * Tests APAR PH06008: Transient attribute defined in a template is inherited by the final page correctly.
-//      *
-//      * Make sure that no 'unable to create view' exception is thrown when the Transient attribute is being
-//      *
-//      * inherited. Clicking submit should reload the page without errors.
-//      *
-//      * @throws Exception
-//      */
-//     @Test
-//     public void testPH06008() throws Exception {
-
-//         WebClient webClient = new WebClient();
-//         final String url = SHARED_SERVER.getServerUrl(true, "/PH06008/index.xhtml");
-
-//        Log.info(c, name.getMethodName(), "PH06008: Making a request to " + url);
-//         HtmlPage page = (HtmlPage) webClient.getPage(url);
-
-//        Log.info(c, name.getMethodName(), "Clicking Page.....");
-//         HtmlSubmitInput submitButton = (HtmlSubmitInput) page.getElementById("form:submit");
-//         submitButton.click();
-//        Log.info(c, name.getMethodName(), "On next page! Testing asserts next...");
-//         // Make sure the test page was rendered correctly
-//         assertTrue("PH06008: the app output was null!", page != null);
-
-//         // Check for the expected text in the target page
-//         assertTrue("testPH06008:: Page reload threw an error!",
-//                    page.asText().contains("PH06008 success!"));
-//     }
+    @Test
+    public void testPI63135() throws Exception {
+        WebClient webClient = new WebClient();
+        HtmlPage page;
+        URL url = JSFUtils.createHttpUrl(jsfAparServer, "PI63135", "index.xhtml");
+
+        Log.info(c, name.getMethodName(), "Making a request to " + url);
+        page = webClient.getPage(url);
+        page = findAndClickButton(page, "form1:submitButton");
+
+        // Search the response to make sure the message is null
+        final String expectedResponse = "PI63135: Message is NULL!";
+        final String response = page.asText();
+        assertTrue("Did not find the expected message in the response. Expected \'" + expectedResponse + "\' but found: " + response, response.contains(expectedResponse));
+    }
+
+    /**
+     * This test case will drive a request to a page that uses a ViewScoped JSF ManagedBean. A
+     * button will then be clicked that will invalidate the session and the test will look to ensure
+     * that the PreDestroy method on the JSF Managed Bean was invoked.
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testViewScopedJSFManagedBeanPreDestroy() throws Exception {
+        WebClient webClient = new WebClient();
+        URL url = JSFUtils.createHttpUrl(jsfAparServer, "ViewScopedJSFBean", "");
+
+        Log.info(c, name.getMethodName(), "Making a request to " + url);
+
+        HtmlPage page = webClient.getPage(url);
+
+        page = findAndClickButton(page, "form1:button1");
+
+        String str = "ViewScopedBean1 PreDestroy Invoked";
+        String ret = jsfAparServer.waitForStringInLogUsingLastOffset(str);
+
+        Log.info(c, name.getMethodName(), "Return value : " + ret);
+        assertTrue("The PreDestroy method of the JSF ViewScoped bean was not invoked on session invalidation " + str, ret != null);
+
+    }
+
+    /**
+     * This test case will drive a request to a page that uses a ViewScoped JSF ManagedBean and
+     * a CDI Named ViewScoped Bean. A button will then be clicked that will invalidate the session
+     * and the test will look to ensure that the PreDestroy method on the CDI bean and JSF bean are
+     * invoked.
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testViewScopedCDIManagedBeanPreDestroy() throws Exception {
+        WebClient webClient = new WebClient();
+        URL url = JSFUtils.createHttpUrl(jsfAparServer, "ViewScopedCDIBean", "");
+
+        Log.info(c, name.getMethodName(), "Making a request to " + url);
+
+        HtmlPage page = webClient.getPage(url);
+
+        page = findAndClickButton(page, "form1:button1");
+
+        String str1 = "ViewScopedBean2 PreDestroy Invoked";
+        String str2 = "ViewScopedCDIBean PreDestroy Invoked";
+
+        String ret1 = jsfAparServer.waitForStringInLog(str1);
+        String ret2 = jsfAparServer.waitForStringInLog(str2);
+
+        Log.info(c, name.getMethodName(), "Return value 1: " + ret1);
+        Log.info(c, name.getMethodName(), "Return value 2: " + ret2);
+
+        assertTrue("The PreDestroy methods of the JSF ViewScoped bean and CDI "
+                   + "ViewScoped bean were not invoked on session invalidation. "
+                   + "JSF: " + str1 + " CDI: " + str2, (ret1 != null) && (ret2 != null));
+
+    }
+
+    /**
+     * Inn the event of a validation error, JSF should not overwrite a user-configured message
+     * severity. Previous behavior was that every message for the view would be overwritten to have a
+     * severity of ERROR. In the case of this test, the message should retain its FATAL severity;
+     * on the view, FATAL messages are assigned to a green text style, so we should find a green
+     * message output
+     *
+     * If there is no text written to the form, a ValidatorException should be thrown. If text is
+     * written, however, a Faces Message should be printed out.
+     */
+    @Test
+    public void testPI64714() throws Exception {
+        WebClient webClient = new WebClient();
+        HtmlPage page;
+        URL url = JSFUtils.createHttpUrl(jsfAparServer, "PI64714", "index.xhtml");
+
+        Log.info(c, name.getMethodName(), "PI64714: Making a request to " + url);
+        page = webClient.getPage(url);
+        page = findAndClickButton(page, "form:execute");
+
+        // we're expecting to find a green message on the page, with the given text
+        final String color = "green";
+        final String validatorException = "ValidatorException#SEVERITY_FATAL";
+        String response = page.asXml();
+
+        assertTrue("PI64714: A green validator exception should have been output, and it was not: \n\n"
+                   + response, response.contains(color) && response.contains(validatorException));
+
+        final String facesException = "FacesContext#SEVERITY_FATAL";
+
+        // to get the faces message instead of the validator exception, we need to add some text
+        HtmlInput intputBox = (HtmlInput) page.getHtmlElementById("form:input");
+        intputBox.setValueAttribute("test string");
+        page = findAndClickButton(page, "form:execute");
+        response = page.asXml();
+
+        assertTrue("PI64714: A green faces message should have been output, and it was not: \n"
+                   + response, response.contains(color) && response.contains(facesException));
+    }
+
+    /**
+     * Verifies that validators defined for a UISelectMany component are invoked when there
+     * are no selections made.
+     *
+     * The test page has four UISelectMany components, and each has three checkboxes. Validation
+     * should fail unless exactly two checkboxes are selected for each component.
+     */
+    @Test
+    public void testPI64718() throws Exception {
+        WebClient webClient = new WebClient();
+        HtmlPage page;
+        URL url = JSFUtils.createHttpUrl(jsfAparServer, "PI64718", "index.xhtml");
+
+        Log.info(c, name.getMethodName(), "PI64718: Making a request to " + url);
+        page = webClient.getPage(url);
+        page = findAndClickButton(page, "form:execute");
+
+        // we're expecting to find these validator exceptions, which are defined in the app's index bean
+        final String validatorException1 = "form:DATA1: size must be between 2 and 2";
+        final String validatorException2 = "form:DATA2: size must be between 2 and 2";
+        final String validatorException3 = "form:DATA3: ListSize is not 2";
+        final String validatorException4 = "form:DATA4: ArraySize is not 2";
+
+        String response = page.asXml();
+
+        assertTrue("PI64718: the page response did not contain " + validatorException1,
+                   response.contains(validatorException1));
+        assertTrue("PI64718: the page response did not contain " + validatorException2,
+                   response.contains(validatorException2));
+        assertTrue("PI64718: the page response did not contain " + validatorException3,
+                   response.contains(validatorException3));
+        assertTrue("PI64718: the page response did not contain " + validatorException4,
+                   response.contains(validatorException4));
+
+        // we'll now check 2/4 boxes on all components except for the last one
+        HtmlCheckBoxInput input = page.getHtmlElementById("form:DATA1:0");
+        input.setChecked(true);
+        input = page.getHtmlElementById("form:DATA1:2");
+        input.setChecked(true);
+        input = page.getHtmlElementById("form:DATA2:0");
+        input.setChecked(true);
+        input = page.getHtmlElementById("form:DATA2:1");
+        input.setChecked(true);
+        input = page.getHtmlElementById("form:DATA3:1");
+        input.setChecked(true);
+        input = page.getHtmlElementById("form:DATA3:2");
+        input.setChecked(true);
+        input = page.getHtmlElementById("form:DATA4:1");
+        input.setChecked(true);
+        page = findAndClickButton(page, "form:execute");
+        response = page.asXml();
+
+        // There should only be one validation error - form:DATA4 was only checked once
+        assertTrue("PI64718: the page response should not contain: " + validatorException1,
+                   !response.contains(validatorException1));
+        assertTrue("PI64718: the page response should not contain: " + validatorException2,
+                   !response.contains(validatorException2));
+        assertTrue("PI64718: the page response should not contain: " + validatorException3,
+                   !response.contains(validatorException3));
+        assertTrue("PI64718: the page response did not contain: " + validatorException4,
+                   response.contains(validatorException4));
+
+        // Set 2/4 boxes on the last component
+        input = page.getHtmlElementById("form:DATA4:0");
+        input.setChecked(true);
+        page = findAndClickButton(page, "form:execute");
+        response = page.asXml();
+
+        // There should now be no validation errors
+        assertTrue("PI64718: the page response should not contain: " + validatorException1,
+                   !response.contains(validatorException1));
+        assertTrue("PI64718: the page response should not contain: " + validatorException2,
+                   !response.contains(validatorException2));
+        assertTrue("PI64718: the page response should not contain: " + validatorException3,
+                   !response.contains(validatorException3));
+        assertTrue("PI64718: the page response should not contain: " + validatorException4,
+                   !response.contains(validatorException4));
+    }
+
+    /**
+     * This test case will drive a request to a page and verify that a Validation Error message is
+     * shown when using the h:inputFile tag, the require attribute is set to true and
+     * no file is attached.
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testPI67525() throws Exception {
+        WebClient webClient = new WebClient();
+        URL url = JSFUtils.createHttpUrl(jsfAparServer, "PI67525", "index.xhtml");
+
+        Log.info(c, name.getMethodName(), "PI67525: Making a request to " + url);
+
+        HtmlPage page = webClient.getPage(url);
+
+        page = findAndClickButton(page, "form:execute");
+
+        String validationErrorMsg = "Validation Error: Value is required";
+        String response = page.asXml();
+
+        assertTrue("PI67525: A validation error message should have been output, and it was not: \n"
+                   + response, response.contains(validationErrorMsg));
+    }
+
+    /**
+     * Tests APAR PI79562. When javax.faces.WEBAPP_RESOURCES_DIRECTORY is set with a param-value that has a leading "/",
+     * ensure that a StringOutOfBoundsException is not thrown, and that the page renders correctly.
+     *
+     * Note that javax.faces.WEBAPP_RESOURCES_DIRECTORY is not valid in JSF 2.0, so this FAT only targets the jsf-2.2 feature.
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testPI79562() throws Exception {
+        WebClient webClient = new WebClient();
+        URL url = JSFUtils.createHttpUrl(jsfAparServer, "PI79562", "faces/index.xhtml");
+        // final String url = SHARED_SERVER.getServerUrl(true, "/PI79562/faces/index.xhtml");
+
+        Log.info(c, name.getMethodName(), "PI79562: Making a request to " + url);
+
+        HtmlPage page = (HtmlPage) webClient.getPage(url);
+
+        // Make sure the test page was rendered correctly
+        assertTrue("PI79562: the app output was null!", page != null);
+
+        // Check response
+        assertTrue("PI79562: The expected text was not printed!\n" + page.asXml(),
+                   page.asText().contains("PI79562: test passed"));
+    }
+
+    /**
+     * Tests APAR PI85492; make sure the output is not flushed too early in the RENDER_RESPONSE phase
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testPI85492() throws Exception {
+        WebClient webClient = new WebClient();
+
+        URL url = JSFUtils.createHttpUrl(jsfAparServer, "PI85492", "");
+
+        Log.info(c, name.getMethodName(), "PI85492: Making a request to " + url);
+
+        HtmlPage page = (HtmlPage) webClient.getPage(url);
+
+        // Make sure the test page was rendered correctly
+        assertTrue("PI85492: the app output was null!", page != null);
+
+        String msgToSearchFor = "PI85492 Resonse commited = false";
+
+        // Check the logs to see if the message was found.
+        String msgResult = jsfAparServer.waitForStringInLog(msgToSearchFor, 20000);
+        assertNotNull("PI85492: the response was committed too early.", msgResult);
+    }
+
+    /**
+     * Tests APAR PI89363; make sure a ProtectedViewException is NOT thrown
+     * in Chrome browser when you are in a stateless view with
+     * view protection set and Origin header is sent in the request.
+     *
+     * Context param STRICT_JSF_2_ORIGIN_HEADER_APP_PATH is set to false (default)
+     * so we don't strictly want to follow JSF 2.x spec.
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testPI89363() throws Exception {
+        WebClient webClient = new WebClient(BrowserVersion.CHROME);
+        webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
+
+        URL url = JSFUtils.createHttpUrl(jsfAparServer, "PI89363", "index.xhtml");
+
+        Log.info(c, name.getMethodName(), "PI89363: Making a request to " + url);
+
+        HtmlPage page = (HtmlPage) webClient.getPage(url);
+
+        // Make sure the test page was rendered correctly
+        assertTrue("PI89363: the app output was null!", page != null);
+
+        // Log the page for debugging if necessary in the future.
+        Log.info(c, name.getMethodName(), "testPI89363:: initial page --> " + page.asXml());
+
+        // Get the anchor and click
+        HtmlAnchor goToStatelessLink = (HtmlAnchor) page.getElementById("goToStateless");
+        page = goToStatelessLink.click();
+
+        // Log the page for debugging if necessary in the future.
+        Log.info(c, name.getMethodName(), "testPI89363:: stateless page --> " + page.asXml());
+
+        // Check response
+        assertTrue("PI89363: Stateless View response message was not found!\n" + page.asText(),
+                   page.asText().contains("Stateless View"));
+
+        // Add Origin header to the request header map to manually trigger the issue in https://issues.apache.org/jira/browse/MYFACES-4058
+        String originHeader = url.toString().substring(0, url.toString().indexOf("/PI89363"));
+        Log.info(c, name.getMethodName(), "PI89363: Origin Header --> " + originHeader);
+        webClient.addRequestHeader("Origin", originHeader);
+
+        // Get the form
+        HtmlForm statelessForm = page.getFormByName("statelessForm");
+
+        // Get the button and then click it
+        HtmlSubmitInput statelessSubmitButton = statelessForm.getInputByName("statelessForm:statelessSubmitButton");
+        page = statelessSubmitButton.click();
+
+        // Log the page for debugging if necessary in the future.
+        Log.info(c, name.getMethodName(), "testPI89363:: final page --> " + page.asText());
+
+        // Check that no ProtectedViewException was thrown
+        assertTrue("PI89363: ProtectedViewException was thrown!\n" + page.asText(),
+                   !page.asText().contains("ProtectedViewException"));
+        // Check the final view response message
+        assertTrue("PI89363: Final View response message was not found!\n" + page.asText(),
+                   page.asText().contains("Final View"));
+    }
+
+    /**
+     * Tests APAR PI89363; make sure a ProtectedViewException is thrown
+     * in Chrome browser when you are in a stateless view with
+     * view protection set and Origin header is sent in the request.
+     *
+     * Context param STRICT_JSF_2_ORIGIN_HEADER_APP_PATH is set to true
+     * so we strictly want to follow JSF 2.x spec.
+     *
+     * @throws Exception
+     */
+    @Test
+    @ExpectedFFDC({ "javax.servlet.ServletException" })
+    public void testPI89363StrictJSF2() throws Exception {
+        WebClient webClient = new WebClient(BrowserVersion.CHROME);
+        webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
+
+        jsfAparServer.addIgnoredErrors(Arrays.asList("SRVE0777E:.*"));
+        URL url = JSFUtils.createHttpUrl(jsfAparServer, "PI89363StrictJSF2", "index.xhtml");
+
+        Log.info(c, name.getMethodName(), "PI89363StrictJSF2: Making a request to " + url);
+
+        HtmlPage page = (HtmlPage) webClient.getPage(url);
+
+        // Make sure the test page was rendered correctly
+        assertTrue("PI89363StrictJSF2: the app output was null!", page != null);
+
+        // Log the page for debugging if necessary in the future.
+        Log.info(c, name.getMethodName(), "testPI89363StrictJSF2:: initial page --> " + page.asXml());
+
+        // Get the anchor and click
+        HtmlAnchor goToStatelessLink = (HtmlAnchor) page.getElementById("goToStateless");
+        page = goToStatelessLink.click();
+
+        // Log the page for debugging if necessary in the future.
+        Log.info(c, name.getMethodName(), "testPI89363StrictJSF2:: stateless page --> " + page.asXml());
+
+        // Check response
+        assertTrue("PI89363StrictJSF2: Stateless View response message was not found!\n" + page.asText(),
+                   page.asText().contains("Stateless View"));
+
+        // Add Origin header to the request header map to manually trigger the issue in https://issues.apache.org/jira/browse/MYFACES-4058
+        String originHeader = url.toString().substring(0, url.toString().indexOf("/PI89363StrictJSF2"));
+        Log.info(c, name.getMethodName(), "PI89363StrictJSF2: Origin Header --> " + originHeader);
+        webClient.addRequestHeader("Origin", originHeader);
+
+        // Get the form
+        HtmlForm statelessForm = page.getFormByName("statelessForm");
+
+        // Get the button and then click it
+        HtmlSubmitInput statelessSubmitButton = statelessForm.getInputByName("statelessForm:statelessSubmitButton");
+        page = statelessSubmitButton.click();
+
+        // Log the page for debugging if necessary in the future.
+        Log.info(c, name.getMethodName(), "testPI89363StrictJSF2:: final page --> " + page.asText());
+
+        // Check that a ProtectedViewException was thrown
+        assertTrue("PI89363StrictJSF2: ProtectedViewException was thrown!\n" + page.asText(),
+                   page.asText().contains("ProtectedViewException"));
+    }
+
+    /**
+     * Tests APAR PI89168; make sure a FacesException is thrown when
+     * you are in a stateful view and the value of hidden input javax.faces.ViewState
+     * is changed to "stateless".
+     *
+     * @throws Exception
+     */
+    @Test
+    @ExpectedFFDC({ "javax.servlet.ServletException" })
+    public void testPI89168() throws Exception {
+        WebClient webClient = new WebClient();
+        webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
+
+        // Add expected ServletException
+        String expectedSRVE0777E = "SRVE0777E";
+        jsfAparServer.addIgnoredErrors(Arrays.asList(expectedSRVE0777E));
+
+        URL url = JSFUtils.createHttpUrl(jsfAparServer, "PI89168", "index.xhtml");
+
+        Log.info(c, name.getMethodName(), "PI89168: Making a request to " + url);
+
+        HtmlPage page = (HtmlPage) webClient.getPage(url);
+
+        // Make sure the test page was rendered correctly
+        assertTrue("PI89168: the app output was null!", page != null);
+
+        // Log the page for debugging if necessary in the future.
+        Log.info(c, name.getMethodName(), "testPI89168:: initial page --> " + page.asXml());
+
+        // Get the anchor and click
+        HtmlAnchor goToStatefulLink = (HtmlAnchor) page.getElementById("goToStateful");
+        page = goToStatefulLink.click();
+
+        // Log the page for debugging if necessary in the future.
+        Log.info(c, name.getMethodName(), "testPI89168:: stateful page --> " + page.asXml());
+
+        // Get the form
+        HtmlForm statefulForm = page.getFormByName("statefulForm");
+
+        // Change the value of ViewState to stateless
+        HtmlHiddenInput viewStateInput = (HtmlHiddenInput) statefulForm.getInputByName("javax.faces.ViewState");
+        viewStateInput.setValueAttribute("stateless");
+
+        // Get the button and then click it
+        HtmlSubmitInput statefulSubmitButton = statefulForm.getInputByName("statefulForm:statefulSubmitButton");
+        page = statefulSubmitButton.click();
+
+        // Log the page for debugging if necessary in the future.
+        Log.info(c, name.getMethodName(), "testPI89168:: final page --> " + page.asText());
+
+        // Check that a FacesException is thrown
+        assertTrue("PI89168: FacesException was not thrown!\n" + page.asText(),
+                   page.asText().contains("javax.faces.FacesException: unable to create view \"/statefulView.xhtml\""));
+    }
+
+    private void verifyFlowScopeValue(HtmlPage page, String message) {
+        assertTrue("The flowScope value was incorrect; expected " + message + "\n" + page.asText(),
+                   page.asText().contains(message));
+    }
+
+    /**
+     * Tests APAR PI90391: that flow re-entry works.
+     * This test navigates through two flows, making sure flow variables and IDs are retained correctly:
+     * flow1 -> flow2 -> flow1 -> flow2
+     * -> return (back in flow 1) -> return (back in flow2) -> return (back in flow 1) -> return (no flow)
+     */
+    @Test
+    public void testPI90391() throws Exception {
+        URL url = JSFUtils.createHttpUrl(jsfAparServer, "PI90391", "");
+        WebClient webClient = new WebClient();
+        HtmlPage page;
+        String message;
+        String value = "no flowscope value";
+
+        // hit the index ("/PI90391/")
+        Log.info(c, name.getMethodName(), "Making a request to " + url);
+        page = webClient.getPage(url);
+        verifyFlowId(page, "no flow ID");
+
+        // enter flow 1 (flow1)
+        page = findAndClickButton(page, "flow1");
+        verifyFlowScopeValue(page, value);
+
+        // enter "1" (inputValue)
+        message = "1";
+        ((HtmlTextInput) page.getElementById("inputValue")).type(message);
+
+        // page 2 (page2)
+        value = "value: 1";
+        page = findAndClickButton(page, "page2");
+        verifyFlowScopeValue(page, value);
+
+        // call flow 2 (flow2)
+        value = "no flowscope value";
+        page = findAndClickButton(page, "flow2");
+        verifyFlowId(page, "flow2");
+        verifyFlowScopeValue(page, value);
+
+        // enter "2" (inputValue)
+        message = "2";
+        ((HtmlTextInput) page.getElementById("inputValue")).type(message);
+
+        // flow 2 page 2 (page2)
+        value = "value: 2";
+        page = findAndClickButton(page, "page2");
+        verifyFlowScopeValue(page, value);
+
+        // call flow 1 (flow1)
+        value = "no flowscope value";
+        page = findAndClickButton(page, "flow1");
+        verifyFlowId(page, "flow1");
+        verifyFlowScopeValue(page, value);
+
+        // enter "3" (inputValue)
+        message = "3";
+        ((HtmlTextInput) page.getElementById("inputValue")).type(message);
+
+        // page 2 (page2)
+        value = "value: 3";
+        page = findAndClickButton(page, "page2");
+        verifyFlowScopeValue(page, value);
+
+        // call flow 2 (flow2)
+        value = "no flowscope value";
+        page = findAndClickButton(page, "flow2");
+        verifyFlowId(page, "flow2");
+        verifyFlowScopeValue(page, value);
+
+        // index (index)
+        page = findAndClickButton(page, "index");
+
+        // verify " Current flow ID: flow1", "Current flowscope value: 3"
+        value = "value: 3";
+        verifyFlowId(page, "flow1");
+        verifyFlowScopeValue(page, value);
+
+        // enter flow 1 (flow1)
+        page = findAndClickButton(page, "flow1");
+
+        // index (index)
+        page = findAndClickButton(page, "index");
+
+        // verify "Current flow ID: flow2", "Current flowscope value: 2"
+        value = "value: 2";
+        verifyFlowId(page, "flow2");
+        verifyFlowScopeValue(page, value);
+
+        // enter flow 1 (flow1)
+        page = findAndClickButton(page, "flow1");
+
+        // index (index)
+        page = findAndClickButton(page, "index");
+
+        // verify "Current flow ID: flow1", "Current flowscope value: 1"
+        value = "value: 1";
+        verifyFlowId(page, "flow1");
+        verifyFlowScopeValue(page, value);
+
+        // enter flow 1 (flow1)
+        page = findAndClickButton(page, "flow1");
+
+        // index (index)
+        page = findAndClickButton(page, "index");
+
+        // verify "Current flow ID: no flow ID", "Current flowscope value: no flowscope value"
+        value = "no flowscope value";
+        verifyFlowId(page, "no flow ID");
+        verifyFlowScopeValue(page, value);
+    }
+
+    /**
+     * Tests APAR PI90507: Facelet Action Listener without binding attribute
+     *
+     * Ensure that when com.ibm.ws.jsf.DisableFaceletActionListenerPreDestroy is set to true,
+     * preDestroy is never called on the Action Listener registered via facelet.
+     *
+     * This prevents a list of injected JSF artifacts to grow.
+     *
+     * @throws Exception
+     */
+    @RunUnlessFeatureBeingTested("jsf-2.3")
+    @Test
+    public void testPI90507NonBindingCase() throws Exception {
+        WebClient webClient = new WebClient();
+
+        URL url = JSFUtils.createHttpUrl(jsfAparServer, "PI90507", "actionListenerNonBinding.xhtml");
+
+        Log.info(c, name.getMethodName(), "PI90507: Making a request to " + url);
+
+        HtmlPage page = (HtmlPage) webClient.getPage(url);
+
+        // Make sure the test page was rendered correctly
+        assertTrue("PI90507: the app output was null!", page != null);
+
+        // Get the button to click
+        HtmlSubmitInput submitButton = (HtmlSubmitInput) page.getElementById("form1:submitButton");
+        submitButton.click();
+
+        // Verify that PostConstruct is called
+        assertTrue("PostConstruct was not called",
+                   jsfAparServer.findStringsInLogs("Post construct from TestActionListener").size() == 1);
+
+        // Stop the server but don't archive the logs (this should shutdown the app)
+        jsfAparServer.stopServer(false);
+
+        // Verify that PreDestroy is not being called
+        assertTrue("PreDestroy was called",
+                   jsfAparServer.findStringsInLogs("Pre destroy from TestActionListener").size() == 0);
+
+        // Archive the logs
+        jsfAparServer.postStopServerArchive();
+    }
+
+    /**
+     * Tests APAR PI90507: Facelet Action Listener with binding attribute
+     *
+     * Ensure that when com.ibm.ws.jsf.DisableFaceletActionListenerPreDestroy is set to true,
+     * preDestroy is never called on the Action Listener registered via facelet.
+     *
+     * This prevents a list of injected JSF artifacts to grow.
+     *
+     * @throws Exception
+     */
+    @RunUnlessFeatureBeingTested("jsf-2.3")
+    @Test
+    public void testPI90507BindingCase() throws Exception {
+        WebClient webClient = new WebClient();
+
+        URL url = JSFUtils.createHttpUrl(jsfAparServer, "PI90507", "actionListenerNonBinding.xhtml");
+
+        Log.info(c, name.getMethodName(), "PI90507: Making a request to " + url);
+
+        HtmlPage page = (HtmlPage) webClient.getPage(url);
+
+        // Make sure the test page was rendered correctly
+        assertTrue("PI90507: the app output was null!", page != null);
+
+        // Get the button to click
+        HtmlSubmitInput submitButton = (HtmlSubmitInput) page.getElementById("form1:submitButton");
+        submitButton.click();
+
+        // Verify that PostConstruct is called
+        assertTrue("PostConstruct was not called",
+                   jsfAparServer.findStringsInLogs("Post construct from TestActionListener").size() == 1);
+
+        // Stop the server but don't archive the logs (this should shutdown the app)
+        jsfAparServer.stopServer(false);
+
+        // Verify that PreDestroy is not being called
+        assertTrue("PreDestroy was called",
+                   jsfAparServer.findStringsInLogs("Pre destroy from TestActionListener").size() == 0);
+
+        // Archive the logs
+        jsfAparServer.postStopServerArchive();
+    }
+
+    /**
+     * Tests APAR PH01566: Faces Servlet mapping defined in web-fragment.xml does not work
+     * Also tests PH09730: a regression caused by PH01566 wherein unloadable servlet definitions prevent initialization
+     *
+     * Make sure that a JSF application with and invalid servlet defined and its faces servlet mapping defined in a web fragment jar
+     * starts up correctly
+     */
+    @Test
+    public void testPH01566_and_PH09730() throws Exception {
+
+        WebClient webClient = new WebClient();
+
+        URL url = JSFUtils.createHttpUrl(jsfAparServer, "PH01566", "index.xhtml");
+
+        Log.info(c, name.getMethodName(), "PH01566: Making a request to " + url);
+        HtmlPage page = (HtmlPage) webClient.getPage(url);
+
+        // Make sure the test page was rendered correctly
+        assertTrue("PH01566: the app output was null!", page != null);
+
+        // Check for the expected text in the target page
+        assertTrue("testPH01566:: Application did not start up correctly!",
+                   page.asText().contains("application initialization succeeded"));
+    }
+
+    /**
+     * Tests APAR PH06008: Transient attribute defined in a template is inherited by the final page correctly.
+     *
+     * Make sure that no 'unable to create view' exception is thrown when the Transient attribute is being
+     *
+     * inherited. Clicking submit should reload the page without errors.
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testPH06008() throws Exception {
+
+        WebClient webClient = new WebClient();
+
+        URL url = JSFUtils.createHttpUrl(jsfAparServer, "PH06008", "index.xhtml");
+
+        Log.info(c, name.getMethodName(), "PH06008: Making a request to " + url);
+        HtmlPage page = (HtmlPage) webClient.getPage(url);
+
+        Log.info(c, name.getMethodName(), "Clicking Page.....");
+        HtmlSubmitInput submitButton = (HtmlSubmitInput) page.getElementById("form:submit");
+        submitButton.click();
+        Log.info(c, name.getMethodName(), "On next page! Testing asserts next...");
+        // Make sure the test page was rendered correctly
+        assertTrue("PH06008: the app output was null!", page != null);
+
+        // Check for the expected text in the target page
+        assertTrue("testPH06008:: Page reload threw an error!",
+                   page.asText().contains("PH06008 success!"));
+    }
 }
