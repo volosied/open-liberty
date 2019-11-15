@@ -10,6 +10,25 @@
  *******************************************************************************/
 package com.ibm.ws.webcontainer.osgi.mbeans;
 
+import com.ibm.websphere.ras.Tr;
+import com.ibm.websphere.ras.TraceComponent;
+import com.ibm.websphere.ras.annotation.Trivial;
+import com.ibm.ws.ffdc.FFDCFilter;
+import com.ibm.ws.ffdc.annotation.FFDCIgnore;
+import com.ibm.ws.kernel.service.util.JavaInfo;
+import com.ibm.ws.kernel.service.util.JavaInfo.Vendor;
+import com.ibm.ws.webcontainer.httpsession.SessionManager;
+import com.ibm.ws.webcontainer.osgi.DynamicVirtualHost;
+import com.ibm.ws.webcontainer.osgi.DynamicVirtualHostManager;
+import com.ibm.ws.webcontainer.osgi.WebContainer;
+import com.ibm.ws.webcontainer.osgi.webapp.WebApp;
+import com.ibm.ws.webcontainer.webapp.WebAppConfiguration;
+import com.ibm.wsspi.channelfw.utils.HostNameUtils;
+import com.ibm.wsspi.kernel.service.location.WsLocationAdmin;
+import com.ibm.wsspi.kernel.service.location.WsResource;
+import com.ibm.wsspi.kernel.service.utils.FrameworkState;
+import com.ibm.wsspi.kernel.service.utils.MetatypeUtils;
+import com.ibm.wsspi.webcontainer.osgi.mbeans.GeneratePluginConfig;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -40,32 +59,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-
 import javax.servlet.SessionCookieConfig;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-
-import java.io.IOException;
-import java.io.StringReader;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
-import org.xml.sax.Attributes;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXNotRecognizedException;
-import org.xml.sax.SAXNotSupportedException;
-import org.xml.sax.XMLReader;
-import org.xml.sax.ext.LexicalHandler;
-import org.xml.sax.helpers.DefaultHandler;
-
 import org.apache.commons.io.FileUtils;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
@@ -78,26 +82,20 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXNotRecognizedException;
+import org.xml.sax.SAXNotSupportedException;
+import org.xml.sax.XMLReader;
+import org.xml.sax.ext.LexicalHandler;
+import org.xml.sax.helpers.DefaultHandler;
 
-import com.ibm.websphere.ras.Tr;
-import com.ibm.websphere.ras.TraceComponent;
-import com.ibm.websphere.ras.annotation.Trivial;
-import com.ibm.ws.ffdc.FFDCFilter;
-import com.ibm.ws.ffdc.annotation.FFDCIgnore;
-import com.ibm.ws.kernel.service.util.JavaInfo;
-import com.ibm.ws.kernel.service.util.JavaInfo.Vendor;
-import com.ibm.ws.webcontainer.httpsession.SessionManager;
-import com.ibm.ws.webcontainer.osgi.DynamicVirtualHost;
-import com.ibm.ws.webcontainer.osgi.DynamicVirtualHostManager;
-import com.ibm.ws.webcontainer.osgi.WebContainer;
-import com.ibm.ws.webcontainer.osgi.webapp.WebApp;
-import com.ibm.ws.webcontainer.webapp.WebAppConfiguration;
-import com.ibm.wsspi.channelfw.utils.HostNameUtils;
-import com.ibm.wsspi.kernel.service.location.WsLocationAdmin;
-import com.ibm.wsspi.kernel.service.location.WsResource;
-import com.ibm.wsspi.kernel.service.utils.FrameworkState;
-import com.ibm.wsspi.kernel.service.utils.MetatypeUtils;
-import com.ibm.wsspi.webcontainer.osgi.mbeans.GeneratePluginConfig;
+
+
+
+
+
 
 /**
  * Generate the appropriate plugin configuration XML file for the current
@@ -763,6 +761,10 @@ public class PluginGenerator {
             // Check to see if the config has changed
             writeFile = hasConfigChanged(output);
 
+            Tr.debug(tc, "utilityRequest : " + utilityRequest);
+
+            Tr.debug(tc, "writeFile : " + writeFile);
+
             // Only write out to file if we have new or changed configuration information, or if this is an explicit request
             if (writeFile || !utilityRequest || !fileExists) {
                 // If writeFile is true write to the cachedFile and copy from there
@@ -771,6 +773,7 @@ public class PluginGenerator {
                 // If writeFile is false and cachedFile doesn't exist write to cachedFile and copy from there
                 try {
                     if (!cachedFile.exists() || writeFile) {
+                        Tr.debug(tc, "cachedFile : " + cachedFile.exists());
                         fOutputStream = new FileOutputStream(cachedFile);
                         pluginCfgWriter = new BufferedWriter(new OutputStreamWriter(fOutputStream, "ISO-8859-1"));
 
@@ -788,6 +791,7 @@ public class PluginGenerator {
                         oprops.put(OutputKeys.INDENT, "yes");
                         serializer.setOutputProperties(oprops);
                         serializer.transform(new DOMSource(output), new StreamResult(pluginCfgWriter));
+                        Tr.debug(tc, "cached file exists : " + cachedFile.exists());
                     }
                 } finally {
                     if (pluginCfgWriter != null) {
@@ -795,8 +799,17 @@ public class PluginGenerator {
                         // Ensure data is physically written to disk
                         fOutputStream.getFD().sync();
                         pluginCfgWriter.close();
+                        Tr.debug(tc, "Flushed cachedFile : " + cachedFile.exists());
                     }
-                    copyFile(cachedFile, outFile.asFile());
+                    
+                    try {
+                        Tr.debug(tc, "Flushed cachedFile : " +getBundleContext());
+                    } catch (Exception e ){
+                        Tr.debug(tc, "Exception getting bundle : " + e ;
+                    }
+                   
+
+                                copyFile(cachedFile, outFile.asFile());
                 }
             } else {
                 if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
@@ -858,6 +871,7 @@ public class PluginGenerator {
                     finally {
                         if (inChannel != null) inChannel.close();
                         if (outChannel != null) outChannel.close();
+                        //return true; 
                     }
                 }
 
@@ -1391,6 +1405,7 @@ protected class XMLRootHandler extends DefaultHandler implements LexicalHandler 
          * 
          * @see org.xml.sax.ext.LexicalHandler#comment(char[], int, int)
          */
+        @Override
         public final void comment(final char[] ch, final int start, final int length) {
                 // Not interested.
         }
@@ -1434,6 +1449,7 @@ protected class XMLRootHandler extends DefaultHandler implements LexicalHandler 
          * 
          * @see org.xml.sax.ext.LexicalHandler#endCDATA()
          */
+        @Override
         public final void endCDATA() {
                 // Not interested.
         }
@@ -1443,6 +1459,7 @@ protected class XMLRootHandler extends DefaultHandler implements LexicalHandler 
          * 
          * @see org.xml.sax.ext.LexicalHandler#endDTD()
          */
+        @Override
         public final void endDTD() {
                 // Not interested.
         }
@@ -1452,6 +1469,7 @@ protected class XMLRootHandler extends DefaultHandler implements LexicalHandler 
          * 
          * @see org.xml.sax.ext.LexicalHandler#endEntity(java.lang.String)
          */
+        @Override
         public final void endEntity(final String name) {
                 // Not interested.
         }
@@ -1489,6 +1507,7 @@ protected class XMLRootHandler extends DefaultHandler implements LexicalHandler 
          * 
          * @see org.xml.sax.ext.LexicalHandler#startCDATA()
          */
+        @Override
         public final void startCDATA() {
                 // Not interested.
         }
@@ -1499,6 +1518,7 @@ protected class XMLRootHandler extends DefaultHandler implements LexicalHandler 
          * @see org.xml.sax.ext.LexicalHandler#startDTD(java.lang.String,
          *      java.lang.String, java.lang.String)
          */
+        @Override
         public final void startDTD(final String name, final String publicId, final String systemId) throws SAXException {
          // Not interested.
         }
@@ -1524,6 +1544,7 @@ protected class XMLRootHandler extends DefaultHandler implements LexicalHandler 
          * 
          * @see org.xml.sax.ext.LexicalHandler#startEntity(java.lang.String)
          */
+        @Override
         public final void startEntity(final String name) {
                 // Not interested.
         }
@@ -1658,6 +1679,7 @@ protected class XMLRootHandler extends DefaultHandler implements LexicalHandler 
             this.port = Integer.valueOf(alias.substring(lastIndex + 1));
         }
 
+        @Override
         public String toString() {
             return "vhost(http=" + host + ':' + port + ")";
         }
@@ -1724,6 +1746,7 @@ protected class XMLRootHandler extends DefaultHandler implements LexicalHandler 
             }
         }
 
+        @Override
         public int hashCode() {
             int result = uriName.hashCode();
             result = 31 * result + cookieName.hashCode();
@@ -1731,6 +1754,7 @@ protected class XMLRootHandler extends DefaultHandler implements LexicalHandler 
             return result;
         }
 
+        @Override
         public boolean equals(Object obj) {
             if (this == obj)
                 return true;
@@ -2138,6 +2162,7 @@ protected class XMLRootHandler extends DefaultHandler implements LexicalHandler 
             }
         }
 
+        @Override
         public boolean equals(Object o) {
             if (o == this) {
                 return true;
@@ -2150,10 +2175,12 @@ protected class XMLRootHandler extends DefaultHandler implements LexicalHandler 
 
         }
 
+        @Override
         public int hashCode() {
             return host.hashCode() + port;
         }
 
+        @Override
         public String toString() {
             return "transportData(host=" + host + ", port=" + port + ", isSSL=" + isSslEnabled + ")";
         }
