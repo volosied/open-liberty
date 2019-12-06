@@ -382,6 +382,9 @@ public class WebContainer extends com.ibm.ws.webcontainer.WebContainer implement
         if (TraceComponent.isAnyTracingEnabled() && tc.isEventEnabled()) {
             Tr.event(tc, "Deactivating the WebContainer bundle");
         }
+
+                // VS -- seeing why deactivate was called 
+                Thread.dumpStack();
         
         if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
             Tr.debug(tc, methodName, "Posting STOPPED_EVENT");
@@ -411,7 +414,7 @@ public class WebContainer extends com.ibm.ws.webcontainer.WebContainer implement
 
         if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
             Tr.debug(tc, methodName, "Deactivating the WebContainer bundle: Complete");
-        }                
+        }  
     }
 
     /**

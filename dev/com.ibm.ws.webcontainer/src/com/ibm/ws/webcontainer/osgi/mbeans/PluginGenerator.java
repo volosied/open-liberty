@@ -796,6 +796,13 @@ public class PluginGenerator {
                         fOutputStream.getFD().sync();
                         pluginCfgWriter.close();
                     }
+
+                    try {
+                        this.getBundleContext().getDataFile(".test-file.txt");
+                    } catch(IllegalStateException e){
+                        Tr.debug(tc, "VS -- BUNDLE CONTEXT NOT VALID " + e.getMessage());
+                    }
+                    Tr.debug(tc, "Output file already exists : " + cachedFile.exists());
                     copyFile(cachedFile, outFile.asFile());
                 }
             } else {
