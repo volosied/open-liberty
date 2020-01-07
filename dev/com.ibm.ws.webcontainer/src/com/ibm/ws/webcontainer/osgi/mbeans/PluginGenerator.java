@@ -789,6 +789,8 @@ public class PluginGenerator {
                         serializer.setOutputProperties(oprops);
                         serializer.transform(new DOMSource(output), new StreamResult(pluginCfgWriter));
                     }
+                } catch(Exception e){
+                    Tr.debug(tc, "Exception caught before copy! --> "  + e.getMessage());
                 } finally {
                     if (pluginCfgWriter != null) {
                         pluginCfgWriter.flush();
@@ -796,6 +798,11 @@ public class PluginGenerator {
                         fOutputStream.getFD().sync();
                         pluginCfgWriter.close();
                     }
+
+                    Tr.debug(tc, "Framework is now stopping --> "  + FrameworkState.isStopping() );
+                    Tr.debug(tc, "Container is now stopping --> "  + container.isServerStopping() );
+                    Tr.debug(tc, "Cached File exits? --> "  + cachedFile.exists());
+
                     copyFile(cachedFile, outFile.asFile());
                 }
             } else {
