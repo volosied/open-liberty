@@ -788,14 +788,31 @@ public class PluginGenerator {
                         oprops.put(OutputKeys.INDENT, "yes");
                         serializer.setOutputProperties(oprops);
                         serializer.transform(new DOMSource(output), new StreamResult(pluginCfgWriter));
+
+                        Tr.debug(tc, "vs - Finishing up serialization");
                     }
                 } finally {
+
                     if (pluginCfgWriter != null) {
                         pluginCfgWriter.flush();
                         // Ensure data is physically written to disk
                         fOutputStream.getFD().sync();
                         pluginCfgWriter.close();
+                        Tr.debug(tc, "vs - file written");
                     }
+
+                    Tr.debug(tc, "vs - File Exists? ->" + cachedFile.exists());
+
+                    try {
+                        if(context.getBundle() == null ){
+                            Tr.debug(tc, "vs - Bundle context is null");
+                        } else {
+                            Tr.debug(tc, "vs - " + context.getBundle().getDataFile("cached-PluginCfg.xml").toString());
+                        }
+                    } catch(IllegalStateException e){
+                        Tr.debug(tc, "vs - Bundle context is not valid " + e.toString());
+                    }
+
                     copyFile(cachedFile, outFile.asFile());
                 }
             } else {
