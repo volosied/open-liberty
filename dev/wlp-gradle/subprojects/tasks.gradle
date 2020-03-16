@@ -159,6 +159,7 @@ task jakartaeeTransform {
   mustRunAfter project.tasks.jar
   if (parseBoolean(bnd('jakartaeeMe', 'true'))) {
     doLast {
+      delete "**/*.jakarta.jar"
       FileTree bundles = fileTree(project.buildDir).matching {
         include '**/*.jar' }        
             bundles.each { bundleJar ->
