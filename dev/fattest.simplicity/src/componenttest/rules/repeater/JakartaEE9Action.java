@@ -46,7 +46,7 @@ public class JakartaEE9Action extends FeatureReplacementAction {
     public static final String ID = "EE9_FEATURES";
 
     static final String[] EE9_FEATURES_ARRAY = { "jakartaee-9.0", "webProfile-9.0", "jakartaeeClient-9.0", "servlet-5.0", "jdbc-4.2", "javaMail-2.0", "cdi-3.0", "jpa-3.0",
-                                                 "beanValidation-3.0", "jaxrs-3.0", "jaxrsClient-3.0", "jsf-3.0", "appSecurity-3.0", "jsonp-2.0", "jsonb-2.0",
+                                                 "beanValidation-3.0", "jaxrs-3.0", "jaxrsClient-3.0", "jsf-3.0", "jsp-3.0", "appSecurity-3.0", "jsonp-2.0", "jsonb-2.0",
                                                  "componenttest-2.0" };
     public static final Set<String> EE9_FEATURE_SET = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(EE9_FEATURES_ARRAY)));
 
