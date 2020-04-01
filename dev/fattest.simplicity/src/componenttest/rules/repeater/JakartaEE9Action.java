@@ -11,6 +11,7 @@
 package componenttest.rules.repeater;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.file.Files;
@@ -173,7 +174,11 @@ public class JakartaEE9Action extends FeatureReplacementAction {
         }
 
         Path outputPath = appPath.resolveSibling(appPath.getFileName() + ".jakarta");
-        Path backupPath = appPath.resolveSibling(appPath.getFileName() + ".backup");
+        //Path backupPath = appPath.resolveSibling(appPath.getFileName() + ".backup");
+        Path serverPath = appPath.getParent().getParent();
+        File backupDir = new File(serverPath.toString(), "backup");
+        backupDir.mkdir();
+
         try {
             // Invoke the jakarta transformer
             String[] args = new String[3];
@@ -184,7 +189,7 @@ public class JakartaEE9Action extends FeatureReplacementAction {
 
             // Swap out the transformed file with the original
             if (outputPath.toFile().exists()) {
-                Files.move(appPath, backupPath);
+                Files.move(appPath, new File(backupDir.toString(), appPath.getFileName() + ".backup"  ).toPath());
                 Files.move(outputPath, appPath);
             } else {
                 throw new RuntimeException("Jakarta transformer failed for: " + appPath);
