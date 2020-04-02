@@ -40,6 +40,7 @@ import componenttest.custom.junit.runner.Mode.TestMode;
  */
 
 // No need to run against cdi-2.0 since these tests don't use CDI at all.
+@SkipForRepeat("EE9_FEATURES")
 @SkipForRepeat("CDI-2.0")
 @RunWith(FATRunner.class)
 public class JSPServerHttpUnit extends LoggingTest {

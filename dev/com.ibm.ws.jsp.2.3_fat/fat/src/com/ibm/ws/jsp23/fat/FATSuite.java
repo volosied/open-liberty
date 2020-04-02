@@ -25,6 +25,8 @@ import com.ibm.ws.jsp23.fat.tests.JSPServerTest;
 import componenttest.rules.repeater.FeatureReplacementAction;
 import componenttest.rules.repeater.RepeatTests;
 
+import componenttest.rules.repeater.JakartaEE9Action;
+
 /**
  * JSP 2.3 Tests
  *
@@ -56,5 +58,5 @@ public class FATSuite {
                     .andWith(new FeatureReplacementAction("cdi-1.2", "cdi-2.0")
                                     .withID("CDI-2.0")
                                     .forceAddFeatures(false)
-                                    .withMinJavaLevel(8));
+                                    .withMinJavaLevel(8)).andWith(new JakartaEE9Action());
 }

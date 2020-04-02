@@ -29,6 +29,8 @@ import componenttest.custom.junit.runner.FATRunner;
 import componenttest.custom.junit.runner.Mode;
 import componenttest.custom.junit.runner.Mode.TestMode;
 
+import componenttest.annotation.SkipForRepeat;
+
 /**
  * All JSP 2.3 tests with all applicable server features enabled.
  *
@@ -36,6 +38,7 @@ import componenttest.custom.junit.runner.Mode.TestMode;
  *
  * If a test needs httpunit it should more than likely be placed in the JSPServerHttpUnit test class.
  */
+@SkipForRepeat("EE9_FEATURES")
 @RunWith(FATRunner.class)
 public class JSPServerTest extends LoggingTest {
 
