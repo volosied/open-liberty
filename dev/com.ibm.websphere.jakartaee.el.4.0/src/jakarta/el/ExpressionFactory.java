@@ -137,8 +137,7 @@ public abstract class ExpressionFactory {
      * @return a new <code>ExpressionFactory</code> instance
      */
     public static ExpressionFactory newInstance(Properties properties) {
-        return (ExpressionFactory) FactoryFinder.find(ExpressionFactory.class,
-                "jakarta.el.ExpressionFactory", "org.apache.el.ExpressionFactoryImpl", properties);
+        return (ExpressionFactory) FactoryFinder.find(ExpressionFactory.class, properties);
     }
 
     /**

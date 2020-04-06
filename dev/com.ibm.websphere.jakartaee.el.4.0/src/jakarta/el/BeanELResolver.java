@@ -30,6 +30,8 @@ import java.lang.ref.ReferenceQueue;
 import java.lang.ref.SoftReference;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -89,8 +91,27 @@ public class BeanELResolver extends ELResolver {
     static private class SoftConcurrentHashMap extends ConcurrentHashMap<Class<?>, BeanProperties> {
 
         private static final long serialVersionUID = -178867497897782229L;
-        private static final int CACHE_INIT_SIZE = 1024;
-        private ConcurrentHashMap<Class<?>, BPSoftReference> map = new ConcurrentHashMap<>(CACHE_INIT_SIZE);
+        private static final int CACHE_SIZE;
+        private static final String CACHE_SIZE_PROP =
+            "org.apache.el.BeanELResolver.CACHE_SIZE";
+    
+        static {
+            if (System.getSecurityManager() == null) {
+                CACHE_SIZE = Integer.parseInt(
+                        System.getProperty(CACHE_SIZE_PROP, "1000"));
+            } else {
+                CACHE_SIZE = AccessController.doPrivileged(
+                        new PrivilegedAction<Integer>() {
+    
+                        @Override
+                        public Integer run() {
+                            return Integer.valueOf(
+                                    System.getProperty(CACHE_SIZE_PROP, "1000"));
+                        }
+                    }).intValue();
+            }
+        }
+        private ConcurrentHashMap<Class<?>, BPSoftReference> map = new ConcurrentHashMap<>(CACHE_SIZE);
         private ReferenceQueue<BeanProperties> refQ = new ReferenceQueue<>();
 
         // Remove map entries that have been placed on the queue by GC.

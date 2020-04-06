@@ -18,16 +18,58 @@
 
 package jakarta.el;
 
-import static java.io.File.separator;
-
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
-import java.util.Iterator;
 import java.util.Properties;
 import java.util.ServiceLoader;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 
 class FactoryFinder {
+
+    private static final boolean IS_SECURITY_ENABLED = (System.getSecurityManager() != null);
+
+    private static final String SERVICE_RESOURCE_NAME = "META-INF/services/jakarta.el.ExpressionFactory";
+
+    private static final String PROPERTY_NAME = "jakarta.el.ExpressionFactory";
+    
+    private static final String SEP;
+    private static final String PROPERTY_FILE;
+
+    static {
+        if (IS_SECURITY_ENABLED) {
+            SEP = AccessController.doPrivileged(
+                            new PrivilegedAction<String>() {
+                                @Override
+                                public String run() {
+                                    return System.getProperty("file.separator");
+                                }
+
+                            }
+                            );
+            PROPERTY_FILE = AccessController.doPrivileged(
+                            new PrivilegedAction<String>() {
+                                @Override
+                                public String run() {
+                                    return System.getProperty("java.home") + SEP +
+                                           "lib" + SEP + "el.properties";
+                                }
+
+                            }
+                            );
+        } else {
+            SEP = System.getProperty("file.separator");
+            PROPERTY_FILE = System.getProperty("java.home") + SEP + "lib" +
+                            SEP + "el.properties";
+        }
+    }
 
     /**
      * Creates an instance of the specified class using the specified <code>ClassLoader</code> object.
@@ -36,17 +78,17 @@ class FactoryFinder {
      */
     private static Object newInstance(String className, ClassLoader classLoader, Properties properties) {
         try {
-            Class<?> spiClass;
+            Class<?> instance = null;
             if (classLoader == null) {
-                spiClass = Class.forName(className);
+                instance = Class.forName(className);
             } else {
-                spiClass = classLoader.loadClass(className);
+                instance = classLoader.loadClass(className);
             }
 
             if (properties != null) {
                 Constructor<?> constr = null;
                 try {
-                    constr = spiClass.getConstructor(Properties.class);
+                    constr = instance.getConstructor(Properties.class);
                 } catch (Exception ex) {
                 }
 
@@ -54,7 +96,7 @@ class FactoryFinder {
                     return constr.newInstance(properties);
                 }
             }
-            return spiClass.getDeclaredConstructor().newInstance();
+            return instance;
         } catch (ClassNotFoundException x) {
             throw new ELException("Provider " + className + " not found", x);
         } catch (Exception x) {
@@ -80,56 +122,129 @@ class FactoryFinder {
      * <code>null</code> to indicate that there is no fallback class name
      * @exception ELException if there is an error
      */
-    static Object find(Class<?> serviceClass, String factoryId, String fallbackClassName, Properties properties) {
+    static Object find(Class<?> serviceClass, Properties properties) {
         ClassLoader classLoader;
         try {
-            classLoader = Thread.currentThread().getContextClassLoader();
+            if (System.getSecurityManager() != null) {
+                classLoader = AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
+                    @Override
+                    public ClassLoader run() {
+                        return Thread.currentThread().getContextClassLoader();
+                    }
+                });
+            } else {
+                classLoader = Thread.currentThread().getContextClassLoader();
+            }
+
         } catch (Exception x) {
             throw new ELException(x.toString(), x);
         }
 
-        // try to find services in CLASSPATH
-        try {
-            ServiceLoader<?> serviceLoader = ServiceLoader.load(serviceClass, classLoader);
-            Iterator<?> iter = serviceLoader.iterator();
-            while (iter.hasNext()) {
-                Object service = iter.next();
-                if (service != null) {
-                    return service;
+        String className = discoverClassName(classLoader);
+
+        return newInstance(className, classLoader, properties);
+    }
+
+    private static String discoverClassName(ClassLoader tccl) {
+        String className = null;
+
+        // First services API
+        className = getClassNameServices(tccl);
+        if (className == null) {
+            if (IS_SECURITY_ENABLED) {
+                className = AccessController.doPrivileged(
+                                new PrivilegedAction<String>() {
+                                    @Override
+                                    public String run() {
+                                        return getClassNameJreDir();
+                                    }
+                                }
+                                );
+            } else {
+                // Second el.properties file
+                className = getClassNameJreDir();
+            }
+        }
+        if (className == null) {
+            if (IS_SECURITY_ENABLED) {
+                className = AccessController.doPrivileged(
+                                new PrivilegedAction<String>() {
+                                    @Override
+                                    public String run() {
+                                        return getClassNameBySysProp();
+                                    }
+                                }
+                                );
+            } else {
+                // Third system property
+                className = getClassNameBySysProp();
+            }
+        }
+        if (className == null) {
+            // Fourth - default
+            className = "org.apache.el.ExpressionFactoryImpl";
+        }
+        return className;
+    }
+
+    private static String getClassNameServices(ClassLoader tccl) {
+        InputStream is = null;
+
+        if (tccl == null) {
+            is = ClassLoader.getSystemResourceAsStream(SERVICE_RESOURCE_NAME);
+        } else {
+            is = tccl.getResourceAsStream(SERVICE_RESOURCE_NAME);
+        }
+
+        if (is != null) {
+            String line = null;
+            try (InputStreamReader isr = new InputStreamReader(is, "UTF-8");
+                            BufferedReader br = new BufferedReader(isr)) {
+                line = br.readLine();
+                if (line != null && line.trim().length() > 0) {
+                    return line.trim();
+                }
+            } catch (UnsupportedEncodingException e) {
+                // Should never happen with UTF-8
+                // If it does - ignore & return null
+            } catch (IOException e) {
+                throw new ELException("Failed to read " + SERVICE_RESOURCE_NAME,
+                                e);
+            } finally {
+                try {
+                    is.close();
+                } catch (IOException ioe) {/* Ignore */
                 }
             }
-        } catch (Exception ex) {
         }
 
-        // Try to read from $java.home/lib/el.properties
-        try {
-            String javah = System.getProperty("java.home");
-            String configFileName = javah + separator + "lib" + separator + "el.properties";
+        return null;
+    }
 
-            File configFile = new File(configFileName);
-            if (configFile.exists()) {
+    private static String getClassNameJreDir() {
+        File file = new File(PROPERTY_FILE);
+        if (file.canRead()) {
+            try (InputStream is = new FileInputStream(file)) {
                 Properties props = new Properties();
-                props.load(new FileInputStream(configFile));
-                String factoryClassName = props.getProperty(factoryId);
-
-                return newInstance(factoryClassName, classLoader, properties);
+                props.load(is);
+                String value = props.getProperty(PROPERTY_NAME);
+                if (value != null && value.trim().length() > 0) {
+                    return value.trim();
+                }
+            } catch (FileNotFoundException e) {
+                // Should not happen - ignore it if it does
+            } catch (IOException e) {
+                throw new ELException("Failed to read " + PROPERTY_FILE, e);
             }
-        } catch (Exception ex) {
         }
+        return null;
+    }
 
-        // Use the system property
-        try {
-            String systemProp = System.getProperty(factoryId);
-            if (systemProp != null) {
-                return newInstance(systemProp, classLoader, properties);
-            }
-        } catch (SecurityException se) {
+    private static final String getClassNameBySysProp() {
+        String value = System.getProperty(PROPERTY_NAME);
+        if (value != null && value.trim().length() > 0) {
+            return value.trim();
         }
-
-        if (fallbackClassName == null) {
-            throw new ELException("Provider for " + factoryId + " cannot be found", null);
-        }
-
-        return newInstance(fallbackClassName, classLoader, properties);
+        return null;
     }
 }
