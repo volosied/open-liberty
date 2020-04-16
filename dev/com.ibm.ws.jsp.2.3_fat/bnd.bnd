@@ -14,16 +14,17 @@ bVersion=1.0
 src: \
     fat/src,\
     test-applications/TestJSP2.3.war/src,\
+    test-applications/TestInjection.war/src,\
+    test-applications/TestEL.war/src,\
 
 fat.project: true
 
 # Define additional tested features that are NOT present in any XML files in this bucket.
 # In this case, jsp-2.2 is added programmatically at runtime.
 tested.features:\
-	jsp-2.2,\
-	servlet-4.0,\
-	cdi-2.0
-
+    jsp-2.2,\
+    servlet-4.0,\
+    cdi-2.0,\
 
 -buildpath: \
     com.ibm.websphere.javaee.cdi.1.2;version=latest,\

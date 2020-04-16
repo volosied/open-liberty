@@ -19,8 +19,10 @@ import org.junit.runners.Suite.SuiteClasses;
 import com.ibm.ws.fat.util.FatLogHandler;
 import com.ibm.ws.jsp23.fat.tests.JSP23JSP22ServerTest;
 import com.ibm.ws.jsp23.fat.tests.JSPJava8Test;
-import com.ibm.ws.jsp23.fat.tests.JSPServerHttpUnit;
+import com.ibm.ws.jsp23.fat.tests.ELExceptionTest;
 import com.ibm.ws.jsp23.fat.tests.JSPServerTest;
+import com.ibm.ws.jsp23.fat.tests.JSPInjectionTest;
+import com.ibm.ws.jsp23.fat.tests.ELOperatorsTest;
 
 import componenttest.rules.repeater.FeatureReplacementAction;
 import componenttest.rules.repeater.RepeatTests;
@@ -32,10 +34,12 @@ import componenttest.rules.repeater.RepeatTests;
  */
 @RunWith(Suite.class)
 @SuiteClasses({
-                JSPServerHttpUnit.class,
+                ELExceptionTest.class,
+                ELOperatorsTest.class,
                 JSPServerTest.class,
                 JSPJava8Test.class,
-                JSP23JSP22ServerTest.class
+                JSP23JSP22ServerTest.class,
+                JSPInjectionTest.class,
 })
 public class FATSuite {
 
