@@ -202,9 +202,26 @@ public class FATRunner extends BlockJUnit4ClassRunner {
                     List<String> expectedFFDCs = getExpectedFFDCAnnotationFromTest(method);
                     // check for expectedFFDCs
                     for (String ffdcException : expectedFFDCs) {
-                        FFDCInfo info = unexpectedFFDCs.remove(ffdcException);
-                        if (info == null) {
-                            errors.add("An FFDC reporting " + ffdcException + " was expected but none was found.");
+                        // Check for 'Or' -- javax/jakarta 
+                        if(ffdcException.contains("|")){
+                            String[] OrFFDCS = ffdcException.split("\\|"); 
+                            int found = 0;
+                            for (String singleFFDC : OrFFDCS) {
+                                FFDCInfo info = unexpectedFFDCs.remove(singleFFDC.trim());
+                                if(info == null){
+                                    found += 1;
+                                }
+                            }
+                            if(found != 1){
+                                errors.add("An FFDC reporting " + ffdcException + " but more than one was found!");
+                            }
+                            
+                        } else {
+                            FFDCInfo info = unexpectedFFDCs.remove(ffdcException);
+
+                            if (info == null) {
+                                errors.add("An FFDC reporting " + ffdcException + " was expected but none was found.");
+                            }
                         }
                     }
 
