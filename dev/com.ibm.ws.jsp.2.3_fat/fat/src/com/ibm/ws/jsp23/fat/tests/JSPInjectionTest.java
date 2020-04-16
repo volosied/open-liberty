@@ -37,6 +37,7 @@ import componenttest.custom.junit.runner.Mode.TestMode;
  * If a test needs httpunit it should more than likely be placed in the JSPServerHttpUnit test class.
  */
 @RunWith(FATRunner.class)
+@SkipForRepeat("EE9_FEATURES")
 public class JSPInjectionTest extends LoggingTest {
 
     private static final String JSP23_APP_NAME = "TestInjection";

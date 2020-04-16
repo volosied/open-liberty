@@ -128,7 +128,7 @@ public class ELExceptionTest extends LoggingTest {
      * @throws Exception
      */
     @Test
-    @ExpectedFFDC("javax.el.MethodNotFoundException")
+    @ExpectedFFDC("javax.el.MethodNotFoundException|jakarta.el.MethodNotFoundException")
     @SkipForRepeat("EE9_FEATURES")
     public void testEL30MethodNotFoundException() throws Exception {
         WebConversation wc = new WebConversation();
@@ -149,7 +149,7 @@ public class ELExceptionTest extends LoggingTest {
      * @throws Exception
      */
     @Test
-    @ExpectedFFDC("javax.el.PropertyNotFoundException")
+    @ExpectedFFDC("javax.el.PropertyNotFoundException|jakarta.el.PropertyNotFoundException")
     @Mode(TestMode.FULL)
     public void testEL30PropertyNotFoundException() throws Exception {
         WebConversation wc = new WebConversation();
@@ -161,7 +161,7 @@ public class ELExceptionTest extends LoggingTest {
 
         LOG.info("Response: " + response.getText());
 
-        assertTrue(response.getText().contains("javax.el.PropertyNotFoundException"));
+        assertTrue(response.getText().contains("el.PropertyNotFoundException"));
     }
 
     /**
@@ -170,7 +170,7 @@ public class ELExceptionTest extends LoggingTest {
      * @throws Exception
      */
     @Test
-    @ExpectedFFDC("javax.el.PropertyNotWritableException")
+    @ExpectedFFDC("javax.el.PropertyNotWritableException|jakarta.el.PropertyNotWritableException")
     @Mode(TestMode.FULL)
     public void testEL30PropertyNotWritableException() throws Exception {
         WebConversation wc = new WebConversation();
@@ -182,7 +182,7 @@ public class ELExceptionTest extends LoggingTest {
 
         LOG.info("Response: " + response.getText());
 
-        assertTrue(response.getText().contains("javax.el.PropertyNotWritableException"));
+        assertTrue(response.getText().contains("el.PropertyNotWritableException"));
     }
 
     /**
@@ -195,7 +195,7 @@ public class ELExceptionTest extends LoggingTest {
      * @throws Exception
      */
     @Test
-    @ExpectedFFDC("javax.el.PropertyNotWritableException")
+    @ExpectedFFDC("javax.el.PropertyNotWritableException|jakarta.el.PropertyNotWritableException")
     @Mode(TestMode.FULL)
     public void testEL30AssignmentOperatorException() throws Exception {
         WebConversation wc = new WebConversation();
@@ -207,7 +207,7 @@ public class ELExceptionTest extends LoggingTest {
 
         LOG.info("Response: " + response.getText());
 
-        assertTrue(response.getText().contains("javax.el.PropertyNotWritableException"));
+        assertTrue(response.getText().contains("el.PropertyNotWritableException"));
     }
 
     /**
@@ -218,7 +218,7 @@ public class ELExceptionTest extends LoggingTest {
      * @throws Exception
      */
     @Test
-    @ExpectedFFDC("javax.el.ELException")
+    @ExpectedFFDC("javax.el.ELException|jakarta.el.ELException")
     @AllowedFFDC("java.security.PrivilegedActionException")
     @Mode(TestMode.FULL)
     public void testEL30ReservedWords() throws Exception {

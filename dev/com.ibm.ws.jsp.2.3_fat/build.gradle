@@ -23,3 +23,5 @@ dependencies {
       'xml-apis:xml-apis:1.4.01',
       'net.sf.jtidy:jtidy:9.3.8'
     }
+    
+addRequiredLibraries.dependsOn addJakartaTransformer

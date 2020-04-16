@@ -97,7 +97,7 @@ public class JSPServerTest extends LoggingTest {
      *                       if something goes wrong
      */
     // No need to run against cdi-2.0 since this test does not use CDI at all.
-    @SkipForRepeat("CDI-2.0")
+    @SkipForRepeat({"CDI-2.0","EE9_FEATURES"}) //Skipping EE9 Run; verifyResponse should check for jakarta/javax using regex   
     @Test
     public void testJSP23ResolutionVariableProperties() throws Exception {
         WebBrowser browser = this.createWebBrowserForTestCase();
