@@ -331,8 +331,8 @@ public class JSPServerHttpUnit {
      *                       if something goes horribly wrong
      */
     // No need to run against cdi-2.0 since this test does not use CDI at all.
-    @SkipForRepeat("CDI-2.0")
     @Test
+    @SkipForRepeat("CDI-2.0")
     public void testServlet() throws Exception {
         this.verifyStringInResponse(TestEL_APP_NAME, "SimpleTestServlet", "Hello World");
     }
@@ -343,8 +343,8 @@ public class JSPServerHttpUnit {
      * @throws Exception
      */
     // No need to run against cdi-2.0 since this test does not use CDI at all.
-    @SkipForRepeat("CDI-2.0")
     @Test
+    @SkipForRepeat("CDI-2.0")
     public void testEL22Operators() throws Exception {
         // Each entry in the array is an expected output in the response
         String[] expectedInResponse = {
@@ -392,8 +392,8 @@ public class JSPServerHttpUnit {
      * @throws Exception
      */
     // No need to run against cdi-2.0 since this test does not use CDI at all.
-    @SkipForRepeat("CDI-2.0")
     @Test
+    @SkipForRepeat("CDI-2.0")
     public void testEL30Operators() throws Exception {
         // Each entry in the array is an expected output in the response
         String[] expectedInResponse = {
@@ -418,8 +418,8 @@ public class JSPServerHttpUnit {
      * @throws Exception
      */
     // No need to run against cdi-2.0 since this test does not use CDI at all.
-    @SkipForRepeat("CDI-2.0")
     @Test
+    @SkipForRepeat("CDI-2.0")
     public void testEL30LambdaExpressions() throws Exception {
         // Each entry in the array is an expected output in the response
         String[] expectedInResponse = {
@@ -450,8 +450,8 @@ public class JSPServerHttpUnit {
      *                       if something goes wrong
      */
     // No need to run against cdi-2.0 since this test does not use CDI at all.
-    @SkipForRepeat("CDI-2.0")
     @Test
+    @SkipForRepeat("CDI-2.0")
     public void testServlet31RequestResponse() throws Exception {
         String[] expectedInResponse = { "JSP to test Servlet 3.1 Request and Response",
                                         "Testing BASIC_AUTH static field from HttpServletRequest (Expected: BASIC): BASIC",
@@ -482,8 +482,8 @@ public class JSPServerHttpUnit {
      *                       if something goes wrong
      */
     // No need to run against cdi-2.0 since this test does not use CDI at all.
-    @SkipForRepeat("CDI-2.0")
     @Test
+    @SkipForRepeat("CDI-2.0")
     public void testMethodExpressionInvocations() throws Exception {
         String[] expectedInResponse = { "Get Parent Name Using Value Expression (Expected: \"John Smith Sr.\"): John Smith Sr.",
                                         "Get Child Name Using Value Expression (Expected: \"John Smith Jr.\"): John Smith Jr.",
@@ -502,8 +502,8 @@ public class JSPServerHttpUnit {
      *                       if something goes wrong
      */
     // No need to run against cdi-2.0 since this test does not use CDI at all.
-    @SkipForRepeat("CDI-2.0")
     @Test
+    @SkipForRepeat("CDI-2.0")
     @Mode(TestMode.FULL)
     public void testOperatorPrecedence() throws Exception {
         String[] expectedInResponse = { "<b>Test 1:</b> EL 3.0 [] and . operators left-to-right (Expected:true): true",
@@ -543,8 +543,8 @@ public class JSPServerHttpUnit {
      *                       if something goes wrong
      */
     // No need to run against cdi-2.0 since this test does not use CDI at all.
-    @SkipForRepeat("CDI-2.0")
     @Test
+    @SkipForRepeat("CDI-2.0")
     public void testEL30CoercionRules() throws Exception {
         String[] expectedInResponse = { "Testing Coercion of a Value X to Type Y.",
                                         "Test if X is null and Y is not a primitive type and also not a String, return null (Expected:true): true" };
@@ -559,8 +559,8 @@ public class JSPServerHttpUnit {
      *                       if something goes wrong
      */
     // No need to run against cdi-2.0 since this test does not use CDI at all.
-    @SkipForRepeat("CDI-2.0")
     @Test
+    @SkipForRepeat("CDI-2.0")
     @Mode(TestMode.FULL)
     public void testEL30ListCollectionObjectOperations() throws Exception {
         this.verifyStringInResponse(TestEL_APP_NAME, "EL30CollectionObjectOperations.jsp?testListCollectionOperations=filter",
@@ -616,8 +616,8 @@ public class JSPServerHttpUnit {
      *                       if something goes wrong
      */
     // No need to run against cdi-2.0 since this test does not use CDI at all.
-    @SkipForRepeat("CDI-2.0")
     @Test
+    @SkipForRepeat("CDI-2.0")
     public void testEL30SetCollectionObjectOperations() throws Exception {
         this.verifyStringInResponse(TestEL_APP_NAME, "EL30CollectionObjectOperations.jsp?testSetCollectionOperations=filter",
                                     "Filter: [4, 3, 5]");
@@ -672,8 +672,8 @@ public class JSPServerHttpUnit {
      *                       if something goes wrong
      */
     // No need to run against cdi-2.0 since this test does not use CDI at all.
-    @SkipForRepeat("CDI-2.0")
     @Test
+    @SkipForRepeat("CDI-2.0")
     @Mode(TestMode.FULL)
     public void testEL30MapCollectionObjectOperations() throws Exception {
         this.verifyStringInResponse(TestEL_APP_NAME, "EL30CollectionObjectOperations.jsp?testMapCollectionOperations=filter",
@@ -756,9 +756,9 @@ public class JSPServerHttpUnit {
      */
 
     // No need to run against cdi-2.0 since this test does not use CDI at all.
-    @SkipForRepeat("CDI-2.0")
     @Mode(TestMode.FULL)
     @Test
+    @SkipForRepeat("CDI-2.0")
     public void testPI44611() throws Exception {
         this.verifyStringInResponse(PI44611_APP_NAME, "PI44611.jsp", "Test passed!");
     }
@@ -770,9 +770,9 @@ public class JSPServerHttpUnit {
      * @throws Exception
      */
     // No need to run against cdi-2.0 since this test does not use CDI at all.
-    @SkipForRepeat("CDI-2.0")
     @Mode(TestMode.FULL)
     @Test
+    @SkipForRepeat("CDI-2.0")
     public void testPI59436() throws Exception {
         this.verifyStringInResponse(PI59436_APP_NAME, "PI59436.jsp", "Test passed.");
     }

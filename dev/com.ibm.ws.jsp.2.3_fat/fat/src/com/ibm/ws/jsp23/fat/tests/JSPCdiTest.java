@@ -320,9 +320,9 @@ public class JSPCdiTest {
      */
 
     // No need to run against cdi-2.0 since this test does not use CDI at all.
-    @SkipForRepeat("CDI-2.0")
     @Mode(TestMode.FULL)
     @Test
+    @SkipForRepeat("CDI-2.0")
     public void testPI44611() throws Exception {
         this.verifyStringInResponse(PI44611_APP_NAME, "PI44611.jsp", "Test passed!");
     }
@@ -334,9 +334,9 @@ public class JSPCdiTest {
      * @throws Exception
      */
     // No need to run against cdi-2.0 since this test does not use CDI at all.
-    @SkipForRepeat("CDI-2.0")
     @Mode(TestMode.FULL)
     @Test
+    @SkipForRepeat("CDI-2.0")
     public void testPI59436() throws Exception {
         this.verifyStringInResponse(PI59436_APP_NAME, "PI59436.jsp", "Test passed.");
     }
