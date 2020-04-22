@@ -154,7 +154,7 @@ public class JSPServerHttpUnit {
      * @throws Exception
      */
     @Test
-    @ExpectedFFDC("javax.el.MethodNotFoundException")
+    @ExpectedFFDC("javax.el.MethodNotFoundException | jakarta.el.MethodNotFoundException")
     public void testEL30MethodNotFoundException() throws Exception {
         WebConversation wc = new WebConversation();
         wc.setExceptionsThrownOnErrorStatus(false);
@@ -169,7 +169,7 @@ public class JSPServerHttpUnit {
         assertEquals("Expected " + 500 + " status code was not returned!",
                      500, response.getResponseCode());
 
-        assertTrue("The response did not contain: javax.el.MethodNotFoundException", response.getText().contains("javax.el.MethodNotFoundException"));
+        assertTrue("The response did not contain: javax.el.MethodNotFoundException", response.getText().contains("el.MethodNotFoundException"));
     }
 
     /**
@@ -178,7 +178,7 @@ public class JSPServerHttpUnit {
      * @throws Exception
      */
     @Test
-    @ExpectedFFDC("javax.el.PropertyNotFoundException")
+    @ExpectedFFDC("javax.el.PropertyNotFoundException | jakarta.el.PropertyNotFoundException")
     @Mode(TestMode.FULL)
     public void testEL30PropertyNotFoundException() throws Exception {
         WebConversation wc = new WebConversation();
@@ -193,7 +193,7 @@ public class JSPServerHttpUnit {
 
         assertEquals("Expected " + 500 + " status code was not returned!",
                      500, response.getResponseCode());
-        assertTrue("The response did not contain: javax.el.PropertyNotFoundException", response.getText().contains("javax.el.PropertyNotFoundException"));
+        assertTrue("The response did not contain: javax.el.PropertyNotFoundException", response.getText().contains("el.PropertyNotFoundException"));
     }
 
     /**
@@ -202,7 +202,7 @@ public class JSPServerHttpUnit {
      * @throws Exception
      */
     @Test
-    @ExpectedFFDC("javax.el.PropertyNotWritableException")
+    @ExpectedFFDC("javax.el.PropertyNotWritableException | jakarta.el.PropertyNotWritableException")
     @Mode(TestMode.FULL)
     public void testEL30PropertyNotWritableException() throws Exception {
         WebConversation wc = new WebConversation();
@@ -217,7 +217,7 @@ public class JSPServerHttpUnit {
 
         assertEquals("Expected " + 500 + " status code was not returned!",
                      500, response.getResponseCode());
-        assertTrue("The response did not contain: javax.el.PropertyNotWritableException", response.getText().contains("javax.el.PropertyNotWritableException"));
+        assertTrue("The response did not contain: javax.el.PropertyNotWritableException", response.getText().contains("el.PropertyNotWritableException"));
     }
 
     /**
@@ -230,7 +230,7 @@ public class JSPServerHttpUnit {
      * @throws Exception
      */
     @Test
-    @ExpectedFFDC("javax.el.PropertyNotWritableException")
+    @ExpectedFFDC("javax.el.PropertyNotWritableException | jakarta.el.PropertyNotWritableException")
     @Mode(TestMode.FULL)
     public void testEL30AssignmentOperatorException() throws Exception {
         WebConversation wc = new WebConversation();
@@ -245,7 +245,7 @@ public class JSPServerHttpUnit {
 
         assertEquals("Expected " + 500 + " status code was not returned!",
                      500, response.getResponseCode());
-        assertTrue("The response did not contain: javax.el.PropertyNotWritableException", response.getText().contains("javax.el.PropertyNotWritableException"));
+        assertTrue("The response did not contain: javax.el.PropertyNotWritableException", response.getText().contains("el.PropertyNotWritableException"));
     }
 
     /**
@@ -256,7 +256,7 @@ public class JSPServerHttpUnit {
      * @throws Exception
      */
     @Test
-    @ExpectedFFDC("javax.el.ELException")
+    @ExpectedFFDC("javax.el.ELException | jakarta.el.ELException")
     @AllowedFFDC("java.security.PrivilegedActionException")
     @Mode(TestMode.FULL)
     public void testEL30ReservedWords() throws Exception {
@@ -729,7 +729,7 @@ public class JSPServerHttpUnit {
      *                       if something goes wrong
      */
     // No need to run against cdi-2.0 since this test does not use CDI at all.
-    @SkipForRepeat("CDI-2.0")
+    @SkipForRepeat({"CDI-2.0","EE9_FEATURES"})
     @Test
     public void testJSP23ResolutionVariableProperties() throws Exception {
         String[] expectedInResponse = { "class org.apache.el.stream.StreamELResolverImpl",

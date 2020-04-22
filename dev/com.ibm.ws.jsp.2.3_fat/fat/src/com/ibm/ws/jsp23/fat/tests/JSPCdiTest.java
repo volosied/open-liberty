@@ -41,8 +41,7 @@ import componenttest.topology.impl.LibertyServer;
  * Tests to execute on the jspServer that use HttpUnit.
  */
 
-// No need to run against cdi-2.0 since these tests don't use CDI at all.
-@SkipForRepeat("CDI-2.0")
+@SkipForRepeat("EE9_FEATURES")
 @RunWith(FATRunner.class)
 public class JSPCdiTest {
     private static final Logger LOG = Logger.getLogger(JSPServerHttpUnit.class.getName());
