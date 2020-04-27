@@ -76,6 +76,8 @@ public class JSF22MiscellaneousTests {
 
         ShrinkHelper.exportDropinAppToServer(jsf22MiscellaneousServer, JSF22MiscellaneousEar);
 
+        ShrinkHelper.defaultDropinApp(jsf23CDIServer, "FunctionMapper.war", "com.ibm.ws.jsf23.fat.functionmapper");
+
         jsf22MiscellaneousServer.startServer(JSF22MiscellaneousTests.class.getSimpleName() + ".log");
     }
 
@@ -433,6 +435,44 @@ public class JSF22MiscellaneousTests {
             if (!page.asText().contains("ExpressionFactory-instance test passed")) {
                 Assert.fail("The JSP and JSF (Application) ExpressionFactory objects were not the same " + page.asText());
             }
+        }
+    }
+
+      /**
+     * 
+     * Ensure FunctionMapper is set on the ELContext 
+     * - MyFaces 4333
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testFunctionMapper() throws Exception {
+        String contextRoot = "FunctionMapper";
+        try (WebClient webClient = new WebClient()) {
+    
+            URL url = JSFUtils.createHttpUrl(jsf23CDIServer, contextRoot, "index.xhtml");
+    
+            Log.info(c, name.getMethodName(), url.toString());
+
+            HtmlPage page = (HtmlPage) webClient.getPage(url);
+
+            String pageXml = page.asXml();
+    
+                // Log the page for debugging if necessary in the future.
+            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), pageXml);
+
+            HtmlSubmitInput submitButton = (HtmlSubmitInput) page.getElementById("form1:button1");
+            page = submitButton.click();
+    
+            pageXml = page.asXml();
+    
+            // Log the page for debugging if necessary in the future.
+            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), pageXml);
+
+            // page displays true when function mapper is null 
+            assertTrue("Function Mapper is null!", pageXml.contains("true"));
         }
     }
 }
