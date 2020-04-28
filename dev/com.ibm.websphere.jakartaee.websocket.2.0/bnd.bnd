@@ -1,0 +1,29 @@
+#*******************************************************************************
+# Copyright (c) 2017 IBM Corporation and others.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License v1.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/epl-v10.html
+#
+# Contributors:
+#     IBM Corporation - initial API and implementation
+#*******************************************************************************
+-include= ~../cnf/resources/bnd/bundle.props
+bVersion=1.0
+
+Bundle-SymbolicName: com.ibm.websphere.jakartaee.websocket.2.0; singleton:=true
+
+Export-Package: \
+	jakarta.websocket; version="1.1.0",\
+	jakarta.websocket.server; version="1.1.0"
+
+Include-Resource: \
+  @${repo;jakarta.websocket:jakarta.websocket-api;2.0}!/META-INF/LICENSE, \
+  @${repo;jakarta.websocket:jakarta.websocket-api;2.0}!/META-INF/NOTICE
+
+instrument.disabled: true
+
+publish.wlp.jar.suffix: dev/api/spec
+
+-buildpath: \
+	jakartta.websocket:jakarta.websocket-api;version=2.0
