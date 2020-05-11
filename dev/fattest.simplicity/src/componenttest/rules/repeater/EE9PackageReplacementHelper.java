@@ -35,7 +35,8 @@ public class EE9PackageReplacementHelper {
 
     private static final Logger Log = Logger.getLogger(EE9PackageReplacementHelper.class.getName());
 
-    public EE9PackageReplacementHelper(String rulesPath){
+    public EE9PackageReplacementHelper(){
+            String rulesPath = System.getProperty("user.dir") + "/autoFVT-templates/" + "jakarta-renames.properties";
             Properties appProps = new Properties();
             try {
                 appProps.load(new FileInputStream(rulesPath));
