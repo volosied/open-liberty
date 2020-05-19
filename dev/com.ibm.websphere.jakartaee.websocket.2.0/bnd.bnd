@@ -26,4 +26,4 @@ instrument.disabled: true
 publish.wlp.jar.suffix: dev/api/spec
 
 -buildpath: \
-	jakartta.websocket:jakarta.websocket-api;version=2.0
+	jakarta.websocket:jakarta.websocket-api;version=2.0
