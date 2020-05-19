@@ -17,6 +17,8 @@ Bundle-Name: WebSocket
 Bundle-SymbolicName:com.ibm.ws.wsoc; singleton:=true
 Bundle-Description: WebSocket, version ${bVersion}
 
+jakartaeeMe:true
+
 app-resources= \
   META-INF/services/javax.websocket.server.ServerEndpointConfig$Configurator | \
   META-INF/services/javax.websocket.ContainerProvider
