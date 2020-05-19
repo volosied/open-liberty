@@ -14,8 +14,8 @@ bVersion=1.0
 Bundle-SymbolicName: com.ibm.websphere.jakartaee.websocket.2.0; singleton:=true
 
 Export-Package: \
-	jakarta.websocket; version="1.1.0",\
-	jakarta.websocket.server; version="1.1.0"
+	jakarta.websocket; version="2.0.0",\
+	jakarta.websocket.server; version="2.0.0"
 
 Include-Resource: \
   @${repo;jakarta.websocket:jakarta.websocket-api;2.0}!/META-INF/LICENSE, \
