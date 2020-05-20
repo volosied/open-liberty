@@ -2,6 +2,8 @@
 /* JavaCCOptions:STATIC=false,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.apache.el.parser;
 
+import com.ibm.ws.ffdc.annotation.FFDCIgnore;
+
 /**
  * An implementation of interface CharStream, where the stream is assumed to
  * contain only ASCII characters (without unicode processing).
@@ -84,6 +86,8 @@ public class SimpleCharStream
     tokenBegin = 0;
   }
 
+  //149852 - Ignore this generated FFDC because we expect it
+  @FFDCIgnore({ java.io.IOException.class })
   protected void FillBuff() throws java.io.IOException
   {
     if (maxNextCharInd == available)
