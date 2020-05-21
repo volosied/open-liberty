@@ -2,6 +2,8 @@
 package org.apache.el.parser;
 import java.io.StringReader;
 
+import com.ibm.ws.ffdc.annotation.FFDCIgnore;
+
 import jakarta.el.ELException;
 @SuppressWarnings("all") // Ignore warnings in generated code
 public class ELParser/*@bgen(jjtree)*/implements ELParserTreeConstants, ELParserConstants {/*@bgen(jjtree)*/
@@ -2029,13 +2031,17 @@ public class ELParser/*@bgen(jjtree)*/implements ELParserTreeConstants, ELParser
     }
   }
 
+  //149852 - Ignore this generated FFDC because we expect it
+  @FFDCIgnore({ LookaheadSuccess.class })
   private boolean jj_2_1(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_1(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(0, xla); }
   }
-
+  
+  //149852 - Ignore this generated FFDC because we expect it
+  @FFDCIgnore({ LookaheadSuccess.class })
   private boolean jj_2_2(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_2(); }
@@ -2043,6 +2049,8 @@ public class ELParser/*@bgen(jjtree)*/implements ELParserTreeConstants, ELParser
     finally { jj_save(1, xla); }
   }
 
+  //149852 - Ignore this generated FFDC because we expect it
+  @FFDCIgnore({ LookaheadSuccess.class })
   private boolean jj_2_3(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_3(); }
@@ -2050,6 +2058,8 @@ public class ELParser/*@bgen(jjtree)*/implements ELParserTreeConstants, ELParser
     finally { jj_save(2, xla); }
   }
 
+  //149852 - Ignore this generated FFDC because we expect it
+  @FFDCIgnore({ LookaheadSuccess.class })
   private boolean jj_2_4(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_4(); }
@@ -2057,6 +2067,8 @@ public class ELParser/*@bgen(jjtree)*/implements ELParserTreeConstants, ELParser
     finally { jj_save(3, xla); }
   }
 
+  //149852 - Ignore this generated FFDC because we expect it
+  @FFDCIgnore({ LookaheadSuccess.class })
   private boolean jj_2_5(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_5(); }
@@ -2064,6 +2076,8 @@ public class ELParser/*@bgen(jjtree)*/implements ELParserTreeConstants, ELParser
     finally { jj_save(4, xla); }
   }
 
+  //149852 - Ignore this generated FFDC because we expect it
+  @FFDCIgnore({ LookaheadSuccess.class })
   private boolean jj_2_6(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_6(); }
@@ -2071,6 +2085,8 @@ public class ELParser/*@bgen(jjtree)*/implements ELParserTreeConstants, ELParser
     finally { jj_save(5, xla); }
   }
 
+  //149852 - Ignore this generated FFDC because we expect it
+  @FFDCIgnore({ LookaheadSuccess.class })
   private boolean jj_2_7(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_7(); }
@@ -2078,6 +2094,8 @@ public class ELParser/*@bgen(jjtree)*/implements ELParserTreeConstants, ELParser
     finally { jj_save(6, xla); }
   }
 
+  //149852 - Ignore this generated FFDC because we expect it
+  @FFDCIgnore({ LookaheadSuccess.class })
   private boolean jj_2_8(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_8(); }
