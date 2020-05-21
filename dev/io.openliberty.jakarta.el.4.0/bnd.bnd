@@ -24,3 +24,6 @@ Include-Resource: \
 instrument.disabled: true
 
 publish.wlp.jar.suffix: dev/api/spec
+
+-buildpath: \
+  org.apache.tomcat:tomcat-el-api;version=10.0.0
