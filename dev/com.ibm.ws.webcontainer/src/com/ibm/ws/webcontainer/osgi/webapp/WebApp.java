@@ -99,7 +99,7 @@ import com.ibm.wsspi.webcontainer.metadata.WebComponentMetaData;
 import com.ibm.wsspi.webcontainer.metadata.WebModuleMetaData;
 import com.ibm.wsspi.webcontainer.servlet.IServletConfig;
 import com.ibm.wsspi.webcontainer.util.ThreadContextHelper;
- 
+
 /**
  */
 @SuppressWarnings("unchecked")
@@ -109,21 +109,21 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
   protected static final String CLASS_NAME = "com.ibm.ws.webcontainer.osgi.webapp.WebApp";
 
 
-  
+
   private final MetaDataService metaDataService;
   private volatile boolean namespacePopulated;
   private final ReferenceContext referenceContext;
-  
+
   private J2EENameFactory  j2eeNameFactory;
   private ClassLoader moduleLoader;
-  
+
   private WebAppConfiguration webAppConfig;
   private boolean extensionProcessingDisabled=false;
-  private ManagedObjectService managedObjectService;  
+  private ManagedObjectService managedObjectService;
 
   /**
    * Constructor.
-   * 
+   *
    * @param name
    * @param parent
    * @param warDir
@@ -143,7 +143,7 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
     this.j2eeNameFactory = j2eeNameFactory;
     this.managedObjectService = managedObjectService;
   }
-  
+
 
 
   @Override
@@ -155,7 +155,7 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see com.ibm.ws.webcontainer.webapp.WebApp#createDispatchContext()
    */
   public WebAppDispatcherContext createDispatchContext()
@@ -165,7 +165,7 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see com.ibm.ws.webcontainer.webapp.WebApp#getInvokerExtensionProcessor()
    */
   protected ExtensionProcessor getInvokerExtensionProcessor()
@@ -175,7 +175,7 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see com.ibm.ws.webcontainer.webapp.WebApp#getLoginProcessor()
    */
   @Override
@@ -189,7 +189,7 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see com.ibm.ws.webcontainer.webapp.WebApp#getLogoutProcessor()
    */
   @Override
@@ -204,7 +204,7 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see com.ibm.ws.webcontainer.webapp.WebApp#getNodeName()
    */
   public String getNodeName()
@@ -215,17 +215,17 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see com.ibm.ws.webcontainer.webapp.WebApp#getServerInfo()
    */
   public String getServerInfo()
-  {      
+  {
       return "SMF WebContainer";
   }
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see com.ibm.ws.webcontainer.webapp.WebApp#getServerName()
    */
   public String getServerName()
@@ -236,7 +236,7 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see com.ibm.ws.webcontainer.webapp.WebApp#getWebExtensionProcessor()
    */
   public com.ibm.ws.webcontainer.extension.WebExtensionProcessor getWebExtensionProcessor()
@@ -252,7 +252,7 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
     referenceContext.process();
 
     super.commonInitializationStart(config, moduleConfig);
-    
+
     Dictionary<String,String> headers = webAppConfig.getBundleHeaders();
     if (headers != null) {
         String implicitMappingDisabledHeader = headers.get("IBM-Web-Extension-Processing-Disabled");
@@ -276,7 +276,7 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
       if (referenceContext.isProcessDynamicNeeded(injectionClasses)) {
           ComponentNameSpaceConfiguration compNSConfig = createComponentNameSpaceConfiguration(Collections.<Class<?>>singletonList(klass), false);
           referenceContext.processDynamic(compNSConfig);
-      }    
+      }
     }
   }
 
@@ -311,9 +311,9 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
     if (config.isMetadataComplete()) {
       return Collections.emptyList();
     }
-    
+
     Set<String> classNames = new TreeSet<String>();
-    
+
     try {
       WebAppInjectionClassList injectionClassList = container.adapt(WebAppInjectionClassList.class);
       classNames.addAll(injectionClassList.getClassNames());
@@ -334,7 +334,7 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
     }
 
     classNames.addAll(config.getListeners());
-    
+
     try {
       WebAnnotations webAnnotations = getWebAnnotations();
       AnnotationTargets_Targets webModuleTargets = webAnnotations.getAnnotationTargets();
@@ -383,10 +383,10 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
     return classes;
   }
 
-  
+
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see com.ibm.ws.webcontainer.webapp.WebApp#getResource(java.lang.String)
    */
   public URL getResource(String p) throws MalformedURLException
@@ -415,7 +415,7 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
       rPath = p;
     }
     // End 263020
-    
+
     if (container != null) {
         //Can not call getEntry with / on the root container
         if (p.equals("/")) {
@@ -423,13 +423,13 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
             Iterator<URL> it = urls.iterator();
             if (it.hasNext()) {
                 URL url = it.next();  //get the first url
-                
-                if (url.getProtocol().equals("file")) { 
+
+                if (url.getProtocol().equals("file")) {
                     File file = new File(url.getFile());
                     if (file.exists() && !file.isDirectory()){  //might be a file:/xxx.war
                         return new URL("jar", "", -1, url + "!/");  //return jar:file:/xxx.war!/
                     }
-                } 
+                }
 
                 return url;
             }
@@ -508,13 +508,13 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
     return checkFile.toURL();
 
   }
-  
+
   /**
    * {@inheritDoc}
    */
   @FFDCIgnore(IOException.class) //This can happen if a non-existent file is requested.
   public InputStream getResourceAsStream(String path) {
-      
+
       try {
           if (container != null){
               Entry entry = container.getEntry(path);
@@ -522,13 +522,13 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
                   return entry.adapt(InputStream.class);
               } else {
                   DocumentRootUtils dru = getDocumentRootUtils(path);
-                  
+
                   //The cache doesn't work for non-URLs (as it only caches URLs) so skip it for now in this case
                   dru.handleDocumentRoots(path, null);
                   return dru.getInputStream();
               }
           }
-      
+
           URL url = getResource(path);
           if (url == null)
               return null;
@@ -547,26 +547,26 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
       return getRealPath(path, true);
   }
 
-  
+
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see javax.servlet.ServletContext#getRealPath(java.lang.String)
    */
   public String getRealPath(String path, boolean checkDocRoot)
   {
       if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE))
           logger.entering(CLASS_NAME, "getRealPath", new Object[]{path, checkDocRoot});
-      
-       
+
+
     String basePath = null;
 
     if (path == null || path.equals("")) {
         path = "/";
     }
-      
+
     if(container != null){
-        
+
         boolean pathIsBackslash = false;
         if (path.contains("\\")) {
             if (path.equals("\\")) {
@@ -574,31 +574,31 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
             }
             path=path.replace("\\", "/");
         }
-        
+
         if (path.equals("/")) {
             String physicalPath = container.getPhysicalPath();
-            
+
             if (physicalPath == null) { // loose app might return null here
                 return null;
-            }        
+            }
 
             File file = new File(physicalPath);
             if (!file.exists() || !file.isDirectory()){ //might be a xxx.war, so return null if it is an archive
                 return null;
             }
-            
+
             if(pathIsBackslash == true){
                 // add backslash back on to the end so there will be a \ at the end.
                 // Need to do this to maintain compatibility with twas
                 // PM70146
-                physicalPath = physicalPath + "\\"; 
+                physicalPath = physicalPath + "\\";
                 return physicalPath;
-            }          
-            
+            }
+
             //getAbsolutePath always return a file path without slash in the end, even the file is a directory.
             return file.getAbsolutePath();
         }
-        
+
         try {
             Entry entry = container.getEntry(path);
             if(entry != null){
@@ -613,13 +613,13 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
                 if (checkDocRoot == false) {
                     return null;
                 }
-                
+
                 DocumentRootUtils dru = getDocumentRootUtils(path);
-                
+
                 if (dru != null) {
                     if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE))
                         logger.logp(Level.FINE, CLASS_NAME, "getRealPath", "obtained dru");
-                    
+
                     dru.handleDocumentRoots(path, WCCustomProperties.CHECK_EDR_IN_GET_REAL_PATH);
                     EntryResource er = dru.getMatchedEntryResource();
 
@@ -630,7 +630,7 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
                         if (ety != null) {
                             if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE))
                                 logger.logp(Level.FINE, CLASS_NAME, "getRealPath", "obtained entry: " + ety);
-                            
+
                             String s = ety.getPhysicalPath();
                             if ((s != null) && (s.length()> 0)) {
                                 if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE))
@@ -654,7 +654,7 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
                         File matchedFile = dru.getMatchedFile();
                         if (matchedFile != null){
                             if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE))
-                                logger.logp(Level.FINE, CLASS_NAME, "getRealPath", "obtained file [" + matchedFile.getAbsolutePath() +"]"); 
+                                logger.logp(Level.FINE, CLASS_NAME, "getRealPath", "obtained file [" + matchedFile.getAbsolutePath() +"]");
                             return matchedFile.getAbsolutePath();
                         }
                     }
@@ -674,23 +674,23 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
             //if the app was extracted, we could return this...
             basePath = container.getPhysicalPath();
          }
-        
+
     }
-    
+
     if (basePath == null) {
         return null;
     }
 
     basePath = basePath.replace('\\', '/');
-    
+
     if (File.separatorChar!='/') {
         basePath = basePath.replace('/', File.separatorChar);
         path = path.replace('/', File.separatorChar);
     }
 
     String realPath = "";
-    
-    if (path.charAt(0) == File.separatorChar) { 
+
+    if (path.charAt(0) == File.separatorChar) {
         realPath = basePath + path;
     } else {
         realPath = basePath + File.separatorChar + path;
@@ -701,10 +701,10 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
     return realPath;
   }
 
-   
+
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see javax.servlet.ServletContext#getResourcePaths(java.lang.String)
    */
   public Set getResourcePaths(String path, boolean searchMetaInf)
@@ -716,15 +716,15 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
         searchMetaInf = false;
         logger.logp(Level.FINE, CLASS_NAME, "getResourcePaths", "override searchMetaInf to false becuase of custom property");
     }
-    
-    
+
+
     if (container != null){
         try {
             addResourcePaths(set, container, path, searchMetaInf);
         } catch (UnableToAdaptException e) {
             throw new IllegalStateException(e);
         }
-        
+
         // PM21451 Start
         // search the static doc roots and include a search of meta-inf resources if boolean parameter is true
         // 96723: Hard code a "false" parameter to avoid searching META-INF resources a second time. The
@@ -735,7 +735,7 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
         // to both doc roots).
         set.addAll(getJSPDocumentRootUtils().getResourcePaths(path,false));
         // PM21451 End
-        
+
         return set;
     }
 
@@ -767,7 +767,7 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see
    * com.ibm.ws.webcontainer.webapp.WebApp#getDefaultExtensionProcessor(com.
    * ibm.ws.webcontainer.webapp.WebApp, java.util.HashMap)
@@ -779,7 +779,7 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see
    * com.ibm.ws.webcontainer.webapp.WebApp#getInvokerExtensionProcessor(com.
    * ibm.ws.webcontainer.webapp.WebApp)
@@ -795,7 +795,7 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
     Object listener = null;
     try {
         // If a serialized version of the listener exists create a new object from it by using Beans.instantiate
-        // otherwise use a ManagedObject factory to create it for cdi 1.2 support.       
+        // otherwise use a ManagedObject factory to create it for cdi 1.2 support.
         final String serializedName = className.replace('.','/').concat(".ser");
         final ClassLoader loader = getClassLoader();
         ManagedObject mo=null;
@@ -807,23 +807,23 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
             });
         if (is!=null) {
             listener = super.loadListener(className);
-            mo = injectAndPostConstruct(listener); 
-        } else {  
-            Class<?> listenerClass = getClassLoader().loadClass(className);        
+            mo = injectAndPostConstruct(listener);
+        } else {
+            Class<?> listenerClass = getClassLoader().loadClass(className);
             mo = injectAndPostConstruct(listenerClass);
             listener = mo.getObject();
-        }     
+        }
         cdiContexts.put(listener, mo);
     } catch (ClassNotFoundException exc) {
         // some exception, log error.
-        logError("Failed to load listener: " + className, exc);        
+        logError("Failed to load listener: " + className, exc);
         if (WCCustomProperties.STOP_APP_STARTUP_ON_LISTENER_EXCEPTION) { //PI58875
             throw exc;
         }
     }
     return listener;
   }
-  
+
   @Override
   public <T extends EventListener> T  createListener(Class<T> classToCreate) throws ServletException
   {
@@ -831,23 +831,23 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
 
       return super.createListener(classToCreate);
   }
-  
+
   //createFilter only called when adding/creating programmatically
   @Override
   public <T extends Filter> T createFilter(Class<T> classToCreate) throws ServletException {
-      
+
       logger.logp(Level.FINE, CLASS_NAME, "createFilter", "called for class: " + classToCreate);
       return super.createFilter(classToCreate);
   }
- 
+
   //createServlet only called when adding/creating programmatically
   @Override
   public <T extends Servlet> T createServlet(Class<T> classToCreate) throws ServletException {
       logger.logp(Level.FINE, CLASS_NAME, "createServlet", "called for class: " + classToCreate);
-      
+
       return super.createServlet(classToCreate);
   }
-  
+
   @Override
   protected void initializeFilterManager()
   {
@@ -869,12 +869,12 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
    * class of a specified initializer.  Provide the answer as a side effect.  If processing
    * is to be done, add the initializer to the specified initializer list.  If processing is
    * not to be done, do not add the initializer.
-   * 
+   *
    * @param sci The candidate servlet container initializer.
    * @param scis Storage for initializers which are to be processed.
    */
   protected void determineWhetherToAddScis(ServletContainerInitializer sci, List<ServletContainerInitializer> scis) {
-      // SCIs from DS are already added      
+      // SCIs from DS are already added
 
       if (acceptAnnotationsFrom(sci.getClass().getName(), DO_ACCEPT_PARTIAL, DO_NOT_ACCEPT_EXCLUDED)) {
           scis.add(sci);
@@ -917,7 +917,7 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
               ServletContainerInitializer sci = sciEntry.getKey();
               Class[] handledTypes = sciEntry.getValue();
               Set<Class<?>> startupTypes = onStartupMap.get(sci);
-    
+
               for ( Class<?> handledType : handledTypes ) {
                   String handledTypeName = handledType.getName();
 
@@ -956,7 +956,7 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
                           String classReason = "Selection on class annotation [ " + handledTypeName + " ]";
                           for ( String targetClassName : targetClassNames ) {
                               addClassToHandlesTypesStartupSet(targetClassName, startupTypes, classReason);
-                          }                      
+                          }
                       }
 
                       if ( isMethodAnnotation ) {
@@ -986,7 +986,7 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
                               Set<String> targetSubclassNames = annoTargets.getSubclassNames(targetClassName);
 
                               for ( String targetSubclassName : targetSubclassNames ) {
-                                  if ( testedClassNames.contains(targetSubclassName)) { 
+                                  if ( testedClassNames.contains(targetSubclassName)) {
                                       continue;
                                   } else {
                                       testedClassNames.add(targetSubclassName);
@@ -1010,7 +1010,7 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
 
                           String methodReason = "Selection on method annotation [ " + handledTypeName + " ]";
                           for ( String foundClassName : foundClassNames ) {
-                              addClassToHandlesTypesStartupSet(foundClassName, startupTypes, methodReason);                          
+                              addClassToHandlesTypesStartupSet(foundClassName, startupTypes, methodReason);
                           }
                       }
 
@@ -1028,10 +1028,10 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
                       }
 
                       String interfaceReason = "Selection on interface [ " + handledTypeName + " ]";
-                      Set<String> implementerClassNames = annoTargets.getAllImplementorsOf(handledTypeName);   
+                      Set<String> implementerClassNames = annoTargets.getAllImplementorsOf(handledTypeName);
                       for ( String implementerClassName : implementerClassNames ) {
                           addClassToHandlesTypesStartupSet(implementerClassName, startupTypes, interfaceReason);
-                      }                  
+                      }
                   }
               }
           }
@@ -1049,7 +1049,7 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
 
   protected void addClassToHandlesTypesStartupSet(String targetClassName, Set<Class<?>> handlesTypesOnStartupSet, String reasonText) {
       String methodName = "addClassToHandlesTypesStartupSet";
-      
+
       boolean enableTrace = ( com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable (Level.FINE) );
 
       int servletSpecLevel = com.ibm.ws.webcontainer.osgi.WebContainer.getServletContainerSpecLevel();
@@ -1079,10 +1079,10 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
           WebAnnotations webAppAnnotations = getWebAnnotations();
           AnnotationTargets_Targets table = webAppAnnotations.getAnnotationTargets();
           //means that the scanner went from an included jar to an excluded jar (because of class heirarchy)
-          //in order to get the complete set of scan data.  
+          //in order to get the complete set of scan data.
           //this object itself should be excluded
           if (table.isExcludedClassName(targetClassName)) {
-              if ( enableTrace ) { 
+              if ( enableTrace ) {
                   logger.logp(Level.FINE, CLASS_NAME, methodName,
                               "Class, {0}, exists in a fragment that has been excluded in the application: {1}",
                               new Object[] { targetClassName, this.config.getDisplayName() });
@@ -1095,10 +1095,10 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
           }
           return;
       }
-      
+
       Class<?> targetInitializerClass;
       try {
-          if ( enableTrace ) { 
+          if ( enableTrace ) {
               logger.logp(Level.FINE, CLASS_NAME, methodName,"InitializeClassInHandlesTypesStartup: {0} ", WCCustomProperties.INITIALIZE_CLASS_IN_HANDLES_TYPES_STARTUP);
           }
           targetInitializerClass = Class.forName(targetClassName,
@@ -1106,48 +1106,48 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
                                            ThreadContextHelper.getContextClassLoader());
       } catch ( ClassNotFoundException e ) {
           targetInitializerClass = null;
-                          
+
           if (WCCustomProperties.LOG_SERVLET_CONTAINER_INITIALIZER_CLASSLOADER_ERRORS) {
               logger.logp(Level.WARNING, CLASS_NAME, methodName,
                           "exception.occurred.while.initializing.ServletContainerInitializers.class.lookup",
                           new Object[] { targetClassName, this.config.getDisplayName() });
-              
-          } else if ( enableTrace ) { 
+
+          } else if ( enableTrace ) {
               logger.logp(Level.FINE, CLASS_NAME, methodName,
                           "exception.occurred.while.initializing.ServletContainerInitializers.class.lookup",
                           new Object[] { targetClassName, this.config.getDisplayName() });
           }
       } catch (NoClassDefFoundError e){   //PM96235
           targetInitializerClass = null;
-          
+
           if (WCCustomProperties.LOG_SERVLET_CONTAINER_INITIALIZER_CLASSLOADER_ERRORS) {
               logger.logp(Level.WARNING, CLASS_NAME, methodName,
                           "exception.occurred.while.initializing.ServletContainerInitializers.class.lookup",
                           new Object[] { targetClassName, this.config.getDisplayName() });
-              
-          } else if ( enableTrace ) { 
+
+          } else if ( enableTrace ) {
               logger.logp(Level.FINE, CLASS_NAME, methodName,
                           "exception.occurred.while.initializing.ServletContainerInitializers.class.lookup",
                           new Object[] { targetClassName, this.config.getDisplayName() });
-          }   
+          }
       } //PM96235 - end
-                      
+
       if ( targetInitializerClass != null ) {
           if (handlesTypesOnStartupSet.contains(targetInitializerClass)) {
-              if ( enableTrace ) { 
+              if ( enableTrace ) {
                   logger.logp(Level.FINE, CLASS_NAME, methodName, "{0} already in onStartup set for {1} : {2}",
                       new Object[] { targetClassName, this.config.getDisplayName(), reasonText });
               }
           } else {
               handlesTypesOnStartupSet.add(targetInitializerClass);
-          
-              if ( enableTrace ) { 
+
+              if ( enableTrace ) {
                   logger.logp(Level.FINE, CLASS_NAME, methodName,
                               "Adding initializer [ {0} ] to [ {1} ] [ {2} ]",
                               new Object[] { targetClassName, this.config.getDisplayName(), reasonText });
               }
           }
-      }          
+      }
   }
 
   public WebComponentMetaData getWebAppCmd()
@@ -1192,16 +1192,16 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
   public Servlet getDirectoryBrowsingServlet() {
       if (directoryBrowsingServlet==null) {
           directoryBrowsingServlet = new DirectoryBrowsingServlet();
-      } 
+      }
       return directoryBrowsingServlet;
   }
-  
+
   @Override
   public boolean getExtensionProcessingDisabled() {
       // Introduced to support the REST connector.
       return this.extensionProcessingDisabled;
   }
-  
+
   protected ICollaboratorHelper createCollaboratorHelper(com.ibm.ws.container.DeployedModule moduleConfig)
   {
     // TODO Auto-generated method stub
@@ -1217,10 +1217,10 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
   {
     this.namespacePopulated = namespacePopulated;
   }
-  
-  
-  // Method introduced for CDI 1.2 support - need to allow CDI to create the object 
-  // in order to support constructor injection. 
+
+
+  // Method introduced for CDI 1.2 support - need to allow CDI to create the object
+  // in order to support constructor injection.
   //
   // Note: 3 versions of ManagedObjectService and ManagedObjectFactory exist:
   //
@@ -1234,44 +1234,44 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
   {
       return inject(Klass, null);
   }
-  
+
   public ManagedObject inject(Class<?> Klass, ClassLoader cl) throws InjectionException
   {
-      ManagedObject<?> r = null;    
+      ManagedObject<?> r = null;
       final String METHOD_NAME="inject(class)";
-      
+
       if (TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
           logger.entering(CLASS_NAME, METHOD_NAME, Klass);
       }
-      try { 
+      try {
           if (null != managedObjectService){
-              
+
               // Make sure the class is know to the injection engine
               processDynamicInjectionMetaData(Klass);
               ManagedObject<?> mo;
-             
+
               try{
 
                   ModuleMetaData moduleMetaData = getModuleMetaData();
-                  ManagedObjectFactory<?> mof = managedObjectService.createManagedObjectFactory(moduleMetaData, Klass, false);     
+                  ManagedObjectFactory<?> mof = managedObjectService.createManagedObjectFactory(moduleMetaData, Klass, false);
 
                   mo = mof.createManagedObject();
 
               } // New path to handle a class outside of war
               catch (IllegalStateException ise){
-                  
+
                   if (TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
                       logger.logp(Level.FINE, CLASS_NAME, METHOD_NAME, "IllegalStateException from managed object service:" + ise );
-                   }   
-                  
+                   }
+
                   // Managed object service failed to create the managed object so, if CDI was enabled, CDI will
                   // not work for the object being created. Instead create an internal managed object so that other
                   // injections will work.
                  if (cl == null){
                       cl = getClassLoader();
-                  }    
+                  }
                   mo = new WCManagedObjectImpl(java.beans.Beans.instantiate(cl, Klass.getName()));
-                  
+
                }
               r = mo;
               mo.inject(this.referenceContext);
@@ -1280,67 +1280,67 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
           throw iex;
       } catch (Exception ex) {
           throw new InjectionException(ex.getCause() != null ? ex.getCause() : ex);
-      } 
+      }
       if (TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
           logger.exiting(CLASS_NAME, METHOD_NAME,r);
       }
       return r;
   }
-  
+
   /**
-   * This method injects the target which is typically a servlet, filter or a event listener and returns the ManagedObject associated with it. 
+   * This method injects the target which is typically a servlet, filter or a event listener and returns the ManagedObject associated with it.
    * The ManagedObject is in turn released in the destroy/constextDestroyed lifecycle method of the target.
-   * 
-   * @param target the filter, servlet or listener that is being injected into 
+   *
+   * @param target the filter, servlet or listener that is being injected into
    * @return  This method will either return the managed object if the injection was successful or throw the exception that resulted during the inject
    * @throws InjectionException if there was an error during the injection
    */
   public ManagedObject inject(final Object target) throws InjectionException
   {
       final String METHOD_NAME="inject";
-      
+
        if (TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
            logger.entering(CLASS_NAME, METHOD_NAME, target);
        }
-      
-        ManagedObject r = null;  
+
+        ManagedObject r = null;
         try {
             if (null != managedObjectService){
-                
+
                 // Make sure the class is know to the injection engine
                 processDynamicInjectionMetaData(target.getClass());
                 ManagedObject mo;
-               
+
                 try {
                     ModuleMetaData moduleMetaData = getModuleMetaData();
                     ManagedObjectFactory<Object> mof = (ManagedObjectFactory<Object>) managedObjectService.createManagedObjectFactory(moduleMetaData, target.getClass(), false);
                     mo = mof.createManagedObject(target, null);
                 } catch (ManagedObjectException moe){
-                    
+
                     if (TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
                         logger.logp(Level.FINE, CLASS_NAME, METHOD_NAME, "IllegalStateException from managed object service:" + moe );
-                     }   
-                    
+                     }
+
                      mo = new WCManagedObjectImpl(target);
                  }
-              
+
                 r = mo;
                 mo.inject(this.referenceContext);
            }
         } catch (ManagedObjectException e) {
             throw new InjectionException(e.getCause());
         }
-        
+
         if (TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
             logger.exiting(CLASS_NAME, METHOD_NAME, r);
         }
         return r;
   }
-  
+
   /**
    * This method injects the target object, then immediately performs PostConstruct operations
-   * 
-   * @param target the filter, servlet or listener that is being injected into 
+   *
+   * @param target the filter, servlet or listener that is being injected into
    * @return  This method will either return the managed object if the injection was successful or throw the exception that resulted during the inject or the PostConstruct
    * the injection
    * @throws InjectionException if there was an error during the injection
@@ -1348,18 +1348,18 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
   public ManagedObject injectAndPostConstruct(final Object target) throws InjectionException
   {
       final String METHOD_NAME="injectAndPostConstruct";
-      
+
        if (TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
            logger.entering(CLASS_NAME, METHOD_NAME, target);
        }
-       
+
        // PI30335: split inject logic from injectAndPostConstruct
        ManagedObject r = inject(target);
-    
+
         // after injection then PostConstruct annotated methods on the host object needs to be invoked.
         Throwable t = this.invokeAnnotTypeOnObjectAndHierarchy(target, ANNOT_TYPE.POST_CONSTRUCT);
         if (null != t){
-            // log exception - and process InjectionExceptions so the error will be returned to the client as an error. 
+            // log exception - and process InjectionExceptions so the error will be returned to the client as an error.
             if (TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
                 logger.logp(Level.FINE, CLASS_NAME, METHOD_NAME, "Exception caught during post construct processing: " + t);
             }
@@ -1372,13 +1372,13 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
                 throw re;
             }
         }
-        
+
         if (TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
             logger.exiting(CLASS_NAME, METHOD_NAME, r);
         }
         return r;
   }
-  
+
   @Override
   protected <T> T createAsManageObject(final Class<?> Klass) throws ServletException {
       ManagedObject<?> mo = null;
@@ -1390,7 +1390,7 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
                       return injectAndPostConstruct(Klass);
                   }
               });
-          } else { 
+          } else {
               mo = injectAndPostConstruct(Klass);
           }
           cdiContexts.put(mo.getObject(), mo);
@@ -1398,29 +1398,29 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
       } catch (Exception e) {
           throw new ServletException(e);
       }
-  }   
+  }
 
   //public ManagedObject injectAndPostConstruct(Class<?> Klass, ClassLoader cl) throws InjectionException
   public ManagedObject injectAndPostConstruct(Class<?> Klass) throws InjectionException
-  { 
+  {
       return injectAndPostConstruct(Klass, null);
   }
-  
+
   public ManagedObject injectAndPostConstruct(Class<?> Klass, ClassLoader cl) throws InjectionException
   {
       final String METHOD_NAME="injectAndPostConstruct(class)";
-      
+
        if (TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
            logger.entering(CLASS_NAME, METHOD_NAME, Klass);
        }
-       
+
        // PI30335: split inject logic from injectAndPostConstruct
        ManagedObject r = inject(Klass, cl);
-    
+
         // after injection then PostConstruct annotated methods on the host object needs to be invoked.
         Throwable t = this.invokeAnnotTypeOnObjectAndHierarchy(r.getObject(), ANNOT_TYPE.POST_CONSTRUCT);
         if (null != t){
-            // log exception - and process InjectionExceptions so the error will be returned to the client as an error. 
+            // log exception - and process InjectionExceptions so the error will be returned to the client as an error.
             if (TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
                 logger.logp(Level.FINE, CLASS_NAME, METHOD_NAME, "Exception caught during post construct processing: " + t);
             }
@@ -1433,7 +1433,7 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
                 throw re;
             }
         }
-        
+
         if (TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
             logger.exiting(CLASS_NAME, METHOD_NAME, r);
         }
@@ -1443,17 +1443,17 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
   public void performPreDestroy(Object target) throws InjectionException
   {
     // after injection then PostConstruct annotated methods on the host object needs to be invoked.
-    Throwable t = this.invokeAnnotTypeOnObjectAndHierarchy(target, ANNOT_TYPE.PRE_DESTROY); 
+    Throwable t = this.invokeAnnotTypeOnObjectAndHierarchy(target, ANNOT_TYPE.PRE_DESTROY);
     if (t != null) {
-        // log exception - could be from user's code - and move on 
+        // log exception - could be from user's code - and move on
         if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
             logger.logp(Level.FINE, CLASS_NAME, "inject", "Exception caught during pre destroy processing: " + t);
         }
     }
-    
+
   }
 
-  
+
   public void destroy() {
       //PI58875
       if (super.getDestroyed().booleanValue()){
@@ -1462,20 +1462,20 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
 
           return;
       }
-      
+
       if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE))
           logger.logp(Level.FINE, CLASS_NAME, "destroy", "osgi.WebApp.destroy entered. this -> "+ this);
-      
+
       super.destroy();
-      
+
       AnnotationHelperManager.removeInstance(this);
-      
-  }    
-      
+
+  }
+
   public void setOrderedLibPaths(List<String> orderedLibPaths) {
       this.orderedLibPaths = orderedLibPaths;
   }
-  
+
   private DocumentRootUtils getDocumentRootUtils(String uri) {
 
       boolean useJSPRoot=false;
@@ -1491,7 +1491,7 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
 
                   try {
 
-                      Class jspProcessorClass = Class.forName("com.ibm.ws.jsp.webcontainerext.AbstractJSPExtensionProcessor");                            
+                      Class jspProcessorClass = Class.forName("com.ibm.ws.jsp.webcontainerext.AbstractJSPExtensionProcessor");
                       useJSPRoot = jspProcessorClass.isInstance(requestProcessor);
 
                       if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
@@ -1506,17 +1506,17 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
                           logger.logp(Level.FINE, CLASS_NAME, "useJSPDocRoot", "useJSPRoot = " + useJSPRoot + ", ClassNotFoundException.", cnfe);
                       }
                   }
-              }    
+              }
       }
       if (useJSPRoot) {
-          docRoot = getJSPDocumentRootUtils();                
+          docRoot = getJSPDocumentRootUtils();
       } else {
-          docRoot = getStaticDocumentRootUtils();             
+          docRoot = getStaticDocumentRootUtils();
       }
 
       return docRoot;
   }
-  
+
   // PM21451 Add convenience method
   public DocumentRootUtils getJSPDocumentRootUtils() {
       return new DocumentRootUtils(this,jspDocRoot.getedrSearchPath(),jspDocRoot.getpfedrSearchPath());
@@ -1525,33 +1525,33 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
   public DocumentRootUtils getStaticDocumentRootUtils() {
       return new DocumentRootUtils(this,staticDocRoot.getedrSearchPath(),staticDocRoot.getpfedrSearchPath());
   }
-  
+
   /*
    * (non-Javadoc)
-   * 
+   *
    * New method added for HttpSessionIdListener in Servlet 3.1, always return false in
    * this Servlet 3.0 implementation.
-   * 
+   *
    * @see com.ibm.ws.webcontainer.webapp.WebApp#isHttpSessionIdListener()
    */
   protected boolean isHttpSessionIdListener(Object listener) {
       return false;
   }
-  
+
   @Override
   protected void checkForSessionIdListenerAndAdd(Object listener){
      return; // do nothing for Servlet 3.0.
   }
-  
+
   public void registerWebSocketHandler(WsocHandler wsocServHandler) {
       return; // NO-OP
   }
-  
+
   public WsocHandler getWebSocketHandler() {
       return null; // NO-OP
   }
-  
+
   public H2Handler getH2Handler() {
       return null; // NO-OP
-  }   
+  }
 }
