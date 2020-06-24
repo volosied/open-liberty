@@ -347,7 +347,8 @@ public class GenerateTagFileVisitor extends GenerateVisitor {
                 writer.print("public void ");
                 writer.print(GeneratorUtils.toSetterMethodName(attrInfos[i].getName()));
                 if (attrInfos[i].isFragment()) {
-                    writer.print("(javax.servlet.jsp.tagext.JspFragment ");
+                    writer.print("(");
+                    writer.print("javax.servlet.jsp.tagext.JspFragment ");
                 }
                 else {
                     writer.print("(");
