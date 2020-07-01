@@ -14,6 +14,7 @@ Bundle-Name: WS_J2EE_jsf
 Bundle-SymbolicName: com.ibm.websphere.javaee.jsf.2.3; singleton:=true
 Bundle-Description: WS_J2EE_jsf, version 2.3
 
+jakartaeeMe:true
 
 Export-Package: javax.faces.*; version=2.3.6
 
