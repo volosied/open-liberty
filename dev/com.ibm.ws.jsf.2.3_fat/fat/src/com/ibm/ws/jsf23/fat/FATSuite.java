@@ -11,6 +11,7 @@
 package com.ibm.ws.jsf23.fat;
 
 import org.junit.BeforeClass;
+import org.junit.ClassRule;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
@@ -40,6 +41,10 @@ import com.ibm.ws.jsf23.fat.tests.JSF23ViewParametersTests;
 import com.ibm.ws.jsf23.fat.tests.JSF23ViewResourceTests;
 import com.ibm.ws.jsf23.fat.tests.JSF23WebSocketTests;
 
+
+import componenttest.rules.repeater.EmptyAction;
+import componenttest.rules.repeater.JakartaEE9Action;
+import componenttest.rules.repeater.RepeatTests;
 /**
  * JSF 2.3 Tests
  *
@@ -83,6 +88,10 @@ import com.ibm.ws.jsf23.fat.tests.JSF23WebSocketTests;
                 CDIConfigByACPTests.class
 })
 public class FATSuite {
+
+  @ClassRule
+  public static RepeatTests repeat = RepeatTests.with(new EmptyAction().fullFATOnly())
+                                              .andWith(new JakartaEE9Action());
 
     /**
      * @see {@link FatLogHandler#generateHelpFile()}
