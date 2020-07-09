@@ -18,6 +18,8 @@ WLP-ServerName: IBM WebSphere Application Server
 WLP-ServerVersion: ${liberty.beta.version}
 Implementation-Version: 2.3.6
 
+jakartaeeMe:true
+
 app-resources= \
   META-INF/services/org.apache.myfaces.config.annotation.LifecycleProviderFactory | \
   META-INF/services/org.apache.myfaces.config.annotation.LifecycleProvider | \
