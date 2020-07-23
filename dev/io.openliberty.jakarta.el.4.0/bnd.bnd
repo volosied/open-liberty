@@ -18,9 +18,9 @@ Export-Package: \
  jakarta.el;thread-context=true; version="4.0.0", \
  com.ibm.wsspi.el;thread-context=true; version="4.0.0"
 
-Include-Resource: \
-    jakarta=resources/jakarta
-
 instrument.disabled: true
 
 publish.wlp.jar.suffix: dev/api/spec
+
+-buildpath: \
+  jakarta.el:jakarta.el-api;version=4.0.0
