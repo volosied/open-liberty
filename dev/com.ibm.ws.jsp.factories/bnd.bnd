@@ -41,6 +41,12 @@ Export-Package: com.ibm.ws.jsp22.webcontainerext;version=2.2, \
    com.ibm.ws.jsp22.translator.visitor.validator;version="2.2", \
    com.ibm.ws.jsp22.translator.visitor.generator;version="2.2"
 
+Service-Component: \
+  com.ibm.ws.jsp.v22.dd; \
+    implementation:=com.ibm.ws.javaee.version.PagesVersion; \
+    provide:=com.ibm.ws.javaee.version.PagesVersion; \
+    properties:="version:String=2.2"
+
 -buildpath: \
 	com.ibm.wsspi.org.osgi.service.component.annotations;version=latest,\
 	com.ibm.websphere.javaee.jsp.2.2;version=latest,\

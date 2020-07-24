@@ -49,6 +49,7 @@ import org.osgi.service.component.annotations.ReferencePolicyOption;
 import com.ibm.ws.ffdc.FFDCFilter;
 import com.ibm.ws.javaee.dd.webext.Attribute;
 import com.ibm.ws.javaee.dd.webext.WebExt;
+import com.ibm.ws.javaee.version.PagesVersion;
 import com.ibm.ws.jsp.Constants;
 import com.ibm.ws.jsp.JSPStrBufferFactory;
 import com.ibm.ws.jsp.JSPStrBufferImpl;
@@ -85,7 +86,7 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
     }
 
     private volatile boolean osgiAppsCanProvideJSTL;
-    
+
     private volatile Properties defaultProperties = new Properties();
 
     private final AtomicServiceReference<ELFactoryWrapperForCDI> expressionFactoryService = new AtomicServiceReference<ELFactoryWrapperForCDI>("ExpressionFactoryService"); //cdi wraps this
@@ -99,20 +100,41 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
     @Reference
     private GeneratorUtilsExtFactory generatorUtilsExtFactory;
     @Reference
-    private JspVersionFactory jspVersionFactory;
-    @Reference
     private ClassLoadingService classLoadingService;
+
     private BundleContext bundleContext;
-    
+
+
+    private ServiceReference<PagesVersion> versionRef;
+
+    private static final String DEFAULT_VERSION = "0.0";
+
+    private static String CURRENT_LOADED_VERSION;
+
+    @Reference(service = PagesVersion.class, cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.DYNAMIC, policyOption = ReferencePolicyOption.GREEDY)
+    protected synchronized void setVersion(ServiceReference<PagesVersion> reference) {
+      this.versionRef = reference;
+      JSPExtensionFactory.CURRENT_LOADED_VERSION = (String) reference.getProperty("version");
+      System.out.println("setVersion " + CURRENT_LOADED_VERSION );
+    }
+
+    protected synchronized void unsetVersion(ServiceReference<PagesVersion> reference) {
+      if (reference == this.versionRef) {
+        this.versionRef = null;
+        JSPExtensionFactory.CURRENT_LOADED_VERSION = JSPExtensionFactory.DEFAULT_VERSION;
+        System.out.println("unsetVersion " + CURRENT_LOADED_VERSION );
+      }
+    }
+
     /**
      * Active JSPExtensionFactory instance. May be null between deactivate and activate
      * calls.
      */
     private static final AtomicReference<JSPExtensionFactory> instance = new AtomicReference<JSPExtensionFactory>();
-    
+
     /**
      * Inject an <code>WrapperExpressionFactory</code> service instance.
-     * 
+     *
      * @param expressionFactoryService
      *            an expressionFactory service to wrap the default ExpressionFactory
      */
@@ -123,14 +145,14 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
 
     /**
      * Remove the <code>WrapperExpressionFactory</code> service instance.
-     * 
+     *
      * @param expressionFactoryService
      *            an expressionFactory service to wrap the default ExpressionFactory
      */
     protected void unsetExpressionFactoryService(ServiceReference<ELFactoryWrapperForCDI> expressionFactoryService) {
         this.expressionFactoryService.unsetReference(expressionFactoryService);
     }
-    
+
     public static ELFactoryWrapperForCDI getWrapperExpressionFactory() {
         JSPExtensionFactory thisService = instance.get();
         if (thisService != null) {
@@ -177,12 +199,12 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
                 defaultProperties.put(key, value);
         }
     }
-    
+
     private final static HashMap<String, String> FullyQualifiedPropertiesMap = new HashMap<String, String>();
-    static { 
+    static {
         JSPExtensionFactory.FullyQualifiedPropertiesMap.put("keepGenerated", "keepgenerated");
     }
-    
+
     private String getOrigPropName(String newKey) {
         String s = JSPExtensionFactory.FullyQualifiedPropertiesMap.get(newKey);
         if (s==null) {
@@ -203,13 +225,13 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
             if (jspExtConfig == null) {
                 jspExtConfig = new JspConfiguratorHelper(null);
             }
-            
+
             Properties propsFromWebXml = null;
-            
+
             WebExt webExt = adaptableContainer.adapt(WebExt.class);
             if (webExt!=null) {
                 List<Attribute> jspAttributeInWebExt = webExt.getJspAttributes();
-                
+
                 if (jspAttributeInWebExt!=null) {
                     propsFromWebXml = new Properties();
                     propsFromWebXml.putAll(defaultProperties);
@@ -217,21 +239,21 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
                         propsFromWebXml.put(a.getName(), a.getValue());
                     }
                 }
-            }        
-                
+            }
+
             WebAppConfig wac = webapp.getWebAppConfig();
             boolean isJCDIEnabled = wac.isJCDIEnabled();
             jspExtConfig.setJCDIEnabledForRuntimeCheck(isJCDIEnabled);
-            
+
             //If we found properties in the web.xml, use those rather than just the defaults
             if (propsFromWebXml != null) {
                 jspExtConfig.getJspOptions().populateOptions(propsFromWebXml);
             } else {
                 jspExtConfig.getJspOptions().populateOptions(defaultProperties);
             }
-            
+
             //The system property javax.servlet.context.tempdir is used to set the scratchdir option on a server-wide basis. (See WebApp.java)
-            //The JSP engine scratchdir parameter takes precedence over this system property. 
+            //The JSP engine scratchdir parameter takes precedence over this system property.
             //Try scratchdir parameter, then com.ibm.websphere.servlet.temp.dir, then java.io.tmpdir
             File outputDir = (File) webapp.getAttribute(Constants.TMP_DIR); //javax.servlet.context.tempdir
             String scratchdir = jspExtConfig.getJspOptions().getScratchDir();
@@ -247,7 +269,7 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
             jspExtConfig.getJspOptions().setOutputDir(outputDir.getCanonicalFile());
             webapp.setAttribute(Constants.TMP_DIR, outputDir); //javax.servlet.context.tempdir
             logger.logp(Level.FINE, CLASS_NAME, "createConfig", "Output dir is:" + outputDir.getPath());
-            
+
             //PK93292: ALLOW THE USE OF WEBSPHERE VARIABLES IN EXTENDEDDOCUMENTROOT JSP ATTRIBUTE.
             String extendedDocumentRoot = jspExtConfig.getJspOptions().getExtendedDocumentRoot();
             if(extendedDocumentRoot!=null){
@@ -256,13 +278,13 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
                     expanded = resolveString(extendedDocumentRoot);
                     jspExtConfig.getJspOptions().setExtendedDocumentRoot(expanded);
                 }catch (Exception e){
-                    // TODO: This should probably be a warning, with an nls. 
+                    // TODO: This should probably be a warning, with an nls.
                     logger.logp(Level.FINE, CLASS_NAME, "createConfig", "varaible expansion failed for extendedDocumentRoot", e);
                 }
             }
-            
 
-            
+
+
         }
         catch (IOException e) {
             FFDCFilter.processException(e, "com.ibm.ws.jsp.webcontainerext.JSPExtensionFactory.createConfig", "299");
@@ -377,7 +399,7 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
     }
 
     /**
-     * @param webapp 
+     * @param webapp
      * @return
      */
     public String getServerName()
@@ -395,11 +417,11 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
     }
 
     /**
-     * @param webapp 
+     * @param webapp
      * @return
      */
     private String getNodeName() {
-        
+
         return "default_node";
     }
 
@@ -415,7 +437,7 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
 
         return dir.toString();
     }
-    
+
     protected JspClassloaderContext createJspClassloaderContext(IServletContext webapp, JspXmlExtConfig webAppConfig) {
         final ClassLoader loader;
         ClassLoader appLoader = webapp.getClassLoader();
@@ -454,7 +476,7 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
                     /*Iterator<Entry> libEntries = libDirContainer.iterator();
                     while (libEntries.hasNext()) {
                         Entry libEntry = libEntries.next();
-                        if (libEntry.getPath().endsWith(".jar")) {
+                        if (flibEntry.getPath().endsWith(".jar")) {
                             //TODO: not sure what to do here ... not sure if we even need to generate the classPath
                         }
                     }*/
@@ -496,7 +518,7 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
             public byte[] predefineClass(String className, byte[] classData) {return classData;}
         };
     }
-    
+
     private static class RequirementImpl implements Requirement {
 
         /* (non-Javadoc)
@@ -530,7 +552,7 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
         public Resource getResource() {
             return null;
         }
-        
+
         @Override
         public boolean equals(Object o) {
                 if (o == this)
@@ -543,8 +565,8 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
                                 && c.getDirectives().isEmpty()
                                 && c.getResource() == null;
         }
-        
-        @Override 
+
+        @Override
         public int hashCode() {
             return getNamespace().hashCode();
         }
@@ -579,7 +601,7 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
      */
     protected void unsetGlobalTagLibConfig(GlobalTagLibConfig globalTagLibConfig) {
     }
-        
+
     public static ElValidatorExtFactory getElValidatorExtFactory() {
         JSPExtensionFactory inst = instance.get();
         return inst == null? null: inst.elValidatorExtFactory;
@@ -589,14 +611,18 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
         JSPExtensionFactory inst = instance.get();
         return inst == null? null: inst.generatorUtilsExtFactory;
     }
-    
-    public static JspVersionFactory getJspVersionFactory() {
-        JSPExtensionFactory inst = instance.get();
-        return inst == null? null: inst.jspVersionFactory;
-    }    
+
+    public static String getLoadedJspSpecLevel() {
+
+        if(JSPExtensionFactory.CURRENT_LOADED_VERSION == null){
+            System.out.println("Current is NULL. getLoadedJspSpecLevel " + CURRENT_LOADED_VERSION);
+          return JSPExtensionFactory.DEFAULT_VERSION;
+        }
+        System.out.println("getLoadedJspSpecLevel " + CURRENT_LOADED_VERSION);
+        return JSPExtensionFactory.CURRENT_LOADED_VERSION;
+    }
 
     public String resolveString(String x) {
         return locationService.resolveString(x);
     }
 }
-
