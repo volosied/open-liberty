@@ -20,7 +20,11 @@ jakartaeeMe: true
 -dsannotations= \
   com.ibm.ws.jsp.webcontainerext.JSPExtensionFactory
 
-Service-Component:  \
+Service-Component: \
+  com.ibm.ws.jsp.v23.dd; \
+   implementation:=com.ibm.ws.javaee.version.PagesVersion; \
+   provide:=com.ibm.ws.javaee.version.PagesVersion; \
+   properties:="version:String=2.3", \
   com.ibm.ws.jsp.webxml.configurator;\
    implementation:=com.ibm.ws.jsp.webxml.JspConfiguratorHelperFactory;\
    provide:=com.ibm.ws.container.service.config.ServletConfiguratorHelperFactory;\
@@ -66,14 +70,11 @@ Export-Package: com.ibm.ws.jsp.runtime;version=2.2;thread-context=true, \
    org.apache.taglibs*;version=2.2, \
    org.apache.jasper.compiler;thread-context=true;version=2.2, \
    org.apache.jasper.runtime;thread-context=true;version=2.2
-   
 
 Private-Package: \
    com.ibm.ws.jsp.*, \
    com.ibm.ws.webcontainer.jsp.runtime, \
    com.ibm.wsspi.jsp.*
-   
-   
 
 Import-Package: \
    junit.*;resolution:=optional, \
@@ -116,7 +117,7 @@ Import-Package: \
    org.eclipse.jdt.internal.compiler.problem;version="3.10.2";usage="JSP", \
    sun.io;resolution:=optional, \
    *
-   
+
 Include-Resource: \
    @lib/bsf.jar, \
    @${repo;com.ibm.ws.javax.j2ee:jsp.tld.standard;1.2}, \
@@ -133,7 +134,7 @@ Include-Resource: \
    com/ibm/ws/jsp/translator/visitor/configuration/JspVisitorConfiguration.xml=src/com/ibm/ws/jsp/translator/visitor/configuration/JspVisitorConfiguration.xml, \
    com/ibm/ws/jsp/translator/visitor/configuration/JspVisitorConfiguration.xsd=src/com/ibm/ws/jsp/translator/visitor/configuration/JspVisitorConfiguration.xsd, \
    com/ibm/ws/jsp/taglib/config/TagLibCacheConfig.xsd=src/com/ibm/ws/jsp/taglib/config/TagLibCacheConfig.xsd
-    
+
 IBM-Default-Config: OSGI-INF/wlp/defaultInstances.xml
 
 instrument.ffdc: false
@@ -165,4 +166,5 @@ instrument.classesExcludes: com/ibm/ws/jsp/resources/*.class
 	com.ibm.ws.org.apache.jasper.el.2.2;version=latest,\
 	com.ibm.ws.kernel.security.thread;version=latest,\
 	com.ibm.ws.artifact.url;version=latest, \
-	com.ibm.ws.org.osgi.annotation.versioning;version=latest
+	com.ibm.ws.org.osgi.annotation.versioning;version=latest, \
+  com.ibm.ws.javaee.version;version=latest
