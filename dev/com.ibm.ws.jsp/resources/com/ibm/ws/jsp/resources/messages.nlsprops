@@ -9,7 +9,7 @@
 #     IBM Corporation - initial API and implementation
 ###############################################################################
 #CMVCPATHNAME ws/code/jsp/src/com/ibm/ws/jsp/resources/messages.nlsprops
-#COMPONENTPREFIX JSPG
+#COMPONENTPREFIX JSPG CWWJS
 #COMPONENTNAMEFOR JSPG jsp
 #ISMESSAGEFILE TRUE
 #NLS_MESSAGEFORMAT_VAR
@@ -65,7 +65,7 @@ jsp.error.usebean.missing.type=JSPG0012E: jsp:useBean is missing a type attribut
 jsp.error.usebean.missing.type.explanation=
 jsp.error.usebean.missing.type.useraction=
 
-jsp.error.usebean.duplicate=JSPG0013E: A bean with id {0} has already been defined 
+jsp.error.usebean.duplicate=JSPG0013E: A bean with id {0} has already been defined
 jsp.error.usebean.duplicate.explanation=
 jsp.error.usebean.duplicate.useraction=
 
@@ -73,7 +73,7 @@ jsp.error.usebean.prohibited.as.session=JSPG0014E: scope attribute cannot be "se
 jsp.error.usebean.prohibited.as.session.explanation=
 jsp.error.usebean.prohibited.as.session.useraction=
 
-jsp.error.usebean.not.both=JSPG0015E: jsp:useBean cannot have both a class and a beanName attribute (class = [{0}] beanName =[{1}]). 
+jsp.error.usebean.not.both=JSPG0015E: jsp:useBean cannot have both a class and a beanName attribute (class = [{0}] beanName =[{1}]).
 jsp.error.usebean.not.both.explanation=
 jsp.error.usebean.not.both.useraction=
 
@@ -197,11 +197,11 @@ jsp.error.introspect.taghandler=JSPG0045E: Error while retrieving bean informati
 jsp.error.introspect.taghandler.explanation=
 jsp.error.introspect.taghandler.useraction=
 
-jsp.error.tagfile.not.found=JSPG0046E: Unable to locate tagfile for tag {0} 
+jsp.error.tagfile.not.found=JSPG0046E: Unable to locate tagfile for tag {0}
 jsp.error.tagfile.not.found.explanation=
 jsp.error.tagfile.not.found.useraction=
 
-jsp.error.taglib.not.found=JSPG0047E: Unable to locate tag library for uri {0} 
+jsp.error.taglib.not.found=JSPG0047E: Unable to locate tag library for uri {0}
 jsp.error.taglib.not.found.explanation=
 jsp.error.taglib.not.found.useraction=
 
@@ -305,7 +305,7 @@ jsp.error.tld.load.failed.from.jar=JSPG0072E: Failed to load tld from jar {0} re
 jsp.error.tld.load.failed.from.jar.explanation=
 jsp.error.tld.load.failed.from.jar.useraction=
 
-jsp.error.usebean.class.must.be.assignable.to.type=JSPG0073E: useBean class "{0}" must be assignable to type "{1}" for jsp element {2} 
+jsp.error.usebean.class.must.be.assignable.to.type=JSPG0073E: useBean class "{0}" must be assignable to type "{1}" for jsp element {2}
 jsp.error.usebean.class.must.be.assignable.to.type.explanation=
 jsp.error.usebean.class.must.be.assignable.to.type.useraction=
 
@@ -317,7 +317,7 @@ jsp.error.multiple.attribute.definitions=JSPG0075E: Multiple occurences of attri
 jsp.error.multiple.attribute.definitions.explanation=
 jsp.error.multiple.attribute.definitions.useraction=
 
-jsp.error.missing.required.attribute=JSPG0076E: Missing required attribute {0} for jsp element {1} 
+jsp.error.missing.required.attribute=JSPG0076E: Missing required attribute {0} for jsp element {1}
 jsp.error.missing.required.attribute.explanation=
 jsp.error.missing.required.attribute.useraction=
 
@@ -334,15 +334,15 @@ multiple.occurences.attribute.tagfile.name=JSPG0079E:  Multiple occurrences of a
 multiple.occurences.attribute.tagfile.name.explanation=
 multiple.occurences.attribute.tagfile.name.useraction=
 
-variable.attribute.nameGiven.nameFromAttribute.not.both=JSPG0080E:  Tag file variable directive cannot have both a name-given and name-from-attribute attribute (name-given=[{1}] name-from-attribute=[{2}]) jsp element {0}. 
+variable.attribute.nameGiven.nameFromAttribute.not.both=JSPG0080E:  Tag file variable directive cannot have both a name-given and name-from-attribute attribute (name-given=[{1}] name-from-attribute=[{2}]) jsp element {0}.
 variable.attribute.nameGiven.nameFromAttribute.not.both.explanation=
 variable.attribute.nameGiven.nameFromAttribute.not.both.useraction=
 
-missing.required.variable.attribute.nameGiven.nameFromAttribute=JSPG0081E:  Tag file variable directive requires either a name-given or name-from-attribute attribute for jsp element {0}. 
+missing.required.variable.attribute.nameGiven.nameFromAttribute=JSPG0081E:  Tag file variable directive requires either a name-given or name-from-attribute attribute for jsp element {0}.
 missing.required.variable.attribute.nameGiven.nameFromAttribute.explanation=
 missing.required.variable.attribute.nameGiven.nameFromAttribute.useraction=
 
-invalid.value.for.variable.directive.attribute.scope=JSPG0082E:  Invalid value for variable directive attribute scope "{1}" jsp element {0}. 
+invalid.value.for.variable.directive.attribute.scope=JSPG0082E:  Invalid value for variable directive attribute scope "{1}" jsp element {0}.
 invalid.value.for.variable.directive.attribute.scope.explanation=
 invalid.value.for.variable.directive.attribute.scope.useraction=
 
@@ -358,7 +358,7 @@ jsp.error.loadclass.taghandler.attr=JSPG0085E: Error while load class specified 
 jsp.error.loadclass.taghandler.attr.explanation=
 jsp.error.loadclass.taghandler.attr.useraction=
 
-jsp.error.include.type.invalid=JSPG0086E: Static Include {0} must be of the same type as the including jsp. 
+jsp.error.include.type.invalid=JSPG0086E: Static Include {0} must be of the same type as the including jsp.
 jsp.error.include.type.invalid.explanation=
 jsp.error.include.type.invalid.useraction=
 
@@ -386,7 +386,7 @@ jsp.error.multiple.line.number=JSPG0092E: An error occurred between lines: {0} a
 jsp.error.multiple.line.number.explanation=
 jsp.error.multiple.line.number.useraction=
 
-jsp.error.corresponding.servlet=JSPG0093E: Generated servlet error from file: {0} 
+jsp.error.corresponding.servlet=JSPG0093E: Generated servlet error from file: {0}
 jsp.error.corresponding.servlet.explanation=
 jsp.error.corresponding.servlet.useraction=
 
@@ -414,11 +414,11 @@ jsp.error.root.invalid.version=JSPG0099E: jsp:root version attribute is invalid 
 jsp.error.root.invalid.version.explanation=
 jsp.error.root.invalid.version.useraction=
 
-jsp.error.tagfile.tag_dynamic_attrs_equals_attr_name=JSPG0100E: Name of Dynamic Attributes Map is the same as the tag attribute directive name attribute 
+jsp.error.tagfile.tag_dynamic_attrs_equals_attr_name=JSPG0100E: Name of Dynamic Attributes Map is the same as the tag attribute directive name attribute
 jsp.error.tagfile.tag_dynamic_attrs_equals_attr_name.explanation=
 jsp.error.tagfile.tag_dynamic_attrs_equals_attr_name.useraction=
 
-jsp.error.tagfile.tag_dynamic_attrs_equals_var_name_given=JSPG0101E: Name of Dynamic Attributes Map is the same as the tag varibke directive name-given attribute 
+jsp.error.tagfile.tag_dynamic_attrs_equals_var_name_given=JSPG0101E: Name of Dynamic Attributes Map is the same as the tag varibke directive name-given attribute
 jsp.error.tagfile.tag_dynamic_attrs_equals_var_name_given.explanation=
 jsp.error.tagfile.tag_dynamic_attrs_equals_var_name_given.useraction=
 
@@ -455,19 +455,19 @@ jsp.error.tagfile.cannot.locate.class.to.validate.primitive=JSPG0111E: Unable to
 jsp.error.tagfile.cannot.locate.class.to.validate.primitive.explanation=
 jsp.error.tagfile.cannot.locate.class.to.validate.primitive.useraction=
 
-jsp.error.scripting.disabled.for.translation.unit=JSPG0112E: Scripting in runtime expressions disabled for this translation unit. 
+jsp.error.scripting.disabled.for.translation.unit=JSPG0112E: Scripting in runtime expressions disabled for this translation unit.
 jsp.error.scripting.disabled.for.translation.unit.explanation=
 jsp.error.scripting.disabled.for.translation.unit.useraction=
 
-jsp.error.scriptlets.disabled.for.translation.unit=JSPG0113E: Scriptlets disabled for this translation unit. 
+jsp.error.scriptlets.disabled.for.translation.unit=JSPG0113E: Scriptlets disabled for this translation unit.
 jsp.error.scriptlets.disabled.for.translation.unit.explanation=
 jsp.error.scriptlets.disabled.for.translation.unit.useraction=
 
-jsp.error.declarations.disabled.for.translation.unit=JSPG0114E: Declarations disabled for this translation unit. 
+jsp.error.declarations.disabled.for.translation.unit=JSPG0114E: Declarations disabled for this translation unit.
 jsp.error.declarations.disabled.for.translation.unit.explanation=
 jsp.error.declarations.disabled.for.translation.unit.useraction=
 
-jsp.error.expressions.disabled.for.translation.unit=JSPG0115E: Expressions disabled for this translation unit. 
+jsp.error.expressions.disabled.for.translation.unit=JSPG0115E: Expressions disabled for this translation unit.
 jsp.error.expressions.disabled.for.translation.unit.explanation=
 jsp.error.expressions.disabled.for.translation.unit.useraction=
 
@@ -572,7 +572,7 @@ jsp.error.tagfile.invoke.scope_invalid=JSPG0140E: jsp:invoke scope value is inva
 jsp.error.tagfile.invoke.scope_invalid.explanation=
 jsp.error.tagfile.invoke.scope_invalid.useraction=
 
-jsp.error.tagfile.dobody.scope_invalid=JSPG0141E: jsp:doBody scope value is invalid 
+jsp.error.tagfile.dobody.scope_invalid=JSPG0141E: jsp:doBody scope value is invalid
 jsp.error.tagfile.dobody.scope_invalid.explanation=
 jsp.error.tagfile.dobody.scope_invalid.useraction=
 
@@ -840,7 +840,7 @@ jsp.error.no.doctype-root-element.attr=JSPG0213E: Error must provide a doctype-r
 jsp.error.no.doctype-root-element.attr.explanation=
 jsp.error.no.doctype-root-element.attr.useraction=
 
-jsp.error.no.doctype-system.attr=JSPG0214E: Error doctype-system is not provided. 
+jsp.error.no.doctype-system.attr=JSPG0214E: Error doctype-system is not provided.
 jsp.error.no.doctype-system.attr.explanation=
 jsp.error.no.doctype-system.attr.useraction=
 
@@ -914,7 +914,7 @@ jsp.error.unable.to.locate.tld.jar.file=JSPG0234E: The JSP container is unable t
 jsp.error.unable.to.locate.tld.jar.file.explanation=A tag library URI that is defined as a JAR location (web.xml file or page directive) cannot be located.
 jsp.error.unable.to.locate.tld.jar.file.useraction=Verify that the JAR file exists and is accessible to this Web module.
 
-jsp.error.failed.load.tei.class=JSPG0235E: The JSP container failed to load the TagExtraInfo class [{0}] 
+jsp.error.failed.load.tei.class=JSPG0235E: The JSP container failed to load the TagExtraInfo class [{0}]
 jsp.error.failed.load.tei.class.explanation=The JSP container is unable to load the TagExtraInfo class that is specified in the tag library descriptor (TLD).
 jsp.error.failed.load.tei.class.useraction=Verify that the TagExtraInfo class exists and is accessible to this Web module.
 
@@ -1219,7 +1219,7 @@ jsp.ard.importTagValidationError=JSPG0297E: There is a problem with the import t
 jsp.ard.importTagValidationError.explanation=
 jsp.ard.importTagValidationError.useraction=
 
-jsp.error.pageContext.multipleInitOrRelease=JSPG0298E: The PageContext has already been initialized or released.  
+jsp.error.pageContext.multipleInitOrRelease=JSPG0298E: The PageContext has already been initialized or released.
 jsp.error.pageContext.multipleInitOrRelease.explanation=The JSP container handles the initializing and releasing of PageContext objects.
 jsp.error.pageContext.multipleInitOrRelease.useraction=According to the specification, verify that there are no applications using JspFactory objects.
 
@@ -1258,3 +1258,7 @@ jsp.parse.tld.exception.useraction=Check the JSP Tag Library Descriptor file for
 system.java.compiler.not.found=JSPG0304W: The JSP attribute, useJDKCompiler, is set to true, but the Java SDK compiler was not found. The JSP container uses the compiler that is embedded in the product to compile the JSP files in web module: {0}.
 system.java.compiler.not.found.explanation=The JSP container was unable to find the system compiler, which usually indicates that the Java SDK jar file, tools.jar, was not found in the class path.
 system.java.compiler.not.found.useraction=Ensure that the Java SDK jar file, tools.jar, is in the class path and verify that the Java SDK supports the Java Compiler API. See Java Specification Request 199 for more information.
+
+jsp.feature.not.loaded.correctly=CWWJS0001: The JSP [Pages] feature did not load with an acceptable version.
+jsp.feature.not.loaded.correctly.explanation=The JSP [Pages] feature is loaded with a version that corresponds to the Java [Jakarta] EE specification of that JSP [Pages] feature. The feature was loaded with no version defined.
+jsp.feature.not.loaded.correctly.useraction=Check the server.xml file for existence of either a jsp-2.2, jsp-2.3, or pages-3.0 feature. Only one of the listed features should be specified.

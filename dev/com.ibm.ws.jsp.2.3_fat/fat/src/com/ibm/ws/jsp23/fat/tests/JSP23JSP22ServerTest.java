@@ -35,6 +35,7 @@ import componenttest.custom.junit.runner.FATRunner;
 import componenttest.custom.junit.runner.Mode;
 import componenttest.custom.junit.runner.Mode.TestMode;
 import componenttest.topology.impl.LibertyServer;
+import componenttest.rules.repeater.JakartaEE9Action;
 
 /**
  * Tests to execute on the jsp23jsp22Server that use HttpUnit.
@@ -87,16 +88,32 @@ public class JSP23JSP22ServerTest {
         WebConversation wc = new WebConversation();
         wc.setExceptionsThrownOnErrorStatus(false);
 
-        LOG.info("Requesting JSP with jsp-2.3 feature enabled");
+        WebRequest request;
+        WebResponse response;
 
         String url = JSPUtils.createHttpUrlString(server, APP_NAME, "testJspFeatureChange.jsp");
         LOG.info("url: " + url);
 
-        WebRequest request = new GetMethodWebRequest(url);
-        WebResponse response = wc.getResponse(request);
-        LOG.info("Response from a 2.3 compilation: " + response.getText());
+        if(JakartaEE9Action.isActive()) {
+          LOG.info("Requesting JSP with jsp-3.0 feature enabled");
 
-        assertTrue("The response did not contain: JSP version: 2.3", response.getText().contains("JSP version: 2.3"));
+          request = new GetMethodWebRequest(url);
+          response = wc.getResponse(request);
+
+          LOG.info("Response from a 3.0 compilation: " + response.getText());
+
+          assertTrue("The response did not contain: JSP version: 3.0", response.getText().contains("JSP version: 3.0"));
+
+        } else {
+          LOG.info("Requesting JSP with jsp-2.3 feature enabled");
+
+          request = new GetMethodWebRequest(url);
+          response = wc.getResponse(request);
+          LOG.info("Response from a 2.3 compilation: " + response.getText());
+
+          assertTrue("The response did not contain: JSP version: 2.3", response.getText().contains("JSP version: 2.3"));
+
+        }
 
         List<String> jsp22Feature = new ArrayList<String>();
         jsp22Feature.add("jsp-2.2");

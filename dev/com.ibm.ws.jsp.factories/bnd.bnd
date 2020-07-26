@@ -15,8 +15,7 @@ Bundle-Name: WAS JSP 2.2 Factories
 Bundle-SymbolicName: com.ibm.ws.jsp.factories
 Bundle-Description: WAS JSP 2.2 Factories, version ${bVersion} - implementation classes that are specific to JSP version 2.2
 
--dsannotations: com.ibm.ws.jsp22.webcontainerext.JspVersionFactoryImpl, \
-com.ibm.ws.jsp22.webcontainerext.ws.PrepareJspHelper22Factory, \
+-dsannotations: com.ibm.ws.jsp22.webcontainerext.ws.PrepareJspHelper22Factory, \
 com.ibm.ws.jsp22.translator.visitor.validator.ElValidatorExtFactoryImpl, \
 com.ibm.ws.jsp22.translator.visitor.generator.GeneratorUtilsExtFactoryImpl
 
@@ -40,6 +39,12 @@ Export-Package: com.ibm.ws.jsp22.webcontainerext;version=2.2, \
    com.ibm.ws.jsp22.webcontainerext.ws;version=2.2, \
    com.ibm.ws.jsp22.translator.visitor.validator;version="2.2", \
    com.ibm.ws.jsp22.translator.visitor.generator;version="2.2"
+
+Service-Component: \
+  com.ibm.ws.jsp.v22.dd; \
+    implementation:=com.ibm.ws.javaee.version.PagesVersion; \
+    provide:=com.ibm.ws.javaee.version.PagesVersion; \
+    properties:="version:String=2.2"
 
 -buildpath: \
 	com.ibm.wsspi.org.osgi.service.component.annotations;version=latest,\
