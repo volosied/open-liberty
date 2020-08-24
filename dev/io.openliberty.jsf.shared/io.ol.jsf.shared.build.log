@@ -1,0 +1,637 @@
+> Task :cnf:checkAlphabetical UP-TO-DATE
+> Task :cnf:dependabotGenerate UP-TO-DATE
+> Task :wlp-bndPlugins:compileJava UP-TO-DATE
+> Task :wlp-bndPlugins:processResources NO-SOURCE
+> Task :wlp-bndPlugins:classes UP-TO-DATE
+> Task :wlp-bndPlugins:jar UP-TO-DATE
+> Task :cnf:updatePluginClasses UP-TO-DATE
+> Task :com.ibm.websphere.javaee.servlet.3.1:globalize NO-SOURCE
+> Task :com.ibm.websphere.javaee.servlet.3.1:compileJava NO-SOURCE
+> Task :com.ibm.websphere.javaee.servlet.3.1:processResources NO-SOURCE
+> Task :com.ibm.websphere.javaee.servlet.3.1:classes UP-TO-DATE
+> Task :com.ibm.websphere.javaee.servlet.3.1:jar UP-TO-DATE
+> Task :com.ibm.websphere.org.osgi.core:globalize NO-SOURCE
+> Task :com.ibm.websphere.org.osgi.core:compileJava NO-SOURCE
+> Task :com.ibm.websphere.org.osgi.core:processResources NO-SOURCE
+> Task :com.ibm.websphere.org.osgi.core:classes UP-TO-DATE
+> Task :com.ibm.websphere.org.osgi.core:jar UP-TO-DATE
+> Task :com.ibm.websphere.org.osgi.service.component:globalize NO-SOURCE
+> Task :com.ibm.websphere.org.osgi.service.component:compileJava NO-SOURCE
+> Task :com.ibm.websphere.org.osgi.service.component:processResources NO-SOURCE
+> Task :com.ibm.websphere.org.osgi.service.component:classes UP-TO-DATE
+> Task :com.ibm.websphere.org.osgi.service.component:jar UP-TO-DATE
+> Task :com.ibm.websphere.appserver.spi.kernel.service:globalize NO-SOURCE
+> Task :com.ibm.ws.common.encoder:globalize NO-SOURCE
+> Task :com.ibm.ws.org.osgi.annotation.versioning:globalize NO-SOURCE
+> Task :com.ibm.ws.org.osgi.annotation.versioning:compileJava NO-SOURCE
+> Task :com.ibm.ws.org.osgi.annotation.versioning:processResources NO-SOURCE
+> Task :com.ibm.ws.org.osgi.annotation.versioning:classes UP-TO-DATE
+> Task :com.ibm.ws.org.osgi.annotation.versioning:jar UP-TO-DATE
+> Task :com.ibm.ws.common.encoder:compileJava UP-TO-DATE
+> Task :com.ibm.ws.common.encoder:processResources NO-SOURCE
+> Task :com.ibm.ws.common.encoder:classes UP-TO-DATE
+> Task :com.ibm.ws.common.encoder:jar UP-TO-DATE
+> Task :com.ibm.ws.crypto.passwordutil:globalize UP-TO-DATE
+> Task :com.ibm.ws.kernel.boot:globalize UP-TO-DATE
+> Task :com.ibm.ws.kernel.boot.cmdline:globalize UP-TO-DATE
+> Task :com.ibm.ws.kernel.boot.common:globalize NO-SOURCE
+> Task :com.ibm.ws.kernel.boot.common:compileJava UP-TO-DATE
+> Task :com.ibm.ws.kernel.boot.common:processResources NO-SOURCE
+> Task :com.ibm.ws.kernel.boot.common:classes UP-TO-DATE
+> Task :com.ibm.ws.kernel.boot.common:jar UP-TO-DATE
+> Task :com.ibm.ws.kernel.boot.core:globalize UP-TO-DATE
+> Task :com.ibm.ws.kernel.security.thread:globalize NO-SOURCE
+> Task :com.ibm.ws.kernel.boot.logging:globalize NO-SOURCE
+> Task :com.ibm.ws.kernel.boot.logging:compileJava UP-TO-DATE
+> Task :com.ibm.ws.kernel.boot.logging:processResources NO-SOURCE
+> Task :com.ibm.ws.kernel.boot.logging:classes UP-TO-DATE
+> Task :com.ibm.ws.kernel.boot.logging:jar UP-TO-DATE
+> Task :com.ibm.ws.logging.core:globalize NO-SOURCE
+> Task :com.ibm.ws.logging.core:compileJava UP-TO-DATE
+> Task :com.ibm.ws.logging.core:processResources NO-SOURCE
+> Task :com.ibm.ws.logging.core:classes UP-TO-DATE
+> Task :com.ibm.ws.logging.core:jar UP-TO-DATE
+> Task :com.ibm.ws.kernel.security.thread:compileJava UP-TO-DATE
+> Task :com.ibm.ws.kernel.security.thread:processResources NO-SOURCE
+> Task :com.ibm.ws.kernel.security.thread:classes UP-TO-DATE
+> Task :com.ibm.ws.kernel.security.thread:jar UP-TO-DATE
+> Task :com.ibm.websphere.org.osgi.service.cm:globalize NO-SOURCE
+> Task :com.ibm.websphere.org.osgi.service.cm:compileJava NO-SOURCE
+> Task :com.ibm.websphere.org.osgi.service.cm:processResources NO-SOURCE
+> Task :com.ibm.websphere.org.osgi.service.cm:classes UP-TO-DATE
+> Task :com.ibm.websphere.org.osgi.service.cm:jar UP-TO-DATE
+> Task :com.ibm.ws.logging:globalize UP-TO-DATE
+> Task :com.ibm.ws.org.objectweb.asm:globalize NO-SOURCE
+> Task :com.ibm.ws.org.objectweb.asm:compileJava NO-SOURCE
+> Task :com.ibm.ws.org.objectweb.asm:processResources NO-SOURCE
+> Task :com.ibm.ws.org.objectweb.asm:classes UP-TO-DATE
+> Task :com.ibm.ws.org.objectweb.asm:jar UP-TO-DATE
+> Task :com.ibm.ws.org.apache.ant:globalize NO-SOURCE
+> Task :com.ibm.ws.org.apache.ant:compileJava NO-SOURCE
+> Task :com.ibm.ws.org.apache.ant:processResources NO-SOURCE
+> Task :com.ibm.ws.org.apache.ant:classes UP-TO-DATE
+> Task :com.ibm.ws.org.apache.ant:jar UP-TO-DATE
+> Task :com.ibm.ws.ras.instrument:globalize NO-SOURCE
+> Task :com.ibm.ws.ras.instrument:compileJava UP-TO-DATE
+> Task :com.ibm.ws.ras.instrument:processResources UP-TO-DATE
+> Task :com.ibm.ws.ras.instrument:classes UP-TO-DATE
+> Task :com.ibm.ws.ras.instrument:jar UP-TO-DATE
+> Task :com.ibm.wsspi.org.osgi.service.event:globalize NO-SOURCE
+> Task :com.ibm.ws.kernel.instrument.agent:globalize NO-SOURCE
+> Task :com.ibm.ws.kernel.instrument.agent:compileJava UP-TO-DATE
+> Task :com.ibm.ws.kernel.instrument.agent:processResources NO-SOURCE
+> Task :com.ibm.ws.kernel.instrument.agent:classes UP-TO-DATE
+> Task :com.ibm.ws.kernel.instrument.agent:jar UP-TO-DATE
+> Task :com.ibm.ws.kernel.instrument.check:globalize NO-SOURCE
+> Task :com.ibm.ws.kernel.instrument.check:compileJava UP-TO-DATE
+> Task :com.ibm.ws.kernel.instrument.check:processResources NO-SOURCE
+> Task :com.ibm.ws.kernel.instrument.check:classes UP-TO-DATE
+> Task :com.ibm.ws.kernel.instrument.check:jar UP-TO-DATE
+> Task :wlp-rasInstrumentation:compileJava NO-SOURCE
+> Task :wlp-rasInstrumentation:processResources NO-SOURCE
+> Task :wlp-rasInstrumentation:classes UP-TO-DATE
+> Task :wlp-rasInstrumentation:jar UP-TO-DATE
+> Task :com.ibm.wsspi.org.osgi.service.event:compileJava NO-SOURCE
+> Task :com.ibm.wsspi.org.osgi.service.event:processResources NO-SOURCE
+> Task :com.ibm.wsspi.org.osgi.service.event:classes UP-TO-DATE
+> Task :com.ibm.wsspi.org.osgi.service.event:jar UP-TO-DATE
+> Task :com.ibm.wsspi.org.osgi.service.log:globalize NO-SOURCE
+> Task :com.ibm.wsspi.org.osgi.service.log:compileJava NO-SOURCE
+> Task :com.ibm.wsspi.org.osgi.service.log:processResources NO-SOURCE
+> Task :com.ibm.wsspi.org.osgi.service.log:classes UP-TO-DATE
+> Task :com.ibm.wsspi.org.osgi.service.log:jar UP-TO-DATE
+> Task :com.ibm.ws.logging:compileJava UP-TO-DATE
+> Task :com.ibm.ws.logging:processResources NO-SOURCE
+> Task :com.ibm.ws.logging:classes UP-TO-DATE
+> Task :com.ibm.ws.logging:jar UP-TO-DATE
+> Task :com.ibm.ws.kernel.boot.core:compileJava UP-TO-DATE
+> Task :com.ibm.ws.kernel.boot.core:processResources NO-SOURCE
+> Task :com.ibm.ws.kernel.boot.core:classes UP-TO-DATE
+> Task :com.ibm.ws.kernel.boot.core:jar UP-TO-DATE
+> Task :com.ibm.ws.kernel.boot.cmdline:compileJava UP-TO-DATE
+> Task :com.ibm.ws.kernel.boot.cmdline:processResources NO-SOURCE
+> Task :com.ibm.ws.kernel.boot.cmdline:classes UP-TO-DATE
+> Task :com.ibm.ws.kernel.boot.cmdline:jar UP-TO-DATE
+> Task :com.ibm.ws.kernel.boot.nested:globalize UP-TO-DATE
+> Task :org.eclipse.osgi:globalize NO-SOURCE
+> Task :org.eclipse.osgi:compileJava NO-SOURCE
+> Task :org.eclipse.osgi:processResources NO-SOURCE
+> Task :org.eclipse.osgi:classes UP-TO-DATE
+> Task :org.eclipse.osgi:jar UP-TO-DATE
+> Task :com.ibm.ws.kernel.boot.nested:compileJava UP-TO-DATE
+> Task :com.ibm.ws.kernel.boot.nested:processResources NO-SOURCE
+> Task :com.ibm.ws.kernel.boot.nested:classes UP-TO-DATE
+> Task :com.ibm.ws.kernel.boot.nested:jar UP-TO-DATE
+> Task :com.ibm.ws.kernel.boot:compileJava UP-TO-DATE
+> Task :com.ibm.ws.kernel.boot:processResources NO-SOURCE
+> Task :com.ibm.ws.kernel.boot:classes UP-TO-DATE
+> Task :com.ibm.ws.kernel.boot.ws-server:globalize NO-SOURCE
+> Task :com.ibm.ws.kernel.boot.ws-server:compileJava NO-SOURCE
+> Task :com.ibm.ws.kernel.boot.ws-server:processResources NO-SOURCE
+> Task :com.ibm.ws.kernel.boot.ws-server:classes UP-TO-DATE
+> Task :com.ibm.ws.kernel.boot.ws-server:jar UP-TO-DATE
+> Task :com.ibm.ws.kernel.boot:jar UP-TO-DATE
+> Task :com.ibm.ws.kernel.service:globalize UP-TO-DATE
+> Task :com.ibm.wsspi.org.osgi.service.component.annotations:globalize NO-SOURCE
+> Task :com.ibm.wsspi.org.osgi.service.component.annotations:compileJava NO-SOURCE
+> Task :com.ibm.wsspi.org.osgi.service.component.annotations:processResources NO-SOURCE
+> Task :com.ibm.wsspi.org.osgi.service.component.annotations:classes UP-TO-DATE
+> Task :com.ibm.wsspi.org.osgi.service.component.annotations:jar UP-TO-DATE
+> Task :com.ibm.ws.kernel.service:compileJava UP-TO-DATE
+> Task :com.ibm.ws.kernel.service:processResources NO-SOURCE
+> Task :com.ibm.ws.kernel.service:classes UP-TO-DATE
+> Task :com.ibm.ws.kernel.service:jar UP-TO-DATE
+> Task :com.ibm.ws.crypto.passwordutil:compileJava UP-TO-DATE
+> Task :com.ibm.ws.crypto.passwordutil:processResources NO-SOURCE
+> Task :com.ibm.ws.crypto.passwordutil:classes UP-TO-DATE
+> Task :com.ibm.ws.crypto.passwordutil:jar UP-TO-DATE
+> Task :com.ibm.websphere.appserver.spi.kernel.service:compileJava NO-SOURCE
+> Task :com.ibm.websphere.appserver.spi.kernel.service:processResources NO-SOURCE
+> Task :com.ibm.websphere.appserver.spi.kernel.service:classes UP-TO-DATE
+> Task :com.ibm.websphere.appserver.spi.kernel.service:jar UP-TO-DATE
+> Task :com.ibm.websphere.appserver.spi.logging:globalize NO-SOURCE
+> Task :com.ibm.websphere.appserver.spi.logging:compileJava NO-SOURCE
+> Task :com.ibm.websphere.appserver.spi.logging:processResources NO-SOURCE
+> Task :com.ibm.websphere.appserver.spi.logging:classes UP-TO-DATE
+> Task :com.ibm.websphere.appserver.spi.logging:jar UP-TO-DATE
+> Task :com.ibm.ws.adaptable.module:globalize NO-SOURCE
+> Task :com.ibm.ws.artifact:globalize NO-SOURCE
+> Task :com.ibm.ws.bnd.annotations:globalize NO-SOURCE
+> Task :com.ibm.ws.bnd.annotations:compileJava UP-TO-DATE
+> Task :com.ibm.ws.bnd.annotations:processResources NO-SOURCE
+> Task :com.ibm.ws.bnd.annotations:classes UP-TO-DATE
+> Task :com.ibm.ws.bnd.annotations:jar UP-TO-DATE
+> Task :com.ibm.ws.artifact:compileJava UP-TO-DATE
+> Task :com.ibm.ws.artifact:processResources NO-SOURCE
+> Task :com.ibm.ws.artifact:classes UP-TO-DATE
+> Task :com.ibm.ws.artifact:jar UP-TO-DATE
+> Task :com.ibm.ws.artifact.overlay:globalize NO-SOURCE
+> Task :com.ibm.ws.artifact.overlay:compileJava UP-TO-DATE
+> Task :com.ibm.ws.artifact.overlay:processResources NO-SOURCE
+> Task :com.ibm.ws.artifact.overlay:classes UP-TO-DATE
+> Task :com.ibm.ws.artifact.overlay:jar UP-TO-DATE
+> Task :com.ibm.ws.adaptable.module:compileJava UP-TO-DATE
+> Task :com.ibm.ws.adaptable.module:processResources NO-SOURCE
+> Task :com.ibm.ws.adaptable.module:classes UP-TO-DATE
+> Task :com.ibm.ws.adaptable.module:jar UP-TO-DATE
+> Task :com.ibm.ws.anno:globalize UP-TO-DATE
+> Task :com.ibm.ws.org.jboss.jandex:globalize NO-SOURCE
+> Task :com.ibm.ws.org.jboss.jandex:compileJava NO-SOURCE
+> Task :com.ibm.ws.org.jboss.jandex:processResources NO-SOURCE
+> Task :com.ibm.ws.org.jboss.jandex:classes UP-TO-DATE
+> Task :com.ibm.ws.org.jboss.jandex:jar UP-TO-DATE
+> Task :com.ibm.ws.anno:compileJava UP-TO-DATE
+> Task :com.ibm.ws.anno:processResources UP-TO-DATE
+> Task :com.ibm.ws.anno:classes UP-TO-DATE
+> Task :com.ibm.ws.anno:jar UP-TO-DATE
+> Task :com.ibm.websphere.javaee.cdi.1.2:globalize NO-SOURCE
+> Task :com.ibm.websphere.javaee.cdi.1.2:compileJava NO-SOURCE
+> Task :com.ibm.websphere.javaee.cdi.1.2:processResources NO-SOURCE
+> Task :com.ibm.websphere.javaee.cdi.1.2:classes UP-TO-DATE
+
+> Task :com.ibm.websphere.javaee.cdi.1.2:jar
+warning: There is an empty jar or directory on the classpath: main
+warning: Empty clause, usually caused by repeating a comma without any name field or by having spaces after the backslash of a property file: javax.decorator; version=1.1, javax.enterprise; version=1.1, javax.enterprise.context; version=1.1, javax.enterprise.context.spi; version=1.1, javax.enterprise.event; version=1.1, javax.enterprise.inject; version=1.1, javax.enterprise.inject.deployment; version=1.1, javax.enterprise.inject.spi; version=1.1, javax.enterprise.inject.stereotype; version=1.1, javax.enterprise.util; version=1.1, javax.inject; version=1, 
+warning: Unreferenced class path entries [cdi-api-1.2, java.ibmjgssprovider-1.8.0, java.math-1.8.0, java.xml-1.8.0, java.jlm-1.8.0, javax.inject-1, java.vm-1.8.0, java.ibmjssefw-1.8.0, java.ibmpkcs-1.8.0, java.xmldsigfw-1.8.0, java.ibmorbapi-1.8.0, java.ibmjgssfw-1.8.0, java.ibmjcefw-1.8.0, java.rt-1.8.0, java.ibmcertpathfw-1.8.0]
+warning: dev :No translation found for macro: artifactory.upload.token
+warning: dev :No translation found for macro: artifactory.upload.server
+warning: dev :No translation found for macro: artifactory.upload.user
+
+> Task :com.ibm.ws.cdi.interfaces:globalize NO-SOURCE
+> Task :com.ibm.ws.container.service:globalize UP-TO-DATE
+> Task :com.ibm.ws.container.service.compat:globalize UP-TO-DATE
+> Task :com.ibm.ws.container.service.compat:compileJava UP-TO-DATE
+> Task :com.ibm.ws.container.service.compat:processResources NO-SOURCE
+> Task :com.ibm.ws.container.service.compat:classes UP-TO-DATE
+> Task :com.ibm.ws.container.service.compat:jar UP-TO-DATE
+> Task :com.ibm.ws.javaee.dd:globalize NO-SOURCE
+> Task :com.ibm.ws.javaee.dd.common:globalize NO-SOURCE
+> Task :com.ibm.ws.javaee.dd.common:compileJava UP-TO-DATE
+> Task :com.ibm.ws.javaee.dd.common:processResources NO-SOURCE
+> Task :com.ibm.ws.javaee.dd.common:classes UP-TO-DATE
+> Task :com.ibm.ws.javaee.dd.common:jar UP-TO-DATE
+> Task :com.ibm.ws.javaee.ddmetadata.annotation:globalize NO-SOURCE
+> Task :com.ibm.ws.javaee.ddmetadata.annotation:compileJava UP-TO-DATE
+> Task :com.ibm.ws.javaee.ddmetadata.annotation:processResources NO-SOURCE
+> Task :com.ibm.ws.javaee.ddmetadata.annotation:classes UP-TO-DATE
+> Task :com.ibm.ws.javaee.ddmetadata.annotation:jar UP-TO-DATE
+> Task :com.ibm.ws.javaee.dd:compileJava UP-TO-DATE
+> Task :com.ibm.ws.javaee.dd:processResources NO-SOURCE
+> Task :com.ibm.ws.javaee.dd:classes UP-TO-DATE
+> Task :com.ibm.ws.javaee.dd:jar UP-TO-DATE
+> Task :com.ibm.ws.javaee.version:globalize NO-SOURCE
+> Task :com.ibm.ws.javaee.version:compileJava UP-TO-DATE
+> Task :com.ibm.ws.javaee.version:processResources NO-SOURCE
+> Task :com.ibm.ws.javaee.version:classes UP-TO-DATE
+> Task :com.ibm.ws.javaee.version:jar UP-TO-DATE
+> Task :com.ibm.ws.resource:globalize UP-TO-DATE
+> Task :com.ibm.ws.resource:compileJava UP-TO-DATE
+> Task :com.ibm.ws.resource:processResources NO-SOURCE
+> Task :com.ibm.ws.resource:classes UP-TO-DATE
+> Task :com.ibm.ws.resource:jar UP-TO-DATE
+> Task :com.ibm.ws.container.service:compileJava UP-TO-DATE
+> Task :com.ibm.ws.container.service:processResources NO-SOURCE
+> Task :com.ibm.ws.container.service:classes UP-TO-DATE
+> Task :com.ibm.ws.container.service:jar UP-TO-DATE
+> Task :com.ibm.ws.cdi.interfaces:compileJava
+> Task :com.ibm.ws.cdi.interfaces:processResources NO-SOURCE
+> Task :com.ibm.ws.cdi.interfaces:classes
+
+> Task :com.ibm.ws.cdi.interfaces:jar
+warning: Imports that lack version ranges: [com.ibm.ws.serialization]
+warning: Unreferenced class path entries [com.ibm.websphere.javaee.cdi.1.2, org.eclipse.osgi, java.ibmjgssprovider-1.8.0, java.math-1.8.0, com.ibm.ws.ras.instrument, java.xml-1.8.0, java.jlm-1.8.0, java.vm-1.8.0, com.ibm.ws.adaptable.module, java.ibmjssefw-1.8.0, java.ibmpkcs-1.8.0, com.ibm.ws.org.osgi.annotation.versioning, java.xmldsigfw-1.8.0, java.ibmorbapi-1.8.0, java.ibmjgssfw-1.8.0, com.ibm.ws.container.service, com.ibm.websphere.appserver.spi.logging, java.ibmjcefw-1.8.0, java.rt-1.8.0, java.ibmcertpathfw-1.8.0]
+
+> Task :com.ibm.websphere.javaee.el.2.2:globalize NO-SOURCE
+> Task :com.ibm.websphere.javaee.el.2.2:compileJava UP-TO-DATE
+> Task :com.ibm.websphere.javaee.el.2.2:processResources NO-SOURCE
+> Task :com.ibm.websphere.javaee.el.2.2:classes UP-TO-DATE
+
+> Task :com.ibm.websphere.javaee.el.2.2:jar
+warning: Split package, multiple jars provide the same package:javax/el
+Use Import/Export Package directive -split-package:=(merge-first|merge-last|error|first) to get rid of this warning
+Package found in   [Jar:main, Jar:el-2.2]
+Class path         [Jar:main, Jar:el-2.2, Jar:java.ibmcertpathfw-1.8.0, Jar:java.ibmjcefw-1.8.0, Jar:java.ibmjgssfw-1.8.0, Jar:java.ibmjgssprovider-1.8.0, Jar:java.ibmjssefw-1.8.0, Jar:java.ibmorbapi-1.8.0, Jar:java.ibmpkcs-1.8.0, Jar:java.jlm-1.8.0, Jar:java.math-1.8.0, Jar:java.rt-1.8.0, Jar:java.vm-1.8.0, Jar:java.xml-1.8.0, Jar:java.xmldsigfw-1.8.0]
+warning: Unreferenced class path entries [java.ibmjgssprovider-1.8.0, java.math-1.8.0, java.xml-1.8.0, java.jlm-1.8.0, java.vm-1.8.0, java.ibmjssefw-1.8.0, java.ibmpkcs-1.8.0, el-2.2, java.xmldsigfw-1.8.0, java.ibmorbapi-1.8.0, java.ibmjgssfw-1.8.0, java.ibmjcefw-1.8.0, java.rt-1.8.0, java.ibmcertpathfw-1.8.0]
+
+> Task :com.ibm.websphere.javaee.jsp.2.2:globalize NO-SOURCE
+> Task :com.ibm.websphere.javaee.jsp.2.2:compileJava NO-SOURCE
+> Task :com.ibm.websphere.javaee.jsp.2.2:processResources NO-SOURCE
+> Task :com.ibm.websphere.javaee.jsp.2.2:classes UP-TO-DATE
+
+> Task :com.ibm.websphere.javaee.jsp.2.2:jar
+warning: There is an empty jar or directory on the classpath: main
+warning: Imports that lack version ranges: [javax.xml.parsers, org.apache.taglibs.standard.resources, org.apache.taglibs.standard.tag.common.fmt, org.xml.sax, org.xml.sax.helpers]
+warning: Unreferenced class path entries [java.ibmjgssprovider-1.8.0, java.math-1.8.0, java.xml-1.8.0, java.jlm-1.8.0, servlet.jsp-2.2, java.vm-1.8.0, java.ibmjssefw-1.8.0, java.ibmpkcs-1.8.0, java.xmldsigfw-1.8.0, java.ibmorbapi-1.8.0, java.ibmjgssfw-1.8.0, java.ibmjcefw-1.8.0, java.rt-1.8.0, java.ibmcertpathfw-1.8.0]
+
+> Task :com.ibm.websphere.javaee.servlet.3.0:globalize NO-SOURCE
+> Task :com.ibm.websphere.javaee.servlet.3.0:compileJava NO-SOURCE
+> Task :com.ibm.websphere.javaee.servlet.3.0:processResources NO-SOURCE
+> Task :com.ibm.websphere.javaee.servlet.3.0:classes UP-TO-DATE
+> Task :com.ibm.websphere.javaee.servlet.3.0:jar UP-TO-DATE
+> Task :com.ibm.ws.artifact.url:globalize NO-SOURCE
+> Task :com.ibm.ws.artifact.zip:globalize UP-TO-DATE
+> Task :com.ibm.ws.classloading.configuration:globalize NO-SOURCE
+> Task :com.ibm.ws.classloading.configuration:compileJava UP-TO-DATE
+> Task :com.ibm.ws.classloading.configuration:processResources NO-SOURCE
+> Task :com.ibm.ws.classloading.configuration:classes UP-TO-DATE
+> Task :com.ibm.ws.classloading.configuration:jar UP-TO-DATE
+> Task :com.ibm.ws.kernel.filemonitor:globalize UP-TO-DATE
+> Task :com.ibm.ws.kernel.filemonitor:compileJava UP-TO-DATE
+> Task :com.ibm.ws.kernel.filemonitor:processResources NO-SOURCE
+> Task :com.ibm.ws.kernel.filemonitor:classes UP-TO-DATE
+> Task :com.ibm.ws.kernel.filemonitor:jar UP-TO-DATE
+> Task :com.ibm.ws.artifact.zip:compileJava UP-TO-DATE
+> Task :com.ibm.ws.artifact.zip:processResources NO-SOURCE
+> Task :com.ibm.ws.artifact.zip:classes UP-TO-DATE
+> Task :com.ibm.ws.artifact.zip:jar UP-TO-DATE
+> Task :com.ibm.ws.org.apache.aries.util:globalize NO-SOURCE
+> Task :com.ibm.ws.org.apache.aries.util:compileJava UP-TO-DATE
+> Task :com.ibm.ws.org.apache.aries.util:processResources NO-SOURCE
+> Task :com.ibm.ws.org.apache.aries.util:classes UP-TO-DATE
+> Task :com.ibm.ws.org.apache.aries.util:jar UP-TO-DATE
+> Task :com.ibm.ws.artifact.url:compileJava UP-TO-DATE
+> Task :com.ibm.ws.artifact.url:processResources NO-SOURCE
+> Task :com.ibm.ws.artifact.url:classes UP-TO-DATE
+> Task :com.ibm.ws.artifact.url:jar UP-TO-DATE
+> Task :com.ibm.ws.classloading:globalize UP-TO-DATE
+> Task :com.ibm.ws.dynamic.bundle:globalize NO-SOURCE
+> Task :com.ibm.ws.org.eclipse.equinox.region:globalize NO-SOURCE
+> Task :com.ibm.ws.org.eclipse.equinox.region:compileJava NO-SOURCE
+> Task :com.ibm.ws.org.eclipse.equinox.region:processResources NO-SOURCE
+> Task :com.ibm.ws.org.eclipse.equinox.region:classes UP-TO-DATE
+> Task :com.ibm.ws.org.eclipse.equinox.region:jar UP-TO-DATE
+> Task :com.ibm.ws.dynamic.bundle:compileJava UP-TO-DATE
+> Task :com.ibm.ws.dynamic.bundle:processResources NO-SOURCE
+> Task :com.ibm.ws.dynamic.bundle:classes UP-TO-DATE
+> Task :com.ibm.ws.dynamic.bundle:jar UP-TO-DATE
+> Task :com.ibm.ws.kernel.equinox.module:globalize NO-SOURCE
+> Task :com.ibm.ws.kernel.equinox.module:compileJava UP-TO-DATE
+> Task :com.ibm.ws.kernel.equinox.module:processResources NO-SOURCE
+> Task :com.ibm.ws.kernel.equinox.module:classes UP-TO-DATE
+> Task :com.ibm.ws.kernel.equinox.module:jar UP-TO-DATE
+> Task :com.ibm.ws.kernel.feature:globalize UP-TO-DATE
+> Task :com.ibm.websphere.appserver.spi.kernel.filemonitor:globalize NO-SOURCE
+> Task :com.ibm.websphere.appserver.spi.kernel.filemonitor:compileJava NO-SOURCE
+> Task :com.ibm.websphere.appserver.spi.kernel.filemonitor:processResources NO-SOURCE
+> Task :com.ibm.websphere.appserver.spi.kernel.filemonitor:classes UP-TO-DATE
+> Task :com.ibm.websphere.appserver.spi.kernel.filemonitor:jar UP-TO-DATE
+> Task :com.ibm.ws.config:globalize UP-TO-DATE
+> Task :com.ibm.ws.config.ext:globalize NO-SOURCE
+> Task :com.ibm.ws.config.ext:compileJava UP-TO-DATE
+> Task :com.ibm.ws.config.ext:processResources NO-SOURCE
+> Task :com.ibm.ws.config.ext:classes UP-TO-DATE
+> Task :com.ibm.ws.config.ext:jar UP-TO-DATE
+> Task :com.ibm.ws.org.eclipse.equinox.metatype:globalize NO-SOURCE
+> Task :com.ibm.wsspi.org.osgi.service.metatype:globalize NO-SOURCE
+> Task :com.ibm.wsspi.org.osgi.service.metatype:compileJava NO-SOURCE
+> Task :com.ibm.wsspi.org.osgi.service.metatype:processResources NO-SOURCE
+> Task :com.ibm.wsspi.org.osgi.service.metatype:classes UP-TO-DATE
+> Task :com.ibm.wsspi.org.osgi.service.metatype:jar UP-TO-DATE
+> Task :com.ibm.ws.org.eclipse.equinox.metatype:compileJava NO-SOURCE
+> Task :com.ibm.ws.org.eclipse.equinox.metatype:processResources NO-SOURCE
+> Task :com.ibm.ws.org.eclipse.equinox.metatype:classes UP-TO-DATE
+> Task :com.ibm.ws.org.eclipse.equinox.metatype:jar UP-TO-DATE
+> Task :com.ibm.ws.runtime.update:globalize UP-TO-DATE
+> Task :com.ibm.ws.threading:globalize UP-TO-DATE
+> Task :com.ibm.ws.threading:compileJava UP-TO-DATE
+> Task :com.ibm.ws.threading:processResources NO-SOURCE
+> Task :com.ibm.ws.threading:classes UP-TO-DATE
+> Task :com.ibm.ws.threading:jar UP-TO-DATE
+> Task :com.ibm.ws.runtime.update:compileJava UP-TO-DATE
+> Task :com.ibm.ws.runtime.update:processResources NO-SOURCE
+> Task :com.ibm.ws.runtime.update:classes UP-TO-DATE
+> Task :com.ibm.ws.runtime.update:jar UP-TO-DATE
+> Task :com.ibm.ws.org.eclipse.equinox.coordinator:globalize NO-SOURCE
+> Task :com.ibm.ws.org.eclipse.equinox.coordinator:compileJava NO-SOURCE
+> Task :com.ibm.ws.org.eclipse.equinox.coordinator:processResources NO-SOURCE
+> Task :com.ibm.ws.org.eclipse.equinox.coordinator:classes UP-TO-DATE
+> Task :com.ibm.ws.org.eclipse.equinox.coordinator:jar UP-TO-DATE
+> Task :com.ibm.wsspi.thirdparty.equinox:globalize NO-SOURCE
+> Task :com.ibm.wsspi.thirdparty.equinox:compileJava NO-SOURCE
+> Task :com.ibm.wsspi.thirdparty.equinox:processResources NO-SOURCE
+> Task :com.ibm.wsspi.thirdparty.equinox:classes UP-TO-DATE
+> Task :com.ibm.wsspi.thirdparty.equinox:jar UP-TO-DATE
+> Task :com.ibm.ws.config:compileJava UP-TO-DATE
+> Task :com.ibm.ws.config:processResources NO-SOURCE
+> Task :com.ibm.ws.config:classes UP-TO-DATE
+> Task :com.ibm.ws.config:jar UP-TO-DATE
+> Task :com.ibm.ws.kernel.feature.cmdline:globalize NO-SOURCE
+> Task :com.ibm.ws.kernel.feature.core:globalize UP-TO-DATE
+> Task :com.ibm.wsspi.org.osgi.namespace.service:globalize NO-SOURCE
+> Task :com.ibm.wsspi.org.osgi.namespace.service:compileJava NO-SOURCE
+> Task :com.ibm.wsspi.org.osgi.namespace.service:processResources NO-SOURCE
+> Task :com.ibm.wsspi.org.osgi.namespace.service:classes UP-TO-DATE
+> Task :com.ibm.wsspi.org.osgi.namespace.service:jar UP-TO-DATE
+> Task :com.ibm.ws.kernel.feature.core:compileJava UP-TO-DATE
+> Task :com.ibm.ws.kernel.feature.core:processResources NO-SOURCE
+> Task :com.ibm.ws.kernel.feature.core:classes UP-TO-DATE
+> Task :com.ibm.ws.kernel.feature.core:jar UP-TO-DATE
+> Task :wlp.lib.extract:globalize UP-TO-DATE
+> Task :wlp.lib.extract:compileJava UP-TO-DATE
+> Task :wlp.lib.extract:processResources NO-SOURCE
+> Task :wlp.lib.extract:classes UP-TO-DATE
+> Task :wlp.lib.extract:jar UP-TO-DATE
+> Task :com.ibm.ws.kernel.feature.cmdline:compileJava UP-TO-DATE
+> Task :com.ibm.ws.kernel.feature.cmdline:processResources NO-SOURCE
+> Task :com.ibm.ws.kernel.feature.cmdline:classes UP-TO-DATE
+> Task :com.ibm.ws.kernel.feature.cmdline:jar UP-TO-DATE
+> Task :com.ibm.ws.kernel.feature:compileJava UP-TO-DATE
+> Task :com.ibm.ws.kernel.feature:processResources NO-SOURCE
+> Task :com.ibm.ws.kernel.feature:classes UP-TO-DATE
+> Task :com.ibm.ws.kernel.feature:jar UP-TO-DATE
+> Task :com.ibm.websphere.appserver.spi.threading:globalize NO-SOURCE
+> Task :com.ibm.websphere.appserver.spi.threading:compileJava NO-SOURCE
+> Task :com.ibm.websphere.appserver.spi.threading:processResources NO-SOURCE
+> Task :com.ibm.websphere.appserver.spi.threading:classes UP-TO-DATE
+> Task :com.ibm.websphere.appserver.spi.threading:jar UP-TO-DATE
+> Task :com.ibm.ws.kernel.metatype.helper:globalize NO-SOURCE
+> Task :com.ibm.ws.kernel.metatype.helper:compileJava UP-TO-DATE
+> Task :com.ibm.ws.kernel.metatype.helper:processResources NO-SOURCE
+> Task :com.ibm.ws.kernel.metatype.helper:classes UP-TO-DATE
+> Task :com.ibm.ws.kernel.metatype.helper:jar UP-TO-DATE
+> Task :com.ibm.ws.classloading:compileJava UP-TO-DATE
+> Task :com.ibm.ws.classloading:processResources NO-SOURCE
+> Task :com.ibm.ws.classloading:classes UP-TO-DATE
+> Task :com.ibm.ws.classloading:jar UP-TO-DATE
+> Task :com.ibm.ws.jsp:globalize UP-TO-DATE
+> Task :com.ibm.ws.jsp.jasper:globalize NO-SOURCE
+
+> Task :com.ibm.ws.jsp.jasper:compileJava
+
+> Task :com.ibm.ws.jsp.jasper:processResources NO-SOURCE
+> Task :com.ibm.ws.jsp.jasper:classes
+
+> Task :com.ibm.ws.jsp.jasper:jar
+warning: Unable to determine whether the meta annotation com.ibm.websphere.ras.annotation.InjectedTrace applied to type org.apache.jasper.JasperException provides bundle annotations as it is not on the project build path. If this annotation does provide bundle annotations then it must be present on the build path in order to be processed
+warning: Unable to determine whether the meta annotation com.ibm.websphere.ras.annotation.TraceObjectField applied to type org.apache.jasper.JasperException provides bundle annotations as it is not on the project build path. If this annotation does provide bundle annotations then it must be present on the build path in order to be processed
+warning: Unable to determine whether the meta annotation com.ibm.websphere.ras.annotation.TraceOptions applied to type org.apache.jasper.JasperException provides bundle annotations as it is not on the project build path. If this annotation does provide bundle annotations then it must be present on the build path in order to be processed
+warning: Imports that lack version ranges: [com.ibm.websphere.ras, com.ibm.websphere.ras.annotation]
+warning: Unreferenced class path entries [java.ibmjgssprovider-1.8.0, java.math-1.8.0, com.ibm.ws.ras.instrument, java.xml-1.8.0, com.ibm.websphere.javaee.jsp.2.2, java.jlm-1.8.0, com.ibm.websphere.javaee.el.2.2, java.vm-1.8.0, java.ibmjssefw-1.8.0, java.ibmpkcs-1.8.0, com.ibm.websphere.javaee.servlet.3.0, com.ibm.ws.org.osgi.annotation.versioning, java.xmldsigfw-1.8.0, java.ibmorbapi-1.8.0, java.ibmjgssfw-1.8.0, java.ibmjcefw-1.8.0, java.rt-1.8.0, java.ibmcertpathfw-1.8.0]
+
+> Task :com.ibm.ws.org.apache.jasper.el.2.2:globalize NO-SOURCE
+> Task :com.ibm.ws.org.apache.jasper.el.2.2:compileJava
+> Task :com.ibm.ws.org.apache.jasper.el.2.2:processResources NO-SOURCE
+> Task :com.ibm.ws.org.apache.jasper.el.2.2:classes
+
+> Task :com.ibm.ws.org.apache.jasper.el.2.2:jar
+warning: Split package, multiple jars provide the same package:org/apache/el/lang
+Use Import/Export Package directive -split-package:=(merge-first|merge-last|error|first) to get rid of this warning
+Package found in   [Jar:main, Jar:jasper-el-2.2]
+Class path         [Jar:main, Jar:jasper-el-2.2, Jar:com.ibm.websphere.javaee.el.2.2, Jar:com.ibm.ws.ras.instrument, Jar:java.ibmcertpathfw-1.8.0, Jar:java.ibmjcefw-1.8.0, Jar:java.ibmjgssfw-1.8.0, Jar:java.ibmjgssprovider-1.8.0, Jar:java.ibmjssefw-1.8.0, Jar:java.ibmorbapi-1.8.0, Jar:java.ibmpkcs-1.8.0, Jar:java.jlm-1.8.0, Jar:java.math-1.8.0, Jar:java.rt-1.8.0, Jar:java.vm-1.8.0, Jar:java.xml-1.8.0, Jar:java.xmldsigfw-1.8.0]
+warning: Unable to determine whether the meta annotation com.ibm.websphere.ras.annotation.InjectedTrace applied to type org.apache.el.lang.EvaluationContext provides bundle annotations as it is not on the project build path. If this annotation does provide bundle annotations then it must be present on the build path in order to be processed
+warning: Unable to determine whether the meta annotation com.ibm.websphere.ras.annotation.TraceObjectField applied to type org.apache.el.lang.EvaluationContext provides bundle annotations as it is not on the project build path. If this annotation does provide bundle annotations then it must be present on the build path in order to be processed
+warning: Unable to determine whether the meta annotation com.ibm.websphere.ras.annotation.TraceOptions applied to type org.apache.el.lang.EvaluationContext provides bundle annotations as it is not on the project build path. If this annotation does provide bundle annotations then it must be present on the build path in order to be processed
+warning: Imports that lack version ranges: [com.ibm.websphere.ras, com.ibm.websphere.ras.annotation]
+warning: Unreferenced class path entries [java.ibmjgssprovider-1.8.0, java.math-1.8.0, com.ibm.ws.ras.instrument, java.xml-1.8.0, java.jlm-1.8.0, com.ibm.websphere.javaee.el.2.2, java.vm-1.8.0, java.ibmjssefw-1.8.0, java.ibmpkcs-1.8.0, jasper-el-2.2, java.xmldsigfw-1.8.0, java.ibmorbapi-1.8.0, java.ibmjgssfw-1.8.0, java.ibmjcefw-1.8.0, java.rt-1.8.0, java.ibmcertpathfw-1.8.0]
+
+> Task :com.ibm.ws.org.eclipse.jdt.core:globalize NO-SOURCE
+> Task :com.ibm.ws.org.eclipse.jdt.core:compileJava NO-SOURCE
+> Task :com.ibm.ws.org.eclipse.jdt.core:processResources NO-SOURCE
+> Task :com.ibm.ws.org.eclipse.jdt.core:classes UP-TO-DATE
+
+> Task :com.ibm.ws.org.eclipse.jdt.core:jar
+warning: There is an empty jar or directory on the classpath: main
+warning: Unreferenced class path entries [java.ibmjgssprovider-1.8.0, java.math-1.8.0, com.ibm.ws.ras.instrument, java.xml-1.8.0, java.jlm-1.8.0, java.vm-1.8.0, java.ibmjssefw-1.8.0, java.ibmpkcs-1.8.0, java.xmldsigfw-1.8.0, java.ibmorbapi-1.8.0, java.ibmjgssfw-1.8.0, ecj-4.4.2, java.ibmjcefw-1.8.0, java.rt-1.8.0, java.ibmcertpathfw-1.8.0]
+
+> Task :com.ibm.ws.channelfw:globalize UP-TO-DATE
+> Task :com.ibm.ws.event:globalize NO-SOURCE
+> Task :com.ibm.ws.event:compileJava UP-TO-DATE
+> Task :com.ibm.ws.event:processResources NO-SOURCE
+> Task :com.ibm.ws.event:classes UP-TO-DATE
+> Task :com.ibm.ws.event:jar UP-TO-DATE
+> Task :com.ibm.ws.timer:globalize NO-SOURCE
+> Task :com.ibm.ws.timer:compileJava UP-TO-DATE
+> Task :com.ibm.ws.timer:processResources NO-SOURCE
+> Task :com.ibm.ws.timer:classes UP-TO-DATE
+> Task :com.ibm.ws.timer:jar UP-TO-DATE
+> Task :com.ibm.ws.channelfw:compileJava UP-TO-DATE
+> Task :com.ibm.ws.channelfw:processResources NO-SOURCE
+> Task :com.ibm.ws.channelfw:classes UP-TO-DATE
+> Task :com.ibm.ws.channelfw:jar UP-TO-DATE
+> Task :com.ibm.ws.transport.http:globalize UP-TO-DATE
+> Task :com.ibm.ws.transport.http:compileJava UP-TO-DATE
+> Task :com.ibm.ws.transport.http:processResources NO-SOURCE
+> Task :com.ibm.ws.transport.http:classes UP-TO-DATE
+> Task :com.ibm.ws.transport.http:jar UP-TO-DATE
+> Task :com.ibm.websphere.javaee.annotation.1.1:globalize NO-SOURCE
+> Task :com.ibm.websphere.javaee.annotation.1.1:compileJava NO-SOURCE
+> Task :com.ibm.websphere.javaee.annotation.1.1:processResources NO-SOURCE
+> Task :com.ibm.websphere.javaee.annotation.1.1:classes UP-TO-DATE
+> Task :com.ibm.websphere.javaee.annotation.1.1:jar UP-TO-DATE
+> Task :com.ibm.websphere.security:globalize NO-SOURCE
+> Task :com.ibm.websphere.security:compileJava UP-TO-DATE
+> Task :com.ibm.websphere.security:processResources NO-SOURCE
+> Task :com.ibm.websphere.security:classes UP-TO-DATE
+> Task :com.ibm.websphere.security:jar UP-TO-DATE
+> Task :com.ibm.ws.injection:globalize UP-TO-DATE
+> Task :com.ibm.ws.injection.core:globalize UP-TO-DATE
+> Task :com.ibm.ws.injection.core:compileJava UP-TO-DATE
+> Task :com.ibm.ws.injection.core:processResources NO-SOURCE
+> Task :com.ibm.ws.injection.core:classes UP-TO-DATE
+> Task :com.ibm.ws.injection.core:jar UP-TO-DATE
+> Task :com.ibm.ws.org.apache.aries.jndi.api:globalize NO-SOURCE
+> Task :com.ibm.ws.org.apache.aries.jndi.api:compileJava NO-SOURCE
+> Task :com.ibm.ws.org.apache.aries.jndi.api:processResources NO-SOURCE
+> Task :com.ibm.ws.org.apache.aries.jndi.api:classes UP-TO-DATE
+> Task :com.ibm.ws.org.apache.aries.jndi.api:jar UP-TO-DATE
+> Task :com.ibm.ws.serialization:globalize NO-SOURCE
+> Task :com.ibm.ws.serialization:compileJava UP-TO-DATE
+> Task :com.ibm.ws.serialization:processResources NO-SOURCE
+> Task :com.ibm.ws.serialization:classes UP-TO-DATE
+> Task :com.ibm.ws.serialization:jar UP-TO-DATE
+> Task :com.ibm.ws.injection:compileJava UP-TO-DATE
+> Task :com.ibm.ws.injection:processResources NO-SOURCE
+> Task :com.ibm.ws.injection:classes UP-TO-DATE
+> Task :com.ibm.ws.injection:jar UP-TO-DATE
+> Task :com.ibm.ws.managedobject:globalize NO-SOURCE
+> Task :com.ibm.ws.managedobject:compileJava UP-TO-DATE
+> Task :com.ibm.ws.managedobject:processResources NO-SOURCE
+> Task :com.ibm.ws.managedobject:classes UP-TO-DATE
+> Task :com.ibm.ws.managedobject:jar UP-TO-DATE
+> Task :com.ibm.ws.monitor:globalize UP-TO-DATE
+> Task :com.ibm.ws.monitor:compileJava UP-TO-DATE
+> Task :com.ibm.ws.monitor:processResources NO-SOURCE
+> Task :com.ibm.ws.monitor:classes UP-TO-DATE
+> Task :com.ibm.ws.monitor:jar UP-TO-DATE
+> Task :com.ibm.ws.org.apache.commons.fileupload:globalize NO-SOURCE
+> Task :com.ibm.ws.org.apache.commons.fileupload:compileJava NO-SOURCE
+> Task :com.ibm.ws.org.apache.commons.fileupload:processResources NO-SOURCE
+> Task :com.ibm.ws.org.apache.commons.fileupload:classes UP-TO-DATE
+> Task :com.ibm.ws.org.apache.commons.fileupload:jar UP-TO-DATE
+> Task :com.ibm.ws.org.apache.commons.io:globalize NO-SOURCE
+> Task :com.ibm.ws.org.apache.commons.io:compileJava NO-SOURCE
+> Task :com.ibm.ws.org.apache.commons.io:processResources NO-SOURCE
+> Task :com.ibm.ws.org.apache.commons.io:classes UP-TO-DATE
+> Task :com.ibm.ws.org.apache.commons.io:jar UP-TO-DATE
+> Task :com.ibm.ws.app.manager.lifecycle:globalize NO-SOURCE
+> Task :com.ibm.ws.app.manager.lifecycle:compileJava UP-TO-DATE
+> Task :com.ibm.ws.app.manager.lifecycle:processResources NO-SOURCE
+> Task :com.ibm.ws.app.manager.lifecycle:classes UP-TO-DATE
+> Task :com.ibm.ws.app.manager.lifecycle:jar UP-TO-DATE
+> Task :com.ibm.ws.session:globalize UP-TO-DATE
+> Task :com.ibm.ws.session:compileJava UP-TO-DATE
+> Task :com.ibm.ws.session:processResources NO-SOURCE
+> Task :com.ibm.ws.session:classes UP-TO-DATE
+> Task :com.ibm.ws.session:jar UP-TO-DATE
+> Task :com.ibm.ws.webcontainer:globalize UP-TO-DATE
+> Task :com.ibm.ws.webserver.plugin.runtime.interfaces:globalize NO-SOURCE
+> Task :com.ibm.ws.webserver.plugin.runtime.interfaces:compileJava UP-TO-DATE
+> Task :com.ibm.ws.webserver.plugin.runtime.interfaces:processResources NO-SOURCE
+> Task :com.ibm.ws.webserver.plugin.runtime.interfaces:classes UP-TO-DATE
+> Task :com.ibm.ws.webserver.plugin.runtime.interfaces:jar UP-TO-DATE
+> Task :io.openliberty.jakarta.servlet.5.0:globalize NO-SOURCE
+> Task :io.openliberty.jakarta.servlet.5.0:compileJava NO-SOURCE
+> Task :io.openliberty.jakarta.servlet.5.0:processResources UP-TO-DATE
+> Task :io.openliberty.jakarta.servlet.5.0:classes UP-TO-DATE
+> Task :io.openliberty.jakarta.servlet.5.0:jar UP-TO-DATE
+> Task :com.ibm.ws.webcontainer:compileJava UP-TO-DATE
+> Task :com.ibm.ws.webcontainer:processResources UP-TO-DATE
+> Task :com.ibm.ws.webcontainer:classes UP-TO-DATE
+> Task :com.ibm.ws.webcontainer:jar UP-TO-DATE
+
+> Task :com.ibm.ws.jsp:compileJava
+
+> Task :com.ibm.ws.jsp:processResources UP-TO-DATE
+> Task :com.ibm.ws.jsp:classes
+
+> Task :com.ibm.ws.jsp:jar
+warning: Unused Import-Package instructions: [org.apache.xpath.*, com.ibm.wsspi.webcontainer.osgi.*] 
+warning: Imports that lack version ranges: [junit.framework, junit.textui, org.apache.xml.serialize, org.apache.xml.serializer, javax.naming, javax.sql, javax.tools, javax.xml.namespace, javax.xml.parsers, javax.xml.transform, javax.xml.transform.dom, javax.xml.transform.sax, javax.xml.transform.stream, javax.xml.xpath, org.w3c.dom, org.w3c.dom.events, org.w3c.dom.traversal, org.w3c.dom.xpath, org.xml.sax, org.xml.sax.ext, org.xml.sax.helpers, com.sun.tools.javac, org.apache.webbeans.el, com.ibm.ws.managedobject, sun.io]
+warning: Export com.ibm.ws.jsp.tsx.db,  has 1,  private references [com.ibm.ws.jsp.tsx]
+warning: Export com.ibm.ws.jsp.translator,  has 5,  private references [com.ibm.ws.jsp.translator.document, com.ibm.ws.jsp.translator.visitor, com.ibm.ws.jsp.translator.visitor.configuration, com.ibm.wsspi.jsp.context, com.ibm.wsspi.jsp.resource]
+warning: Export com.ibm.ws.jsp.translator.utils,  has 5,  private references [com.ibm.ws.jsp.taglib, com.ibm.wsspi.jsp.compiler, com.ibm.wsspi.jsp.context.translation, com.ibm.wsspi.jsp.resource, com.ibm.wsspi.jsp.resource.translation]
+warning: Export com.ibm.ws.jsp.translator.visitor.validator,  has 5,  private references [com.ibm.ws.jsp.bean, com.ibm.ws.jsp.taglib, com.ibm.ws.jsp.translator.visitor, com.ibm.ws.jsp.translator.visitor.configuration, com.ibm.wsspi.jsp.context]
+warning: Export com.ibm.ws.jsp.translator.visitor.generator,  has 6,  private references [com.ibm.ws.jsp.taglib, com.ibm.ws.jsp.translator.optimizedtag, com.ibm.ws.jsp.translator.visitor, com.ibm.ws.jsp.translator.visitor.configuration, com.ibm.wsspi.jsp.context, com.ibm.wsspi.jsp.resource.translation]
+warning: Export com.ibm.ws.jsp.webcontainerext,  has 6,  private references [com.ibm.ws.jsp.taglib, com.ibm.wsspi.jsp.compiler, com.ibm.wsspi.jsp.context, com.ibm.wsspi.jsp.context.translation, com.ibm.wsspi.jsp.resource, com.ibm.wsspi.jsp.resource.translation]
+warning: Export org.apache.taglibs.standard.tag.common.xml,  has 3,  private references [org.apache.xml.utils, org.apache.xpath, org.apache.xpath.objects]
+warning: Duplicate name osgi.service used in header: 'osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=1.8))",osgi.service;filter:="(objectClass=com.ibm.ws.jsp.translator.visitor.generator.GeneratorUtilsExtFactory)";effective:=active,osgi.service;filter:="(objectClass=com.ibm.ws.jsp.translator.visitor.validator.ElValidatorExtFactory)";effective:=active,osgi.service;filter:="(objectClass=com.ibm.ws.jsp.webcontainerext.JspVersionFactory)";effective:=active,osgi.service;filter:="(objectClass=com.ibm.ws.jsp.webcontainerext.ws.PrepareJspHelperFactory)";effective:=active,osgi.service;filter:="(objectClass=com.ibm.wsspi.classloading.ClassLoadingService)";effective:=active,osgi.service;filter:="(objectClass=com.ibm.wsspi.el.ELFactoryWrapperForCDI)";effective:=active;resolution:=optional,osgi.service;filter:="(objectClass=com.ibm.wsspi.jsp.taglib.config.GlobalTagLibConfig)";effective:=active;resolution:=optional;cardinality:=multiple,osgi.service;filter:="(objectClass=com.ibm.wsspi.kernel.service.location.WsLocationAdmin)";effective:=active,osgi.extender;filter:="(&(osgi.extender=osgi.component)(version>=1.4.0)(!(version>=2.0.0)))"'. Duplicate names are specially marked in Bnd with a ~ at the end (which is stripped at printing time).
+warning: Unreferenced class path entries [com.ibm.ws.kernel.security.thread, java.math-1.8.0, com.ibm.ws.ras.instrument, com.ibm.wsspi.org.osgi.service.component.annotations, com.ibm.websphere.org.osgi.core, com.ibm.websphere.javaee.jsp.2.2, com.ibm.websphere.javaee.el.2.2, java.vm-1.8.0, com.ibm.ws.jsp.jasper, com.ibm.ws.org.osgi.annotation.versioning, com.ibm.ws.javaee.dd, com.ibm.ws.transport.http, com.ibm.ws.org.apache.jasper.el.2.2, com.ibm.ws.artifact.url, com.ibm.ws.container.service, java.ibmjcefw-1.8.0, com.ibm.ws.artifact, com.ibm.ws.kernel.metatype.helper, com.ibm.ws.kernel.service, java.ibmjgssprovider-1.8.0, com.ibm.ws.webcontainer, java.xml-1.8.0, com.ibm.ws.classloading, com.ibm.ws.org.eclipse.jdt.core.3.10.2.v20160712-0000, com.ibm.websphere.org.osgi.service.component, java.jlm-1.8.0, com.ibm.ws.adaptable.module, com.ibm.websphere.org.osgi.service.cm, java.ibmjssefw-1.8.0, java.ibmpkcs-1.8.0, com.ibm.websphere.javaee.servlet.3.0, com.ibm.ws.javaee.dd.common, java.xmldsigfw-1.8.0, java.ibmorbapi-1.8.0, bsf, java.ibmjgssfw-1.8.0, com.ibm.ws.logging.core, com.ibm.ws.artifact.overlay, java.rt-1.8.0, java.ibmcertpathfw-1.8.0]
+
+> Task :io.openliberty.jakarta.cdi.3.0:globalize NO-SOURCE
+> Task :io.openliberty.jakarta.cdi.3.0:compileJava NO-SOURCE
+> Task :io.openliberty.jakarta.cdi.3.0:processResources NO-SOURCE
+> Task :io.openliberty.jakarta.cdi.3.0:classes UP-TO-DATE
+
+> Task :io.openliberty.jakarta.cdi.3.0:jar
+warning: There is an empty jar or directory on the classpath: main
+warning: Unreferenced class path entries [java.ibmjgssprovider-1.8.0, java.math-1.8.0, jakarta.inject-api-2.0.0-RC4, java.xml-1.8.0, jakarta.enterprise.cdi-api-3.0.0-M4, java.jlm-1.8.0, java.vm-1.8.0, java.ibmjssefw-1.8.0, java.ibmpkcs-1.8.0, java.xmldsigfw-1.8.0, java.ibmorbapi-1.8.0, java.ibmjgssfw-1.8.0, java.ibmjcefw-1.8.0, java.rt-1.8.0, java.ibmcertpathfw-1.8.0]
+
+> Task :io.openliberty.jakarta.el.4.0:globalize NO-SOURCE
+> Task :io.openliberty.jakarta.el.4.0:compileJava UP-TO-DATE
+> Task :io.openliberty.jakarta.el.4.0:processResources NO-SOURCE
+> Task :io.openliberty.jakarta.el.4.0:classes UP-TO-DATE
+
+> Task :io.openliberty.jakarta.el.4.0:jar
+warning: Unreferenced class path entries [java.ibmjgssprovider-1.8.0, java.math-1.8.0, java.xml-1.8.0, java.jlm-1.8.0, java.vm-1.8.0, java.ibmjssefw-1.8.0, java.ibmpkcs-1.8.0, tomcat-el-api-10.0.0-M7, java.xmldsigfw-1.8.0, java.ibmorbapi-1.8.0, java.ibmjgssfw-1.8.0, java.ibmjcefw-1.8.0, java.rt-1.8.0, java.ibmcertpathfw-1.8.0]
+
+> Task :io.openliberty.jakarta.jsf.3.0:globalize NO-SOURCE
+> Task :io.openliberty.jakarta.jsp.3.0:globalize NO-SOURCE
+> Task :io.openliberty.jakarta.jsp.3.0:compileJava NO-SOURCE
+> Task :io.openliberty.jakarta.jsp.3.0:processResources UP-TO-DATE
+> Task :io.openliberty.jakarta.jsp.3.0:classes UP-TO-DATE
+
+> Task :io.openliberty.jakarta.jsp.3.0:jar
+warning: Version for package jakarta.servlet.jsp is set to different values in the source (3.0.0) and in the manifest (3.0.0.SNAPSHOT). The version in the manifest is not picked up by an other sibling bundles in this project or projects that directly depend on this project
+warning: Version for package jakarta.servlet.jsp.el is set to different values in the source (3.0.0) and in the manifest (3.0.0.SNAPSHOT). The version in the manifest is not picked up by an other sibling bundles in this project or projects that directly depend on this project
+warning: Version for package jakarta.servlet.jsp.tagext is set to different values in the source (3.0.0) and in the manifest (3.0.0.SNAPSHOT). The version in the manifest is not picked up by an other sibling bundles in this project or projects that directly depend on this project
+warning: Imports that lack version ranges: [javax.xml.parsers, org.apache.taglibs.standard.resources, org.apache.taglibs.standard.tag.common.fmt, org.xml.sax, org.xml.sax.helpers]
+warning: Unreferenced class path entries [java.ibmjgssprovider-1.8.0, java.math-1.8.0, java.xml-1.8.0, java.jlm-1.8.0, java.vm-1.8.0, jakarta.servlet.jsp-api-3.0.0-M1, java.ibmjssefw-1.8.0, java.ibmpkcs-1.8.0, java.xmldsigfw-1.8.0, java.ibmorbapi-1.8.0, java.ibmjgssfw-1.8.0, java.ibmjcefw-1.8.0, java.rt-1.8.0, java.ibmcertpathfw-1.8.0]
+
+> Task :io.openliberty.jakarta.jstl.2.0:globalize NO-SOURCE
+> Task :io.openliberty.jakarta.jstl.2.0:compileJava NO-SOURCE
+> Task :io.openliberty.jakarta.jstl.2.0:processResources NO-SOURCE
+> Task :io.openliberty.jakarta.jstl.2.0:classes UP-TO-DATE
+
+> Task :io.openliberty.jakarta.jstl.2.0:jar
+warning: There is an empty jar or directory on the classpath: main
+warning: Imports that lack version ranges: [javax.xml.parsers, org.xml.sax, org.xml.sax.helpers, org.apache.taglibs.standard.resources, org.apache.taglibs.standard.tag.common.fmt]
+warning: Unreferenced class path entries [java.ibmjgssprovider-1.8.0, java.math-1.8.0, java.xml-1.8.0, java.jlm-1.8.0, java.vm-1.8.0, java.ibmjssefw-1.8.0, java.ibmpkcs-1.8.0, java.xmldsigfw-1.8.0, java.ibmorbapi-1.8.0, java.ibmjgssfw-1.8.0, java.ibmjcefw-1.8.0, java.rt-1.8.0, java.ibmcertpathfw-1.8.0, jakarta.servlet.jsp.jstl-api-2.0.0-RC1]
+
+> Task :io.openliberty.jakarta.validation.3.0:globalize NO-SOURCE
+> Task :io.openliberty.jakarta.validation.3.0:compileJava NO-SOURCE
+> Task :io.openliberty.jakarta.validation.3.0:processResources NO-SOURCE
+> Task :io.openliberty.jakarta.validation.3.0:classes UP-TO-DATE
+
+> Task :io.openliberty.jakarta.validation.3.0:jar
+warning: There is an empty jar or directory on the classpath: main
+warning: Version for package jakarta.validation is set to different values in the source (3.0.0) and in the manifest (3.0.0.M1). The version in the manifest is not picked up by an other sibling bundles in this project or projects that directly depend on this project
+warning: Version for package jakarta.validation.bootstrap is set to different values in the source (3.0.0) and in the manifest (3.0.0.M1). The version in the manifest is not picked up by an other sibling bundles in this project or projects that directly depend on this project
+warning: Version for package jakarta.validation.constraints is set to different values in the source (3.0.0) and in the manifest (3.0.0.M1). The version in the manifest is not picked up by an other sibling bundles in this project or projects that directly depend on this project
+warning: Version for package jakarta.validation.constraintvalidation is set to different values in the source (3.0.0) and in the manifest (3.0.0.M1). The version in the manifest is not picked up by an other sibling bundles in this project or projects that directly depend on this project
+warning: Version for package jakarta.validation.executable is set to different values in the source (3.0.0) and in the manifest (3.0.0.M1). The version in the manifest is not picked up by an other sibling bundles in this project or projects that directly depend on this project
+warning: Version for package jakarta.validation.groups is set to different values in the source (3.0.0) and in the manifest (3.0.0.M1). The version in the manifest is not picked up by an other sibling bundles in this project or projects that directly depend on this project
+warning: Version for package jakarta.validation.metadata is set to different values in the source (3.0.0) and in the manifest (3.0.0.M1). The version in the manifest is not picked up by an other sibling bundles in this project or projects that directly depend on this project
+warning: Version for package jakarta.validation.spi is set to different values in the source (3.0.0) and in the manifest (3.0.0.M1). The version in the manifest is not picked up by an other sibling bundles in this project or projects that directly depend on this project
+warning: Version for package jakarta.validation.valueextraction is set to different values in the source (3.0.0) and in the manifest (3.0.0.M1). The version in the manifest is not picked up by an other sibling bundles in this project or projects that directly depend on this project
+warning: Unreferenced class path entries [java.ibmjgssprovider-1.8.0, java.math-1.8.0, jakarta.validation-api-3.0.0-M1, java.xml-1.8.0, java.jlm-1.8.0, java.vm-1.8.0, java.ibmjssefw-1.8.0, java.ibmpkcs-1.8.0, java.xmldsigfw-1.8.0, java.ibmorbapi-1.8.0, java.ibmjgssfw-1.8.0, java.ibmjcefw-1.8.0, java.rt-1.8.0, java.ibmcertpathfw-1.8.0]
+
+> Task :io.openliberty.jakarta.websocket.2.0:globalize NO-SOURCE
+> Task :io.openliberty.jakarta.websocket.2.0:compileJava NO-SOURCE
+> Task :io.openliberty.jakarta.websocket.2.0:processResources NO-SOURCE
+> Task :io.openliberty.jakarta.websocket.2.0:classes UP-TO-DATE
+
+> Task :io.openliberty.jakarta.websocket.2.0:jar
+warning: There is an empty jar or directory on the classpath: main
+warning: Version for package jakarta.websocket is set to different values in the source (2.0.0) and in the manifest (2.0.0.RC1). The version in the manifest is not picked up by an other sibling bundles in this project or projects that directly depend on this project
+warning: Version for package jakarta.websocket.server is set to different values in the source (2.0.0) and in the manifest (2.0.0.RC1). The version in the manifest is not picked up by an other sibling bundles in this project or projects that directly depend on this project
+warning: Unreferenced class path entries [java.ibmjgssprovider-1.8.0, java.math-1.8.0, java.xml-1.8.0, java.jlm-1.8.0, java.vm-1.8.0, java.ibmjssefw-1.8.0, java.ibmpkcs-1.8.0, java.xmldsigfw-1.8.0, java.ibmorbapi-1.8.0, java.ibmjgssfw-1.8.0, java.ibmjcefw-1.8.0, jakarta.websocket-api-2.0.0-RC1, java.rt-1.8.0, java.ibmcertpathfw-1.8.0]
+
+> Task :io.openliberty.jakarta.jsf.3.0:compileJava NO-SOURCE
+> Task :io.openliberty.jakarta.jsf.3.0:processResources NO-SOURCE
+> Task :io.openliberty.jakarta.jsf.3.0:classes UP-TO-DATE
+
+> Task :io.openliberty.jakarta.jsf.3.0:jar
+warning: There is an empty jar or directory on the classpath: main
+warning: Imports that lack version ranges: [org.w3c.dom]
+warning: Unreferenced class path entries [io.openliberty.jakarta.websocket.2.0, java.ibmjgssprovider-1.8.0, java.math-1.8.0, io.openliberty.jakarta.jsp.3.0, java.xml-1.8.0, io.openliberty.jakarta.validation.3.0, java.jlm-1.8.0, io.openliberty.jakarta.cdi.3.0, java.vm-1.8.0, java.ibmjssefw-1.8.0, java.ibmpkcs-1.8.0, io.openliberty.jakarta.servlet.5.0, com.ibm.ws.org.osgi.annotation.versioning, java.xmldsigfw-1.8.0, java.ibmorbapi-1.8.0, java.ibmjgssfw-1.8.0, myfaces-api-3.0.0-RC1, java.ibmjcefw-1.8.0, io.openliberty.jakarta.el.4.0, io.openliberty.jakarta.jstl.2.0, java.rt-1.8.0, myfaces-builder-annotations-1.0.9, java.ibmcertpathfw-1.8.0]
+
+> Task :io.openliberty.jsf.shared:globalize UP-TO-DATE
+
+> Task :io.openliberty.jsf.shared:compileJava
+
+> Task :io.openliberty.jsf.shared:compileJava FAILED
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 7.0.
+Use '--warning-mode all' to show the individual deprecation warnings.
+See https://docs.gradle.org/6.4/userguide/command_line_interface.html#sec:command_line_warnings
+207 actionable tasks: 20 executed, 187 up-to-date
