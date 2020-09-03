@@ -28,8 +28,13 @@ public class JSFExtensionProcessor extends WebExtensionProcessor {
      *
      * @see com.ibm.wsspi.webcontainer.RequestProcessor#handleRequest(jakarta.servlet.ServletRequest, jakarta.servlet.ServletResponse)
      */
+    public void handleRequest(javax.servlet.ServletRequest req, javax.servlet.ServletResponse res) throws Exception {
+        throw new IllegalStateException("JSFExtensionProcessor.handleRequest(ServletRequest, ServletResponse) is not implemented by this extension processor");
+    }
+
     public void handleRequest(ServletRequest req, ServletResponse res) throws Exception {
         throw new IllegalStateException("JSFExtensionProcessor.handleRequest(ServletRequest, ServletResponse) is not implemented by this extension processor");
     }
+
 
 }

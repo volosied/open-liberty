@@ -16,11 +16,11 @@ import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.logging.Logger;
 
-import jakarta.faces.context.ExternalContext;
-import jakarta.faces.context.FacesContext;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 import javax.naming.Context;
 import javax.naming.NamingException;
-import jakarta.servlet.ServletContext;
+import javax.servlet.ServletContext;
 
 import org.apache.myfaces.config.annotation.DiscoverableLifecycleProvider;
 import org.apache.myfaces.config.annotation.LifecycleProvider2;

@@ -13,8 +13,8 @@ package com.ibm.ws.jsf.config;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jakarta.faces.application.Application;
-import jakarta.faces.application.ApplicationFactory;
+import javax.faces.application.Application;
+import javax.faces.application.ApplicationFactory;
 
 import org.apache.myfaces.application.ApplicationFactoryImpl;
 import com.ibm.ws.jsf.config.WASApplicationImpl;
@@ -23,13 +23,13 @@ import com.ibm.ws.jsf.extprocessor.JSFExtensionFactory;
 /**
  * WAS custom application factory that initializes CDIJSFELResolver per application
  */
-public class WASApplicationFactoryImpl extends ApplicationFactory
+public class WASApplicationFactoryImpl extends ApplicationFactory 
 {
     private static final Logger log = Logger.getLogger(WASApplicationFactoryImpl.class.getName());
-
+    
     private ApplicationFactory _applicationFactory;
     private Application _application;
-
+    
     public WASApplicationFactoryImpl(ApplicationFactory applicationFactory)
     {
         this._applicationFactory = applicationFactory;
@@ -40,13 +40,13 @@ public class WASApplicationFactoryImpl extends ApplicationFactory
     }
 
     @Override
-    public Application getApplication()
+    public Application getApplication() 
     {
-        if (_application == null)
+        if (_application == null) 
         {
-            synchronized (this)
+            synchronized (this) 
             {
-                if (_application == null)
+                if (_application == null) 
                 {
                     _application = new WASApplicationImpl(_applicationFactory.getApplication());
                     JSFExtensionFactory.initializeCDIJSFELContextListenerAndELResolver(_application);
@@ -55,11 +55,11 @@ public class WASApplicationFactoryImpl extends ApplicationFactory
         }
         return _application;
     }
-
+    
     @Override
-    public void setApplication(Application application)
+    public void setApplication(Application application) 
     {
-        synchronized (this)
+        synchronized (this) 
         {
             if (application == null)
             {
@@ -68,9 +68,9 @@ public class WASApplicationFactoryImpl extends ApplicationFactory
             _application = application;
         }
     }
-
+    
     @Override
-    public ApplicationFactory getWrapped()
+    public ApplicationFactory getWrapped() 
     {
         return _applicationFactory;
     }

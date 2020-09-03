@@ -13,11 +13,11 @@ package com.ibm.ws.jsf.config;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jakarta.faces.application.Application;
-import jakarta.faces.application.ApplicationWrapper;
-import jakarta.faces.application.ViewHandler;
-import jakarta.faces.context.ExternalContext;
-import jakarta.faces.context.FacesContext;
+import javax.faces.application.Application;
+import javax.faces.application.ApplicationWrapper;
+import javax.faces.application.ViewHandler;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 
 import org.apache.myfaces.util.ExternalSpecifications;
 import org.apache.myfaces.application.ApplicationFactoryImpl;
@@ -30,12 +30,12 @@ import com.ibm.ws.jsf.extprocessor.JSFExtensionFactory;
  * WAS custom application implementation that initializes CDIJSFViewHandler per application
  * if CDI feature is enabled.
  */
-public class WASApplicationImpl extends ApplicationWrapper
+public class WASApplicationImpl extends ApplicationWrapper 
 {
     private static final Logger log = Logger.getLogger(WASApplicationImpl.class.getName());
-
+    
     private Application application;
-
+    
     public WASApplicationImpl(Application delegate)
     {
         this.application = delegate;
@@ -44,7 +44,7 @@ public class WASApplicationImpl extends ApplicationWrapper
             log.fine("New WASApplication instance created");
         }
     }
-
+    
     @Override
     @Trivial
     public Application getWrapped()
@@ -54,11 +54,11 @@ public class WASApplicationImpl extends ApplicationWrapper
 
     @Override
     public void setViewHandler(ViewHandler viewHandler)
-    {
+    {        
         ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-
+        
         // Check to see if CDI feature is enabled AND the app has an active BeanManager
-        if (ExternalSpecifications.isCDIAvailable(externalContext) && CDIUtils.getBeanManager(externalContext) != null)
+        if (ExternalSpecifications.isCDIAvailable(externalContext) && CDIUtils.getBeanManager(externalContext) != null) 
         {
             if (log.isLoggable(Level.FINE))
             {
@@ -66,8 +66,8 @@ public class WASApplicationImpl extends ApplicationWrapper
             }
             application.setViewHandler(viewHandler);
             JSFExtensionFactory.initializeCDIJSFViewHandler(application);
-        }
-        else
+        } 
+        else 
         {
             if (log.isLoggable(Level.FINE))
             {

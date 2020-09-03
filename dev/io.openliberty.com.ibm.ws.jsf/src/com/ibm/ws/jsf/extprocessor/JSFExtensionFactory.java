@@ -19,8 +19,8 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jakarta.faces.application.Application;
-import jakarta.servlet.ServletContextListener;
+import javax.faces.application.Application;
+import javax.servlet.ServletContextListener;
 
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.component.ComponentContext;
@@ -46,7 +46,7 @@ public class JSFExtensionFactory implements ExtensionFactory {
     protected static final Logger log = Logger.getLogger("com.ibm.ws.jsf");
     private static final String CLASS_NAME = "com.ibm.ws.jsf.extprocessor.JSFExtensionFactory";
 
-    private static final String FACES_SERVLET_RESOURCE = "jakarta/faces/webapp/FacesServlet.class";
+    private static final String FACES_SERVLET_RESOURCE = "javax/faces/webapp/FacesServlet.class";
     private static final String SUN_CONFIGURE_LISTENER_CLASSNAME = "com.sun.faces.config.ConfigureListener";
     private static final String MYFACES_LIFECYCLE_LISTENER_CLASSNAME = "org.apache.myfaces.webapp.StartupServletContextListener";
     private static final String sunRIClassToSearch = "com/sun/faces/vendor/WebSphereInjectionProvider.class";
@@ -63,9 +63,9 @@ public class JSFExtensionFactory implements ExtensionFactory {
     private final static AtomicServiceReference<SerializationService> serializationServiceRef = new AtomicServiceReference<SerializationService>("serializationService");
 
     protected final AtomicServiceReference<CDIJSFInitializer> cdiJSFInitializerService = new AtomicServiceReference<CDIJSFInitializer>("cdiJSFInitializerService");
-
+    
     private static final AtomicReference<JSFExtensionFactory> instance = new AtomicReference<JSFExtensionFactory>();
-
+    
     public JSFExtensionFactory() {
         defaultFacesServlet = WSFacesUtil.getClassLoader(this).getResource(FACES_SERVLET_RESOURCE);
         if (log.isLoggable(Level.FINE)) {
@@ -77,7 +77,7 @@ public class JSFExtensionFactory implements ExtensionFactory {
     public void activate(ComponentContext compcontext, Map<String, Object> properties) {
         instance.set(this);
         this.serializationServiceRef.activate(compcontext);
-        this.cdiJSFInitializerService.activate(compcontext);
+        this.cdiJSFInitializerService.activate(compcontext);        
     }
 
     public void deactivate(ComponentContext compcontext) {
@@ -93,7 +93,7 @@ public class JSFExtensionFactory implements ExtensionFactory {
     protected void unsetCdiJSFInitializerService(ServiceReference<CDIJSFInitializer> setCdiJSFInitializerService) {
         this.cdiJSFInitializerService.unsetReference(setCdiJSFInitializerService);
     }
-
+    
     protected void setClassLoadingService(ClassLoadingService ref) {
         classLoadingSRRef.set(ref);
     }
@@ -135,7 +135,7 @@ public class JSFExtensionFactory implements ExtensionFactory {
         //initialize the JSF runtime based on the FacesServlet loaded in the webapp
         initFaces(webapp, config);
 
-        //set a context attribute for later queries on which JSF impl is in use.
+        //set a context attribute for later queries on which JSF impl is in use. 
         webapp.setAttribute(JSFConstants.JSF_IMPL_ENABLED_PARAM, jsfImplEnabled);
 
         if (log.isLoggable(Level.FINE)) {
@@ -190,8 +190,8 @@ public class JSFExtensionFactory implements ExtensionFactory {
             }
             //handleJSPUpdateCheck only done in custom/sunRI case
             handleJSPUpdateCheck(webapp); //233952
-            // Webapp is using a third party JSF runtime so do not load either the MyFaces startupServletContextListener or the Sun configureListener.
-            //It could still be loaded from the Webapp so just do nothing here.
+            // Webapp is using a third party JSF runtime so do not load either the MyFaces startupServletContextListener or the Sun configureListener.  
+            //It could still be loaded from the Webapp so just do nothing here.  
             jsfImplEnabled = JSFImplEnabled.Custom;
             if (log.isLoggable(Level.FINE)) {
                 log.logp(Level.FINE, CLASS_NAME, "initFaces", "Webapp [" + applicationName + "] is providing a third party JSF runtime.");
@@ -206,7 +206,7 @@ public class JSFExtensionFactory implements ExtensionFactory {
                 log.logp(Level.FINE, CLASS_NAME, "initFaces", "Sun RI 1.2 JSF Implementation detected and will be used to configure the webapp for  [" + applicationName + "].");
             }
             if (!listenerFound.equals(SUN_LISTENER_REGISTERED_STRING)) {
-                //provide a warning during startup if the MyFaces listener is also registered when using Sun RI
+                //provide a warning during startup if the MyFaces listener is also registered when using Sun RI                      
                 if (listenerFound.equals(MYFACES_LISTENER_REGISTERED_STRING) && log.isLoggable(Level.WARNING)) {
                     log.logp(Level.WARNING, CLASS_NAME, "initFaces", FacesMessages.getMsg("jsf.warn.myfaces.listener.for.ri.app", new Object[] { applicationName }));
                 }
@@ -246,10 +246,10 @@ public class JSFExtensionFactory implements ExtensionFactory {
                     log.logp(Level.FINE, CLASS_NAME, "initFaces", "MyFaces listener already configured, skipping listener registration for  [" + applicationName + "].");
                 }
             } else {
-                // Add StartupServletContextListener to the web container so that we can initialize MyFaces.
+                // Add StartupServletContextListener to the web container so that we can initialize MyFaces.  
                 // As of WAS 8.0, this is the default behavior.
 
-                //provide a warning during startup if the Sun configureListener is also registered when using MyFaces
+                //provide a warning during startup if the Sun configureListener is also registered when using MyFaces 
                 if (listenerFound.equals(SUN_LISTENER_REGISTERED_STRING) && log.isLoggable(Level.WARNING)) {
                     log.logp(Level.WARNING, CLASS_NAME, "initFaces", FacesMessages.getMsg("jsf.warn.ri.listener.for.myfaces.app", new Object[] { applicationName }));
                 }
@@ -322,7 +322,7 @@ public class JSFExtensionFactory implements ExtensionFactory {
         // loaded by the classloader, which is always true).
         for (Iterator<IServletConfig> servletConfigs = config.getServletInfos(); servletConfigs.hasNext();) {
             String servletClass = servletConfigs.next().getClassName();
-            if ("jakarta.faces.webapp.FacesServlet".equals(servletClass)
+            if ("javax.faces.webapp.FacesServlet".equals(servletClass)
                     || "org.apache.myfaces.webapp.MyFacesServlet".equals(servletClass)) {
                 return true;
             }
@@ -357,7 +357,7 @@ public class JSFExtensionFactory implements ExtensionFactory {
             }
         }
     }
-
+    
     public static void initializeCDIJSFViewHandler(Application application){
         JSFExtensionFactory factory = instance.get();
         if(factory != null){

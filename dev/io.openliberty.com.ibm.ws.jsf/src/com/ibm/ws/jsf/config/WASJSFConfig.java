@@ -10,13 +10,13 @@
  *******************************************************************************/
 package com.ibm.ws.jsf.config;
 
-import jakarta.faces.context.ExternalContext;
+import javax.faces.context.ExternalContext;
 
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFWebConfigParam;
 import org.apache.myfaces.shared.util.WebConfigParamUtils;
 
 /**
- * Holds all the IBM specific configuration init parameters (from web.xml) that
+ * Holds all the IBM specific configuration init parameters (from web.xml) that 
  * are independent from the core implementation. The parameters in this class are available to
  * all shared, component and implementation classes.
  *

@@ -21,8 +21,8 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jakarta.faces.context.ExternalContext;
-import jakarta.servlet.ServletContext;
+import javax.faces.context.ExternalContext;
+import javax.servlet.ServletContext;
 
 import org.apache.myfaces.shared.util.ClassUtils;
 import org.apache.myfaces.spi.AnnotationProvider;
@@ -46,17 +46,17 @@ public class WASMyFacesAnnotationProvider extends AnnotationProvider {
 
     static {
         Set<Class<? extends Annotation>> annotations = new HashSet<Class<? extends Annotation>>(10, 1f);
-        annotations.add(jakarta.faces.component.FacesComponent.class);
-        annotations.add(jakarta.faces.component.behavior.FacesBehavior.class);
-        annotations.add(jakarta.faces.convert.FacesConverter.class);
-        annotations.add(jakarta.faces.validator.FacesValidator.class);
-        annotations.add(jakarta.faces.render.FacesRenderer.class);
-        annotations.add(jakarta.faces.bean.ManagedBean.class);
-        annotations.add(jakarta.faces.event.NamedEvent.class);
-        annotations.add(jakarta.faces.render.FacesBehaviorRenderer.class);
+        annotations.add(javax.faces.component.FacesComponent.class);
+        annotations.add(javax.faces.component.behavior.FacesBehavior.class);
+        annotations.add(javax.faces.convert.FacesConverter.class);
+        annotations.add(javax.faces.validator.FacesValidator.class);
+        annotations.add(javax.faces.render.FacesRenderer.class);
+        annotations.add(javax.faces.bean.ManagedBean.class);
+        annotations.add(javax.faces.event.NamedEvent.class);
+        annotations.add(javax.faces.render.FacesBehaviorRenderer.class);
 
         // New annotation for JSF 2.2
-        annotations.add(jakarta.faces.view.facelets.FaceletsResourceResolver.class);
+        annotations.add(javax.faces.view.facelets.FaceletsResourceResolver.class);
 
         annotationClasses = Collections.unmodifiableSet(annotations);
     }

@@ -12,7 +12,7 @@ package com.ibm.ws.jsf.config.annotation;
 
 import java.util.HashMap;
 
-import jakarta.faces.context.ExternalContext;
+import javax.faces.context.ExternalContext;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

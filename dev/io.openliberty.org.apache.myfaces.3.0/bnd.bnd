@@ -144,7 +144,6 @@ Import-Package: \
 
 -buildpath: \
   org.apache.myfaces.core:myfaces-impl;version=3.0.0,\
-  io.openliberty.jsf.shared;version=latest,\
   io.openliberty.jakarta.jsf.3.0;version=latest,\
   com.ibm.ws.classloading;version=latest,\
   com.ibm.ws.webcontainer;version=latest,\
@@ -163,3 +162,4 @@ Import-Package: \
   com.ibm.websphere.org.osgi.service.component;version=latest,\
   com.ibm.ws.org.osgi.annotation.versioning;version=latest,\
   org.apache.myfaces.buildtools:myfaces-builder-annotations;version=1.0.9
+  io.openliberty.com.ibm.ws.jsf;version=latest

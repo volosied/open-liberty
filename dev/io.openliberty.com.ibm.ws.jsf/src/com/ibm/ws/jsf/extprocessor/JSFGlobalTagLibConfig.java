@@ -20,10 +20,10 @@ import com.ibm.wsspi.jsp.taglib.config.TldPathConfig;
 /**
  * The JSFGlobalTagLibConfig provides the definition of the tag libraries provided by the
  * JSF code and how those tag libraries can be located.
- *
+ * 
  * The values are provided are derived from the taglibcacheconfig.xml file
  * (Version 1.2 of the WASX.SERV1 file SERV1/ws/code/jsf.myfaces/src-ibm/2.0.0-SNAPSHOT/META-INF/taglibcacheconfig.xml)
- *
+ * 
  */
 public class JSFGlobalTagLibConfig extends GlobalTagLibConfig {
     public JSFGlobalTagLibConfig() {

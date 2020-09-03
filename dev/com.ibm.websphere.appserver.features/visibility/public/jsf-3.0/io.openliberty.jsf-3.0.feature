@@ -42,16 +42,17 @@ Subsystem-Name: Jakarta Server Faces 3.0
  io.openliberty.jakarta.jaxb-3.0; \
  com.ibm.websphere.appserver.jsfProvider-3.0.0.MyFaces, \
  com.ibm.websphere.appserver.eeCompatible-9.0
--bundles=com.ibm.ws.org.apache.myfaces.2.3.jakarta, \
+-bundles=io.openliberty.org.apache.myfaces.3.0, \
  com.ibm.ws.org.apache.commons.beanutils.1.9.4, \
  com.ibm.ws.org.apache.commons.collections, \
  com.ibm.ws.org.apache.commons.discovery.0.2, \
  com.ibm.ws.org.apache.commons.logging.1.0.3, \
  com.ibm.ws.jsf.shared.jakarta, \
+ io.openliberty.com.ibm.ws.jsf, \
  com.ibm.ws.cdi.interfaces.jakarta, \
  com.ibm.ws.org.apache.commons.digester.1.8, \
  io.openliberty.jakarta.websocket.2.0; apiJar=false; location:="dev/api/spec/,lib/"; mavenCoordinates="jakarta.websocket:jakarta.websocket-api:2.0.0-RC1", \
- com.ibm.websphere.appserver.thirdparty.jsf-2.3.jakarta; location:="dev/api/third-party/"
+ io.openliberty.thirdparty.jsf-3.0; location:="dev/api/third-party/"
 kind=noship
 edition=full
 WLP-Activation-Type: parallel

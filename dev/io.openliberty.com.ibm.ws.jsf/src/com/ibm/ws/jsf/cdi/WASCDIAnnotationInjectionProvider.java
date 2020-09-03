@@ -13,8 +13,8 @@ package com.ibm.ws.jsf.cdi;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jakarta.faces.context.ExternalContext;
-import jakarta.servlet.ServletContext;
+import javax.faces.context.ExternalContext;
+import javax.servlet.ServletContext;
 
 import org.apache.myfaces.spi.InjectionProvider;
 import org.apache.myfaces.spi.InjectionProviderException;
@@ -25,7 +25,7 @@ import com.ibm.wsspi.webcontainer.annotation.AnnotationHelperManager;
 
 /**
  * Used by MyFaces as an injection provider for CDI 1.2 support.
- *
+ * 
  */
 public class WASCDIAnnotationInjectionProvider extends InjectionProvider
 {
