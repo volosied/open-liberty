@@ -38,7 +38,7 @@ Subsystem-Name: Jakarta Server Faces 3.0
  io.openliberty.jakarta.servlet-5.0, \
  io.openliberty.jakarta.validation-3.0, \
  io.openliberty.jakarta.jsf-3.0, \
- com.ibm.websphere.appserver.jsp-3.0, \
+ io.openliberty.jsp-3.0, \
  io.openliberty.jakarta.jaxb-3.0; \
  com.ibm.websphere.appserver.jsfProvider-3.0.0.MyFaces, \
  com.ibm.websphere.appserver.eeCompatible-9.0
@@ -48,10 +48,11 @@ Subsystem-Name: Jakarta Server Faces 3.0
  com.ibm.ws.org.apache.commons.discovery.0.2, \
  com.ibm.ws.org.apache.commons.logging.1.0.3, \
  com.ibm.ws.jsf.shared.jakarta, \
- io.openliberty.com.ibm.ws.jsf, \
+ io.openliberty.com.ibm.ws.jsf.jakarta, \
  com.ibm.ws.cdi.interfaces.jakarta, \
  com.ibm.ws.org.apache.commons.digester.1.8, \
  io.openliberty.jakarta.websocket.2.0; apiJar=false; location:="dev/api/spec/,lib/"; mavenCoordinates="jakarta.websocket:jakarta.websocket-api:2.0.0-RC1", \
+ io.openliberty.jakarta.jstl.2.0; location:="dev/api/spec/,lib/"; mavenCoordinates="jakarta.servlet:jstl:2.0", \
  io.openliberty.thirdparty.jsf-3.0; location:="dev/api/third-party/"
 kind=noship
 edition=full

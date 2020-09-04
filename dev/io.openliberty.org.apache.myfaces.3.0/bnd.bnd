@@ -74,6 +74,13 @@ Include-Resource: \
   @${repo;io.openliberty.jakarta.jsf.3.0}!/META-INF/internal-resources/**, \
   META-INF=@src/META-INF
 
+Import-Package: \
+  com.ibm.ws.jsf.cdi, \
+  com.ibm.ws.jsf.config.*;thread-context=true, \
+  com.ibm.ws.jsf.ee;version=1.0.44 \
+  com.ibm.ws.jsf.spi.*, \
+  com.ibm.ws.jsf.extprocessor, \
+
 # Don't export the org.apache.myfaces.buildtools package as that is only needed for compilation.  The jar that contains the
 # org.apache.myfaces.buildtools package is jakarta.j2ee.jsf-2.2/lib/myfaces-builder-annotations-1.0.9.jar
 # Additionally, a subset of these org.apache.myfaces packages are exported by the thirdparty.jsf-3.0 bundle - so we exclude them here.
@@ -84,53 +91,48 @@ Export-Package: \
   !org.apache.myfaces.shared.renderkit, \
   !org.apache.myfaces.shared.renderkit.html, \
   !org.apache.myfaces.shared.renderkit.html.util, \
-  com.ibm.ws.jsf.cdi, \
-  com.ibm.ws.jsf.config.*;thread-context=true, \
-  com.ibm.ws.jsf.ee, \
-  com.ibm.ws.jsf.spi.*, \
-  com.ibm.ws.jsf.extprocessor, \
-  org.apache.myfaces.application;thread-context=true;version=3.0.0.RC1, \
-  org.apache.myfaces.application.viewstate;thread-context=true;version=3.0.0.RC1, \
-  org.apache.myfaces.cdi.model;thread-context=true;version=3.0.0.RC1, \
-  org.apache.myfaces.cdi.view;thread-context=true;version=3.0.0.RC1, \
-  org.apache.myfaces.cdi.util;thread-context=true;version=3.0.0.RC1, \
-  org.apache.myfaces.component;thread-context=true;version=3.0.0.RC1, \
-  org.apache.myfaces.component.search;thread-context=true;version=3.0.0.RC1, \
-  org.apache.myfaces.component.visit;thread-context=true;version=3.0.0.RC1, \
-  org.apache.myfaces.context;thread-context=true;version=3.0.0.RC1, \
-  org.apache.myfaces.context.servlet;thread-context=true;version=3.0.0.RC1, \
-  org.apache.myfaces.config.annotation;thread-context=true;version=3.0.0.RC1, \
-  org.apache.myfaces.config.impl.digester.elements;thread-context=true;version=3.0.0.RC1, \
-  org.apache.myfaces.flow;thread-context=true;version=3.0.0.RC1, \
-  org.apache.myfaces.flow.cdi;thread-context=true;version=3.0.0.RC1, \
-  org.apache.myfaces.lifecycle;thread-context=true;version=3.0.0.RC1, \
-  org.apache.myfaces.push.cdi;thread-context=true;version=3.0.0.RC1, \
-  org.apache.myfaces.renderkit;thread-context=true;version=3.0.0.RC1, \
-  org.apache.myfaces.shared.context.flash;thread-context=true;version=3.0.0.RC1, \
-  org.apache.myfaces.shared.taglib;thread-context=true;version=3.0.0.RC1, \
-  org.apache.myfaces.shared.taglib.core;thread-context=true;version=3.0.0.RC1, \
-  org.apache.myfaces.shared.util;thread-context=true;version=3.0.0.RC1, \
-  org.apache.myfaces.spi.impl;thread-context=true;version=3.0.0.RC1, \
-  org.apache.myfaces.taglib.core;thread-context=true;version=3.0.0.RC1, \
-  org.apache.myfaces.taglib.html;thread-context=true;version=3.0.0.RC1, \
-  org.apache.myfaces.view;thread-context=true;version=3.0.0.RC1, \
-  org.apache.myfaces.view.facelets;thread-context=true;version=3.0.0.RC1, \
-  org.apache.myfaces.view.facelets.compiler;thread-context=true;version=3.0.0.RC1, \
-  org.apache.myfaces.view.facelets.component;thread-context=true;version=3.0.0.RC1, \
-  org.apache.myfaces.view.facelets.el;thread-context=true;version=3.0.0.RC1, \
-  org.apache.myfaces.view.facelets.impl;thread-context=true;version=3.0.0.RC1, \
-  org.apache.myfaces.view.facelets.pool;thread-context=true;version=3.0.0.RC1, \
-  org.apache.myfaces.view.facelets.pool.impl;thread-context=true;version=3.0.0.RC1, \
-  org.apache.myfaces.view.facelets.tag;thread-context=true;version=3.0.0.RC1, \
-  org.apache.myfaces.view.facelets.tag.composite;thread-context=true;version=3.0.0.RC1, \
-  org.apache.myfaces.view.facelets.tag.jsf;thread-context=true;version=3.0.0.RC1, \
-  org.apache.myfaces.view.facelets.tag.jsf.core;thread-context=true;version=3.0.0.RC1, \
-  org.apache.myfaces.view.facelets.tag.jsf.html;thread-context=true;version=3.0.0.RC1, \
-  org.apache.myfaces.view.facelets.tag.jstl.core;thread-context=true;version=3.0.0.RC1, \
-  org.apache.myfaces.view.facelets.tag.jstl.fn;thread-context=true;version=3.0.0.RC1, \
-  org.apache.myfaces.view.facelets.tag.ui;thread-context=true;version=3.0.0.RC1, \
-  org.apache.myfaces.view.facelets.util;thread-context=true;version=3.0.0.RC1, \
-  org.apache.myfaces.webapp;thread-context=true;version=3.0.0.RC1, \
+  org.apache.myfaces.application;thread-context=true;version=3.0.0, \
+  org.apache.myfaces.application.viewstate;thread-context=true;version=3.0.0, \
+  org.apache.myfaces.cdi.model;thread-context=true;version=3.0.0, \
+  org.apache.myfaces.cdi.view;thread-context=true;version=3.0.0, \
+  org.apache.myfaces.cdi.util;thread-context=true;version=3.0.0, \
+  org.apache.myfaces.component;thread-context=true;version=3.0.0, \
+  org.apache.myfaces.component.search;thread-context=true;version=3.0.0, \
+  org.apache.myfaces.component.visit;thread-context=true;version=3.0.0, \
+  org.apache.myfaces.context;thread-context=true;version=3.0.0, \
+  org.apache.myfaces.context.servlet;thread-context=true;version=3.0.0, \
+  org.apache.myfaces.config.annotation;thread-context=true;version=3.0.0, \
+  org.apache.myfaces.config.impl.digester.elements;thread-context=true;version=3.0.0, \
+  org.apache.myfaces.flow;thread-context=true;version=3.0.0, \
+  org.apache.myfaces.flow.cdi;thread-context=true;version=3.0.0, \
+  org.apache.myfaces.lifecycle;thread-context=true;version=3.0.0, \
+  org.apache.myfaces.push.cdi;thread-context=true;version=3.0.0, \
+  org.apache.myfaces.renderkit;thread-context=true;version=3.0.0, \
+  org.apache.myfaces.shared.context.flash;thread-context=true;version=3.0.0, \
+  org.apache.myfaces.shared.taglib;thread-context=true;version=3.0.0, \
+  org.apache.myfaces.shared.taglib.core;thread-context=true;version=3.0.0, \
+  org.apache.myfaces.shared.util;thread-context=true;version=3.0.0, \
+  org.apache.myfaces.spi.impl;thread-context=true;version=3.0.0, \
+  org.apache.myfaces.taglib.core;thread-context=true;version=3.0.0, \
+  org.apache.myfaces.taglib.html;thread-context=true;version=3.0.0, \
+  org.apache.myfaces.view;thread-context=true;version=3.0.0, \
+  org.apache.myfaces.view.facelets;thread-context=true;version=3.0.0, \
+  org.apache.myfaces.view.facelets.compiler;thread-context=true;version=3.0.0, \
+  org.apache.myfaces.view.facelets.component;thread-context=true;version=3.0.0, \
+  org.apache.myfaces.view.facelets.el;thread-context=true;version=3.0.0, \
+  org.apache.myfaces.view.facelets.impl;thread-context=true;version=3.0.0, \
+  org.apache.myfaces.view.facelets.pool;thread-context=true;version=3.0.0, \
+  org.apache.myfaces.view.facelets.pool.impl;thread-context=true;version=3.0.0, \
+  org.apache.myfaces.view.facelets.tag;thread-context=true;version=3.0.0, \
+  org.apache.myfaces.view.facelets.tag.composite;thread-context=true;version=3.0.0, \
+  org.apache.myfaces.view.facelets.tag.jsf;thread-context=true;version=3.0.0, \
+  org.apache.myfaces.view.facelets.tag.jsf.core;thread-context=true;version=3.0.0, \
+  org.apache.myfaces.view.facelets.tag.jsf.html;thread-context=true;version=3.0.0, \
+  org.apache.myfaces.view.facelets.tag.jstl.core;thread-context=true;version=3.0.0, \
+  org.apache.myfaces.view.facelets.tag.jstl.fn;thread-context=true;version=3.0.0, \
+  org.apache.myfaces.view.facelets.tag.ui;thread-context=true;version=3.0.0, \
+  org.apache.myfaces.view.facelets.util;thread-context=true;version=3.0.0, \
+  org.apache.myfaces.webapp;thread-context=true;version=3.0.0, \
   org.apache.myfaces.*;version=3.0.0.RC1
 
 # Import everything we need except for the below exclusions that will not be needed at runtime.

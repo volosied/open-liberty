@@ -15,7 +15,7 @@ Bundle-Name: JSF Liberty Integration
 Bundle-SymbolicName: io.openliberty.com.ibm.ws.jsf
 Implementation-Version: 2.3.6
 
-jakartaeeMe:true
+jakartaeeMe: true
 
 app-resources= \
   META-INF/services/org.apache.myfaces.config.annotation.LifecycleProviderFactory | \
@@ -25,7 +25,12 @@ app-resources= \
   META-INF/services/org.apache.myfaces.spi.FaceletConfigResourceProvider | \
   META-INF/services/javax.faces.application.ApplicationFactory
 
-Export-Package: *
+Export-Package: \
+  com.ibm.ws.jsf.cdi, \
+  com.ibm.ws.jsf.config.*;thread-context=true, \
+  com.ibm.ws.jsf.ee;version=1.0.44 \
+  com.ibm.ws.jsf.spi.*, \
+  com.ibm.ws.jsf.extprocessor, \
 
 -buildpath: \
   org.apache.myfaces.core.impl;strategy=exact;version=${Implementation-Version},\
