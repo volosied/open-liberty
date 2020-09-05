@@ -25,6 +25,45 @@ app-resources= \
   META-INF/services/org.apache.myfaces.spi.FaceletConfigResourceProvider | \
   META-INF/services/javax.faces.application.ApplicationFactory
 
+  Include-Resource: \
+    META-INF=@src/META-INF
+
+    Service-Component: \
+      com.ibm.ws.jsf_3_0; \
+        implementation:=com.ibm.ws.jsf.extprocessor.JSFExtensionFactory; \
+        provide:='com.ibm.wsspi.webcontainer.extension.ExtensionFactory'; \
+        serializationService=com.ibm.ws.serialization.SerializationService; \
+        classLoadingService=com.ibm.wsspi.classloading.ClassLoadingService;\
+        cdiJSFInitializerService=com.ibm.ws.jsf.shared.cdi.CDIJSFInitializer; \
+        greedy:="cdiJSFInitializerService"; \
+        optional:="cdiJSFInitializerService"; \
+        properties:="service.vendor=IBM", \
+      com.ibm.ws.myfaces.initializer; \
+        implementation:=com.ibm.ws.jsf.ee.WASMyFacesContainerInitializer; \
+        provide:=javax.servlet.ServletContainerInitializer; \
+        properties:="service.vendor=IBM,service.ranking:Integer=101", \
+      com.ibm.ws.jsf_3_0.injection.class.list.collaborator; \
+        implementation:=com.ibm.ws.jsf.shared.util.JSFInjectionClassListCollaborator ; \
+        provide:='com.ibm.wsspi.webcontainer.collaborator.WebAppInjectionClassListCollaborator'; \
+        immediate:=true; \
+        properties:="service.vendor=IBM", \
+      com.ibm.ws.org.apache.myfaces_3_0_${replace;${bVersion};\\.;_}.ResourceProvider; \
+        implementation:=com.ibm.wsspi.classloading.ResourceProvider; \
+        provide:=com.ibm.wsspi.classloading.ResourceProvider; \
+        configuration-policy:=ignore; \
+        properties:="resources=${app-resources}", \
+      com.ibm.ws.jsf_3_0.cdiextension; \
+        implementation:=com.ibm.ws.jsf.shared.ext.CdiExtension; \
+        provide:='com.ibm.ws.cdi.extension.WebSphereCDIExtension'; \
+        properties:="service.vendor=IBM,\
+                     bean.defining.annotations=javax.faces.flow.FlowScoped;javax.faces.view.ViewScoped,\
+                     api.classes=javax.faces.flow.builder.FlowDefinition;javax.faces.flow.builder.FlowBuilderParameter,\
+                     extension.classes.only=true", \
+      com.ibm.ws.jsf_30.dd; \
+        implementation:=com.ibm.ws.javaee.version.FacesVersion; \
+        provide:=com.ibm.ws.javaee.version.FacesVersion; \
+        properties:="version:Integer=30"
+
 Export-Package: \
   com.ibm.ws.jsf.cdi, \
   com.ibm.ws.jsf.config.*;thread-context=true, \

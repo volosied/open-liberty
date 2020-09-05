@@ -13,60 +13,18 @@ bVersion=1.0
 
 Bundle-SymbolicName: io.openliberty.org.apache.myfaces.3.0
 
-app-resources= \
-  META-INF/services/org.apache.myfaces.config.annotation.LifecycleProviderFactory | \
-  META-INF/services/org.apache.myfaces.config.annotation.LifecycleProvider | \
-  META-INF/services/org.apache.myfaces.spi.AnnotationProvider | \
-  META-INF/services/org.apache.myfaces.spi.InjectionProvider | \
-  META-INF/services/org.apache.myfaces.spi.FaceletConfigResourceProvider | \
-  META-INF/services/jakarta.faces.application.ApplicationFactory
-
-
-Service-Component: \
-  com.ibm.ws.jsf_3_0; \
-    implementation:=com.ibm.ws.jsf.extprocessor.JSFExtensionFactory; \
-    provide:='com.ibm.wsspi.webcontainer.extension.ExtensionFactory'; \
-    serializationService=com.ibm.ws.serialization.SerializationService; \
-    classLoadingService=com.ibm.wsspi.classloading.ClassLoadingService;\
-    cdiJSFInitializerService=com.ibm.ws.jsf.shared.cdi.CDIJSFInitializer; \
-    greedy:="cdiJSFInitializerService"; \
-    optional:="cdiJSFInitializerService"; \
-    properties:="service.vendor=IBM", \
-  com.ibm.ws.jsf_3_0.taglib; \
-    implementation:=com.ibm.ws.jsf.extprocessor.JSFGlobalTagLibConfig; \
-    provide:='com.ibm.wsspi.jsp.taglib.config.GlobalTagLibConfig'; \
-    properties:="service.vendor=IBM", \
-  com.ibm.ws.myfaces.initializer; \
-    implementation:=com.ibm.ws.jsf.ee.WASMyFacesContainerInitializer; \
-    provide:=jakarta.servlet.ServletContainerInitializer; \
-    properties:="service.vendor=IBM,service.ranking:Integer=101", \
-  com.ibm.ws.jsf_3_0.injection.class.list.collaborator; \
-    implementation:=com.ibm.ws.jsf.shared.util.JSFInjectionClassListCollaborator ; \
-    provide:='com.ibm.wsspi.webcontainer.collaborator.WebAppInjectionClassListCollaborator'; \
-    immediate:=true; \
-    properties:="service.vendor=IBM", \
-  com.ibm.ws.org.apache.myfaces_3_0_${replace;${bVersion};\\.;_}.ResourceProvider; \
-    implementation:=com.ibm.wsspi.classloading.ResourceProvider; \
-    provide:=com.ibm.wsspi.classloading.ResourceProvider; \
-    configuration-policy:=ignore; \
-    properties:="resources=${app-resources}", \
-  com.ibm.ws.jsf_3_0.cdiextension; \
-    implementation:=com.ibm.ws.jsf.shared.ext.CdiExtension; \
-    provide:='com.ibm.ws.cdi.extension.WebSphereCDIExtension'; \
-    properties:="service.vendor=IBM,\
-                 bean.defining.annotations=jakarta.faces.flow.FlowScoped;jakarta.faces.view.ViewScoped,\
-                 api.classes=jakarta.faces.flow.builder.FlowDefinition;jakarta.faces.flow.builder.FlowBuilderParameter,\
-                 extension.classes.only=true", \
-  com.ibm.ws.jsf_30.dd; \
-    implementation:=com.ibm.ws.javaee.version.FacesVersion; \
-    provide:=com.ibm.ws.javaee.version.FacesVersion; \
-    properties:="version:Integer=30"
-
 -fixupmessages.missingexport: "Used bundle version * for exported package";is:=ignore
 
 instrument.ffdc: false
 instrument.classesExcludes: \
   org/**/*.class
+
+
+Service-Component: \
+  com.ibm.ws.jsf_3_0.taglib; \
+    implementation:=com.ibm.ws.jsf.taglibconfig.JSFGlobalTagLibConfig; \
+    provide:='com.ibm.wsspi.jsp.taglib.config.GlobalTagLibConfig'; \
+    properties:="service.vendor=IBM", \
 
 Include-Resource: \
   @${repo;org.apache.myfaces.core.impl;3.0.0.RC1;EXACT}!/META-INF/**, \
@@ -91,6 +49,7 @@ Export-Package: \
   !org.apache.myfaces.shared.renderkit, \
   !org.apache.myfaces.shared.renderkit.html, \
   !org.apache.myfaces.shared.renderkit.html.util, \
+  com.ibm.ws.jsf.taglibconfig, \
   org.apache.myfaces.application;thread-context=true;version=3.0.0, \
   org.apache.myfaces.application.viewstate;thread-context=true;version=3.0.0, \
   org.apache.myfaces.cdi.model;thread-context=true;version=3.0.0, \
@@ -133,7 +92,7 @@ Export-Package: \
   org.apache.myfaces.view.facelets.tag.ui;thread-context=true;version=3.0.0, \
   org.apache.myfaces.view.facelets.util;thread-context=true;version=3.0.0, \
   org.apache.myfaces.webapp;thread-context=true;version=3.0.0, \
-  org.apache.myfaces.*;version=3.0.0.RC1
+  org.apache.myfaces.*;version=3.0.0
 
 # Import everything we need except for the below exclusions that will not be needed at runtime.
 Import-Package: \

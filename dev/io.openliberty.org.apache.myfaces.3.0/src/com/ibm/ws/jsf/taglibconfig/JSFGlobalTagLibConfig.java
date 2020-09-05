@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package com.ibm.ws.jsf.extprocessor;
+package com.ibm.ws.jsf.taglibconfig;
 
 import java.net.URL;
 import java.security.AccessController;
@@ -20,10 +20,10 @@ import com.ibm.wsspi.jsp.taglib.config.TldPathConfig;
 /**
  * The JSFGlobalTagLibConfig provides the definition of the tag libraries provided by the
  * JSF code and how those tag libraries can be located.
- * 
+ *
  * The values are provided are derived from the taglibcacheconfig.xml file
  * (Version 1.2 of the WASX.SERV1 file SERV1/ws/code/jsf.myfaces/src-ibm/2.0.0-SNAPSHOT/META-INF/taglibcacheconfig.xml)
- * 
+ *
  */
 public class JSFGlobalTagLibConfig extends GlobalTagLibConfig {
     public JSFGlobalTagLibConfig() {
@@ -45,6 +45,7 @@ public class JSFGlobalTagLibConfig extends GlobalTagLibConfig {
                 return getClassloader().getResource("META-INF/myfaces_core.tld");
             }
         }));
+        System.out.println("VS JSF 3.0 -- JSFGlobalTagLibConfig -- TAGLIB");
     }
 
     @SuppressWarnings("unchecked")
