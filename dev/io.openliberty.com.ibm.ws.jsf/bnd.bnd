@@ -64,12 +64,16 @@ app-resources= \
         provide:=com.ibm.ws.javaee.version.FacesVersion; \
         properties:="version:Integer=30"
 
+Import-Package: \
+  javax.faces.webapp, \
+  *
+
 Export-Package: \
   com.ibm.ws.jsf.cdi, \
   com.ibm.ws.jsf.config.*;thread-context=true, \
-  com.ibm.ws.jsf.ee;version=1.0.44 \
-  com.ibm.ws.jsf.spi.*, \
-  com.ibm.ws.jsf.extprocessor, \
+  com.ibm.ws.jsf.ee;version=1.0.44, \
+  com.ibm.ws.jsf.spi.impl, \
+  com.ibm.ws.jsf.extprocessor
 
 -buildpath: \
   org.apache.myfaces.core.impl;strategy=exact;version=${Implementation-Version},\

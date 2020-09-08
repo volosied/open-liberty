@@ -31,13 +31,15 @@ Include-Resource: \
   @${repo;io.openliberty.jakarta.jsf.3.0}!/META-INF/resources/**, \
   @${repo;io.openliberty.jakarta.jsf.3.0}!/META-INF/internal-resources/**, \
   META-INF=@src/META-INF
-
-Import-Package: \
+  
+DynamicImport-Package: \
   com.ibm.ws.jsf.cdi, \
-  com.ibm.ws.jsf.config.*;thread-context=true, \
-  com.ibm.ws.jsf.ee;version=1.0.44 \
-  com.ibm.ws.jsf.spi.*, \
-  com.ibm.ws.jsf.extprocessor, \
+  com.ibm.ws.jsf.config.annotion,\
+  com.ibm.ws.jsf.config.resource,\
+  com.ibm.ws.jsf.ee, \
+  com.ibm.ws.jsf.spi.impl, \
+  com.ibm.ws.jsf.extprocessor
+
 
 # Don't export the org.apache.myfaces.buildtools package as that is only needed for compilation.  The jar that contains the
 # org.apache.myfaces.buildtools package is jakarta.j2ee.jsf-2.2/lib/myfaces-builder-annotations-1.0.9.jar
