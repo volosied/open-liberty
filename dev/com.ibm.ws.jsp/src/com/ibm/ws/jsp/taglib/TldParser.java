@@ -50,7 +50,7 @@ import com.ibm.wsspi.jsp.context.JspCoreContext;
 import com.ibm.wsspi.jsp.resource.JspInputSource;
 
 
-public class TldParser extends DefaultHandler { 
+public class TldParser extends DefaultHandler {
 
 	static protected Logger logger;
 	static protected Level logLevel = Level.FINEST;
@@ -61,28 +61,10 @@ public class TldParser extends DefaultHandler {
 
     public static final String TAGLIB_DTD_PUBLIC_ID_11 = "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.1//EN";
     public static final String TAGLIB_DTD_RESOURCE_PATH_11 = "/javax/servlet/jsp/resources/web-jsptaglibrary_1_1.dtd";
-    
+
     public static final String TAGLIB_DTD_PUBLIC_ID_12 = "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN";
     public static final String TAGLIB_DTD_RESOURCE_PATH_12 = "/javax/servlet/jsp/resources/web-jsptaglibrary_1_2.dtd";
-    
-    public static final String XMLSCHEMA_DTD_PUBLIC_ID = "-//W3C//DTD XMLSCHEMA 200102//EN";
-    public static final String XMLSCHEMA_DTD_RESOURCE_PATH = "/javax/servlet/resources/XMLSchema.dtd";
-    
-    public static final String DATATYPES_DTD_PUBLIC_ID = "datatypes";
-    public static final String DATATYPES_DTD_RESOURCE_PATH = "/javax/servlet/resources/datatypes.dtd";
-    
-    public static final String TAGLIB_XSD_SYSTEM_ID_20 = "web-jsptaglibrary_2_0.xsd";
-    public static final String TAGLIB_XSD_RESOURCE_PATH_20 = "/javax/servlet/jsp/resources/web-jsptaglibrary_2_0.xsd";
-    
-    public static final String J2EE14_XSD_SYSTEM_ID = "j2ee_1_4.xsd";
-    public static final String J2EE14_XSD_RESOURCE_PATH = "/javax/servlet/resources/j2ee_1_4.xsd";
-    
-    public static final String XML_XSD_SYSTEM_ID = "http://www.w3.org/2001/xml.xsd";
-    public static final String XML_XSD_RESOURCE_PATH = "/javax/servlet/resources/xml.xsd";
-    
-    public static final String WEB_SERVICE_CLIENT_XSD_SYSTEM_ID = "http://www.ibm.com/webservices/xsd/j2ee_web_services_client_1_1.xsd";
-    public static final String WEB_SERVICE_CLIENT_XSD_RESOURCE_PATH = "/javax/servlet/resources/j2ee_web_services_client_1_1.xsd";
-    
+
     protected static final int TAGLIB_ELEMENT = 1;
     protected static final int TAG_ELEMENT = 2;
     protected static final int TAGFILE_ELEMENT = 3;
@@ -91,17 +73,17 @@ public class TldParser extends DefaultHandler {
     protected static final int DEFERRED_VALUE_ELEMENT = 6;
     // DON'T FORGET TO ADD NEW ELEMENT TYPES TO elementTypes array!:
     protected static String[] elementTypes = {"TAGLIB_ELEMENT","TAG_ELEMENT","TAGFILE_ELEMENT","FUNCTION_ELEMENT","ATTRIBUTE_ELEMENT","DEFERRED_VALUE_ELEMENT"};
-    
+
     protected int currentElement = 0;
 
     protected JspCoreContext ctxt = null;
     protected JspConfigurationManager configManager = null;
     protected ClassLoader classloader = null;
-        
+
     protected SAXParser saxParser = null;
-    
+
     protected TagLibraryInfoImpl tli = null;
-    
+
     protected List <TagInfo>tags = new ArrayList<TagInfo>();
     protected String tagName = null;
     protected String tagDescription = null;
@@ -112,7 +94,7 @@ public class TldParser extends DefaultHandler {
     protected String smallIcon = null;
     protected String largeIcon = null;
     protected boolean dynamicAttributes = false;
-    
+
     protected List <TagAttributeInfo>attributes = new ArrayList<TagAttributeInfo>();
     protected String attributeName = null;
     protected boolean required = false;
@@ -122,43 +104,43 @@ public class TldParser extends DefaultHandler {
     protected boolean deferredValue = false, deferredMethod = false;  //jsp2.1ELwork
     protected String expectedType = null;
     protected String methodSignature = null;
-    
+
     protected List <TagVariableInfo>variables = new ArrayList<TagVariableInfo>();
     protected String nameGiven = null;
     protected String nameFromAttribute = null;
     protected String variableClassName = "java.lang.String";
     protected boolean declare = true;
     protected int scope = VariableInfo.NESTED;
-    
+
     protected List <TagFileInfo>tagFiles = new ArrayList<TagFileInfo>();
     protected String tagFileName = null;
     protected String path = null;
-    
+
     protected List <FunctionInfo>functions = new ArrayList<FunctionInfo>();
     protected String functionName = null;
     protected String functionClass = null;
     protected String functionSignature = null;
-    
+
     protected String validatorClass = null;
     protected HashMap <String,String>validatorInitParams = null;
     protected String paramName = null;
     protected String paramValue = null;
-    
+
     protected StringBuffer chars = null;
-    
+
     protected List <String>eventListenerList = new ArrayList<String>();
-    
+
     protected String tldLocation = null;
-    
+
     public ArrayList<ParsedTagElement> parsedTagElements;
     public ArrayList<ParsedTagFileElement> parsedTagFileElements;
     public HashMap<String, HashMap<String, String>> tagLibValidators;
-    
+
     public TldParser(JspCoreContext ctxt,
             JspConfigurationManager configManager,
             boolean validateTLDs,
             ClassLoader classloader) throws JspCoreException {
-        
+
         this(ctxt, configManager, validateTLDs);
         if (classloader != null)
             this.classloader = classloader;
@@ -199,7 +181,7 @@ public class TldParser extends DefaultHandler {
             ThreadContextHelper.setClassLoader(oldLoader);
         }
     }
-    
+
     private void reset() {
         resetTagFile();
         resetTag();
@@ -212,12 +194,12 @@ public class TldParser extends DefaultHandler {
         functions.clear();
         eventListenerList.clear();
     }
-    
+
     private void resetTagFile() {
         tagFileName = null;
         path = null;
     }
-    
+
     private void resetTag() {
         tagName = null;
         tagClassName = null;
@@ -231,13 +213,13 @@ public class TldParser extends DefaultHandler {
         attributes.clear();
         variables.clear();
     }
-    
+
     private void resetFunction() {
         functionClass = null;
         functionSignature = null;
         functionName = null;
     }
-    
+
     private void resetVariable() {
         nameGiven = null;
         nameFromAttribute = null;
@@ -245,7 +227,7 @@ public class TldParser extends DefaultHandler {
         declare = true;
         scope = VariableInfo.NESTED;
     }
-    
+
     private void resetAttribute() {
         attributeName = null;
         required = false;
@@ -254,18 +236,18 @@ public class TldParser extends DefaultHandler {
         fragment = false;
         // jsp2.1ELwork
         deferredValue = false;
-        deferredMethod = false;  
+        deferredMethod = false;
         expectedType = null;
         methodSignature = null;
     }
-    
+
     private void resetValidator() {
         validatorClass = null;
         validatorInitParams = null;
         paramName = null;
         paramValue = null;
     }
-    
+
     public TagLibraryInfoImpl parseTLD(JspInputSource inputSource, String tldOriginatorId) throws JspCoreException {
         this.tldLocation = inputSource.getRelativeURL();
         tli = new TagLibraryInfoImpl(tldOriginatorId, inputSource);
@@ -281,7 +263,7 @@ public class TldParser extends DefaultHandler {
                 } else {
                     if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(logLevel)) {
                         logger.logp(logLevel, CLASS_NAME, "parseTLD(JspInputSource, String)", "problem parsing tld for " + inputSource.getRelativeURL());
-                    }                    
+                    }
                 }
             } else {
                 parse(inputSource.getInputStream());
@@ -297,13 +279,13 @@ public class TldParser extends DefaultHandler {
             logParseErrorMessage(e);
             throw new JspCoreException(e);
         }
-        
+
         if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(logLevel)) {
             logger.logp(logLevel, CLASS_NAME, "parseTLD(JspInputSource, String)", "returning tli= ["+tli+"]");
         }
         return (tli);
     }
-    
+
     public TagLibraryInfoImpl parseTLD(JspInputSource inputSource, InputStream is, String tldOriginatorId) throws JspCoreException {
         this.tldLocation = inputSource.getRelativeURL();
         tli = new TagLibraryInfoImpl(tldOriginatorId, inputSource);
@@ -323,17 +305,17 @@ public class TldParser extends DefaultHandler {
             logParseErrorMessage(e);
             throw new JspCoreException(e);
         }
-        
+
         if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(logLevel)) {
             logger.logp(logLevel, CLASS_NAME, "parseTLD(JspInputSource, InputStream, String)", "returning tli= ["+tli+"]");
         }
         return (tli);
     }
-    
+
     private void parse(InputStream is) throws SAXException, IOException {
         reset();
 
-        try {        
+        try {
             ParserFactory.parseDocument(saxParser, is, this);
 	    }
         finally {
@@ -342,11 +324,11 @@ public class TldParser extends DefaultHandler {
             } catch (IOException e) {}
         }
     }
-    
+
     public List<String> getEventListenerList() {
         return eventListenerList;
     }
-    
+
     public List<String> getParsedTagsList() {
         List<String> result = new ArrayList<String>();
         if (parsedTagElements!=null) {
@@ -356,11 +338,11 @@ public class TldParser extends DefaultHandler {
         }
         return result;
     }
-    
-    public void startElement(String namespaceURI, 
+
+    public void startElement(String namespaceURI,
                              String localName,
-                             String elementName, 
-                             Attributes attrs) 
+                             String elementName,
+                             Attributes attrs)
         throws SAXException {
         chars = new StringBuffer();
         if (elementName.equals("taglib")) {
@@ -389,7 +371,7 @@ public class TldParser extends DefaultHandler {
             logger.logp(logLevel, CLASS_NAME, "startElement", "currentElement= ["+elementTypes[currentElement-1]+"]");
         }
     }
-    
+
     @Trivial
     public void characters(char[] ch, int start, int length) throws SAXException {
         for (int i = 0; i < length; i++) {
@@ -425,7 +407,7 @@ public class TldParser extends DefaultHandler {
                 case TAGLIB_ELEMENT:
                     tli.setInfoString(chars.toString().trim());
                     break;
-                case TAG_ELEMENT:                    
+                case TAG_ELEMENT:
                     tagDescription = chars.toString().trim();
                     break;
                 default:
@@ -437,7 +419,7 @@ public class TldParser extends DefaultHandler {
             if (attributes.size() > 0) {
                 tagAttributes = (TagAttributeInfo[])attributes.toArray(tagAttributes);
             }
-            
+
             TagVariableInfo[] tagVariables = new TagVariableInfo[variables.size()];
             if (variables.size() > 0) {
                 tagVariables = (TagVariableInfo[])variables.toArray(tagVariables);
@@ -457,7 +439,7 @@ public class TldParser extends DefaultHandler {
                             logger.logp(Level.WARNING, CLASS_NAME, "endElement", "TagExtraInfo specified in tld without a value.  tld=[" + tldLocation +"]");
                     }
                     else{
-                            // end  221334: check if user specified empty tag for tei-class and log warning.        
+                            // end  221334: check if user specified empty tag for tei-class and log warning.
                             try {
                                 tei = (TagExtraInfo)classloader.loadClass(teiClassName).newInstance();
                             }
@@ -467,7 +449,7 @@ public class TldParser extends DefaultHandler {
                                     message+=" from "+tldLocation;
                                     logger.logp(Level.WARNING, CLASS_NAME, "endElement", message);   //PK27099
                                 //throw new SAXException(message);                               //PK27099
-                                    //      end  221334: improve error being logged for this error.                     
+                                    //      end  221334: improve error being logged for this error.
                             }
                     }
                 }
@@ -483,10 +465,10 @@ public class TldParser extends DefaultHandler {
                                           largeIcon,
                                           tagVariables,
                                           dynamicAttributes);
-                                          
+
                 tags.add(tag);
             }
-            
+
             resetTag();
             currentElement = TAGLIB_ELEMENT;
             if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(logLevel)) {
@@ -501,14 +483,14 @@ public class TldParser extends DefaultHandler {
                     }
                     JspOptions jspOptions = new JspOptions(); // 396002
                 	JspInputSource tagFileInputSource = ctxt.getJspInputSourceFactory().copyJspInputSource(tli.getInputSource(), path);
-                    JspTranslator jspTranslator = JspTranslatorFactory.getFactory().createTranslator(TagLibraryCache.TAGFILE_SCAN_ID, 
-                                                                                                     tagFileInputSource, 
-                                                                                                     ctxt, 
+                    JspTranslator jspTranslator = JspTranslatorFactory.getFactory().createTranslator(TagLibraryCache.TAGFILE_SCAN_ID,
+                                                                                                     tagFileInputSource,
+                                                                                                     ctxt,
                                                                                                      configManager.createJspConfiguration(),
                                                                                                      jspOptions, // 396002
                                                                                                      new HashMap());
-                    
-                    
+
+
                     JspVisitorInputMap  inputMap = new JspVisitorInputMap();
                     inputMap.put("TagLibraryInfo", tli);
                     inputMap.put("TagFileName", tagFileName);
@@ -541,13 +523,13 @@ public class TldParser extends DefaultHandler {
                 case TAGFILE_ELEMENT:
                     tagFileName = chars.toString().trim();
                     break;
-                case TAG_ELEMENT:                    
+                case TAG_ELEMENT:
                     tagName = chars.toString().trim();
                     break;
-                case FUNCTION_ELEMENT:                    
+                case FUNCTION_ELEMENT:
                     functionName = chars.toString().trim();
                     break;
-                case ATTRIBUTE_ELEMENT:                    
+                case ATTRIBUTE_ELEMENT:
                     attributeName = chars.toString().trim();
                     break;
                 default:
@@ -570,66 +552,66 @@ public class TldParser extends DefaultHandler {
             bodyContent = chars.toString().trim();
         }
         else if (elementName.equals("variable")) {
-            TagVariableInfo tvi = new TagVariableInfo(nameGiven, 
-                                                      nameFromAttribute, 
-                                                      variableClassName, 
-                                                      declare, 
+            TagVariableInfo tvi = new TagVariableInfo(nameGiven,
+                                                      nameFromAttribute,
+                                                      variableClassName,
+                                                      declare,
                                                       scope);
             variables.add(tvi);
-            resetVariable();                                           
+            resetVariable();
             if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(logLevel)) {
                 logger.logp(logLevel, CLASS_NAME, "endElement", "elementName= ["+elementName+"] TagVariableInfo= ["+tvi+"]");
             }
         }
         else if (elementName.equals("attribute")) {
             /* Start Defect 202537 */
-             
-            /* 
-             * According to JSP.C-3 ("TLD Schema Element Structure - tag"), 
+
+            /*
+             * According to JSP.C-3 ("TLD Schema Element Structure - tag"),
              * 'type' and 'rtexprvalue' must not be specified if 'fragment'
              * has been specified (this will be enforced by validating parser).
              * Also, if 'fragment' is TRUE, 'type' is fixed at
              * javax.servlet.jsp.tagext.JspFragment, and 'rtexprvalue' is
              * fixed at true. See also JSP.8.5.2.
-             * 
+             *
              */
-              
+
             if (fragment) {
                 type = "javax.servlet.jsp.tagext.JspFragment";
                 reqTime = true;
             }
-            
+
             /* According to JSP spec, for static values (those determined at
              * translation time) the type is fixed at java.lang.String.
              */
             if (!reqTime) {
                 type = "java.lang.String";
             }
-            
+
             /* End Defect 202537 */
-            
+
             if(deferredValue && expectedType==null) {
             	expectedType = "java.lang.Object";
             }
-            
+
             // defect 420617 - comment-out the setting of type to "java.lang.Object"
             //if (type == null) {
             //	type = "java.lang.Object";
             //}
-            
+
             /*if(deferredValue) {
             	type = "javax.el.ValueExpression";
             }
-            
+
             if(deferredMethod) {
             	type = "javax.el.MethodExpression";
             }*/
-             
+
             TagAttributeInfo tai = new TagAttributeInfo(attributeName, required, type, reqTime, fragment,
                                                         null, deferredValue, deferredMethod, expectedType,
                                                         methodSignature);  // jsp2.1ELWork
             attributes.add(tai);
-            resetAttribute();                                                
+            resetAttribute();
             currentElement = TAG_ELEMENT;
             if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(logLevel)) {
                 logger.logp(logLevel, CLASS_NAME, "endElement", "elementName= ["+elementName+"] TagAttributeInfo= ["+tai+"]");
@@ -639,7 +621,7 @@ public class TldParser extends DefaultHandler {
             String requiredString = chars.toString().trim();
             if (requiredString.equalsIgnoreCase("yes") ||
                 requiredString.equalsIgnoreCase("true")) {
-                required = true;    
+                required = true;
             }
             else {
                 required = false;
@@ -652,7 +634,7 @@ public class TldParser extends DefaultHandler {
             String reqTimeString = chars.toString().trim();
             if (reqTimeString.equalsIgnoreCase("yes") ||
                 reqTimeString.equalsIgnoreCase("true")) {
-                reqTime = true;    
+                reqTime = true;
             }
             else {
                 reqTime = false;
@@ -669,7 +651,7 @@ public class TldParser extends DefaultHandler {
             deferredMethod = true;
             if (methodSignature==null) {
             	methodSignature = "java.lang.Object method()";
-            }         
+            }
             if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(logLevel)) {
                 logger.logp(logLevel, CLASS_NAME, "endElement", "elementName= ["+elementName+"] deferredMethod= ["+deferredMethod+"] methodSignature= ["+methodSignature+"]");
             }
@@ -707,7 +689,7 @@ public class TldParser extends DefaultHandler {
                 break;
             default:
                 break;
-            }            
+            }
         }
         else if (elementName.equals("function-class")) {
             functionClass = chars.toString().trim();
@@ -719,7 +701,7 @@ public class TldParser extends DefaultHandler {
             String dynamicAttributesString = chars.toString().trim();
             if (dynamicAttributesString.equalsIgnoreCase("yes") ||
                 dynamicAttributesString.equalsIgnoreCase("true")) {
-                dynamicAttributes = true;    
+                dynamicAttributes = true;
             }
             else {
                 dynamicAttributes = false;
@@ -732,7 +714,7 @@ public class TldParser extends DefaultHandler {
             String fragmentString = chars.toString().trim();
             if (fragmentString.equalsIgnoreCase("yes") ||
                 fragmentString.equalsIgnoreCase("true")) {
-                fragment = true;    
+                fragment = true;
             }
             else {
                 fragment = false;
@@ -754,7 +736,7 @@ public class TldParser extends DefaultHandler {
             String declareString = chars.toString().trim();
             if (declareString.equalsIgnoreCase("yes") ||
                 declareString.equalsIgnoreCase("true")) {
-                declare = true;    
+                declare = true;
             }
             else {
                 declare = false;
@@ -778,7 +760,7 @@ public class TldParser extends DefaultHandler {
         else if (elementName.equals("validator")) {
 
         	if(validatorClass != null){
-        		// begin  221334: check if user specified empty tag for validator-class and log warning.        		
+        		// begin  221334: check if user specified empty tag for validator-class and log warning.
         		if (validatorClass.trim().equals("")){
 	        		logger.logp(Level.WARNING, CLASS_NAME, "endElement", "TagLibraryValidator specified in tld without a value.  tld=[" + tldLocation +"]");
 	        	}
@@ -791,11 +773,11 @@ public class TldParser extends DefaultHandler {
         	        	}
         	        	this.tagLibValidators.put(validatorClass, validatorInitParams);
 	        	    } else {
-	        	        
+
 	        	        try {
-		                
+
 	        	            Class tlvClass = classloader.loadClass(validatorClass);
-	        	            tli.setTabLibraryValidator(tlvClass, validatorInitParams);                 
+	        	            tli.setTabLibraryValidator(tlvClass, validatorInitParams);
                                 } catch (Exception e) {
                                     //  begin  221334: improve error being logged for this error.
                                     String message = JspCoreException.getMsg("jsp.error.failed.load.tlv.class", new Object[]{validatorClass});
@@ -854,40 +836,19 @@ public class TldParser extends DefaultHandler {
       }
         chars = null;
     }
-    
+
     public InputSource resolveEntity(String publicId, String systemId)
         throws SAXException {
         InputSource isrc = null;
-        String resourcePath = null;            
-        if (publicId != null) {          
+        String resourcePath = null;
+        if (publicId != null) {
             if (publicId.equals(TAGLIB_DTD_PUBLIC_ID_11)) {
                 resourcePath = TAGLIB_DTD_RESOURCE_PATH_11;
             }
-            else if (publicId.equals(TAGLIB_DTD_PUBLIC_ID_12)) {
+						else if (publicId.equals(TAGLIB_DTD_PUBLIC_ID_12)) {
                 resourcePath = TAGLIB_DTD_RESOURCE_PATH_12;
             }
-            else if (publicId.equals(XMLSCHEMA_DTD_PUBLIC_ID)) {
-                resourcePath = XMLSCHEMA_DTD_RESOURCE_PATH;
-            }
-            else if (publicId.equals(DATATYPES_DTD_PUBLIC_ID)) {
-                resourcePath = DATATYPES_DTD_RESOURCE_PATH;
-            }
         }
-        else if (systemId != null) {
-            if (systemId.endsWith(TAGLIB_XSD_SYSTEM_ID_20)) {
-                resourcePath = TAGLIB_XSD_RESOURCE_PATH_20;
-            }
-            else if (systemId.endsWith(J2EE14_XSD_SYSTEM_ID)) {
-                resourcePath = J2EE14_XSD_RESOURCE_PATH;
-            }
-            else if (systemId.equals(XML_XSD_SYSTEM_ID)) {
-                resourcePath = XML_XSD_RESOURCE_PATH;
-            }
-            else if (systemId.equals(WEB_SERVICE_CLIENT_XSD_SYSTEM_ID)) {
-                resourcePath = WEB_SERVICE_CLIENT_XSD_RESOURCE_PATH;
-            }
-        }
-        
         if (resourcePath != null) {
             InputStream input = this.getClass().getResourceAsStream(resourcePath);
             if (input == null) {
@@ -906,7 +867,7 @@ public class TldParser extends DefaultHandler {
     }
 
     public void fatalError(SAXParseException arg0) throws SAXException {
-		throw arg0;    
+		throw arg0;
 	}
 
     public void warning(SAXParseException arg0) throws SAXException {
@@ -917,7 +878,7 @@ public class TldParser extends DefaultHandler {
 		}
 		logger.logp(Level.WARNING, CLASS_NAME, "warning", newMessage);
     }
-    
+
     private void logParseErrorMessage(Exception e){
 		String origMessage= e.getMessage();
 		String newMessage = "Failed to parse Tag Library [" + tldLocation +"]";
