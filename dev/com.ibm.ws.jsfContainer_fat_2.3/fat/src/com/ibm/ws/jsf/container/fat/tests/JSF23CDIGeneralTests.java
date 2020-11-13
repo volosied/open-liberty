@@ -386,6 +386,8 @@ public class JSF23CDIGeneralTests extends FATServletClient {
             String contextRoot = "ConverterValidatorBehaviorInjectionTarget";
             URL url = JSFUtils.createHttpUrl(jsf23CDIServer, contextRoot, "index.xhtml");
 
+            jsf23CDIServer.waitForStringInLog("CWWKZ0001I: Application " + contextRoot + " started");
+
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
             // Verify that the page contains the expected messages.
@@ -590,7 +592,7 @@ public class JSF23CDIGeneralTests extends FATServletClient {
           String responseText = indexPage.asText();
           assertTrue("Page does not contain expected response.", responseText.contains("Value is 1"));
 
-          //Click Continue to go to page2.xhtml 
+          //Click Continue to go to page2.xhtml
           form = indexPage.getFormByName("form1");
           submitButton = form.getInputByName("form1:continueButton");
           HtmlPage page2 = submitButton.click();
