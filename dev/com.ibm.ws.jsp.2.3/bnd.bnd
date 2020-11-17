@@ -19,8 +19,7 @@ WLP-ServerVersion: ${liberty.beta.version}
 
 jakartaeeMe: true
 
--dsannotations: com.ibm.ws.jsp23.webcontainerext.JspVersionFactoryImpl, \
-com.ibm.ws.jsp23.webcontainerext.ws.PrepareJspHelper23Factory, \
+-dsannotations: com.ibm.ws.jsp23.webcontainerext.ws.PrepareJspHelper23Factory, \
 com.ibm.ws.jsp23.translator.visitor.validator.ElValidatorExtFactoryImpl, \
 com.ibm.ws.jsp23.translator.visitor.generator.GeneratorUtilsExtFactoryImpl
 
@@ -81,7 +80,12 @@ Import-Package: \
    org.eclipse.jdt.internal.compiler.problem;version="3.10.2";usage="JSP", \
    sun.io;resolution:=optional, \
    *
-   
+
+Service-Component: \
+   com.ibm.ws.jsp.v23.dd; \
+      implementation:=com.ibm.ws.javaee.version.PagesVersion; \
+      provide:=com.ibm.ws.javaee.version.PagesVersion; \
+      properties:="version:String=2.3"
 
 -includeresource: \
    org/apache/jasper/runtime/packageinfo=src/org/apache/jasper/runtime/packageinfo
@@ -100,4 +104,5 @@ instrument.classesExcludes: org/apache/**/*.class
 	com.ibm.ws.container.service;version=latest,\
 	com.ibm.ws.logging.core,\
 	com.ibm.wsspi.org.osgi.service.component.annotations, \
-	com.ibm.ws.org.osgi.annotation.versioning;version=latest
+	com.ibm.ws.org.osgi.annotation.versioning;version=latest,\
+	com.ibm.ws.javaee.version;version=latest

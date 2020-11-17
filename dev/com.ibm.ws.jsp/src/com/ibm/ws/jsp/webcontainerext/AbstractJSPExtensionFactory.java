@@ -30,8 +30,8 @@ public abstract class AbstractJSPExtensionFactory implements ExtensionFactory {
     private static final long NANOS_IN_A_MILLISECONDS = 1000000L;
     protected static GlobalTagLibraryCache globalTagLibraryCache = null;
     private final static Object lock=new Object();
-    
-//	  defect PK04091 - comment out this constructor   
+
+//	  defect PK04091 - comment out this constructor
 //    public AbstractJSPExtensionFactory (int bodyContentBufferSize) {
 //        if (JspFactory.getDefaultFactory() == null) {
 //            JspFactoryImpl factory = new JspFactoryImpl(bodyContentBufferSize);
@@ -69,14 +69,14 @@ public abstract class AbstractJSPExtensionFactory implements ExtensionFactory {
 
         ExtensionProcessor extensionProcessor = createProcessor(webapp, webAppConfig, jspClassloaderContext);
 
-        AnnotationHelperManager aHM =  new AnnotationHelperManager(webapp);    
+        AnnotationHelperManager aHM =  new AnnotationHelperManager(webapp);
         com.ibm.wsspi.webcontainer.annotation.AnnotationHelperManager.addInstance(webapp, aHM);
         if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE)) {
             logger.logp(Level.FINE,"JSPExtensionFactory","createExtensionProcessor", "Added AnnotationHelperManager of: " + aHM);
             logger.logp(Level.FINE,"JSPExtensionFactory","createExtensionProcessor", "with IServletContext of: " + webapp);
         }
 
-        
+
 	if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable (Level.FINE)){
          	logger.exiting(CLASS_NAME,"createExtensionProcessor", " app contextPath --> "+ webapp.getContextPath());
 	}// d651265
@@ -101,14 +101,14 @@ public abstract class AbstractJSPExtensionFactory implements ExtensionFactory {
 
     protected abstract JspXmlExtConfig createConfig(IServletContext webapp);
     protected abstract JspClassloaderContext createJspClassloaderContext(IServletContext webapp, JspXmlExtConfig webAppConfig);
-    protected abstract ExtensionProcessor createProcessor(IServletContext webapp, 
-    		                                              JspXmlExtConfig webAppConfig, 
+    protected abstract ExtensionProcessor createProcessor(IServletContext webapp,
+    		                                              JspXmlExtConfig webAppConfig,
     		                                              JspClassloaderContext jspClassloaderContext) throws Exception;
-    
+
     protected static void createGlobalTagLibraryCache() {
     	synchronized (lock) {
     		if (globalTagLibraryCache == null ) {
-	            long start = System.nanoTime();        	
+	            long start = System.nanoTime();
 	            globalTagLibraryCache = new GlobalTagLibraryCache();
 	            long end = System.nanoTime();
 	            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE)) {
