@@ -15,6 +15,9 @@ Bundle-Name: WAS JSP
 Bundle-SymbolicName: com.ibm.ws.taglibs
 Bundle-Description: WAS JSTL Impl 1.2
 
+Import-Package: \
+   org.apache.xml.*;resolution:=optional
+
 Export-Package: \
    org.apache.taglibs.standard.tag.common.sql;version=2.3, \
    org.apache.taglibs*;version=2.2
