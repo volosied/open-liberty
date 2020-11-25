@@ -6,7 +6,7 @@
 # http://www.eclipse.org/legal/epl-v10.html
 #
 # Contributors:
-#     IBM Corporation - initial API and implementation
+#    IBM Corporation - initial API and implementation
 #*******************************************************************************
 -include= ~../cnf/resources/bnd/bundle.props
 bVersion=1.0
@@ -41,10 +41,10 @@ Service-Component:  \
    configuration-policy:=ignore;\
    properties:="service.vendor=IBM,toType=com.ibm.ws.jsp.configuration.JspXmlExtConfig", \
   com.ibm.ws.jsp.taglib.InjectionService; \
-    implementation:=com.ibm.ws.jsp.taglib.InjectionServiceImpl; \
-    provide:='com.ibm.wsspi.webcontainer.collaborator.WebAppInjectionClassListCollaborator'; \
-    immediate:=true; \
-    properties:="service.vendor=IBM"
+   implementation:=com.ibm.ws.jsp.taglib.InjectionServiceImpl; \
+   provide:='com.ibm.wsspi.webcontainer.collaborator.WebAppInjectionClassListCollaborator'; \
+   immediate:=true; \
+   properties:="service.vendor=IBM"
 
 Export-Package: com.ibm.ws.jsp.runtime;version=2.2;thread-context=true, \
    com.ibm.ws.jsp.jsx.tags;version=2.2;thread-context=true, \
@@ -62,7 +62,6 @@ Export-Package: com.ibm.ws.jsp.runtime;version=2.2;thread-context=true, \
    com.ibm.ws.jsp.webcontainerext.ws;version=2.2, \
    org.apache.jasper.compiler;thread-context=true;version=2.2, \
    org.apache.jasper.runtime;thread-context=true;version=2.2
-
 
 Private-Package: \
    com.ibm.ws.jsp.*, \
@@ -100,7 +99,6 @@ Import-Package: \
    org.apache.el.parser;version="2.2", \
    org.apache.el.util;version="2.2", \
    org.apache.jasper.el;version="2.2", \
-   !org.apache.xerces*, \
    com.ibm.wsspi.el;version="2.2", \
    org.eclipse.jdt.core.compiler;version="3.10.2";usage="JSP", \
    org.eclipse.jdt.internal.compiler;version="3.10.2";usage="JSP", \
@@ -109,12 +107,35 @@ Import-Package: \
    org.eclipse.jdt.internal.compiler.impl;version="3.10.2";usage="JSP", \
    org.eclipse.jdt.internal.compiler.problem;version="3.10.2";usage="JSP", \
    sun.io;resolution:=optional, \
-   org.apache.taglibs.standard.tlv;version=2.2,\ 
    *
+
+DynamicImport-Package:\
+  org.apache.taglibs.standard,\
+  org.apache.taglibs.standard.extra.spath,\
+  org.apache.taglibs.standard.functions,\
+  org.apache.taglibs.standard.lang.jstl,\
+  org.apache.taglibs.standard.lang.jstl.parser,\
+  org.apache.taglibs.standard.lang.jstl.test,,\
+  org.apache.taglibs.standard.lang.jstl.test.beans,\
+  org.apache.taglibs.standard.lang.support,\
+  org.apache.taglibs.standard.resources,\,\
+  org.apache.taglibs.standard.tag.common.core,\
+  org.apache.taglibs.standard.tag.common.fmt,\
+  org.apache.taglibs.standard.tag.common.sql,\
+  org.apache.taglibs.standard.tag.common.xml,\
+  org.apache.taglibs.standard.tag.el.core,\
+  org.apache.taglibs.standard.tag.el.fmt,\
+  org.apache.taglibs.standard.tag.el.sql,\
+  org.apache.taglibs.standard.tag.el.xml,\
+  org.apache.taglibs.standard.tag.rt.core,\
+  org.apache.taglibs.standard.tag.rt.fmt,\
+  org.apache.taglibs.standard.tag.rt.sql,\
+  org.apache.taglibs.standard.tag.rt.xml,\
+  org.apache.taglibs.standard.tei,\
+  org.apache.taglibs.standard.tlv
 
 Include-Resource: \
    @lib/bsf.jar, \
-   @${repo;com.ibm.ws.org.apache:xalan;2.7.2}!/!META-INF/*, \
    standard.jar=${repo;com.ibm.ws.javax.j2ee:standardtld;1.2}, \
    ard.jar=lib/ard.jar, \
    OSGI-INF=resources/OSGI-INF, \
