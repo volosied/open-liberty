@@ -21,8 +21,7 @@ Import-Package: \
    *
 
 Export-Package: \
-   org.apache.taglibs.standard.tag.common.sql;version=2.3, \
-   org.apache.taglibs*;version=2.2
+   org.apache.taglibs*;version=1.2
 
 Include-Resource: \
    @${repo;com.ibm.ws.javax.j2ee:jsp.tld.standard;1.2}!/META-INF/*.tld,\
