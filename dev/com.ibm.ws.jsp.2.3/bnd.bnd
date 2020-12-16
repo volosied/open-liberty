@@ -19,16 +19,13 @@ WLP-ServerVersion: ${liberty.beta.version}
 
 jakartaeeMe: true
 
--dsannotations: com.ibm.ws.jsp23.webcontainerext.JspVersionFactoryImpl, \
-com.ibm.ws.jsp23.webcontainerext.ws.PrepareJspHelper23Factory, \
-com.ibm.ws.jsp23.translator.visitor.validator.ElValidatorExtFactoryImpl, \
-com.ibm.ws.jsp23.translator.visitor.generator.GeneratorUtilsExtFactoryImpl
+-dsannotations: \
+	com.ibm.ws.jsp23.webcontainerext.ws.PrepareJspHelper23Factory, \
+	com.ibm.ws.jsp23.translator.visitor.validator.ElValidatorExtFactoryImpl, \
+
 
 Export-Package: \
-	com.ibm.ws.jsp23.webcontainerext;version="2.3", \
 	com.ibm.ws.jsp23.webcontainerext.ws;version="2.3", \
-	com.ibm.ws.jsp23.translator.visitor.validator;version="2.3", \
-	com.ibm.ws.jsp23.translator.visitor.generator;version="2.3", \
 	org.apache.jasper;version="2.3", \
 	org.apache.jasper.el;thread-context=true;version="2.3", \
 	org.apache.jasper.runtime;thread-context=true;version="2.3"
@@ -81,7 +78,7 @@ Import-Package: \
    org.eclipse.jdt.internal.compiler.problem;version="3.10.2";usage="JSP", \
    sun.io;resolution:=optional, \
    *
-   
+
 
 -includeresource: \
    org/apache/jasper/runtime/packageinfo=src/org/apache/jasper/runtime/packageinfo

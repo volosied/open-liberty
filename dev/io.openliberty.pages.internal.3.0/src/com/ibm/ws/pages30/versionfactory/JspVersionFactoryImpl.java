@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package com.ibm.ws.jsp.versionfactory;
+package com.ibm.ws.pages30.versionfactory;
 
 import org.osgi.service.component.annotations.Component;
 

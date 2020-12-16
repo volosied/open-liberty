@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package com.ibm.ws.jsp.versionfactory;
+package com.ibm.ws.pages30.versionfactory;
 
 import com.ibm.ws.jsp.webcontainerext.JspVersion;
 
@@ -18,6 +18,6 @@ public class JspVersionImpl implements JspVersion {
 
     @Override
     public String getJspVersionString() {
-        return "2.3";
+        return "3.0";
     }
 }

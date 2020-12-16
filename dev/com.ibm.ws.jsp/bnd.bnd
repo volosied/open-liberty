@@ -66,14 +66,14 @@ Export-Package: com.ibm.ws.jsp.runtime;version=2.2;thread-context=true, \
    org.apache.taglibs*;version=2.2, \
    org.apache.jasper.compiler;thread-context=true;version=2.2, \
    org.apache.jasper.runtime;thread-context=true;version=2.2
-   
+
 
 Private-Package: \
    com.ibm.ws.jsp.*, \
    com.ibm.ws.webcontainer.jsp.runtime, \
    com.ibm.wsspi.jsp.*
-   
-   
+
+
 
 Import-Package: \
    junit.*;resolution:=optional, \
@@ -115,8 +115,10 @@ Import-Package: \
    org.eclipse.jdt.internal.compiler.impl;version="3.10.2";usage="JSP", \
    org.eclipse.jdt.internal.compiler.problem;version="3.10.2";usage="JSP", \
    sun.io;resolution:=optional, \
+   com.ibm.ws.jsp23.translator.visitor.validator;version="2.3", \
+   com.ibm.ws.jsp23.translator.visitor.generator;version="2.3", \
    *
-   
+
 Include-Resource: \
    @lib/bsf.jar, \
    @${repo;com.ibm.ws.javax.j2ee:jsp.tld.standard;1.2}, \
@@ -133,7 +135,7 @@ Include-Resource: \
    com/ibm/ws/jsp/translator/visitor/configuration/JspVisitorConfiguration.xml=src/com/ibm/ws/jsp/translator/visitor/configuration/JspVisitorConfiguration.xml, \
    com/ibm/ws/jsp/translator/visitor/configuration/JspVisitorConfiguration.xsd=src/com/ibm/ws/jsp/translator/visitor/configuration/JspVisitorConfiguration.xsd, \
    com/ibm/ws/jsp/taglib/config/TagLibCacheConfig.xsd=src/com/ibm/ws/jsp/taglib/config/TagLibCacheConfig.xsd
-    
+
 IBM-Default-Config: OSGI-INF/wlp/defaultInstances.xml
 
 instrument.ffdc: false
