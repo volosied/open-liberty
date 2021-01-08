@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-//PM21638      10/04/10    pmdinh      Mem Leak when start and stop application repeatedly
 
 package javax.el;
 
@@ -31,6 +30,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -41,20 +41,20 @@ public class BeanELResolver extends ELResolver {
         "org.apache.el.BeanELResolver.CACHE_SIZE";
 
     static {
+        String cacheSizeStr;
         if (System.getSecurityManager() == null) {
-            CACHE_SIZE = Integer.parseInt(
-                    System.getProperty(CACHE_SIZE_PROP, "1000"));
+            cacheSizeStr = System.getProperty(CACHE_SIZE_PROP, "1000");
         } else {
-            CACHE_SIZE = AccessController.doPrivileged(
-                    new PrivilegedAction<Integer>() {
+            cacheSizeStr = AccessController.doPrivileged(
+                    new PrivilegedAction<String>() {
 
                     @Override
-                    public Integer run() {
-                        return Integer.valueOf(
-                                System.getProperty(CACHE_SIZE_PROP, "1000"));
+                    public String run() {
+                        return System.getProperty(CACHE_SIZE_PROP, "1000");
                     }
-                }).intValue();
+                });
         }
+        CACHE_SIZE = Integer.parseInt(cacheSizeStr);
     }
 
     private final boolean readOnly;
@@ -72,9 +72,7 @@ public class BeanELResolver extends ELResolver {
 
     @Override
     public Class<?> getType(ELContext context, Object base, Object property) {
-        if (context == null) {
-            throw new NullPointerException();
-        }
+        Objects.requireNonNull(context);
         if (base == null || property == null) {
             return null;
         }
@@ -85,15 +83,13 @@ public class BeanELResolver extends ELResolver {
 
     @Override
     public Object getValue(ELContext context, Object base, Object property) {
-        if (context == null) {
-            throw new NullPointerException();
-        }
+        Objects.requireNonNull(context);
         if (base == null || property == null) {
             return null;
         }
 
         context.setPropertyResolved(base, property);
-        Method m = this.property(context, base, property).read(context);
+        Method m = this.property(context, base, property).read(context, base);
         try {
             return m.invoke(base, (Object[]) null);
         } catch (InvocationTargetException e) {
@@ -109,9 +105,7 @@ public class BeanELResolver extends ELResolver {
     @Override
     public void setValue(ELContext context, Object base, Object property,
             Object value) {
-        if (context == null) {
-            throw new NullPointerException();
-        }
+        Objects.requireNonNull(context);
         if (base == null || property == null) {
             return;
         }
@@ -123,7 +117,7 @@ public class BeanELResolver extends ELResolver {
                     "resolverNotWriteable", base.getClass().getName()));
         }
 
-        Method m = this.property(context, base, property).write(context);
+        Method m = this.property(context, base, property).write(context, base);
         try {
             m.invoke(base, value);
         } catch (InvocationTargetException e) {
@@ -142,9 +136,7 @@ public class BeanELResolver extends ELResolver {
     @Override
     public Object invoke(ELContext context, Object base, Object method,
             Class<?>[] paramTypes, Object[] params) {
-        if (context == null) {
-            throw new NullPointerException();
-        }
+        Objects.requireNonNull(context);
         if (base == null || method == null) {
             return null;
         }
@@ -155,7 +147,7 @@ public class BeanELResolver extends ELResolver {
 
         // Find the matching method
         Method matchingMethod =
-                Util.findMethod(base.getClass(), methodName, paramTypes, params);
+                Util.findMethod(base.getClass(), base, methodName, paramTypes, params);
 
         Object[] parameters = Util.buildParameters(
                 matchingMethod.getParameterTypes(), matchingMethod.isVarArgs(),
@@ -178,15 +170,13 @@ public class BeanELResolver extends ELResolver {
 
     @Override
     public boolean isReadOnly(ELContext context, Object base, Object property) {
-        if (context == null) {
-            throw new NullPointerException();
-        }
+        Objects.requireNonNull(context);
         if (base == null || property == null) {
             return false;
         }
 
         context.setPropertyResolved(base, property);
-        return this.readOnly || this.property(context, base, property).isReadOnly();
+        return this.readOnly || this.property(context, base, property).isReadOnly(base);
     }
 
     @Override
@@ -198,9 +188,9 @@ public class BeanELResolver extends ELResolver {
         try {
             BeanInfo info = Introspector.getBeanInfo(base.getClass());
             PropertyDescriptor[] pds = info.getPropertyDescriptors();
-            for (int i = 0; i < pds.length; i++) {
-                pds[i].setValue(RESOLVABLE_AT_DESIGN_TIME, Boolean.TRUE);
-                pds[i].setValue(TYPE, pds[i].getPropertyType());
+            for (PropertyDescriptor pd : pds) {
+                pd.setValue(RESOLVABLE_AT_DESIGN_TIME, Boolean.TRUE);
+                pd.setValue(TYPE, pd.getPropertyType());
             }
             return Arrays.asList((FeatureDescriptor[]) pds).iterator();
         } catch (IntrospectionException e) {
@@ -236,13 +226,12 @@ public class BeanELResolver extends ELResolver {
                 if (System.getSecurityManager() != null) {
                     // When running with SecurityManager, some classes may be
                     // not accessible, but have accessible interfaces.
-                    populateFromInterfaces(type);                
+                    populateFromInterfaces(type);
                 }
             } catch (IntrospectionException ie) {
                 throw new ELException(ie);
             }
         }
- 
 
         private void populateFromInterfaces(Class<?> aClass) throws IntrospectionException {
             Class<?> interfaces[] = aClass.getInterfaces();
@@ -256,6 +245,7 @@ public class BeanELResolver extends ELResolver {
                                     this.type, pd));
                         }
                     }
+                    populateFromInterfaces(ifs);
                 }
             }
             Class<?> superclass = aClass.getSuperclass();
@@ -264,7 +254,6 @@ public class BeanELResolver extends ELResolver {
             }
         }
 
-
         private BeanProperty get(ELContext ctx, String name) {
             BeanProperty property = this.properties.get(name);
             if (property == null) {
@@ -272,10 +261,6 @@ public class BeanELResolver extends ELResolver {
                         "propertyNotFound", type.getName(), name));
             }
             return property;
-        }
-
-        public BeanProperty getBeanProperty(String name) {
-            return get(null, name);
         }
 
         private Class<?> getType() {
@@ -300,28 +285,18 @@ public class BeanELResolver extends ELResolver {
             this.type = descriptor.getPropertyType();
         }
 
-        // Can't use Class<?> because API needs to match specification
-        @SuppressWarnings("rawtypes")
-        public Class getPropertyType() {
+        public Class<?> getPropertyType() {
             return this.type;
         }
 
-        public boolean isReadOnly() {
+        public boolean isReadOnly(Object base) {
             return this.write == null &&
-                    (null == (this.write = Util.getMethod(this.owner, descriptor.getWriteMethod())));
+                    (null == (this.write = Util.getMethod(this.owner, base, descriptor.getWriteMethod())));
         }
 
-        public Method getWriteMethod() {
-            return write(null);
-        }
-
-        public Method getReadMethod() {
-            return this.read(null);
-        }
-
-        private Method write(ELContext ctx) {
+        private Method write(ELContext ctx, Object base) {
             if (this.write == null) {
-                this.write = Util.getMethod(this.owner, descriptor.getWriteMethod());
+                this.write = Util.getMethod(this.owner, base, descriptor.getWriteMethod());
                 if (this.write == null) {
                     throw new PropertyNotWritableException(Util.message(ctx,
                             "propertyNotWritable", new Object[] {
@@ -331,9 +306,9 @@ public class BeanELResolver extends ELResolver {
             return this.write;
         }
 
-        private Method read(ELContext ctx) {
+        private Method read(ELContext ctx, Object base) {
             if (this.read == null) {
-                this.read = Util.getMethod(this.owner, descriptor.getReadMethod());
+                this.read = Util.getMethod(this.owner, base, descriptor.getReadMethod());
                 if (this.read == null) {
                     throw new PropertyNotFoundException(Util.message(ctx,
                             "propertyNotReadable", new Object[] {
@@ -352,7 +327,7 @@ public class BeanELResolver extends ELResolver {
         BeanProperties props = this.cache.get(type.getName());
         if (props == null || type != props.getType()) {
             props = new BeanProperties(type);
-            this.cache.put(new String(type.getName()), props);//PM21638
+            this.cache.put(type.getName(), props);
         }
 
         return props.get(ctx, prop);
