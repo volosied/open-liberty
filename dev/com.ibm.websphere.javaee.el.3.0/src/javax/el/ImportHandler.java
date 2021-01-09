@@ -14,14 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// wtlucy: Apache bug 57142 patch pulled in - file rev 1644523
-
-package javax.el; 
+package javax.el;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -54,7 +51,7 @@ public class ImportHandler {
         String className = name.substring(0, lastPeriod);
         String fieldOrMethodName = name.substring(lastPeriod + 1);
 
-        Class<?> clazz = findClass(className);
+        Class<?> clazz = findClass(className, true);
 
         if (clazz == null) {
             throw new ELException(Util.message(
@@ -114,7 +111,7 @@ public class ImportHandler {
         }
 
         String unqualifiedName = name.substring(lastPeriodIndex + 1);
-        String currentName = ((ConcurrentHashMap<String, String>) classNames).putIfAbsent(unqualifiedName, name);
+        String currentName = classNames.putIfAbsent(unqualifiedName, name);
 
         if (currentName != null && !currentName.equals(name)) {
             // Conflict. Same unqualifiedName, different fully qualified names
@@ -126,18 +123,10 @@ public class ImportHandler {
 
     public void importPackage(String name) {
         // Import ambiguity is handled at resolution, not at import
-        Package p = Package.getPackage(name);
-        if (p == null) {
-            // Either the package does not exist or no class has been loaded
-            // from that package. Check if the package exists.
-            ClassLoader cl = Thread.currentThread().getContextClassLoader();
-            String path = name.replace('.', '/');
-            URL url = cl.getResource(path);
-            if (url == null) {
-                throw new ELException(Util.message(
-                        null, "importHandler.invalidPackage", name));
-            }
-        }
+        // Whether the package exists is not checked,
+        // a) for sake of performance when used in JSPs (BZ 57142),
+        // b) java.lang.Package.getPackage(name) is not reliable (BZ 57574),
+        // c) such check is not required by specification.
         packageNames.add(name);
     }
 
@@ -151,15 +140,19 @@ public class ImportHandler {
         Class<?> result = clazzes.get(name);
 
         if (result != null) {
-            return result;
+            if (NotFound.class.equals(result)) {
+                return null;
+            } else {
+                return result;
+            }
         }
 
         // Search the class imports
         String className = classNames.get(name);
         if (className != null) {
-            Class<?> clazz = findClass(className);
+            Class<?> clazz = findClass(className, true);
             if (clazz != null) {
-                clazzes.put(className, clazz);
+                clazzes.put(name, clazz);
                 return clazz;
             }
         }
@@ -168,7 +161,7 @@ public class ImportHandler {
         // (which correctly triggers an error)
         for (String p : packageNames) {
             className = p + '.' + name;
-            Class<?> clazz = findClass(className);
+            Class<?> clazz = findClass(className, false);
             if (clazz != null) {
                 if (result != null) {
                     throw new ELException(Util.message(null,
@@ -178,7 +171,11 @@ public class ImportHandler {
                 result = clazz;
             }
         }
-        if (result != null) {
+        if (result == null) {
+            // Cache NotFound results to save repeated calls to findClass()
+            // which is relatively slow
+            clazzes.put(name, NotFound.class);
+        } else {
             clazzes.put(name, result);
         }
 
@@ -191,11 +188,26 @@ public class ImportHandler {
     }
 
 
-    private Class<?> findClass(String name) {
+    private Class<?> findClass(String name, boolean throwException) {
         Class<?> clazz;
-        ClassLoader cl = Thread.currentThread().getContextClassLoader();
+        ClassLoader cl = Util.getContextClassLoader();
+        String path = name.replace('.', '/') + ".class";
         try {
-             clazz = cl.loadClass(name);
+            /* Given that findClass() has to be called for every imported
+             * package and that getResource() is a lot faster then loadClass()
+             * for resources that don't exist, the overhead of the getResource()
+             * for the case where the class does exist is a lot less than the
+             * overhead we save by not calling loadClass().
+             */
+            if (cl.getResource(path) == null) {
+                return null;
+            }
+        } catch (ClassCircularityError cce) {
+            // May happen under a security manager. Ignore it and try loading
+            // the class normally.
+        }
+        try {
+            clazz = cl.loadClass(name);
         } catch (ClassNotFoundException e) {
             return null;
         }
@@ -204,10 +216,22 @@ public class ImportHandler {
         int modifiers = clazz.getModifiers();
         if (!Modifier.isPublic(modifiers) || Modifier.isAbstract(modifiers) ||
                 Modifier.isInterface(modifiers)) {
-            throw new ELException(Util.message(
-                    null, "importHandler.invalidClass", name));
+            if (throwException) {
+                throw new ELException(Util.message(
+                        null, "importHandler.invalidClass", name));
+            } else {
+                return null;
+            }
         }
 
         return clazz;
+    }
+
+
+    /*
+     * Marker class used because null values are not permitted in a
+     * ConcurrentHashMap.
+     */
+    private static class NotFound {
     }
 }
