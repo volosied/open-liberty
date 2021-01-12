@@ -85,7 +85,7 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
     }
 
     private volatile boolean osgiAppsCanProvideJSTL;
-    
+
     private volatile Properties defaultProperties = new Properties();
 
     private final AtomicServiceReference<ELFactoryWrapperForCDI> expressionFactoryService = new AtomicServiceReference<ELFactoryWrapperForCDI>("ExpressionFactoryService"); //cdi wraps this
@@ -103,16 +103,16 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
     @Reference
     private ClassLoadingService classLoadingService;
     private BundleContext bundleContext;
-    
+
     /**
      * Active JSPExtensionFactory instance. May be null between deactivate and activate
      * calls.
      */
     private static final AtomicReference<JSPExtensionFactory> instance = new AtomicReference<JSPExtensionFactory>();
-    
+
     /**
      * Inject an <code>WrapperExpressionFactory</code> service instance.
-     * 
+     *
      * @param expressionFactoryService
      *            an expressionFactory service to wrap the default ExpressionFactory
      */
@@ -123,14 +123,14 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
 
     /**
      * Remove the <code>WrapperExpressionFactory</code> service instance.
-     * 
+     *
      * @param expressionFactoryService
      *            an expressionFactory service to wrap the default ExpressionFactory
      */
     protected void unsetExpressionFactoryService(ServiceReference<ELFactoryWrapperForCDI> expressionFactoryService) {
         this.expressionFactoryService.unsetReference(expressionFactoryService);
     }
-    
+
     public static ELFactoryWrapperForCDI getWrapperExpressionFactory() {
         JSPExtensionFactory thisService = instance.get();
         if (thisService != null) {
@@ -177,12 +177,12 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
                 defaultProperties.put(key, value);
         }
     }
-    
+
     private final static HashMap<String, String> FullyQualifiedPropertiesMap = new HashMap<String, String>();
-    static { 
+    static {
         JSPExtensionFactory.FullyQualifiedPropertiesMap.put("keepGenerated", "keepgenerated");
     }
-    
+
     private String getOrigPropName(String newKey) {
         String s = JSPExtensionFactory.FullyQualifiedPropertiesMap.get(newKey);
         if (s==null) {
@@ -203,13 +203,13 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
             if (jspExtConfig == null) {
                 jspExtConfig = new JspConfiguratorHelper(null);
             }
-            
+
             Properties propsFromWebXml = null;
-            
+
             WebExt webExt = adaptableContainer.adapt(WebExt.class);
             if (webExt!=null) {
                 List<Attribute> jspAttributeInWebExt = webExt.getJspAttributes();
-                
+
                 if (jspAttributeInWebExt!=null) {
                     propsFromWebXml = new Properties();
                     propsFromWebXml.putAll(defaultProperties);
@@ -217,21 +217,21 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
                         propsFromWebXml.put(a.getName(), a.getValue());
                     }
                 }
-            }        
-                
+            }
+
             WebAppConfig wac = webapp.getWebAppConfig();
             boolean isJCDIEnabled = wac.isJCDIEnabled();
             jspExtConfig.setJCDIEnabledForRuntimeCheck(isJCDIEnabled);
-            
+
             //If we found properties in the web.xml, use those rather than just the defaults
             if (propsFromWebXml != null) {
                 jspExtConfig.getJspOptions().populateOptions(propsFromWebXml);
             } else {
                 jspExtConfig.getJspOptions().populateOptions(defaultProperties);
             }
-            
+
             //The system property javax.servlet.context.tempdir is used to set the scratchdir option on a server-wide basis. (See WebApp.java)
-            //The JSP engine scratchdir parameter takes precedence over this system property. 
+            //The JSP engine scratchdir parameter takes precedence over this system property.
             //Try scratchdir parameter, then com.ibm.websphere.servlet.temp.dir, then java.io.tmpdir
             File outputDir = (File) webapp.getAttribute(Constants.TMP_DIR); //javax.servlet.context.tempdir
             String scratchdir = jspExtConfig.getJspOptions().getScratchDir();
@@ -247,7 +247,7 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
             jspExtConfig.getJspOptions().setOutputDir(outputDir.getCanonicalFile());
             webapp.setAttribute(Constants.TMP_DIR, outputDir); //javax.servlet.context.tempdir
             logger.logp(Level.FINE, CLASS_NAME, "createConfig", "Output dir is:" + outputDir.getPath());
-            
+
             //PK93292: ALLOW THE USE OF WEBSPHERE VARIABLES IN EXTENDEDDOCUMENTROOT JSP ATTRIBUTE.
             String extendedDocumentRoot = jspExtConfig.getJspOptions().getExtendedDocumentRoot();
             if(extendedDocumentRoot!=null){
@@ -256,13 +256,13 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
                     expanded = resolveString(extendedDocumentRoot);
                     jspExtConfig.getJspOptions().setExtendedDocumentRoot(expanded);
                 }catch (Exception e){
-                    // TODO: This should probably be a warning, with an nls. 
+                    // TODO: This should probably be a warning, with an nls.
                     logger.logp(Level.FINE, CLASS_NAME, "createConfig", "varaible expansion failed for extendedDocumentRoot", e);
                 }
             }
-            
 
-            
+
+
         }
         catch (IOException e) {
             FFDCFilter.processException(e, "com.ibm.ws.jsp.webcontainerext.JSPExtensionFactory.createConfig", "299");
@@ -377,7 +377,7 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
     }
 
     /**
-     * @param webapp 
+     * @param webapp
      * @return
      */
     public String getServerName()
@@ -395,11 +395,11 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
     }
 
     /**
-     * @param webapp 
+     * @param webapp
      * @return
      */
     private String getNodeName() {
-        
+
         return "default_node";
     }
 
@@ -415,30 +415,30 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
 
         return dir.toString();
     }
-    
+
     protected JspClassloaderContext createJspClassloaderContext(IServletContext webapp, JspXmlExtConfig webAppConfig) {
         final ClassLoader loader;
         ClassLoader appLoader = webapp.getClassLoader();
-        if (!osgiAppsCanProvideJSTL && (appLoader instanceof BundleReference)) {
-            Bundle systemBundle = bundleContext.getBundle(org.osgi.framework.Constants.SYSTEM_BUNDLE_LOCATION);
-            FrameworkWiring fw = systemBundle.adapt(FrameworkWiring.class);
-            Collection<BundleCapability> caps = fw.findProviders(new RequirementImpl());
-            if (!caps.isEmpty()) {
-                BundleCapability bc = caps.iterator().next();
-                Bundle b = bc.getRevision().getBundle();
-                BundleWiring bw = b.adapt(BundleWiring.class);
-                if (bw != null) {
-                    ClassLoader cl = bw.getClassLoader();
-                    loader = classLoadingService.unify(cl, appLoader);
-                } else {
-                    throw new IllegalStateException("jstl facade bundle is unresolved");
-                }
-            } else {
-                throw new IllegalStateException("jstl facade bundle can not be located from its capability");
-            }
-        } else {
+        // if (!osgiAppsCanProvideJSTL && (appLoader instanceof BundleReference)) {
+        //     Bundle systemBundle = bundleContext.getBundle(org.osgi.framework.Constants.SYSTEM_BUNDLE_LOCATION);
+        //     FrameworkWiring fw = systemBundle.adapt(FrameworkWiring.class);
+        //     Collection<BundleCapability> caps = fw.findProviders(new RequirementImpl());
+        //     if (!caps.isEmpty()) {
+        //         BundleCapability bc = caps.iterator().next();
+        //         Bundle b = bc.getRevision().getBundle();
+        //         BundleWiring bw = b.adapt(BundleWiring.class);
+        //         if (bw != null) {
+        //             ClassLoader cl = bw.getClassLoader();
+        //             loader = classLoadingService.unify(cl, appLoader);
+        //         } else {
+        //             throw new IllegalStateException("jstl facade bundle is unresolved");
+        //         }
+        //     } else {
+        //         throw new IllegalStateException("jstl facade bundle can not be located from its capability");
+        //     }
+        // } else {
             loader = appLoader;
-        }
+        // }
         Container adaptableContainer = webapp.getModuleContainer();
         StringBuilder classPath=new StringBuilder();
         if (adaptableContainer!=null) {
@@ -496,60 +496,60 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
             public byte[] predefineClass(String className, byte[] classData) {return classData;}
         };
     }
-    
-    private static class RequirementImpl implements Requirement {
 
-        /* (non-Javadoc)
-         * @see org.osgi.resource.Requirement#getNamespace()
-         */
-        @Override
-        public String getNamespace() {
-            return "com.ibm.ws.jsp.jstl.facade";
-        }
-
-        /* (non-Javadoc)
-         * @see org.osgi.resource.Requirement#getDirectives()
-         */
-        @Override
-        public Map<String, String> getDirectives() {
-            return Collections.emptyMap();
-        }
-
-        /* (non-Javadoc)
-         * @see org.osgi.resource.Requirement#getAttributes()
-         */
-        @Override
-        public Map<String, Object> getAttributes() {
-            return Collections.emptyMap();
-        }
-
-        /* (non-Javadoc)
-         * @see org.osgi.resource.Requirement#getResource()
-         */
-        @Override
-        public Resource getResource() {
-            return null;
-        }
-        
-        @Override
-        public boolean equals(Object o) {
-                if (o == this)
-                        return true;
-                if (!(o instanceof Requirement))
-                        return false;
-                Requirement c = (Requirement)o;
-                return c.getNamespace().equals(getNamespace())
-                                && c.getAttributes().isEmpty()
-                                && c.getDirectives().isEmpty()
-                                && c.getResource() == null;
-        }
-        
-        @Override 
-        public int hashCode() {
-            return getNamespace().hashCode();
-        }
-
-    }
+    // private static class RequirementImpl implements Requirement {
+    //
+    //     /* (non-Javadoc)
+    //      * @see org.osgi.resource.Requirement#getNamespace()
+    //      */
+    //     @Override
+    //     public String getNamespace() {
+    //         return "com.ibm.ws.jsp.jstl.facade";
+    //     }
+    //
+    //     /* (non-Javadoc)
+    //      * @see org.osgi.resource.Requirement#getDirectives()
+    //      */
+    //     @Override
+    //     public Map<String, String> getDirectives() {
+    //         return Collections.emptyMap();
+    //     }
+    //
+    //     /* (non-Javadoc)
+    //      * @see org.osgi.resource.Requirement#getAttributes()
+    //      */
+    //     @Override
+    //     public Map<String, Object> getAttributes() {
+    //         return Collections.emptyMap();
+    //     }
+    //
+    //     /* (non-Javadoc)
+    //      * @see org.osgi.resource.Requirement#getResource()
+    //      */
+    //     @Override
+    //     public Resource getResource() {
+    //         return null;
+    //     }
+    //
+    //     @Override
+    //     public boolean equals(Object o) {
+    //             if (o == this)
+    //                     return true;
+    //             if (!(o instanceof Requirement))
+    //                     return false;
+    //             Requirement c = (Requirement)o;
+    //             return c.getNamespace().equals(getNamespace())
+    //                             && c.getAttributes().isEmpty()
+    //                             && c.getDirectives().isEmpty()
+    //                             && c.getResource() == null;
+    //     }
+    //
+    //     @Override
+    //     public int hashCode() {
+    //         return getNamespace().hashCode();
+    //     }
+    //
+    // }
 
     protected ExtensionProcessor createProcessor(IServletContext webapp,
                                                  JspXmlExtConfig webAppConfig,
@@ -579,7 +579,7 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
      */
     protected void unsetGlobalTagLibConfig(GlobalTagLibConfig globalTagLibConfig) {
     }
-        
+
     public static ElValidatorExtFactory getElValidatorExtFactory() {
         JSPExtensionFactory inst = instance.get();
         return inst == null? null: inst.elValidatorExtFactory;
@@ -589,14 +589,13 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
         JSPExtensionFactory inst = instance.get();
         return inst == null? null: inst.generatorUtilsExtFactory;
     }
-    
+
     public static JspVersionFactory getJspVersionFactory() {
         JSPExtensionFactory inst = instance.get();
         return inst == null? null: inst.jspVersionFactory;
-    }    
+    }
 
     public String resolveString(String x) {
         return locationService.resolveString(x);
     }
 }
-
