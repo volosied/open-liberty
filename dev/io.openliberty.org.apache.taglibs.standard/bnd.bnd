@@ -27,8 +27,8 @@ Export-Package: \
    org.apache.taglibs.standard.tei;thread-context=true;version=2.0, \
    org.apache.taglibs*;version=2.0
 
--privatepackage: \
-  com.oracle.wls.shaded.*
+Include-Resource: \
+   @${repo;org.glassfish.web:jakarta.servlet.jsp.jstl;2.0}!/!META-INF/com.oracle.wls.shaded.*
 
 -buildpath: \
   org.glassfish.web:jakarta.servlet.jsp.jstl;version=2.0
