@@ -319,6 +319,9 @@ public class WCCustomProperties {
     //21.0.0.1
     public static boolean REDIRECT_TO_RELATIVE_URL;
 
+    //21.0.0.2
+    public static boolean HTML_CONTENT_TYPE_ON_ERROR;
+
     static {
         setCustomPropertyVariables(); //initializes all the variables
     }
@@ -411,6 +414,8 @@ public class WCCustomProperties {
         WCCustomProperties.FullyQualifiedPropertiesMap.put("servletpathfordefaultmapping", "com.ibm.ws.webcontainer.servletpathfordefaultmapping");     //4666
         WCCustomProperties.FullyQualifiedPropertiesMap.put("getrealpathreturnsqualifiedPath", "com.ibm.ws.webcontainer.getrealpathreturnsqualifiedPath");
         WCCustomProperties.FullyQualifiedPropertiesMap.put("redirecttorelativeurl", "com.ibm.ws.webcontainer.redirecttorelativeurl");
+        WCCustomProperties.FullyQualifiedPropertiesMap.put("sethtmlcontenttypeonerror", "com.ibm.ws.webcontainer.sethtmlcontenttypeonerror");
+
     }
 
     //some properties require "com.ibm.ws.webcontainer." on the front
@@ -797,6 +802,9 @@ public class WCCustomProperties {
         
         //21.0.0.1
         REDIRECT_TO_RELATIVE_URL = Boolean.valueOf(WebContainer.getWebContainerProperties().getProperty("com.ibm.ws.webcontainer.redirecttorelativeurl", "false")).booleanValue();
+
+        //21.0.0.2
+        HTML_CONTENT_TYPE_ON_ERROR = Boolean.valueOf(WebContainer.getWebContainerProperties().getProperty("com.ibm.ws.webcontainer.sethtmlcontenttypeonerror", "true")).booleanValue();
 
         //Default for Servlet 5.0 +
         if(com.ibm.ws.webcontainer.osgi.WebContainer.getServletContainerSpecLevel() >= com.ibm.ws.webcontainer.osgi.WebContainer.SPEC_LEVEL_50) {

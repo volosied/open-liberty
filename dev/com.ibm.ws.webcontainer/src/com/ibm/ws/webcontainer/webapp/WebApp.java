@@ -4196,23 +4196,26 @@ public abstract class WebApp extends BaseContainer implements ServletContext, IS
             // set the response status
             res.setStatus(error.getErrorCode());
 
-            // We have to determine the charset to use with the error page
-            String clientEncoding = req.getCharacterEncoding();
-            // PK21127 start
-            if (clientEncoding != null && !EncodingUtils.isCharsetSupported(clientEncoding)) {
-                // charset not supported, continue with the logic to determine
-                // the encoding
-                clientEncoding = null;
-            }
-            // PK21127 end
-            if (clientEncoding == null)
-                clientEncoding = com.ibm.wsspi.webcontainer.util.EncodingUtils.getEncodingFromLocale(req.getLocale());
-            if (clientEncoding == null)
-                clientEncoding = System.getProperty("default.client.encoding");
-            if (clientEncoding == null)
-                clientEncoding = "ISO-8859-1";
+            if(WCCustomProperties.HTML_CONTENT_TYPE_ON_ERROR){
+                // We have to determine the charset to use with the error page
+                String clientEncoding = req.getCharacterEncoding();
+                // PK21127 start
+                if (clientEncoding != null && !EncodingUtils.isCharsetSupported(clientEncoding)) {
+                    // charset not supported, continue with the logic to determine
+                    // the encoding
+                    clientEncoding = null;
+                }
+                // PK21127 end
 
-            res.setContentType("text/html;charset=" + clientEncoding);
+                if (clientEncoding == null)
+                    clientEncoding = com.ibm.wsspi.webcontainer.util.EncodingUtils.getEncodingFromLocale(req.getLocale());
+                if (clientEncoding == null)
+                    clientEncoding = System.getProperty("default.client.encoding");
+                if (clientEncoding == null)
+                    clientEncoding = "ISO-8859-1";
+
+                res.setContentType("text/html;charset=" + clientEncoding);
+            }
         } catch (IllegalStateException ise) {
             // failed to set status code.
             // This could be caused by:
