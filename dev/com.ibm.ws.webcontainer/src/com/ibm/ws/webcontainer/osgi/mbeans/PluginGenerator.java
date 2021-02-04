@@ -874,7 +874,7 @@ public class PluginGenerator {
                     FileUtils.forceDelete(pluginFile);
                 }
 
-                outFile.asFile().renameTo(pluginFile);
+                Files.move(outFile.asFile().toPath(), pluginFile.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
 
                 // tell the user where the file is - quietly for implicit requests
                 String fullFilePath = pluginFile.getAbsolutePath();
