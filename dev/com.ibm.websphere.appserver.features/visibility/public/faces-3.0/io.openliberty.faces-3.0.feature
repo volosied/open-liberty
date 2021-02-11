@@ -49,7 +49,7 @@ Subsystem-Name: Jakarta Server Faces 3.0
  com.ibm.ws.org.apache.commons.discovery.0.2, \
  com.ibm.ws.org.apache.commons.logging.1.0.3, \
  com.ibm.ws.jsf.shared.jakarta, \
- io.openliberty.faces.internal.jakarta, \
+ com.ibm.ws.jsf.internal.jakarta, \
  com.ibm.ws.cdi.interfaces.jakarta, \
  com.ibm.ws.org.apache.commons.digester.1.8, \
  io.openliberty.jakarta.websocket.2.0; apiJar=false; location:="dev/api/spec/,lib/"; mavenCoordinates="jakarta.websocket:jakarta.websocket-api:2.0.0", \
