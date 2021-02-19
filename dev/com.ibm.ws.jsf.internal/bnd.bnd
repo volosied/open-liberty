@@ -12,7 +12,7 @@
 bVersion=1.0
 
 Bundle-Name: JSF Liberty Integration
-Bundle-SymbolicName: io.openliberty.faces.internal
+Bundle-SymbolicName: com.ibm.ws.jsf.internal
 Implementation-Version: 2.3.8
 
 jakartaeeMe: true
@@ -54,7 +54,14 @@ Service-Component: \
     implementation:=com.ibm.wsspi.classloading.ResourceProvider; \
     provide:=com.ibm.wsspi.classloading.ResourceProvider; \
     configuration-policy:=ignore; \
-    properties:="resources=${app-resources}"
+    properties:="resources=${app-resources}", \
+  com.ibm.ws.jsf_3_0.cdiextension; \
+    implementation:=com.ibm.ws.jsf.shared.ext.CdiExtension; \
+    provide:='com.ibm.ws.cdi.extension.WebSphereCDIExtension'; \
+    properties:="service.vendor=IBM,\
+    bean.defining.annotations=jakarta.faces.flow.FlowScoped;jakarta.faces.view.ViewScoped,\
+    api.classes=jakarta.faces.flow.builder.FlowDefinition;jakarta.faces.flow.builder.FlowBuilderParameter,\
+    extension.classes.only=true",\
 
 Import-Package: \
   javax.faces.webapp, \
