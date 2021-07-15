@@ -90,6 +90,7 @@ public abstract class AbstractJSPExtensionServletWrapper extends GenericServletW
     protected boolean classloaderCreated = false;
     protected long lastCheck = 0;
     protected boolean debugClassFile = true; // defect 272935
+    private boolean firstRequest = true; // OLGH 17828 
     
     protected Boolean recompiledJspOnRestart = null;//used with recompileJspOnRestart param
 
@@ -210,6 +211,7 @@ public abstract class AbstractJSPExtensionServletWrapper extends GenericServletW
             }
             super.handleRequest(req, res);
             loadClassInformation();
+            this.firstRequest = false;
         }
     }
 
@@ -270,7 +272,9 @@ public abstract class AbstractJSPExtensionServletWrapper extends GenericServletW
             if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE) && versionNumber != null && jspResources != null) {
                 logger.logp(Level.FINE, CLASS_NAME, "checkForTranslation", "Classfile: [" + jspResources.getClassName() + "] version: [" + versionNumber + "]");
             }
-            classloaderCreated = false;
+            if(!this.firstRequest){
+                classloaderCreated = false;
+            }
             // if (versionNumber !=null && jspResources != null) {
             // System.out.println("Classfile: ["+jspResources.getClassName()+"]
             // version: [" + versionNumber+"]");
