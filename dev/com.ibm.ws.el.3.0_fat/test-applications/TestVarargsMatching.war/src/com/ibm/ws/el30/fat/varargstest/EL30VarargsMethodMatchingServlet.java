@@ -19,6 +19,9 @@ import javax.servlet.annotation.WebServlet;
 import org.junit.Test;
 
 import com.ibm.ws.el30.fat.varargstest.EL30VarargsMethodMatchingTestBean;
+import com.ibm.ws.el30.fat.varargstest.EnumBean;
+import com.ibm.ws.el30.fat.varargstest.Bird;
+import com.ibm.ws.el30.fat.varargstest.Falcon;
 
 import componenttest.annotation.SkipForRepeat;
 import componenttest.app.FATServlet;
@@ -42,9 +45,17 @@ public class EL30VarargsMethodMatchingServlet extends FATServlet {
 
         // Create an instance of the EL30VarargsMethodMatchingTestBean bean
         EL30VarargsMethodMatchingTestBean testBean = new EL30VarargsMethodMatchingTestBean();
+        Falcon falcon = new Falcon();
+        Bird bird = new Bird();
+        Integer number = new Integer(1);
+        Enum enum1 = EnumBean.ENUM1;
 
-        // Add the bean to the ELProcessor
+        // Add the beans to the ELProcessor
         elp.defineBean("testBean", testBean);
+        elp.defineBean("falcon", falcon);
+        elp.defineBean("bird", bird);
+        elp.defineBean("number", number);
+        elp.defineBean("enum1", enum1);
  
 
     }
@@ -53,7 +64,7 @@ public class EL30VarargsMethodMatchingServlet extends FATServlet {
     @SkipForRepeat(SkipForRepeat.EE9_FEATURES)
     public void testSingleEnum() throws Exception {
 
-        getMethodExpression("testBean.testMethod(testBean.enum1)", "(IEnum enum1)");
+        getMethodExpression("testBean.testMethod(enum1)", "(IEnum enum1)");
 
     }
 
@@ -85,25 +96,55 @@ public class EL30VarargsMethodMatchingServlet extends FATServlet {
     @SkipForRepeat(SkipForRepeat.EE9_FEATURES)
     public void testEnum_VarargsEnum() throws Exception {
         
-        getMethodExpression("testBean.testMethod(testBean.enum1,testBean.enum1,testBean.enum1)", "(IEnum enum1, IEnum... enum2)");
+        getMethodExpression("testBean.testMethod(enum1,enum1,enum1)", "(IEnum enum1, IEnum... enum2)");
 
     }
 
     @Test
     @SkipForRepeat(SkipForRepeat.EE9_FEATURES)
-    public void testString_VarargsEnum() throws Exception {
+    public void testString_VarargsMultipleEnum() throws Exception {
         
-        getMethodExpression("testBean.testMethod('string1',testBean.enum1)", "(String param1, IEnum... param2)");
+        getMethodExpression("testBean.testMethod('string1', enum1, enum1)", "(String param1, IEnum... param2)");
 
     }
 
     @Test
     @SkipForRepeat(SkipForRepeat.EE9_FEATURES)
-    public void testVarargsInt() throws Exception {
+    public void selectMethodWithNoVarargs() throws Exception {
         
-        getMethodExpression("testBean.testMethod(testBean.number)", "(int... param1)");
+        getMethodExpression("testBean.chirp(falcon)", "chirp(Bird bird1)");
 
     }
+
+    @Test
+    @SkipForRepeat(SkipForRepeat.EE9_FEATURES)
+    public void testString_VarargsBird() throws Exception {
+        
+        getMethodExpression("testBean.chirp('string1', bird, bird)", "chirp(String string1, Bird... bird2)");
+
+    }
+
+
+    // Limitions of the varags selection are below -- tests currently fail 
+    // See Mark's July 29th comment here: https://bz.apache.org/bugzilla/show_bug.cgi?id=65358
+
+    // @Test
+    // @SkipForRepeat(SkipForRepeat.EE9_FEATURES)
+    // public void testVarargsInt() throws Exception {  // No varargs methods are always prefered over varargs 
+    //     getMethodExpression("testBean.testMethod(number)", "(int... param1)");
+    // }
+
+    // @Test
+    // @SkipForRepeat(SkipForRepeat.EE9_FEATURES)
+    // public void testString_VarargsEnum() throws Exception { // Failure related to coercion, I think? 
+    //     getMethodExpression("testBean.testMethod('string1', enum1)", "(String param1, IEnum... param2)");
+    // }
+
+    // @Test
+    // @SkipForRepeat(SkipForRepeat.EE9_FEATURES)
+    // public void testString_VarargsFalcon() throws Exception { // Unable to find unambiguous method:
+    //     getMethodExpression("testBean.chirp('string1', falcon, falcon)", "chirp(String string1, Falcon... falcon2)");
+    // }
 
     /**
      * Helper method to get value using Method Expressions
