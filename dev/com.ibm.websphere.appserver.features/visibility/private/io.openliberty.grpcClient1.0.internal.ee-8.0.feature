@@ -5,9 +5,7 @@ singleton=true
 Subsystem-Version: 1.0.0
 Subsystem-Name: gRPC Client 1.0
 -features=\
-  com.ibm.websphere.appserver.servlet-4.0, \ 
-  com.ibm.websphere.appserver.javax.annotation-1.3; ibm.tolerates:="1.2", \
-  com.ibm.websphere.appserver.anno-1.0
+  com.ibm.websphere.appserver.servlet-4.0
 -bundles=\
   io.openliberty.grpc.1.0.internal.common, \
   io.openliberty.grpc.1.0.internal.client, \
