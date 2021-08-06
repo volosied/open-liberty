@@ -65,6 +65,8 @@ public abstract class ProgrammaticClientEP extends Endpoint implements TestHelpe
         @Override
         public void onOpen(Session session, EndpointConfig arg1) {
 
+            LOG.info("ProgrammaticClientEP.TextTest.onOpen() called!");
+
             final Session sess = session;
             session.addMessageHandler(new MessageHandler.Whole<String>() {
 
@@ -624,6 +626,9 @@ public abstract class ProgrammaticClientEP extends Endpoint implements TestHelpe
 
     @Override
     public void onClose(Session session, CloseReason closeReason) {
+
+        LOG.info("ProgrammaticClientEP.onClose() called!");
+
         try {
             session.close();
         } catch (IOException e) {
