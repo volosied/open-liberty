@@ -75,6 +75,7 @@ public abstract class ProgrammaticClientEP extends Endpoint implements TestHelpe
 
                     _wtr.addMessage(text);
                     if (_wtr.limitReached()) {
+                         LOG.info("ProgrammaticClientEP.TextTest.onMessage() _wtr limit has been reached!");
                         _wtr.terminateClient();
                     }
                     else {
