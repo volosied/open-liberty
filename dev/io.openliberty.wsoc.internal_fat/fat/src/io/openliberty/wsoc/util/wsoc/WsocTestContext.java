@@ -76,6 +76,8 @@ public class WsocTestContext {
         _numMsgsExpected = numMsgsExected;
         _messageCountOnly = messageCountOnly;
 
+        LOG.info("WsocTestContext object created: " + this.toString() + "with numMsgsExpected of " + numMsgsExected);
+
         if (!_messageCountOnly) {
             _messages = new ArrayList<Object>(numMsgsExected);
         }
@@ -100,7 +102,7 @@ public class WsocTestContext {
     public synchronized void addMessage(Object msg) {
 
         _curMessage++;
-        // log the six messages of each test, for better debugging
+        // log the first six messages of each test, for better debugging
         if (_curMessage <= 6) {
             LOG.info("Adding message to test results, message #: " + _curMessage + " " + msg);
         }
@@ -223,7 +225,7 @@ public class WsocTestContext {
      * @param timed
      */
     public void setTimedout(boolean timed) {
-        LOG.info("Timeout set to true");
+        LOG.info("Timeout set to " + timed);
         _timedOut = timed;
     }
 
