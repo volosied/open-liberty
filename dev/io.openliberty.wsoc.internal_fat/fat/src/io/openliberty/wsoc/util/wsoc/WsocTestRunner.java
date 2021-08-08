@@ -73,8 +73,9 @@ public class WsocTestRunner {
         _runTimeout = runTimeout;
         _cfg = cfg;
 
-        WsocTestContext.completeLatch = new CountDownLatch(1);
-        _wtr = new WsocTestContext(numMsgsExpected);
+        // WsocTestContext.completeLatch = new CountDownLatch(1);
+        // LOG.info("WsocTestContext.completeLatch set to 1");
+        _wtr = new WsocTestContext(numMsgsExpected, new CountDownLatch(1));
 
         // _numMsgsExpected = numMsgsExpected;
 
@@ -106,7 +107,7 @@ public class WsocTestRunner {
 
         LOG.info("Waiting for wsoc test to finish");
 
-        if (!WsocTestContext.completeLatch.await(_runTimeout, TimeUnit.MILLISECONDS)) {
+        if (!_wtr.getCompleteLatch().await(_runTimeout, TimeUnit.MILLISECONDS)) {
             LOG.info("Latch timeout reached!");
             _wtr.setTimedout(true);
         }
@@ -114,7 +115,7 @@ public class WsocTestRunner {
         LOG.info("Waiting complete.");
 
         // We've had some test failures that are not found in local env and some builds.  This short wait should flesh them out locally...
-        java.lang.Thread.sleep(50);
+        java.lang.Thread.sleep(8);
         if (sess.isOpen()) {
             LOG.info("Reached max messages or test timeout, closing wsoc session");
             if (!_wtr.getClosedAlready()) {

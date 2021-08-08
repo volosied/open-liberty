@@ -28,7 +28,8 @@ public class WsocTestContext {
     //completeLatch - Latch to wait for test completion.. tests will call terminate to trigger completion.
     //connectLatch  - Tests should call connected when onOpen occurs.
     //messageLatch  - List of tests can wait for all the tests to receive a message.
-    public static CountDownLatch completeLatch = null;
+    // public static CountDownLatch completeLatch = null;
+    private CountDownLatch completeLatch = null;
     public static CountDownLatch connectLatch = null;
     public static CountDownLatch messageLatch = null;
 
@@ -59,7 +60,7 @@ public class WsocTestContext {
     }
 
     /**
-     * 
+     *
      * @param numMsgsExpected - Tests will usually expect this many messages to be received.
      */
     public WsocTestContext(int numMsgsExpected) {
@@ -67,9 +68,19 @@ public class WsocTestContext {
         LOG.info("WsocTestContext object created: " + this.toString() + "with numMsgsExpected of " + numMsgsExpected);
     }
 
+    public WsocTestContext(int numMsgsExpected, CountDownLatch completeLatch) {
+        this(numMsgsExpected, false);
+        this.completeLatch = completeLatch;
+        LOG.info("WsocTestContext object created: " + this.toString() + "with numMsgsExpected of " + numMsgsExpected);
+    }
+
+    public void setcompleteLatch(CountDownLatch completeLatch){
+        this.completeLatch = completeLatch;
+    }
+
     /**
-     * 
-     * @param numMsgsExpected - Tests will usually expect this many messages to be received.
+     *
+     * @param numMsgsExpected  - Tests will usually expect this many messages to be received.
      * @param messageCountOnly - True and textContext will not store any messages when addMessage is called.
      */
     public WsocTestContext(int numMsgsExected, boolean messageCountOnly) {
@@ -80,8 +91,7 @@ public class WsocTestContext {
 
         if (!_messageCountOnly) {
             _messages = new ArrayList<Object>(numMsgsExected);
-        }
-        else {
+        } else {
             _messages = new ArrayList<Object>(1);
         }
     }
@@ -96,7 +106,7 @@ public class WsocTestContext {
 
     /**
      * addMessage. In endpoint code you can add anything you want to verify here, incoming wsoc messages, Exceptions, etc..
-     * 
+     *
      * @param msg
      */
     public synchronized void addMessage(Object msg) {
@@ -116,7 +126,7 @@ public class WsocTestContext {
             }
         }
 
-        // If maxMessages <= 0 then we'll never reach the limit thorugh receiving messages n    
+        // If maxMessages <= 0 then we'll never reach the limit thorugh receiving messages n
 
         if (_numMsgsExpected > 0) {
             if (_curMessage >= _numMsgsExpected) {
@@ -144,9 +154,10 @@ public class WsocTestContext {
         LOG.info("Wsoc process has been terminated for " + this.toString());
         _limitReached = true;
         LOG.info("_limitReached set to true");
-        if (completeLatch != null) {
+        if (this.completeLatch != null) {
+            LOG.info("completeLatch count: " + this.completeLatch.getCount());
             LOG.info("completeLatch countdown Called!");
-            completeLatch.countDown();
+            this.completeLatch.countDown();
         }
     }
 
@@ -161,9 +172,9 @@ public class WsocTestContext {
 
     /**
      * Terminate the clienit with Exception e. Can be used as expected exception. or abnormal exception depending on the test.
-     * 
+     *
      * @param msg - additional info you want to pass...
-     * @param e - Exception
+     * @param e   - Exception
      */
     public void addExceptionAndTerminate(String msg, Throwable e) {
         LOG.info("adding exception: " + e.toString());
@@ -173,7 +184,7 @@ public class WsocTestContext {
 
     /**
      * MSN TODO - not sure if this currently works
-     * 
+     *
      * @param msg
      * @param e
      */
@@ -191,7 +202,7 @@ public class WsocTestContext {
 
     /**
      * Could just call reThrowException to fail any test that you expect to pass...
-     * 
+     *
      * @throws WsocTestException
      */
     public void reThrowException() throws WsocTestException {
@@ -202,7 +213,7 @@ public class WsocTestContext {
 
     /**
      * set this value to signal that test got closed, and not to try to close it again. Normally does not need to be used except for test that have special close requirements.
-     * 
+     *
      * @param x
      */
     public void setClosedAlready(boolean x) {
@@ -211,7 +222,7 @@ public class WsocTestContext {
 
     /**
      * get closedAlready
-     * 
+     *
      * @param x
      */
     public boolean getClosedAlready() {
@@ -221,7 +232,7 @@ public class WsocTestContext {
     /**
      * Test did not complete in expected amount of time, set this value so test can determine this event happened. Test will likely fail anyway.. but this provides some additional
      * info.
-     * 
+     *
      * @param timed
      */
     public void setTimedout(boolean timed) {
@@ -230,7 +241,7 @@ public class WsocTestContext {
     }
 
     /**
-     * 
+     *
      * @return true if test did not complete in expected amount of time, false if it complete in time.
      */
     public boolean getTimedOut() {
@@ -242,7 +253,7 @@ public class WsocTestContext {
     }
 
     /**
-     * 
+     *
      * @return Array of messages added through AddMessage
      */
     public List<Object> getMessage() {
@@ -250,7 +261,7 @@ public class WsocTestContext {
     }
 
     /**
-     * 
+     *
      * @return number of messages added through addMessage.
      */
     public int getMessageCount() {
@@ -258,7 +269,7 @@ public class WsocTestContext {
     }
 
     /**
-     * 
+     *
      * @return true if messages added through addMessage = numMsgsExpected.
      */
     public boolean limitReached() {
@@ -276,11 +287,11 @@ public class WsocTestContext {
 
     /**
      * Need this exposed for some multi client tests to check is test is complete...
-     * 
+     *
      * @return
      */
     public CountDownLatch getCompleteLatch() {
-        return completeLatch;
+        return this.completeLatch;
     }
 
     /**

@@ -21,6 +21,7 @@ import componenttest.topology.impl.LibertyServer;
 import io.openliberty.wsoc.common.Constants;
 import io.openliberty.wsoc.endpoints.client.context.Session5ClientEP;
 import io.openliberty.wsoc.util.WebServerControl;
+import java.util.concurrent.CountDownLatch;
 
 /**
  *
@@ -143,6 +144,17 @@ public class WsocTest {
         LOG.info("Creating new test runner with resource " + url + " maxMessages " + numMsgsExpected + " runtime " + runtime + " and timeout " + connectTimeout);
         MultiClientRunner tc = new MultiClientRunner(receiveEndpoints, publishEndpoint, ptask, uri, cfg);
 
+        return tc.runTest(numMsgsExpected, runtime, connectTimeout, msgCountOnly);
+    }
+
+    public MultiClientTestContext runMultiClientWsocTest(Object[] receiveEndpoints, Object publishEndpoint, PublishTask ptask, String resource,
+                                                         ClientEndpointConfig cfg, int numMsgsExpected, int runtime, int connectTimeout,
+                                                         boolean msgCountOnly, CountDownLatch  testingLatch) throws Exception {
+
+        String url = getServerUrl(resource);
+        URI uri = new URI(String.format(url));
+        LOG.info("Creating new test runner with resource " + url + " maxMessages " + numMsgsExpected + " runtime " + runtime + " and timeout " + connectTimeout);
+        MultiClientRunner tc = new MultiClientRunner(receiveEndpoints, publishEndpoint, ptask, uri, cfg, testingLatch);
         return tc.runTest(numMsgsExpected, runtime, connectTimeout, msgCountOnly);
     }
 

@@ -51,6 +51,8 @@ public class MultiClientRunner {
 
     public static int DEFAULT_TIMEOUT = Constants.getDefaultTimeout();
 
+    CountDownLatch testingLatch = null;
+
     public static ClientEndpointConfig getDefaultConfig() {
         Builder b = ClientEndpointConfig.Builder.create();
         return b.build();
@@ -66,6 +68,7 @@ public class MultiClientRunner {
     public MultiClientRunner(Object[] receiveEndpoints, URI uri, ClientEndpointConfig cfg) {
 
         this(receiveEndpoints, null, null, uri, cfg);
+        // this.testingLatch = new CountDownLatch(1);
     }
 
     /**
@@ -77,6 +80,18 @@ public class MultiClientRunner {
      * @param uri - URI to connect to - in the form of ws:// or ws:///
      * @param cfg - endpoint config
      */
+    public MultiClientRunner(Object[] receiveEndpoints, Object publishEndpoint, PublishTask ptask, URI uri, ClientEndpointConfig cfg, CountDownLatch  testingLatch) {
+        _receiveEndpoints = receiveEndpoints;
+
+        _uri = uri;
+        _cfg = cfg;
+        _receiveEndpoints = receiveEndpoints;
+        _publishEndpoint = publishEndpoint;
+        _publishTask = ptask;
+        this.testingLatch = testingLatch;
+
+    }
+
     public MultiClientRunner(Object[] receiveEndpoints, Object publishEndpoint, PublishTask ptask, URI uri, ClientEndpointConfig cfg) {
         _receiveEndpoints = receiveEndpoints;
 
@@ -85,6 +100,8 @@ public class MultiClientRunner {
         _receiveEndpoints = receiveEndpoints;
         _publishEndpoint = publishEndpoint;
         _publishTask = ptask;
+        // this.testingLatch = testingLatch; 
+        //   this.testingLatch = new CountDownLatch(1);
 
     }
 
@@ -111,7 +128,8 @@ public class MultiClientRunner {
         if (_publishEndpoint != null) {
             total++;
         }
-        WsocTestContext.completeLatch = new CountDownLatch(total);
+        
+        // testingLatch = new CountDownLatch(total);
 
         MultiClientTestContext mctr = new MultiClientTestContext();
 
@@ -120,6 +138,7 @@ public class MultiClientRunner {
 
         for (int x = 0; x < _receiveEndpoints.length; x++) {
             _receiveClients[x] = connectClient(_receiveEndpoints[x], c, numMsgsExpected, messageCountOnly);
+            _receiveClients[x].setcompleteLatch(this.testingLatch);
         }
 
         if (connectTimeout > 0) {
@@ -151,10 +170,10 @@ public class MultiClientRunner {
 
         LOG.info("Waiting for wsoc test to finish");
 
-        if (!WsocTestContext.completeLatch.await(runTime, TimeUnit.MILLISECONDS)) {
+        if (!testingLatch.await(runTime, TimeUnit.MILLISECONDS)) {
             mctr.setTestTimedout(true);
-            while (WsocTestContext.completeLatch.getCount() > 0) {
-                WsocTestContext.completeLatch.countDown();
+            while (testingLatch.getCount() > 0) {
+                testingLatch.countDown();
             }
         }
 

@@ -19,6 +19,7 @@ import io.openliberty.wsoc.util.wsoc.WsocTest;
 import io.openliberty.wsoc.util.wsoc.WsocTestContext;
 import io.openliberty.wsoc.util.wsoc.WsocTestRunner;
 import io.openliberty.wsoc.common.Constants;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * Tests WebSocket Stuff
@@ -33,10 +34,10 @@ public class MultiClientTest {
         this.wsocTest = test;
     }
 
-    protected void runMultiTest(Object[] receiveEdps, Object publishEdp, String resource, Object[] data) throws Exception {
+    protected void runMultiTest(Object[] receiveEdps, Object publishEdp, String resource, Object[] data, CountDownLatch testingLatch) throws Exception {
 
         MultiClientTestContext mctr = wsocTest.runMultiClientWsocTest(receiveEdps, publishEdp, null, resource, WsocTestRunner.getDefaultConfig(),
-                                                                      data.length, Constants.getDefaultTimeout(), Constants.getDefaultTimeout(), false);
+                                                                      data.length, Constants.getDefaultTimeout(), Constants.getDefaultTimeout(), false, testingLatch);
 
         for (WsocTestContext wtc : mctr.getReceivers()) {
             wtc.reThrowException();
@@ -52,12 +53,16 @@ public class MultiClientTest {
         String[] textValues = { "WEREWR", "ERERE", "ERWEREW", "ADSFSDFDS", "WERWEREWR", "33423423423432" };
         int numClients = 100;
         Object[] receivers = new TestHelper[numClients];
+        
+        CountDownLatch  testingLatch = new CountDownLatch(numClients);
+        
         for (int x = 0; x < numClients; x++) {
             receivers[x] = new io.openliberty.wsoc.endpoints.client.basic.MultiClientEP.SimplePublisherTest(textValues);
         }
 
-        runMultiTest(receivers, null, "/basic/multiText", textValues);
+        runMultiTest(receivers, null, "/basic/multiText", textValues, testingLatch);
     }
+
 
     /*
      * ServerEndpoint - @see SinglePublisherMultiClientServerEP
@@ -67,6 +72,8 @@ public class MultiClientTest {
         final String[] textValues = { "WEREWR", "ERERE", "ERWEREW", "ADSFSDFDS", "WERWEREWR", "33423423423432" };
 
         int numClients = Constants.getClientsCount();
+
+       CountDownLatch  testingLatch = new CountDownLatch(numClients);
 
         Object[] receivers = new TestHelper[numClients];
         for (int x = 0; x < numClients; x++) {
@@ -93,7 +100,7 @@ public class MultiClientTest {
                                                                         e.printStackTrace();
                                                                     }
                                                                 }
-                                                                WsocTestContext.completeLatch.countDown();
+                                                                testingLatch.countDown();
                                                             }
                                                         },
                                                         "/basic/singlePubMultiReceive",
@@ -101,7 +108,8 @@ public class MultiClientTest {
                                                         textValues.length,
                                                         Constants.getDefaultTimeout(),
                                                         Constants.getDefaultTimeout(),
-                                                        true);
+                                                        true,
+                                                        testingLatch);
         for (WsocTestContext wtc : mctr.getReceivers()) {
             wtc.reThrowException();
             Assert.assertArrayEquals(textValues, wtc.getMessage().toArray());

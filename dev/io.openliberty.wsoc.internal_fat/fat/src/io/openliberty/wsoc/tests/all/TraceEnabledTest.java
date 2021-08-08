@@ -29,6 +29,8 @@ import io.openliberty.wsoc.endpoints.client.trace.AnnotatedConfiguratorClientEP;
 import io.openliberty.wsoc.endpoints.client.trace.ProgrammaticClientEP; // this should be .trace.
 import io.openliberty.wsoc.endpoints.client.trace.ProgrammaticConfiguratorClientEP;
 
+import java.util.concurrent.CountDownLatch;
+
 /**
  * Tests WebSocket Stuff
  *
@@ -44,10 +46,10 @@ public class TraceEnabledTest {
         this.wsocTest = test;
     }
 
-    protected void runMultiTest(Object[] receiveEdps, Object publishEdp, String resource, Object[] data) throws Exception {
+    protected void runMultiTest(Object[] receiveEdps, Object publishEdp, String resource, Object[] data, CountDownLatch latch) throws Exception {
 
         MultiClientTestContext mctr = wsocTest.runMultiClientWsocTest(receiveEdps, publishEdp, null, resource, WsocTestRunner.getDefaultConfig(),
-                                                                      data.length, Constants.getDefaultTimeout(), Constants.getDefaultTimeout(), false);
+                                                                      data.length, Constants.getDefaultTimeout(), Constants.getDefaultTimeout(), false, latch);
 
         for (WsocTestContext wtc : mctr.getReceivers()) {
             wtc.reThrowException();
@@ -145,11 +147,14 @@ public class TraceEnabledTest {
         String[] textValues = { "WEREWR", "ERERE", "ERWEREW", "ADSFSDFDS", "WERWEREWR", "33423423423432" };
         int numClients = 100;
         Object[] receivers = new TestHelper[numClients];
+        
+        CountDownLatch  testingLatch = new CountDownLatch(numClients);
+
         for (int x = 0; x < numClients; x++) {
             receivers[x] = new io.openliberty.wsoc.endpoints.client.trace.MultiClientEP.SimplePublisherTest(textValues);
         }
 
-        runMultiTest(receivers, null, "/trace/multiText", textValues);
+        runMultiTest(receivers, null, "/trace/multiText", textValues, testingLatch);
     }
 
     /*
@@ -166,6 +171,8 @@ public class TraceEnabledTest {
             receivers[x] = new io.openliberty.wsoc.endpoints.client.trace.MultiClientEP.SimpleReceiverTest();
         }
 
+        CountDownLatch  testingLatch = new CountDownLatch(numClients);
+
         Object publisher = new io.openliberty.wsoc.endpoints.client.trace.MultiClientEP.NoPublishNoReceiveTest();
 
         MultiClientTestContext mctr = wsocTest.runMultiClientWsocTest(receivers, publisher,
@@ -181,7 +188,7 @@ public class TraceEnabledTest {
                                                                                       e.printStackTrace();
                                                                                   }
                                                                               }
-                                                                              WsocTestContext.completeLatch.countDown();
+                                                                              testingLatch.countDown();
                                                                           }
                                                                       },
                                                                       "/trace/singlePubMultiReceive",
@@ -189,7 +196,7 @@ public class TraceEnabledTest {
                                                                       textValues.length,
                                                                       Constants.getLongTimeout(),
                                                                       Constants.getDefaultTimeout(),
-                                                                      true);
+                                                                      true, testingLatch);
         for (WsocTestContext wtc : mctr.getReceivers()) {
             wtc.reThrowException();
             Assert.assertArrayEquals(textValues, wtc.getMessage().toArray());
