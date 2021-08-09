@@ -464,7 +464,7 @@ public abstract class ImportSupport extends BodyTagSupport
 		throw new IllegalStateException(
 		    Resources.getMessage("IMPORT_ILLEGAL_STREAM"));
 	    isWriterUsed = true;
-	    return new PrintWriterWrapper(sw, pageContext.getOut());
+	    return new PrintWriter(sw);
 	}
 	
 	/** Returns a ServletOutputStream designed to buffer the output. */
