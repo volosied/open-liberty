@@ -19,4 +19,4 @@ Import-Package: !*
    
 Export-Package: org.eclipse.jdt.*;version=3.10.2;usage=JSP
 
--buildpath: org.eclipse.jdt.core.compiler.batch;strategy=exact;version=3.10.2.v20160712-0000
+-buildpath: ecj-3.26.0.jar;version=file
