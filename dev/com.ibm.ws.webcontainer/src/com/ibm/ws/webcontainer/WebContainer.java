@@ -37,6 +37,14 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
+
+import org.osgi.framework.wiring.BundleWire;
+import org.osgi.framework.wiring.BundleWiring;
+import org.osgi.framework.wiring.FrameworkWiring;
+import org.osgi.framework.namespace.PackageNamespace;
+
 import javax.servlet.ServletContainerInitializer;
 import javax.servlet.ServletContextAttributeListener;
 import javax.servlet.ServletContextListener;
@@ -206,6 +214,17 @@ public abstract class WebContainer extends BaseContainer {
     private static boolean servletCachingInitNeeded = true; //TODO: make false and require dynacache to set to true
 
     public static boolean appInstallBegun = false;
+
+    protected static Map<String, Integer> versionMappings = new HashMap<>();
+    static {
+        versionMappings.put("2.6.0", 30);
+        versionMappings.put("2.7.0", 31);
+        versionMappings.put("2.8.0", 40);
+        versionMappings.put("5.0.0", 50);
+        versionMappings.put("-1", com.ibm.ws.webcontainer.osgi.WebContainer.SPEC_LEVEL_UNLOADED);
+    }
+
+    protected static int loadedContainerSpecLevel = preloadServletSpecVersion();
     
     // Servlet 4.0 : Must be static since referenced from static method
     protected static CacheServletWrapperFactory cacheServletWrapperFactory;
@@ -228,6 +247,33 @@ public abstract class WebContainer extends BaseContainer {
             logger.logp(Level.FINE, CLASS_NAME, "initialize", "Web Container invocationCache --> [" + invocationCacheSize+ "]");
 
         webConProperties = new Properties();
+    }
+
+    protected static int preloadServletSpecVersion() {
+        String methodName = "loadServletSpecVersion";
+
+        String capabiltityVersion = "-1"; // SPEC_LEVEL_UNLOADED
+       try {
+            Bundle myBundle = FrameworkUtil.getBundle(WebContainer.class);
+            BundleWiring myWiring = myBundle.adapt(BundleWiring.class);
+            List<BundleWire> packageWires = myWiring.getRequiredWires(PackageNamespace.PACKAGE_NAMESPACE);
+
+            for (BundleWire wire : packageWires) {
+                if (wire.getCapability().getAttributes().get(PackageNamespace.PACKAGE_NAMESPACE).equals("javax.servlet")) {
+                    capabiltityVersion = wire.getCapability().getAttributes().get(PackageNamespace.CAPABILITY_VERSION_ATTRIBUTE).toString();
+                    break;
+                } else if (wire.getCapability().getAttributes().get(PackageNamespace.PACKAGE_NAMESPACE).equals("jakarta.servlet")) {
+                    capabiltityVersion = wire.getCapability().getAttributes().get(PackageNamespace.CAPABILITY_VERSION_ATTRIBUTE).toString();
+                    break;
+                } ;
+
+            }
+        } catch (Exception e) {
+            // Also catches an NPE in unit tests since no bundles are active
+            // Worst case, loadedContainerSpecLevel is set to -1 and the version is then loaded through the ServletVersion reference 
+        }
+        System.out.println("Setting Version " + versionMappings.get(capabiltityVersion));
+        return versionMappings.get(capabiltityVersion);
     }
 
     /**

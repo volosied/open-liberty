@@ -1593,8 +1593,6 @@ public class WebContainer extends com.ibm.ws.webcontainer.WebContainer implement
     public static final int SPEC_LEVEL_50 = 50;
     private static final int DEFAULT_SPEC_LEVEL = 30;
     
-    private static int loadedContainerSpecLevel = SPEC_LEVEL_UNLOADED;
-    
     public static int getServletContainerSpecLevel() {
         String methodName = "getServletContainerSpecLevel";
 
