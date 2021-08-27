@@ -19,6 +19,7 @@ public class JspEngineElement extends ConfigElement {
     private Boolean useStringCast;
     private Boolean usescriptvardupinit;
     private String jdkSourceLevel;
+    private String javaSourceLevel;
     private Boolean disableResourceInjection;
     private Boolean disableTldSearch;
     private String scratchdir;
@@ -61,6 +62,18 @@ public class JspEngineElement extends ConfigElement {
     }
 
     /**
+     * @return the javaSourceLevel
+     */
+    public String getJavaSourceLevel() {
+        return javaSourceLevel;
+    }
+
+    @XmlAttribute(name = "javaSourceLevel")
+    public void setJavaSourceLevel(String s) {
+        this.javaSourceLevel = s;
+    }
+
+    /**
      * @return the disableResourceInjection
      */
     public Boolean isDisableResourceInjection() {
@@ -93,7 +106,7 @@ public class JspEngineElement extends ConfigElement {
     public String getScratchdir() {
         return scratchdir;
     }
-    
+
     /**
      * @return the keepGenerated
      */
@@ -115,6 +128,8 @@ public class JspEngineElement extends ConfigElement {
             buf.append("usescriptvardupinit=\"" + usescriptvardupinit + "\" ");
         if (jdkSourceLevel != null)
             buf.append("jdkSourceLevel=\"" + jdkSourceLevel + "\" ");
+        if (javaSourceLevel != null)
+            buf.append("javaSourceLevel=\"" + javaSourceLevel + "\" ");
         if (disableResourceInjection != null)
             buf.append("disableResourceInjection=\"" + disableResourceInjection + "\" ");
         if (disableTldSearch != null)
