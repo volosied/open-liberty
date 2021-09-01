@@ -36,6 +36,8 @@ import com.ibm.wsspi.webcontainer.osgi.mbeans.GeneratePluginConfig;
  */
 public class GeneratePluginConfigMBean extends StandardMBean implements GeneratePluginConfig, com.ibm.websphere.webcontainer.GeneratePluginConfigMBean, PluginUtilityConfigGenerator, ServerQuiesceListener  {
     private static final String DEFAULT_SERVER_NAME = "defaultServer";
+
+    private static final Object pluginGeneratorLock = new Object();
     
     private static final TraceComponent tc = Tr.register(GeneratePluginConfigMBean.class,com.ibm.ws.webcontainer.osgi.osgi.WebContainerConstants.TR_GROUP,
                                                          com.ibm.ws.webcontainer.osgi.osgi.WebContainerConstants.NLS_PROPS);
@@ -151,13 +153,15 @@ public class GeneratePluginConfigMBean extends StandardMBean implements Generate
     		// Method is synchronized so only one generate can be in progress at a time.
     	    generateInProgress = true;
         	if (!serverIsStopping) {
-    		
-                PluginGenerator generator = pluginGenerator;
-                if ( generator == null ) {
-                    // Process the updated configuration
-                    generator = pluginGenerator = new PluginGenerator(this.config, locMgr, bundleContext);
+
+                synchronized(pluginGeneratorLock){
+                    PluginGenerator generator = pluginGenerator;
+                    if ( generator == null ) {
+                        // Process the updated configuration
+                        generator = pluginGenerator = new PluginGenerator(this.config, locMgr, bundleContext);
+                    }
+                    generator.generateXML(root, serverName, (WebContainer) webContainer, smgr, dynVhostMgr, locMgr,utilityRequest, writeDirectory); 
                 }
-                generator.generateXML(root, serverName, (WebContainer) webContainer, smgr, dynVhostMgr, locMgr,utilityRequest, writeDirectory); 
         	}   
          } catch (Throwable t) {
             FFDCFilter.processException(t, getClass().getName(), "generatePluginConfig");
