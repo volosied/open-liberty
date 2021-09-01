@@ -98,6 +98,9 @@ import com.ibm.wsspi.webcontainer.osgi.mbeans.GeneratePluginConfig;
  */
 public class PluginGenerator {
 
+    // Single Lock for Both Files For Simplicity
+    private static final Object tempAndCachedFileLock = new Object();
+
     private static final TraceComponent tc = Tr.register(PluginGenerator.class, com.ibm.ws.webcontainer.osgi.osgi.WebContainerConstants.TR_GROUP,
                                                          com.ibm.ws.webcontainer.osgi.osgi.WebContainerConstants.NLS_PROPS);
     private static final String styleSheet = " <xsl:stylesheet version=\"1.0\"                                   \n" +
@@ -174,15 +177,18 @@ public class PluginGenerator {
         appServerName = locSvc.getServerName();
 
         bundle = context.getBundle();
-        cachedFile = bundle.getDataFile("cached-PluginCfg.xml");
 
-        if (cachedFile.exists()) {
-            try {
+        synchronized(tempAndCachedFileLock){
+            cachedFile = bundle.getDataFile("cached-PluginCfg.xml");
 
-                PluginConfigQuickPeek quickPeek = new PluginConfigQuickPeek(new FileInputStream(cachedFile));
-                previousConfigHash = quickPeek.getHashValue();
-            } catch (Exception e) {
-                // Do nothing we are just trying to avoid doing xml serialization twice.
+            if (cachedFile.exists()) {
+                try {
+
+                    PluginConfigQuickPeek quickPeek = new PluginConfigQuickPeek(new FileInputStream(cachedFile));
+                    previousConfigHash = quickPeek.getHashValue();
+                } catch (Exception e) {
+                    // Do nothing we are just trying to avoid doing xml serialization twice.
+                }
             }
         }
     }
@@ -755,11 +761,13 @@ public class PluginGenerator {
                 }
                 File pluginFile = new File(path + pcd.PluginConfigFileName);
                 fileExists = pluginFile.exists();
-                File temPluginFile = new File(path + pcd.TempPluginConfigFileName);
-                // ensure any existing temp file is deleted (should never exist in non failure situations)
-                if (temPluginFile.exists())
-                    temPluginFile.delete();
-                outFile = locationService.asResource(temPluginFile, true);
+                synchronized(tempAndCachedFileLock){
+                    File temPluginFile = new File(path + pcd.TempPluginConfigFileName);
+                    // ensure any existing temp file is deleted (should never exist in non failure situations)
+                    if (temPluginFile.exists())
+                        temPluginFile.delete();
+                    outFile = locationService.asResource(temPluginFile, true);
+                }
             }
 
             if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
@@ -776,35 +784,38 @@ public class PluginGenerator {
                 // If writeFile is false and the cachedFile doesn't exist write to the cache file and copy from there
                 // If writeFile is false and cachedFile exists copy from there
                 // If writeFile is false and cachedFile doesn't exist write to cachedFile and copy from there
-                try {
-                    if (!cachedFile.exists() || writeFile) {
-                        fOutputStream = new FileOutputStream(cachedFile);
-                        pluginCfgWriter = new BufferedWriter(new OutputStreamWriter(fOutputStream, StandardCharsets.ISO_8859_1));
+                synchronized(tempAndCachedFileLock){
+                    try {
+                        if (!cachedFile.exists() || writeFile) {
+                            fOutputStream = new FileOutputStream(cachedFile);
+                            pluginCfgWriter = new BufferedWriter(new OutputStreamWriter(fOutputStream, StandardCharsets.ISO_8859_1));
 
-                        // Write the plugin config file
-                        // Create a style sheet to indent the output
-                        StreamSource xsltSource = new StreamSource(new StringReader(styleSheet));
+                            // Write the plugin config file
+                            // Create a style sheet to indent the output
+                            StreamSource xsltSource = new StreamSource(new StringReader(styleSheet));
 
-                        // Use transform apis to do generic serialization
-                        TransformerFactory tfactory = getTransformerFactory();
-                        Transformer serializer = tfactory.newTransformer(xsltSource);
-                        Properties oprops = new Properties();
-                        oprops.put(OutputKeys.METHOD, "xml");
-                        oprops.put(OutputKeys.OMIT_XML_DECLARATION, "no");
-                        oprops.put(OutputKeys.VERSION, "1.0");
-                        oprops.put(OutputKeys.INDENT, "yes");
-                        serializer.setOutputProperties(oprops);
-                        serializer.transform(new DOMSource(output), new StreamResult(pluginCfgWriter));
+                            // Use transform apis to do generic serialization
+                            TransformerFactory tfactory = getTransformerFactory();
+                            Transformer serializer = tfactory.newTransformer(xsltSource);
+                            Properties oprops = new Properties();
+                            oprops.put(OutputKeys.METHOD, "xml");
+                            oprops.put(OutputKeys.OMIT_XML_DECLARATION, "no");
+                            oprops.put(OutputKeys.VERSION, "1.0");
+                            oprops.put(OutputKeys.INDENT, "yes");
+                            serializer.setOutputProperties(oprops);
+                            serializer.transform(new DOMSource(output), new StreamResult(pluginCfgWriter));
+                        }
+                    } finally {
+                        if (pluginCfgWriter != null) {
+                            pluginCfgWriter.flush();
+                            // Ensure data is physically written to disk
+                            fOutputStream.getFD().sync();
+                            pluginCfgWriter.close();
+                        }
+                        copyFile(cachedFile, outFile.asFile());
                     }
-                } finally {
-                    if (pluginCfgWriter != null) {
-                        pluginCfgWriter.flush();
-                        // Ensure data is physically written to disk
-                        fOutputStream.getFD().sync();
-                        pluginCfgWriter.close();
-                    }
-                    copyFile(cachedFile, outFile.asFile());
                 }
+
             } else {
                 if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
                     Tr.debug(tc, "A new plugin configuration file was not written: the configuration did not change.");
@@ -833,19 +844,21 @@ public class PluginGenerator {
                     return;
                 }
                 
-                // Verify that the temp plugin file exists
-                if (!outFile.exists()) {
-                    throw new FileNotFoundException("File " + outFile.asFile().getAbsolutePath() + " could not be found");
-                }
-                // Construct the actual plugin file path
-                File pluginFile = new File(outFile.asFile().getParentFile(), pcd.PluginConfigFileName);
-                
+                sychronized(tempAndCachedFileLock){
+                    // Verify that the temp plugin file exists
+                    if (!outFile.exists()) {
+                        throw new FileNotFoundException("File " + outFile.asFile().getAbsolutePath() + " could not be found");
+                    }
+                    // Construct the actual plugin file path
+                    File pluginFile = new File(outFile.asFile().getParentFile(), pcd.PluginConfigFileName);
+                    
 
-                if (pluginFile.exists()) {
-                    FileUtils.forceDelete(pluginFile);
-                }
+                    if (pluginFile.exists()) {
+                        FileUtils.forceDelete(pluginFile);
+                    }
 
-                Files.move(outFile.asFile().toPath(), pluginFile.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                    Files.move(outFile.asFile().toPath(), pluginFile.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                }
 
                 // tell the user where the file is - quietly for implicit requests
                 String fullFilePath = pluginFile.getAbsolutePath();
