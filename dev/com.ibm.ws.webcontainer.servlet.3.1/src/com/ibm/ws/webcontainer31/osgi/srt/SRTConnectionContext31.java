@@ -17,6 +17,7 @@
 package com.ibm.ws.webcontainer31.osgi.srt;
 
 import java.io.IOException;
+import java.util.concurrent.CountDownLatch;
 
 import javax.servlet.http.HttpUpgradeHandler;
 
@@ -108,6 +109,7 @@ public class SRTConnectionContext31 extends com.ibm.ws.webcontainer.osgi.srt.SRT
                         connection.setDeviceConnLink(cldevice);  
                         vc.getStateMap().put(TransportConstants.UPGRADED_CONNECTION, "true");
                         vc.getStateMap().put(TransportConstants.UPGRADED_WEB_CONNECTION_OBJECT, connection);
+                        vc.getStateMap().put(TransportConstants.ON_CLOSE_COUNTDOWN_LATCH,  new CountDownLatch(1));
                         connection.setVirtualConnection(vc);
 
                         doInit = true;                            

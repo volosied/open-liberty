@@ -29,4 +29,7 @@ public class TransportConstants {
     public static final String UPGRADED_LISTENER = "UpgradedListener";
     public static final String CLOSE_UPGRADED_WEBCONNECTION = "CloseUpgradedWebConnection";
 
+    // for defect 276206
+    public static final String ON_CLOSE_COUNTDOWN_LATCH = "OnCloseCountDownLatch";
+
 }
