@@ -137,6 +137,7 @@ public class SRTConnectionContext31 extends com.ibm.ws.webcontainer.osgi.srt.SRT
                             // remove the TransportConstants which if added for Upgrade previously
                             vc.getStateMap().put(TransportConstants.CLOSE_UPGRADED_WEBCONNECTION, null);
                             vc.getStateMap().put(TransportConstants.UPGRADED_LISTENER, null);
+                            vc.getStateMap().put(TransportConstants.ON_CLOSE_COUNTDOWN_LATCH, null);
                             
                             upgradedCon.setVirtualConnection(vc);
 

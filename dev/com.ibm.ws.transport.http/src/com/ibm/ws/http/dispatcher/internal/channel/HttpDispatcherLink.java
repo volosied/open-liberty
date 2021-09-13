@@ -279,7 +279,7 @@ public class HttpDispatcherLink extends InboundApplicationLink implements HttpIn
                     CountDownLatch countDownLatch = (CountDownLatch) (vc.getStateMap().get(TransportConstants.ON_CLOSE_COUNTDOWN_LATCH));
                     if (countDownLatch != null) {
                         try {
-                            countDownLatch.await(25L, TimeUnit.MILLISECONDS);
+                            countDownLatch.await(30L, TimeUnit.MILLISECONDS);
                         } catch (InterruptedException e1) {
                             Tr.debug(tc, "InterruptedException occured while awaiting the countDownLatch!");
                         }
