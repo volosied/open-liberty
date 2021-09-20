@@ -109,6 +109,8 @@ public class HttpDispatcherLink extends InboundApplicationLink implements HttpIn
     private String localHostAlias = null;
     /** Cached remote origin */
     private String remoteContextAddress;
+    /** Defect ??? */
+    private boolean destroyCalledFirstDuringUpgradeConnection = false; 
 
     private volatile boolean linkIsReady = false;
     private volatile UsePrivateHeaders usePrivateHeaders = UsePrivateHeaders.unknown;
@@ -158,6 +160,14 @@ public class HttpDispatcherLink extends InboundApplicationLink implements HttpIn
             if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
                 Tr.debug(tc, "Connection must be already closed since vc is null");
             }
+
+            if(destroyCalledFirstDuringUpgradeConnection){
+                if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
+                    Tr.debug(tc, "destroy already called, decrementing active connection count");
+                }
+                this.myChannel.decrementActiveConns();
+            }
+
             return;
         }
 
@@ -267,6 +277,7 @@ public class HttpDispatcherLink extends InboundApplicationLink implements HttpIn
         if (vc != null) {
             String upgraded = (String) (vc.getStateMap().get(TransportConstants.UPGRADED_CONNECTION));
             if (upgraded != null) {
+                destroyCalledFirstDuringUpgradeConnection = true;
                 if (upgraded.compareToIgnoreCase("true") == 0) {
                     Object webConnectionObject = vc.getStateMap().get(TransportConstants.UPGRADED_WEB_CONNECTION_OBJECT);
                     if (webConnectionObject != null) {
