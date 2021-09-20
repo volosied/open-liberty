@@ -29,4 +29,8 @@ public class TransportConstants {
     public static final String UPGRADED_LISTENER = "UpgradedListener";
     public static final String CLOSE_UPGRADED_WEBCONNECTION = "CloseUpgradedWebConnection";
 
+    public static final String CLOSE_CALLED_FIRST_DURING_UPGRADE_CONNECTION = "closeCalledFirstDuringUpgradeConnection";
+
+
+
 }

@@ -108,6 +108,7 @@ public class SRTConnectionContext31 extends com.ibm.ws.webcontainer.osgi.srt.SRT
                         connection.setDeviceConnLink(cldevice);  
                         vc.getStateMap().put(TransportConstants.UPGRADED_CONNECTION, "true");
                         vc.getStateMap().put(TransportConstants.UPGRADED_WEB_CONNECTION_OBJECT, connection);
+                        vc.getStateMap().put(TransportConstants.CLOSE_CALLED_FIRST_DURING_UPGRADE_CONNECTION, null);
                         connection.setVirtualConnection(vc);
 
                         doInit = true;                            
@@ -135,6 +136,7 @@ public class SRTConnectionContext31 extends com.ibm.ws.webcontainer.osgi.srt.SRT
                             // remove the TransportConstants which if added for Upgrade previously
                             vc.getStateMap().put(TransportConstants.CLOSE_UPGRADED_WEBCONNECTION, null);
                             vc.getStateMap().put(TransportConstants.UPGRADED_LISTENER, null);
+                            vc.getStateMap().put(TransportConstants.CLOSE_CALLED_FIRST_DURING_UPGRADE_CONNECTION, null);
                             
                             upgradedCon.setVirtualConnection(vc);
 

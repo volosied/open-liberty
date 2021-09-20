@@ -109,8 +109,6 @@ public class HttpDispatcherLink extends InboundApplicationLink implements HttpIn
     private String localHostAlias = null;
     /** Cached remote origin */
     private String remoteContextAddress;
-    /** Defect ??? */
-    private boolean destroyCalledFirstDuringUpgradeConnection = false; 
 
     private volatile boolean linkIsReady = false;
     private volatile UsePrivateHeaders usePrivateHeaders = UsePrivateHeaders.unknown;
@@ -160,15 +158,12 @@ public class HttpDispatcherLink extends InboundApplicationLink implements HttpIn
             if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
                 Tr.debug(tc, "Connection must be already closed since vc is null");
             }
-
-            if(destroyCalledFirstDuringUpgradeConnection){
-                if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
-                    Tr.debug(tc, "destroy already called, decrementing active connection count");
-                }
-                this.myChannel.decrementActiveConns();
-            }
-
             return;
+        }
+
+        String upgraded = (String) (vc.getStateMap().get(TransportConstants.UPGRADED_CONNECTION));
+        if(upgraded != null){
+            vc.getStateMap().put(TransportConstants.CLOSE_CALLED_FIRST_DURING_UPGRADE_CONNECTION, "true");
         }
 
         // This is added for Upgrade Servlet3.1 WebConnection
@@ -272,12 +267,13 @@ public class HttpDispatcherLink extends InboundApplicationLink implements HttpIn
 
         linkIsReady = false;
 
+        String upgraded = null;
+
         // if this was an http upgrade connection, then tell it to close also.
         VirtualConnection vc = getVC();
         if (vc != null) {
-            String upgraded = (String) (vc.getStateMap().get(TransportConstants.UPGRADED_CONNECTION));
+            upgraded = (String) (vc.getStateMap().get(TransportConstants.UPGRADED_CONNECTION));
             if (upgraded != null) {
-                destroyCalledFirstDuringUpgradeConnection = true;
                 if (upgraded.compareToIgnoreCase("true") == 0) {
                     Object webConnectionObject = vc.getStateMap().get(TransportConstants.UPGRADED_WEB_CONNECTION_OBJECT);
                     if (webConnectionObject != null) {
@@ -302,12 +298,23 @@ public class HttpDispatcherLink extends InboundApplicationLink implements HttpIn
             }
         }
 
+        String closeCalledFirstDuringUpgradeConnection =  (String)  (vc.getStateMap().get(TransportConstants.CLOSE_CALLED_FIRST_DURING_UPGRADE_CONNECTION)); 
+
+        // Only when close has been called is closeCalledFirstDuringUpgradeConnection equal to 'true'. 
+        if(upgraded != null && closeCalledFirstDuringUpgradeConnection != null && !closeCalledFirstDuringUpgradeConnection.equals("true")){
+            if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
+                Tr.debug(tc, "decrement active connection count within destroy");
+            }
+            this.myChannel.decrementActiveConns();   
+        }
+
         super.destroy();
         this.isc = null;
         this.remoteAddress = null;
         this.request = null;
         this.response = null;
         this.sslinfo = null;
+        
     }
 
     /**
