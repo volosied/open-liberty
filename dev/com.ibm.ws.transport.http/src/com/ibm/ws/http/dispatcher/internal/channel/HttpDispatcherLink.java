@@ -57,6 +57,8 @@ import com.ibm.wsspi.http.ee7.HttpInboundConnectionExtended;
 import com.ibm.wsspi.http.ee8.Http2InboundConnection;
 import com.ibm.wsspi.tcpchannel.TCPConnectionContext;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 /**
  * Connection link object that the HTTP dispatcher provides to CHFW
  * for an individual connection.
@@ -117,6 +119,8 @@ public class HttpDispatcherLink extends InboundApplicationLink implements HttpIn
     private final Object WebConnCanCloseSync = new Object();
     private boolean WebConnCanClose = true;
     private final String h2InitError = "com.ibm.ws.transport.http.http2InitError";
+
+    final AtomicBoolean connectionDecremented = new AtomicBoolean(false);
 
     /**
      * Constructor.
@@ -243,10 +247,12 @@ public class HttpDispatcherLink extends InboundApplicationLink implements HttpIn
             try {
                 super.close(conn, e);
             } finally {
-                if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
-                    Tr.debug(tc, "decrement active connection count");
+                if (this.connectionDecremented.compareAndSet(false, true)) {
+                    if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
+                        Tr.debug(tc, "decrement active connection count");
+                    }
+                    this.myChannel.decrementActiveConns();
                 }
-                this.myChannel.decrementActiveConns();
             }
         }
     }
@@ -262,10 +268,11 @@ public class HttpDispatcherLink extends InboundApplicationLink implements HttpIn
 
         linkIsReady = false;
 
+        String upgraded = null;
         // if this was an http upgrade connection, then tell it to close also.
         VirtualConnection vc = getVC();
         if (vc != null) {
-            String upgraded = (String) (vc.getStateMap().get(TransportConstants.UPGRADED_CONNECTION));
+            upgraded = (String) (vc.getStateMap().get(TransportConstants.UPGRADED_CONNECTION));
             if (upgraded != null) {
                 if (upgraded.compareToIgnoreCase("true") == 0) {
                     Object webConnectionObject = vc.getStateMap().get(TransportConstants.UPGRADED_WEB_CONNECTION_OBJECT);
@@ -288,6 +295,15 @@ public class HttpDispatcherLink extends InboundApplicationLink implements HttpIn
                         }
                     }
                 }
+            }
+        }
+
+        if(upgraded != null){
+            if (this.connectionDecremented.compareAndSet(false, true)) {
+                            if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
+                                Tr.debug(tc, "decrement active connection count within destroy -- close not called first");
+                            }
+                            this.myChannel.decrementActiveConns();   
             }
         }
 
