@@ -3931,6 +3931,21 @@ public abstract class WebApp extends BaseContainer implements ServletContext, IS
                 return;
             }
             destroyed = Boolean.TRUE;
+
+                        //VS
+                        if(WebContainer.somPropertyisSet){
+                            String tempDir = getTempDirectory();
+                            if(tempDir != null){
+                                java.io.File file = new java.io.File(tempDir);
+                                try{ 
+                                    System.out.println("Cleaning up file: "+ file );
+                                    org.apache.commons.io.FileUtils.cleanDirectory( file );
+                                } catch(Exception e) {
+                                    System.out.println("Failed to up file: "+ file );
+                                }
+                            }
+                        }
+                        
             // 325429 END
             try {
 /*
