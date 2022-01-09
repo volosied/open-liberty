@@ -225,7 +225,7 @@ public class JSFHtmlUnit {
         try (WebClient webClient = new WebClient()) {
             Calendar calendar = Calendar.getInstance();
 
-            webClient.addRequestHeader("If-Modified-Since", "Thu, 01 Jan " + (calendar.get(Calendar.YEAR) + 1) + " 00:00:00 GMT");
+            webClient.addRequestHeader("If-Modified-Since", "Thu, 02 Jan " + (calendar.get(Calendar.YEAR) + 1) + " 00:00:00 GMT");
 
             URL url = JSFUtils.createHttpUrl(jsfTestServer2, contextRoot, "testUserAgentNeedsUpdateMethod.jsf");
 
