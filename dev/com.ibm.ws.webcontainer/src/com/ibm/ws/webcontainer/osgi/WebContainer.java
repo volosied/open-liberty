@@ -11,12 +11,16 @@
 package com.ibm.ws.webcontainer.osgi;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
@@ -226,7 +230,7 @@ public class WebContainer extends com.ibm.ws.webcontainer.WebContainer implement
     private AsyncContextFactory asyncContextFactory;
     
     private static final int DEFAULT_MAX_VERSION = 30;
-    private ServiceReference<ServletVersion> versionRef;
+    // private ServiceReference<ServletVersion> versionRef;
     
     private static boolean serverStopping = false;
 
@@ -234,6 +238,19 @@ public class WebContainer extends com.ibm.ws.webcontainer.WebContainer implement
     
     // Servlet 4.0
     private URIMatcherFactory uriMatcherFactory;
+
+    public static final int SPEC_LEVEL_UNLOADED = -1;
+    public static final int SPEC_LEVEL_30 = 30;
+    public static final int SPEC_LEVEL_31 = 31;
+    public static final int SPEC_LEVEL_40 = 40;
+    public static final int SPEC_LEVEL_50 = 50;
+    private static final int DEFAULT_SPEC_LEVEL = 30;
+    
+    private static int loadedContainerSpecLevel = SPEC_LEVEL_UNLOADED;
+
+    static {
+        loadServletVersion();
+    }
     
     
     /**
@@ -1569,31 +1586,53 @@ public class WebContainer extends com.ibm.ws.webcontainer.WebContainer implement
     }
 
     
-    @Reference(service=ServletVersion.class, cardinality=ReferenceCardinality.MANDATORY, policy=ReferencePolicy.DYNAMIC, policyOption=ReferencePolicyOption.GREEDY)
-    protected synchronized void setVersion(ServiceReference<ServletVersion> reference) {
-        String methodName = "setVersion";
-        versionRef = reference;
-        WebContainer.loadedContainerSpecLevel = (Integer) reference.getProperty("version");
-        if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
-            Tr.debug(tc, methodName, "loadedContainerSpecLevel [ " + WebContainer.loadedContainerSpecLevel + " ]");
-        }
-    }
+    // @Reference(service=ServletVersion.class, cardinality=ReferenceCardinality.MANDATORY, policy=ReferencePolicy.DYNAMIC, policyOption=ReferencePolicyOption.GREEDY)
+    // protected synchronized void setVersion(ServiceReference<ServletVersion> reference) {
+    //     String methodName = "setVersion";
+    //     versionRef = reference;
+    //     WebContainer.loadedContainerSpecLevel = (Integer) reference.getProperty("version");
+    //     if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
+    //         Tr.debug(tc, methodName, "loadedContainerSpecLevel [ " + WebContainer.loadedContainerSpecLevel + " ]");
+    //     }
+    // }
 
-    protected synchronized void unsetVersion(ServiceReference<ServletVersion> reference) {
-        if (reference == this.versionRef) {
-            versionRef = null;
-            WebContainer.loadedContainerSpecLevel = DEFAULT_MAX_VERSION;
+    // protected synchronized void unsetVersion(ServiceReference<ServletVersion> reference) {
+    //     if (reference == this.versionRef) {
+    //         versionRef = null;
+    //         WebContainer.loadedContainerSpecLevel = DEFAULT_MAX_VERSION;
+    //     }
+    // }
+
+    protected static synchronized void loadServletVersion(){
+        try (InputStream input = WebContainer.class.getClassLoader().getResourceAsStream("javax/servlet/resources/version.property")) {
+
+            if(input != null){
+                Properties prop = new Properties();
+                prop.load(input);
+                WebContainer.loadedContainerSpecLevel  = Integer.parseInt(prop.getProperty("version"));
+                System.out.println("Loaded: loadedContainerSpecLevel -> " + loadedContainerSpecLevel);
+            }
+
+
+        } catch (IOException ex) {
+           // URL url = Thread.currentThread().getContextClassLoader().getResource("jakarta/servlet/resources/version.property");
+            try (InputStream input = WebContainer.class.getClassLoader().getResourceAsStream("jakarta/servlet/resources/version.property")) {
+
+                if(input != null){
+                    Properties prop = new Properties();
+                    prop.load(input);
+                    WebContainer.loadedContainerSpecLevel  = Integer.parseInt(prop.getProperty("version"));
+                    System.out.println("Loaded: loadedContainerSpecLevel -> " + loadedContainerSpecLevel);
+                }
+    
+            } catch (IOException ex2){
+                ex2.printStackTrace();
+            }
+           
+        } catch (NumberFormatException ex) {
+            ex.printStackTrace();
         }
     }
-    
-    public static final int SPEC_LEVEL_UNLOADED = -1;
-    public static final int SPEC_LEVEL_30 = 30;
-    public static final int SPEC_LEVEL_31 = 31;
-    public static final int SPEC_LEVEL_40 = 40;
-    public static final int SPEC_LEVEL_50 = 50;
-    private static final int DEFAULT_SPEC_LEVEL = 30;
-    
-    private static int loadedContainerSpecLevel = SPEC_LEVEL_UNLOADED;
     
     public static int getServletContainerSpecLevel() {
         String methodName = "getServletContainerSpecLevel";

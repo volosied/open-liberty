@@ -19,10 +19,6 @@ WLP-ServerVersion: ${liberty.beta.version}
   com.ibm.wsspi.webcontainer40.util.factory.URIMatcherFactory40Impl
 
 Service-Component: \
-  com.ibm.ws.webcontainer.v40.dd; \
-    implementation:=com.ibm.ws.javaee.version.ServletVersion; \
-    provide:=com.ibm.ws.javaee.version.ServletVersion; \
-    properties:="version:Integer=40", \
   com.ibm.ws.webcontainer.v40.httpTransportBehavior; \
     implementation:=com.ibm.wsspi.http.ee7.HttpTransportBehavior; \
     provide:=com.ibm.wsspi.http.ee7.HttpTransportBehavior; \
@@ -36,8 +32,10 @@ Service-Component: \
 # file, and place an @version javadoc tag in package-level javadoc. 
 # Append ";provide:=true" if this bundle also provides an implementation
 # for the exported API.
+#error  : Used bundle version 1.0.61 for exported package com.ibm.ws.webcontainer40.spec
 Export-Package: \
     !*.internal.*, \
+    com.ibm.ws.webcontainer.speclevel;version=1.0.61,\
     com.ibm.ws.webcontainer40.*factory*;provide:=true, \
     com.ibm.wsspi.webcontainer40.*factory*;provide:=true
 

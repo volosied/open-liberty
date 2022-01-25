@@ -189,7 +189,6 @@ public abstract class WebContainer extends BaseContainer {
         if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE))
             logger.logp(Level.FINE, CLASS_NAME, "<static init>", "context classloader->" + Thread.currentThread().getContextClassLoader() + ", webcontainer classloader->"
                                                                  + WebContainer.class.getClassLoader());
-
     }
 
     protected final static ConcurrentMap _cacheMap = new ConcurrentHashMap(invocationCacheSize);
