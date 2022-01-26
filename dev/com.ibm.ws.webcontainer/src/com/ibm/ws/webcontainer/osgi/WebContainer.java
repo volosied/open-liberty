@@ -1603,34 +1603,36 @@ public class WebContainer extends com.ibm.ws.webcontainer.WebContainer implement
     //     }
     // }
 
+    /*
+    * Should only be called by loadServletSpecVersion
+    */
+    public static void setVersion(int version){
+        WebContainer.loadedContainerSpecLevel = version;
+    }
+
+    /*
+    * Not sure if thinks should exist or where it should be called
+    */
+    public static void unsetVersion(int version){
+        WebContainer.loadedContainerSpecLevel = DEFAULT_MAX_VERSION;
+    }
+
     protected static synchronized void loadServletVersion(){
-        try (InputStream input = WebContainer.class.getClassLoader().getResourceAsStream("javax/servlet/resources/version.property")) {
+        try (InputStream input = WebContainer.class.getClassLoader().getResourceAsStream("com/ibm/ws/webcontainer/speclevel/servletSpecLevel.properties")) {
 
             if(input != null){
                 Properties prop = new Properties();
                 prop.load(input);
-                WebContainer.loadedContainerSpecLevel  = Integer.parseInt(prop.getProperty("version"));
-                System.out.println("Loaded: loadedContainerSpecLevel -> " + loadedContainerSpecLevel);
+                setVersion(Integer.parseInt(prop.getProperty("version")));
+                System.out.println("Loaded: loadedContainerSpecLevel -> " + WebContainer.loadedContainerSpecLevel);
+            } else {
+                System.out.println("input is null");
             }
 
-
-        } catch (IOException ex) {
-           // URL url = Thread.currentThread().getContextClassLoader().getResource("jakarta/servlet/resources/version.property");
-            try (InputStream input = WebContainer.class.getClassLoader().getResourceAsStream("jakarta/servlet/resources/version.property")) {
-
-                if(input != null){
-                    Properties prop = new Properties();
-                    prop.load(input);
-                    WebContainer.loadedContainerSpecLevel  = Integer.parseInt(prop.getProperty("version"));
-                    System.out.println("Loaded: loadedContainerSpecLevel -> " + loadedContainerSpecLevel);
-                }
-    
-            } catch (IOException ex2){
-                ex2.printStackTrace();
-            }
-           
         } catch (NumberFormatException ex) {
             ex.printStackTrace();
+        } catch (IOException ex2){
+            ex2.printStackTrace();
         }
     }
     

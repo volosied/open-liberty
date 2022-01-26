@@ -140,6 +140,7 @@ Import-Package: \
     com.ibm.websphere.security, \
     com.ibm.ws.container.service.app.deploy, \
     com.ibm.ws.genericbnf, \
+	com.ibm.ws.webcontainer.speclevel,\
      !com.ibm.wsspi.buffermgmt, \
      !com.ibm.ejs.sm.client.ui, \
      !com.ibm.websphere.monitor.jmx, \
