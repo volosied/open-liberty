@@ -1607,7 +1607,13 @@ public class WebContainer extends com.ibm.ws.webcontainer.WebContainer implement
     * Should only be called by loadServletSpecVersion
     */
     public static void setVersion(int version){
+        String methodName = "setVersion";
+
         WebContainer.loadedContainerSpecLevel = version;
+        
+        if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
+            Tr.debug(tc, methodName, "loadedContainerSpecLevel [ " + WebContainer.loadedContainerSpecLevel + " ]");
+        }
     }
 
     /*
@@ -1618,9 +1624,12 @@ public class WebContainer extends com.ibm.ws.webcontainer.WebContainer implement
     }
 
     protected static synchronized void loadServletVersion(){
+        String methodName = "loadServletVersion";
+
         try (InputStream input = WebContainer.class.getClassLoader().getResourceAsStream("com/ibm/ws/webcontainer/speclevel/servletSpecLevel.properties")) {
 
-            if(input != null){
+            // null check fixes errors in wc unit tests 
+            if(input != null){ 
                 Properties prop = new Properties();
                 prop.load(input);
                 setVersion(Integer.parseInt(prop.getProperty("version")));
@@ -1630,10 +1639,13 @@ public class WebContainer extends com.ibm.ws.webcontainer.WebContainer implement
             }
 
         } catch (NumberFormatException ex) {
+            // Rethrow exception? Create a new error message? 
             ex.printStackTrace();
         } catch (IOException ex2){
+            // Rethrow exception? Create a new error message? 
             ex2.printStackTrace();
         }
+
     }
     
     public static int getServletContainerSpecLevel() {
