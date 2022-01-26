@@ -22,6 +22,7 @@ WLP-ServerVersion: ${liberty.beta.version}
 # Append ";provide:=true" if this bundle also provides an implementation
 # for the exported API.
 Export-Package: !*.internal.*, \
+    com.ibm.ws.webcontainer.speclevel;version=1.0.61,\
     com.ibm.ws.webcontainer31.*factory*;provide:=true
 
 Import-Package: \
@@ -55,10 +56,6 @@ Private-Package: \
     com.ibm.wsspi.webcontainer31.util.factory.URIMatcherFactory31Impl
 
 Service-Component: \
-  com.ibm.ws.webcontainer.v31.dd; \
-    implementation:=com.ibm.ws.javaee.version.ServletVersion; \
-    provide:=com.ibm.ws.javaee.version.ServletVersion; \
-    properties:="version:Integer=31", \
   com.ibm.ws.webcontainer.v31.httpTransportBehavior; \
     implementation:=com.ibm.wsspi.http.ee7.HttpTransportBehavior; \
     provide:=com.ibm.wsspi.http.ee7.HttpTransportBehavior; \
