@@ -33,7 +33,7 @@ public class WebFragmentTestBase extends DDTestBase {
         });
 
         WebFragmentAdapter adapter = new WebFragmentAdapter();
-        adapter.setVersion(versionRef);
+        adapter.setVersion(maxVersion);
 
         return adapter;
     }

@@ -12,6 +12,9 @@ package com.ibm.ws.javaee.ddmodel.web;
 
 import org.osgi.framework.ServiceReference;
 
+import java.io.InputStream;
+import java.util.Properties;
+
 import com.ibm.ws.ffdc.annotation.FFDCIgnore;
 import com.ibm.ws.javaee.dd.web.WebApp;
 import com.ibm.ws.javaee.ddmodel.DDParser.ParseException;
@@ -24,40 +27,34 @@ import com.ibm.wsspi.artifact.ArtifactEntry;
 import com.ibm.wsspi.artifact.overlay.OverlayContainer;
 
 public final class WebAppEntryAdapter implements EntryAdapter<WebApp> {
+
     protected static final int DEFAULT_MAX_VERSION = WebApp.VERSION_3_0;
 
-    private ServiceReference<ServletVersion> versionRef;
     private volatile int maxVersion = DEFAULT_MAX_VERSION;
 
-    public synchronized void setVersion(ServiceReference<ServletVersion> versionRef) {
-        this.versionRef = versionRef;
-
-        Integer maxVersionValue = (Integer) versionRef.getProperty("version");
-        maxVersion = maxVersionValue.intValue();
-    }
-
-    public synchronized void unsetVersion(ServiceReference<ServletVersion> versionRef) {
-        if ( versionRef == this.versionRef ) {
-            this.versionRef = null;
-            this.maxVersion = DEFAULT_MAX_VERSION;
-        }
+    public synchronized void setVersion(Integer version) {
+        if (version != null) {
+            maxVersion = version;
+        } // else keep as DEFAULT_MAX_VERSION
     }
 
     @FFDCIgnore(ParseException.class)
     @Override
     public WebApp adapt(
-        Container rawContainer,
-        OverlayContainer container,
-        ArtifactEntry rawWebAppEntry,
-        Entry webAppEntry) throws UnableToAdaptException {
-        
+                        Container rawContainer,
+                        OverlayContainer container,
+                        ArtifactEntry rawWebAppEntry,
+                        Entry webAppEntry) throws UnableToAdaptException {
+
+        setVersion(ServletSpecLoader.getServletSpecLevel());
+
         String webAppPath = rawWebAppEntry.getPath();
         WebApp webAppDD = (WebApp) container.getFromNonPersistentCache(webAppPath, WebApp.class);
-        if ( webAppDD == null ) {
+        if (webAppDD == null) {
             try {
                 WebAppDDParser webAppDDParser = new WebAppDDParser(rawContainer, webAppEntry, maxVersion); // throws ParseException
                 webAppDD = webAppDDParser.parse(); // throws ParseException
-            } catch ( ParseException e ) {
+            } catch (ParseException e) {
                 throw new UnableToAdaptException(e);
             }
             container.addToNonPersistentCache(webAppPath, WebApp.class, webAppDD);

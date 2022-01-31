@@ -44,15 +44,11 @@ Service-Component:\
     implementation:=com.ibm.ws.javaee.ddmodel.web.WebAppEntryAdapter;\
     provide:=com.ibm.wsspi.adaptable.module.adapters.EntryAdapter;\
     configuration-policy:=ignore;\
-    version=com.ibm.ws.javaee.version.ServletVersion?;\
-    greedy:=version;\
     properties:="service.vendor=IBM,toType=com.ibm.ws.javaee.dd.web.WebApp",\
    com.ibm.ws.javaee.dd.web.fragment.adapter;\
     implementation:=com.ibm.ws.javaee.ddmodel.web.WebFragmentAdapter;\
     provide:=com.ibm.wsspi.adaptable.module.adapters.ContainerAdapter;\
     configuration-policy:=ignore;\
-    version=com.ibm.ws.javaee.version.ServletVersion?;\
-    greedy:=version;\
     properties:="service.vendor=IBM,toType=com.ibm.ws.javaee.dd.web.WebFragment",\
    com.ibm.ws.javaee.dd.jsf.adapter;\
     implementation:=com.ibm.ws.javaee.ddmodel.jsf.FacesConfigAdapter;\
@@ -179,6 +175,7 @@ Import-Package:\
     !com.ibm.ws.javaee.ddmodel.web,\
     !com.ibm.ws.javaee.ddmodel.webbnd,\
     !com.ibm.ws.javaee.ddmodel.webext,\
+    com.ibm.ws.webcontainer.speclevel,\
     *
 
 Private-Package:\

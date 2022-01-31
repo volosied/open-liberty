@@ -24,43 +24,38 @@ import com.ibm.wsspi.artifact.ArtifactContainer;
 import com.ibm.wsspi.artifact.overlay.OverlayContainer;
 
 public final class WebFragmentAdapter implements ContainerAdapter<WebFragment> {
-    private ServiceReference<ServletVersion> versionRef;
+
     private int version = WebAppEntryAdapter.DEFAULT_MAX_VERSION;
 
-    public synchronized void setVersion(ServiceReference<ServletVersion> reference) {
-        versionRef = reference;
-        version = (Integer) reference.getProperty("version");
-    }
-
-    public synchronized void unsetVersion(ServiceReference<ServletVersion> reference) {
-        if ( reference == this.versionRef ) {
-            versionRef = null;
-            version = WebAppEntryAdapter.DEFAULT_MAX_VERSION;
-        }
+    public synchronized void setVersion(Integer version) {
+        if (version != null) {
+            this.version = version;
+        } // else keep as WebAppEntryAdapter.DEFAULT_MAX_VERSION
     }
 
     public synchronized int getVersion() {
         return version;
     }
-    
+
     @FFDCIgnore(ParseException.class)
     @Override
     public WebFragment adapt(
-            Container ddRoot,
-            OverlayContainer rootOverlay,
-            ArtifactContainer artifactContainer,
-            Container ddAdaptRoot) throws UnableToAdaptException {
+                             Container ddRoot,
+                             OverlayContainer rootOverlay,
+                             ArtifactContainer artifactContainer,
+                             Container ddAdaptRoot) throws UnableToAdaptException {
 
         Entry ddEntry = ddAdaptRoot.getEntry(WebFragment.DD_NAME);
-        if ( ddEntry == null ) {
+        if (ddEntry == null) {
             return null;
         }
 
+        setVersion(ServletSpecLoader.getServletSpecLevel());
+
         try {
-            WebFragmentDDParser ddParser =
-                new WebFragmentDDParser( ddAdaptRoot, ddEntry, getVersion() );
+            WebFragmentDDParser ddParser = new WebFragmentDDParser(ddAdaptRoot, ddEntry, getVersion());
             return ddParser.parse();
-        } catch ( ParseException e ) {
+        } catch (ParseException e) {
             throw new UnableToAdaptException(e);
         }
     }

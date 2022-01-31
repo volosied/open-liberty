@@ -33,7 +33,7 @@ public class WebAppTestBase extends DDTestBase {
         });
 
         WebAppEntryAdapter ddAdapter = new WebAppEntryAdapter();
-        ddAdapter.setVersion(versionRef);
+        ddAdapter.setVersion(maxVersion);
         
         return ddAdapter;
     }
