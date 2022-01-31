@@ -1585,39 +1585,20 @@ public class WebContainer extends com.ibm.ws.webcontainer.WebContainer implement
         // no-op intended here to avoid cacheServletWrapperFactory being null when switching service implementations
     }
 
-    
-    // @Reference(service=ServletVersion.class, cardinality=ReferenceCardinality.MANDATORY, policy=ReferencePolicy.DYNAMIC, policyOption=ReferencePolicyOption.GREEDY)
-    // protected synchronized void setVersion(ServiceReference<ServletVersion> reference) {
-    //     String methodName = "setVersion";
-    //     versionRef = reference;
-    //     WebContainer.loadedContainerSpecLevel = (Integer) reference.getProperty("version");
-    //     if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
-    //         Tr.debug(tc, methodName, "loadedContainerSpecLevel [ " + WebContainer.loadedContainerSpecLevel + " ]");
-    //     }
-    // }
-
-    // protected synchronized void unsetVersion(ServiceReference<ServletVersion> reference) {
-    //     if (reference == this.versionRef) {
-    //         versionRef = null;
-    //         WebContainer.loadedContainerSpecLevel = DEFAULT_MAX_VERSION;
-    //     }
-    // }
 
     /*
     * Should only be called by loadServletSpecVersion
     */
     public static void setVersion(int version){
         String methodName = "setVersion";
-
         WebContainer.loadedContainerSpecLevel = version;
-        
         if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
             Tr.debug(tc, methodName, "loadedContainerSpecLevel [ " + WebContainer.loadedContainerSpecLevel + " ]");
         }
     }
 
-    /*
-    * Not sure if thinks should exist or where it should be called
+   /*
+    * Not sure if this should exist or where it should be called...?
     */
     public static void unsetVersion(int version){
         WebContainer.loadedContainerSpecLevel = DEFAULT_MAX_VERSION;
@@ -1629,22 +1610,22 @@ public class WebContainer extends com.ibm.ws.webcontainer.WebContainer implement
         try (InputStream input = WebContainer.class.getClassLoader().getResourceAsStream("com/ibm/ws/webcontainer/speclevel/servletSpecLevel.properties")) {
 
             // null check fixes errors in wc unit tests 
-            if(input != null){ 
+            if(input != null){
                 Properties prop = new Properties();
                 prop.load(input);
                 setVersion(Integer.parseInt(prop.getProperty("version")));
-                System.out.println("Loaded: loadedContainerSpecLevel -> " + WebContainer.loadedContainerSpecLevel);
+                System.out.println("Loaded: loadServletVersion -> " + WebContainer.loadedContainerSpecLevel);
             } else {
-                System.out.println("input is null");
+                if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
+                    Tr.debug(tc, methodName, "InputStream was null for servletSpecLevel.properties");
+                }
             }
 
-        } catch (NumberFormatException ex) {
-            // Rethrow exception? Create a new error message? 
-            ex.printStackTrace();
-        } catch (IOException ex2){
-            // Rethrow exception? Create a new error message? 
-            ex2.printStackTrace();
-        }
+        } catch (Exception ex) {
+            if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
+                Tr.debug(tc, methodName, "Exception occured: " + ex.getCause());
+            }
+        } 
 
     }
     
