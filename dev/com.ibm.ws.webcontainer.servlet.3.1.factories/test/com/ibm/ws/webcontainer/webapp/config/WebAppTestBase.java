@@ -74,7 +74,7 @@ public class WebAppTestBase {
             }
         });
 
-        adapter.setVersion(versionRef);
+        adapter.setVersion(maxVersion);
 
         try {
             return adapter.adapt(root, rootOverlay, artifactEntry, entry);
@@ -127,7 +127,7 @@ public class WebAppTestBase {
             }
         });
 
-        adapter.setVersion(versionRef);
+        adapter.setVersion(maxVersion);
 
         try {
             return adapter.adapt(root, rootOverlay, artifactContainer, container);
