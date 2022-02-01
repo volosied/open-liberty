@@ -19,7 +19,7 @@ public final class ServletSpecLoader {
 
     public static Integer getServletSpecLevel() {
 
-        if (version != null) {
+        if (version == null) {
             try (InputStream input = ServletSpecLoader.class.getClassLoader().getResourceAsStream("com/ibm/ws/webcontainer/speclevel/servletSpecLevel.properties")) {
 
                 if (input != null) {
@@ -27,10 +27,12 @@ public final class ServletSpecLoader {
                     prop.load(input);
                     version = Integer.parseInt(prop.getProperty("version"));
                 } else {
+                    System.out.println("InputStream was null.");
                     return null;
                 }
 
             } catch (Exception ex) {
+                System.out.println("Exception occured " + ex);
                 return null;
             }
         }

@@ -31,6 +31,7 @@ public final class WebFragmentAdapter implements ContainerAdapter<WebFragment> {
         if (version != null) {
             this.version = version;
         } // else keep as WebAppEntryAdapter.DEFAULT_MAX_VERSION
+        System.out.println("WebFragmentAdapter version set to " + version);
     }
 
     public synchronized int getVersion() {

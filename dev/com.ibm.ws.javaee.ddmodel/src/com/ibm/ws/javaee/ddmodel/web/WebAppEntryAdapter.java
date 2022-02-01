@@ -36,6 +36,7 @@ public final class WebAppEntryAdapter implements EntryAdapter<WebApp> {
         if (version != null) {
             maxVersion = version;
         } // else keep as DEFAULT_MAX_VERSION
+        System.out.println("WebAppEntryAdapter version set to " + version);
     }
 
     @FFDCIgnore(ParseException.class)
