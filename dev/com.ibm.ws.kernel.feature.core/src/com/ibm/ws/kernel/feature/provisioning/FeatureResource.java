@@ -52,6 +52,8 @@ public interface FeatureResource extends HeaderElementDefinition {
 
     public Integer getRequireJava();
 
+    public Integer getJavaLimit();
+
     /**
      * @return the activation type for the resource
      **/

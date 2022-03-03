@@ -86,6 +86,7 @@ import com.ibm.ws.kernel.feature.ServerReadyStatus;
 import com.ibm.ws.kernel.feature.ServerStarted;
 import com.ibm.ws.kernel.feature.ServerStartedPhase2;
 import com.ibm.ws.kernel.feature.Visibility;
+import com.ibm.ws.kernel.feature.internal.BundleList.RuntimeFeatureResource;
 import com.ibm.ws.kernel.feature.internal.subsystem.FeatureDefinitionUtils;
 import com.ibm.ws.kernel.feature.internal.subsystem.FeatureRepository;
 import com.ibm.ws.kernel.feature.internal.subsystem.KernelFeatureDefinitionImpl;
@@ -2505,6 +2506,11 @@ public class FeatureManager implements FeatureProvisioner, FrameworkReady, Manag
     boolean missingRequiredJava(FeatureResource fr) {
         Integer requiredJava = fr.getRequireJava();
         return requiredJava == null ? false : JavaInfo.majorVersion() < requiredJava;
+    }
+
+    public boolean aboveJavaLimit(FeatureResource fr) {
+        Integer javaLimit = fr.getJavaLimit();
+        return javaLimit == null ? false : JavaInfo.majorVersion() >= javaLimit;
     }
 
 }

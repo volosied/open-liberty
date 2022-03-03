@@ -577,6 +577,11 @@ public class FeatureResolverInterfacesTest {
         }
 
         @Override
+        public Integer getJavaLimit() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
         public ActivationType getActivationType() {
             throw new UnsupportedOperationException();
         }

@@ -284,6 +284,11 @@ public class BundleList {
         }
 
         @Override
+        public Integer getJavaLimit() {
+            return fr.getJavaLimit();
+        }
+
+        @Override
         public ActivationType getActivationType() {
             return fr.getActivationType();
         }
@@ -445,6 +450,11 @@ public class BundleList {
         }
 
         @Override
+        public Integer getJavaLimit() {
+            return null;
+        }
+
+        @Override
         public ActivationType getActivationType() {
             return activationType;
         }
@@ -599,8 +609,8 @@ public class BundleList {
     public void addAll(ProvisioningFeatureDefinition fdefinition, FeatureManager featureManager) {
         for (FeatureResource fr : fdefinition.getConstituents(SubsystemContentType.BUNDLE_TYPE)) {
             RuntimeFeatureResource rfr = (RuntimeFeatureResource) ((fr instanceof RuntimeFeatureResource) ? fr : new RuntimeFeatureResource(fr));
-            // only add bundles that match the current osgi.ee capability
-            if (!featureManager.missingRequiredJava(rfr)) {
+            // only add bundles that match the current osgi.ee capability & the min java level
+            if (!featureManager.missingRequiredJava(rfr) && !featureManager.aboveJavaLimit(rfr)) {
                 resources.add(rfr);
             }
         }

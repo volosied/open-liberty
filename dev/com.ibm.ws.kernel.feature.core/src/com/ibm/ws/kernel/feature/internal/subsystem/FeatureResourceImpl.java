@@ -288,7 +288,8 @@ public class FeatureResourceImpl implements FeatureResource {
                && Objects.equals(getLocation(), other.getLocation())
                && Objects.equals(getOsList(), other.getOsList())
                && Objects.equals(getTolerates(), other.getTolerates())
-               && Objects.equals(getRequireJava(), other.getRequireJava());
+               && Objects.equals(getRequireJava(), other.getRequireJava())
+               && Objects.equals(getJavaLimit(), other.getJavaLimit());
     }
 
     /** {@inheritDoc} */
@@ -336,6 +337,13 @@ public class FeatureResourceImpl implements FeatureResource {
         // Directive names are in the attributes map, but end with a colon
         String requireJava = _rawAttributes.get("require-java:");
         return requireJava == null ? null : Integer.valueOf(requireJava);
+    }
+
+    @Override
+    public Integer getJavaLimit() {
+        // Directive names are in the attributes map, but end with a colon
+        String javaLimit = _rawAttributes.get("java-limit:");
+        return javaLimit == null ? null : Integer.valueOf(javaLimit);
     }
 
     @Override
