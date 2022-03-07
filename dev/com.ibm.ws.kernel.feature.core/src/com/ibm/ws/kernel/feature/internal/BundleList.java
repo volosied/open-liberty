@@ -33,6 +33,7 @@ import com.ibm.websphere.ras.TraceComponent;
 import com.ibm.websphere.ras.annotation.Trivial;
 import com.ibm.ws.ffdc.annotation.FFDCIgnore;
 import com.ibm.ws.kernel.feature.internal.subsystem.FeatureDefinitionUtils;
+import com.ibm.ws.kernel.feature.internal.subsystem.JavaRange;
 import com.ibm.ws.kernel.feature.provisioning.ActivationType;
 import com.ibm.ws.kernel.feature.provisioning.FeatureResource;
 import com.ibm.ws.kernel.feature.provisioning.ProvisioningFeatureDefinition;
@@ -289,6 +290,11 @@ public class BundleList {
         }
 
         @Override
+        public JavaRange getJavaRange() {
+            return fr.getJavaRange();
+        }
+
+        @Override
         public ActivationType getActivationType() {
             return fr.getActivationType();
         }
@@ -455,6 +461,11 @@ public class BundleList {
         }
 
         @Override
+        public JavaRange getJavaRange() {
+            return null;
+        }
+
+        @Override
         public ActivationType getActivationType() {
             return activationType;
         }
@@ -610,7 +621,7 @@ public class BundleList {
         for (FeatureResource fr : fdefinition.getConstituents(SubsystemContentType.BUNDLE_TYPE)) {
             RuntimeFeatureResource rfr = (RuntimeFeatureResource) ((fr instanceof RuntimeFeatureResource) ? fr : new RuntimeFeatureResource(fr));
             // only add bundles that match the current osgi.ee capability & the min java level
-            if (!featureManager.missingRequiredJava(rfr) && !featureManager.aboveJavaLimit(rfr)) {
+            if (featureManager.withinJavaRange(rfr)) {
                 resources.add(rfr);
             }
         }

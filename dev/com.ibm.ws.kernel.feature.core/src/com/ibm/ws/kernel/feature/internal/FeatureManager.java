@@ -120,6 +120,8 @@ import com.ibm.wsspi.kernel.service.utils.OnErrorUtil.OnError;
 import com.ibm.wsspi.kernel.service.utils.PathUtils;
 import com.ibm.wsspi.kernel.service.utils.TimestampUtils;
 
+import com.ibm.ws.kernel.feature.internal.subsystem.JavaRange;
+
 import io.openliberty.checkpoint.spi.CheckpointPhase;
 
 /**
@@ -2511,6 +2513,11 @@ public class FeatureManager implements FeatureProvisioner, FrameworkReady, Manag
     public boolean aboveJavaLimit(FeatureResource fr) {
         Integer javaLimit = fr.getJavaLimit();
         return javaLimit == null ? false : JavaInfo.majorVersion() >= javaLimit;
+    }
+
+    public boolean withinJavaRange(FeatureResource fr) {
+        JavaRange range = fr.getJavaRange();
+        return range == null ? true : range.contains(JavaInfo.majorVersion());
     }
 
 }

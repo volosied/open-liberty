@@ -48,6 +48,9 @@ import com.ibm.ws.kernel.feature.provisioning.SubsystemContentType;
 import com.ibm.ws.kernel.feature.resolver.FeatureResolver;
 import com.ibm.ws.kernel.feature.resolver.FeatureResolver.Result;
 
+import com.ibm.ws.kernel.feature.internal.subsystem.JavaRange;
+
+
 /**
  * In contrast to {@link FeatureResolverTest}, this class tests the feature resolver using its interfaces directly, without invoking any manifest reading code.
  */
@@ -578,6 +581,11 @@ public class FeatureResolverInterfacesTest {
 
         @Override
         public Integer getJavaLimit() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public JavaRange getJavaRange() {
             throw new UnsupportedOperationException();
         }
 

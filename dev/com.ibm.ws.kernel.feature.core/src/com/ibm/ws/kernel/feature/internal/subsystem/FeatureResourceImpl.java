@@ -30,6 +30,8 @@ import com.ibm.ws.kernel.feature.provisioning.FeatureResource;
 import com.ibm.ws.kernel.feature.provisioning.SubsystemContentType;
 import com.ibm.ws.kernel.provisioning.VersionUtility;
 
+import com.ibm.ws.kernel.feature.internal.subsystem.JavaRange;
+
 public class FeatureResourceImpl implements FeatureResource {
     private static final TraceComponent tc = Tr.register(FeatureResourceImpl.class);
 
@@ -344,6 +346,13 @@ public class FeatureResourceImpl implements FeatureResource {
         // Directive names are in the attributes map, but end with a colon
         String javaLimit = _rawAttributes.get("java-limit:");
         return javaLimit == null ? null : Integer.valueOf(javaLimit);
+    }
+
+    @Override
+    public JavaRange getJavaRange() {
+        // Directive names are in the attributes map, but end with a colon
+        String javaRange = _rawAttributes.get("require-java:");
+        return javaRange == null ? null : new JavaRange(javaRange);
     }
 
     @Override
