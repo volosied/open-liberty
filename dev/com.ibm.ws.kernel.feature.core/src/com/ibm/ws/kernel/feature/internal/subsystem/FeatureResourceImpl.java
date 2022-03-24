@@ -30,6 +30,8 @@ import com.ibm.ws.kernel.feature.provisioning.FeatureResource;
 import com.ibm.ws.kernel.feature.provisioning.SubsystemContentType;
 import com.ibm.ws.kernel.provisioning.VersionUtility;
 
+import com.ibm.ws.kernel.feature.internal.subsystem.JavaRange;
+
 public class FeatureResourceImpl implements FeatureResource {
     private static final TraceComponent tc = Tr.register(FeatureResourceImpl.class);
 
@@ -288,7 +290,7 @@ public class FeatureResourceImpl implements FeatureResource {
                && Objects.equals(getLocation(), other.getLocation())
                && Objects.equals(getOsList(), other.getOsList())
                && Objects.equals(getTolerates(), other.getTolerates())
-               && Objects.equals(getRequireJava(), other.getRequireJava());
+               && Objects.equals(getJavaRange(), other.getJavaRange());
     }
 
     /** {@inheritDoc} */
@@ -332,10 +334,10 @@ public class FeatureResourceImpl implements FeatureResource {
     }
 
     @Override
-    public Integer getRequireJava() {
+    public JavaRange getJavaRange() {
         // Directive names are in the attributes map, but end with a colon
-        String requireJava = _rawAttributes.get("require-java:");
-        return requireJava == null ? null : Integer.valueOf(requireJava);
+        String javaRange = _rawAttributes.get("require-java:");
+        return javaRange == null ? null : new JavaRange(javaRange);
     }
 
     @Override

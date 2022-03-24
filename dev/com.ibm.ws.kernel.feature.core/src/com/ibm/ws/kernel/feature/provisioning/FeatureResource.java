@@ -12,6 +12,8 @@ package com.ibm.ws.kernel.feature.provisioning;
 
 import java.util.List;
 
+import com.ibm.ws.kernel.feature.internal.subsystem.JavaRange;
+
 import org.osgi.framework.VersionRange;
 
 public interface FeatureResource extends HeaderElementDefinition {
@@ -50,7 +52,7 @@ public interface FeatureResource extends HeaderElementDefinition {
 
     public List<String> getTolerates();
 
-    public Integer getRequireJava();
+    public JavaRange getJavaRange();
 
     /**
      * @return the activation type for the resource

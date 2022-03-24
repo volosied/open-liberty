@@ -86,6 +86,7 @@ import com.ibm.ws.kernel.feature.ServerReadyStatus;
 import com.ibm.ws.kernel.feature.ServerStarted;
 import com.ibm.ws.kernel.feature.ServerStartedPhase2;
 import com.ibm.ws.kernel.feature.Visibility;
+import com.ibm.ws.kernel.feature.internal.BundleList.RuntimeFeatureResource;
 import com.ibm.ws.kernel.feature.internal.subsystem.FeatureDefinitionUtils;
 import com.ibm.ws.kernel.feature.internal.subsystem.FeatureRepository;
 import com.ibm.ws.kernel.feature.internal.subsystem.KernelFeatureDefinitionImpl;
@@ -118,6 +119,8 @@ import com.ibm.wsspi.kernel.service.utils.OnErrorUtil;
 import com.ibm.wsspi.kernel.service.utils.OnErrorUtil.OnError;
 import com.ibm.wsspi.kernel.service.utils.PathUtils;
 import com.ibm.wsspi.kernel.service.utils.TimestampUtils;
+
+import com.ibm.ws.kernel.feature.internal.subsystem.JavaRange;
 
 import io.openliberty.checkpoint.spi.CheckpointPhase;
 
@@ -2502,9 +2505,9 @@ public class FeatureManager implements FeatureProvisioner, FrameworkReady, Manag
         refreshFeatures();
     }
 
-    boolean missingRequiredJava(FeatureResource fr) {
-        Integer requiredJava = fr.getRequireJava();
-        return requiredJava == null ? false : JavaInfo.majorVersion() < requiredJava;
+    public boolean withinJavaRange(FeatureResource fr) {
+        JavaRange range = fr.getJavaRange();
+        return range == null ? true : range.contains(JavaInfo.majorVersion());
     }
 
 }
