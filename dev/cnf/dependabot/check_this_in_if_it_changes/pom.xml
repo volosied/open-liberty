@@ -1638,8 +1638,18 @@
     </dependency>
     <dependency>
       <groupId>org.apache.tomcat</groupId>
+      <artifactId>tomcat-el-api</artifactId>
+      <version>10.1.0-M12</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.tomcat</groupId>
       <artifactId>tomcat-jasper-el</artifactId>
       <version>10.0.14</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.tomcat</groupId>
+      <artifactId>tomcat-jasper-el</artifactId>
+      <version>10.1.0-M12</version>
     </dependency>
     <dependency>
       <groupId>org.apache.wink</groupId>
