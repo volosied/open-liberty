@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package com.ibm.ws.el.fat.tests;
+package io.openliberty.el50.internal.fat.tests;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;

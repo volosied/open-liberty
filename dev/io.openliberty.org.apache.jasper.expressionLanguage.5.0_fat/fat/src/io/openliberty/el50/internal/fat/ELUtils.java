@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package com.ibm.ws.el.fat;
+package io.openliberty.el50.internal.fat;
 
 import java.net.URL;
 

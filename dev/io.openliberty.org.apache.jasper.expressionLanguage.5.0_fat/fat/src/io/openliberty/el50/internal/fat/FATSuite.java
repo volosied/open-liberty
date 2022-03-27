@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package com.ibm.ws.el.fat;
+package io.openliberty.el50.internal.fat;
 
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
@@ -18,7 +18,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 import componenttest.annotation.MinimumJavaLevel;
 
-import com.ibm.ws.el.fat.tests.EL50DefaultMethodsTest;
+import io.openliberty.el50.internal.fat.tests.EL50DefaultMethodsTest;
 import com.ibm.ws.fat.util.FatLogHandler;
 
 

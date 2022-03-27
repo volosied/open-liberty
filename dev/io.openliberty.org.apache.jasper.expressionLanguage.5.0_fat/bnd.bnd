@@ -15,7 +15,7 @@ src: \
     fat/src,\
     test-applications/TestEL5.0.war/src
 
-fat.project: true   
+fat.project: true
 
 javac.source: 11
 javac.target: 11
