@@ -16,12 +16,14 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
+import componenttest.annotation.MinimumJavaLevel;
+
 import com.ibm.ws.el.fat.tests.EL50DefaultMethodsTest;
 import com.ibm.ws.fat.util.FatLogHandler;
 
 
 /**
- * EL 3.0 Tests
+ * Expresssion Language 5.0 Tests
  *
  * The tests for both features should be included in this test component.
  *
@@ -35,6 +37,7 @@ import com.ibm.ws.fat.util.FatLogHandler;
  * By default only lite mode tests are run.
  *
  */
+@MinimumJavaLevel(javaLevel = 11)
 @RunWith(Suite.class)
 @SuiteClasses({
     EL50DefaultMethodsTest.class

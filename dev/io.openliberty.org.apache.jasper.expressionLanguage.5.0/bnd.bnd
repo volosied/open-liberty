@@ -15,6 +15,11 @@ Bundle-SymbolicName: io.openliberty.org.apache.jasper.expressionLanguage.5.0
 Bundle-Description: Jakarta Expression Language EE10 Implementation, version 5.0
 Implementation-Version: 5.0.0
 
+javac.source: 11
+javac.target: 11
+
+Require-Capability: osgi.ee; filter:="(&(osgi.ee=JavaSE)(version=11))"
+
 Export-Package: org.apache.el;thread-context=true;version=${Implementation-Version}, \
    org.apache.el.lang;thread-context=true;version=${Implementation-Version}, \
    org.apache.el.parser;version=${Implementation-Version}, \
