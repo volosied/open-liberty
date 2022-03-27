@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2021 IBM Corporation and others.
+ * Copyright (c) 2013, 2022 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -59,6 +59,8 @@ public class JSPTests {
     private static final String PI59436_APP_NAME = "PI59436";
     private static final String TestEDR_APP_NAME = "TestEDR";
     private static final String TestJDT_APP_NAME = "TestJDT";
+    private static final String OLGH20509_APP_NAME1 = "OLGH20509jar";
+    private static final String OLGH20509_APP_NAME2 = "OLGH20509TDfalse";
 
     @Server("jspServer")
     public static LibertyServer server;
@@ -82,6 +84,9 @@ public class JSPTests {
         ShrinkHelper.defaultDropinApp(server, PI59436_APP_NAME + ".war");
 
         ShrinkHelper.defaultDropinApp(server, TestJDT_APP_NAME + ".war");
+
+        ShrinkHelper.defaultDropinApp(server, OLGH20509_APP_NAME1 + ".war");
+        ShrinkHelper.defaultDropinApp(server, OLGH20509_APP_NAME2 + ".war");
 
         server.startServer(JSPTests.class.getSimpleName() + ".log");
     }
@@ -794,7 +799,7 @@ public class JSPTests {
 
         Thread.sleep(5000L); // sleeps necessary to insure sufficient time delta for epoch timestamp comparisons
         server.setMarkToEndOfLog(); // mark after 1st call to index.jsp since it might have compiled and caused a SRVE0253I
-        Thread.sleep(5000L); 
+        Thread.sleep(5000L);
         WebConversation wc2 = new WebConversation();
         WebRequest request2 = new GetMethodWebRequest(url);
         wc2.getResponse(request2);
@@ -834,7 +839,7 @@ public class JSPTests {
 
     /**
      * Same test as above, but this test verifies that the dependentsList
-     * is populated when proccessing multiple requests concurrently.
+     * is populated when processing multiple requests concurrently.
      *
      * @throws Exception
      */
@@ -846,6 +851,36 @@ public class JSPTests {
         LOG.info("url: " + url);
 
         runEDR(url, true);
+    }
+
+    /**
+     * This test verifies no destroy/init cycles, i.e.,
+     * JSP recompiles, occur after 2nd attempt,
+     * while using jsp within a jar under WEB-INF,
+     * trackDependencies=true, per issue 20509.
+     *
+     * @throws Exception
+     */
+    // @Mode(TestMode.FULL)
+    @Test
+    public void testTrackDependenciesTrue() throws Exception {
+        this.verifyStringInResponse(OLGH20509_APP_NAME1, "index.jsp", "Test Passed!");
+        Thread.sleep(5100);
+        this.verifyStringInResponse(OLGH20509_APP_NAME1, "index.jsp", "Test Passed!");
+    }
+
+    /**
+     * This test verifies no NPE occurs after 2nd attempt,
+     * trackDependencies=false, per issue 20509.
+     *
+     * @throws Exception
+     */
+    // @Mode(TestMode.FULL)
+    @Test
+    public void testTrackDependenciesFalse() throws Exception {
+        this.verifyStringInResponse(OLGH20509_APP_NAME2, "index.jsp", "Test Passed!");
+        Thread.sleep(5100);
+        this.verifyStringInResponse(OLGH20509_APP_NAME2, "index.jsp", "Test Passed!");
     }
 
     private void runEDR(String url, boolean makeConcurrentRequests) throws Exception {
