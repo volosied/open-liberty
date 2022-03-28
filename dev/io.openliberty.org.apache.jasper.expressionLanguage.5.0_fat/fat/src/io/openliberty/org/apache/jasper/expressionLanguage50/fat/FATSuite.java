@@ -8,15 +8,13 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package io.openliberty.el50.internal.fat;
+package io.openliberty.org.apache.jasper.expressionLanguage50.fat;
 
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
-
-import componenttest.annotation.MinimumJavaLevel;
 
 import io.openliberty.el50.internal.fat.tests.EL50DefaultMethodsTest;
 import com.ibm.ws.fat.util.FatLogHandler;
@@ -37,7 +35,6 @@ import com.ibm.ws.fat.util.FatLogHandler;
  * By default only lite mode tests are run.
  *
  */
-@MinimumJavaLevel(javaLevel = 11)
 @RunWith(Suite.class)
 @SuiteClasses({
     EL50DefaultMethodsTest.class

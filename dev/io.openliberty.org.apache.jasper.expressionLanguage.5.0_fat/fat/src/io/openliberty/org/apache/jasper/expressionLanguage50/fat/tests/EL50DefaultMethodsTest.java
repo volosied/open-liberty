@@ -24,19 +24,19 @@ import componenttest.topology.impl.LibertyServer;
 import componenttest.topology.utils.FATServletClient;
 
 /**
- * Tests for default methods in EL 5.0
+ * Tests to ensure default methods are resolved by BeanELResolver in EL 5.0. 
  * https://github.com/jakartaee/expression-language/issues/43
  */
 @RunWith(FATRunner.class)
 public class EL50DefaultMethodsTest extends FATServletClient {
 
-    @Server("elDefaultMethodBeanELResolverServer")
-    @TestServlet(servlet = EL50DefaultMethodsServlet.class, contextRoot = "TestEL5.0")
+    @Server("expressionLanguage50_defaultMethodsServer")
+    @TestServlet(servlet = EL50DefaultMethodsServlet.class, contextRoot = "EL50DefaultMethodBeanELResolverTest")
     public static LibertyServer elServer;
 
     @BeforeClass
     public static void setup() throws Exception {
-        ShrinkHelper.defaultDropinApp(elServer, "TestEL5.0.war", "io.openliberty.el50.fat.servlets");
+        ShrinkHelper.defaultDropinApp(elServer, "EL50DefaultMethodBeanELResolver.war", "io.openliberty.el50.fat.servlets");
 
         elServer.startServer(EL50DefaultMethodsTest.class.getSimpleName() + ".log");
     }

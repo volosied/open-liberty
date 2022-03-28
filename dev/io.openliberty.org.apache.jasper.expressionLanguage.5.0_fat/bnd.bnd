@@ -13,7 +13,7 @@ bVersion=1.0
 
 src: \
     fat/src,\
-    test-applications/TestEL5.0.war/src
+    test-applications/EL50DefaultMethodBeanELResolverTest.war/src
 
 fat.project: true
 
