@@ -30,7 +30,7 @@ import componenttest.topology.utils.FATServletClient;
 @RunWith(FATRunner.class)
 public class EL50DefaultMethodsTest extends FATServletClient {
 
-    @Server("elServer")
+    @Server("elDefaultMethodBeanELResolverServer")
     @TestServlet(servlet = EL50DefaultMethodsServlet.class, contextRoot = "TestEL5.0")
     public static LibertyServer elServer;
 
