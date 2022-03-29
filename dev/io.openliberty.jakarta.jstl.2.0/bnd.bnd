@@ -27,7 +27,7 @@ Import-Package:  jakarta.servlet.jsp.*;version="[2.0.0,4.0.0)", \
  org.apache.taglibs.standard.tag.common.fmt; resolution:=optional, \
  org.xml.sax; resolution:=optional, \
  org.xml.sax.helpers; resolution:=optional, \
- jakarta.el; version="[4.0.0,5.0.0)"
+ jakarta.el; version="[4.0.0,6.0.0)"
 
 instrument.disabled: true
 
