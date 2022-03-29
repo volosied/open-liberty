@@ -45,6 +45,10 @@ import componenttest.custom.junit.runner.Mode.TestMode;
 import componenttest.rules.repeater.JakartaEE9Action;
 import componenttest.topology.impl.LibertyServer;
 
+
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
+
 /**
  * Tests to execute on the jspServer that use HttpUnit/HttpClient
  */
@@ -85,8 +89,17 @@ public class JSPTests {
 
         ShrinkHelper.defaultDropinApp(server, TestJDT_APP_NAME + ".war");
 
-        ShrinkHelper.defaultDropinApp(server, OLGH20509_APP_NAME1 + ".war");
-        ShrinkHelper.defaultDropinApp(server, OLGH20509_APP_NAME2 + ".war");
+        // ShrinkHelper.defaultDropinApp(server, OLGH20509_APP_NAME1 + ".war");
+        // ShrinkHelper.defaultDropinApp(server, OLGH20509_APP_NAME2 + ".war");
+
+
+        JavaArchive jar = ShrinkHelper.buildJavaArchive("OLGH20509Include.jar");
+
+        WebArchive war = ShrinkHelper.buildDefaultApp("OLGH20509TDfalse" + ".war");
+
+        war.addAsLibraries(jar);
+
+        ShrinkHelper.exportDropinAppToServer(server, war);
 
         server.startServer(JSPTests.class.getSimpleName() + ".log");
     }
