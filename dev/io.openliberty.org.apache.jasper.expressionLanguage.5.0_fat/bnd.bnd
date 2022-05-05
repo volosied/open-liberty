@@ -21,7 +21,7 @@ javac.source: 11
 javac.target: 11
 
 -buildpath: \
-    io.openliberty.jakarta.servlet.5.0;version=latest,\
+    io.openliberty.jakarta.servlet.6.0;version=latest,\
     io.openliberty.jakarta.expressionLanguage.5.0;version=latest,\
     org.apache.httpcomponents:httpclient;version=4.1.2,\
     org.apache.httpcomponents:httpcore;version=4.1.2,\

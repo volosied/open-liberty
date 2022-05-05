@@ -24,6 +24,8 @@ import jakarta.servlet.annotation.WebServlet;
 import org.junit.Test;
 
 import componenttest.app.FATServlet;
+import componenttest.custom.junit.runner.Mode;
+import componenttest.custom.junit.runner.Mode.TestMode;
 
 /**
  * Servlet for testing default methods in EL 5.0
@@ -38,6 +40,7 @@ public class EL50DefaultMethodsServlet extends FATServlet {
     }
 
     @Test
+    @Mode(TestMode.FULL)
     public void testRegularValue() throws Exception {
         SomeBean bean = new SomeBean();
 
@@ -60,6 +63,7 @@ public class EL50DefaultMethodsServlet extends FATServlet {
     }
 
     @Test
+    @Mode(TestMode.FULL)
     public void testOverriddenValue() {
         SomeBean bean = new SomeBean();
 

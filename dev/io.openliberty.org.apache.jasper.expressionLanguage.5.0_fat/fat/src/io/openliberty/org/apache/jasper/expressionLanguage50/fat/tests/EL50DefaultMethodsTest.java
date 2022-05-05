@@ -24,7 +24,7 @@ import componenttest.topology.impl.LibertyServer;
 import componenttest.topology.utils.FATServletClient;
 
 /**
- * Tests to ensure default methods are resolved by BeanELResolver in EL 5.0. 
+ * Tests to ensure default methods are resolved by BeanELResolver in expressionLanguage-5.0. 
  * https://github.com/jakartaee/expression-language/issues/43
  */
 @RunWith(FATRunner.class)
