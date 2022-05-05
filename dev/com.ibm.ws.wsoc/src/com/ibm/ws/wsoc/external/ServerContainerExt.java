@@ -286,6 +286,11 @@ public class ServerContainerExt extends WebSocketContainerExt implements WsWsocS
         return annotatedEP;
     }
 
+    // VS https://github.com/jakartaee/websocket/pull/375 
+    // public void upgradeHttpToWebSocket(Object httpServletRequest, Object httpServletResponse, ServerEndpointConfig sec,
+    // Map<String,String> pathParameters) throws IOException, DeploymentException;
+    // https://wasrtc.hursley.ibm.com:9443/jazz/web/projects/WS-CD#action=com.ibm.team.scm.browseElement&workspaceItemId=_RthwwL7qEeGqAveGCjgPPg&componentItemId=_bB9H0AFHEeCRyLCwaAjryg&itemType=com.ibm.team.filesystem.FileItem&itemId=_wopdINznEeKhnOTCxScKMw&tab=history
+    
     /*
      * (non-Javadoc)
      * 

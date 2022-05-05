@@ -85,4 +85,7 @@ public interface OutboundVirtualConnection extends VirtualConnection {
      */
     void close(Exception e);
 
+    public OutboundConnectionLink getApplicationLink();
+
+
 }

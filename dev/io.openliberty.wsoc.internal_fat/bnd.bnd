@@ -29,14 +29,20 @@ fat.project: true
 tested.features: \
     servlet-4.0,\
     servlet-5.0,\
+    servlet-6.0,\
     websocket-2.0, \
+    websocket-2.1, \
     messagingserver-3.0, \
     messagingclient-3.0, \
     enterprisebeanslite-4.0, \
     cdi-3.0, \
+    cdi-4.0, \
     connectors-2.0, \
     appsecurity-4.0, \
-    expressionlanguage-4.0
+    appsecurity-4.0, \
+    expressionlanguage-4.0, \
+    expressionlanguage-5.0, \
+    xmlbinding-4.0
 
 -buildpath: \
     com.ibm.websphere.javaee.ejb.3.2;version=latest,\

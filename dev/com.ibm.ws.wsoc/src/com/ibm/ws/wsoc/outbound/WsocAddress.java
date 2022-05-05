@@ -13,6 +13,8 @@ package com.ibm.ws.wsoc.outbound;
 import java.net.InetSocketAddress;
 import java.net.URI;
 
+import javax.net.ssl.SSLContext;
+
 import com.ibm.websphere.ras.Tr;
 import com.ibm.websphere.ras.TraceComponent;
 import com.ibm.wsspi.http.channel.outbound.HttpAddress;
@@ -36,6 +38,8 @@ public class WsocAddress implements HttpAddress {
     private int port = 80;
 
     private URI path = null;
+
+    private SSLContext context = null;
 
     public WsocAddress(URI path) {
 
@@ -76,6 +80,14 @@ public class WsocAddress implements HttpAddress {
             return true;
         }
         return false;
+    }
+
+    public void setSSLContext(SSLContext context){
+        this.context = context;
+    }
+
+    public SSLContext getSSLContext(){
+        return context;
     }
 
     public URI getURI() {

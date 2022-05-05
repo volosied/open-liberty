@@ -318,7 +318,17 @@ public class SSLChannel implements InboundChannel, OutboundChannel, Discriminato
                 }
             }
         }
-        SSLContext context = getSSLContextForLink(vc, socket.getHostName(), Integer.toString(socket.getPort()), protocol, Boolean.FALSE, link);
+
+        SSLContext context = null;
+
+        if(address instanceof com.ibm.ws.wsoc.outbound.WsocAddress && ((com.ibm.ws.wsoc.outbound.WsocAddress) address).getSSLContext() != null ){
+            context = ((com.ibm.ws.wsoc.outbound.WsocAddress) address).getSSLContext();
+            System.out.println("Set SSLContext via wsoc address");
+        } else {
+            context = getSSLContextForLink(vc, socket.getHostName(), Integer.toString(socket.getPort()), protocol, Boolean.FALSE, link);
+        }
+
+        // SSLContext context = getSSLContextForLink(vc, socket.getHostName(), Integer.toString(socket.getPort()), protocol, Boolean.FALSE, link);
 
         if (TraceComponent.isAnyTracingEnabled() && tc.isEntryEnabled()) {
             Tr.exit(tc, "getSSLContextForOutboundLink");

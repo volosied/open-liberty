@@ -202,6 +202,9 @@ public class DefaultServerEndpointConfigurator extends ServerEndpointConfig.Conf
         }
     }
 
+    //VS getContainerDefaultConfigurator()
+    // https://github.com/jakartaee/websocket/issues/207
+
     public void releaseCC(Object key) {
 
         InjectionProvider12 ip12 = ServiceManager.getInjectionProvider12();

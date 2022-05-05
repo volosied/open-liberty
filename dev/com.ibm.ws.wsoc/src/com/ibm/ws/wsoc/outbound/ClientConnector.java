@@ -12,9 +12,11 @@ package com.ibm.ws.wsoc.outbound;
 
 import java.io.IOException;
 import java.net.URI;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import javax.net.ssl.SSLContext;
 import javax.websocket.ClientEndpoint;
 import javax.websocket.ClientEndpointConfig;
 import javax.websocket.ClientEndpointConfig.Builder;
@@ -123,6 +125,40 @@ public class ClientConnector {
     }
 
     private ClientEndpointConfig getEndpointConfig(EndpointHelper helper) throws DeploymentException {
+
+        // SSLContext sslContext = SSLContext.getInstance("TLS");
+        // File trustStoreFile = new File(TesterSupport.CA_JKS);
+        // KeyStore ks = KeyStore.getInstance("JKS");
+        // try (InputStream is = new FileInputStream(trustStoreFile)) {
+        //     KeyStoreUtil.load(ks, is, Constants.SSL_TRUSTSTORE_PWD_DEFAULT.toCharArray());
+        // }
+        // TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+        // tmf.init(ks);
+        // sslContext.init(null,  tmf.getTrustManagers(), null);
+
+        // KeyStore keyStore  = KeyStore.getInstance("PKCS12");
+        // FileInputStream instream = new FileInputStream(new File("/Users/siedlecki/libertyGit/open-liberty/dev/build.image/wlp/usr/servers/secureTestServer/resources/security/key.p12"));
+        // try {
+        //     keyStore.load(instream, "{xor}BC8+LCwoby07Ag==".toCharArray());
+        // } finally {
+        //     instream.close();
+        // }
+    
+        // // Trust own CA and all self-signed certs
+        // SSLContext sslcontext = SSLContexts.custom()
+        //     .loadKeyMaterial(keyStore, "password".toCharArray())
+        //     //.loadTrustMaterial(trustStore, new TrustSelfSignedStrategy())
+        //     .build();
+        // SSLContext sc = null;
+        // try {
+        //     sc = SSLContext.getInstance("TLSv1");
+        //     sc.init(null, null, new SecureRandom());
+        // } catch (Exception e) {
+        //     System.out.println("ERROR " + e.toString());
+        // }
+
+
+
 
         Builder builder = ClientEndpointConfig.Builder.create();
 

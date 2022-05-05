@@ -87,6 +87,11 @@ public class HttpRequestor {
 
         vc = (OutboundVirtualConnection) WsocOutboundChain.getVCFactory(endpointAddress);;
         access.setVirtualConnection(vc);
+
+        endpointAddress.setSSLContext(config.getSSLContext());
+
+        // vc.getApplicationLink().getDeviceLink().getChannel().setWebSocketSSLContext(null);
+
         vc.connect(endpointAddress);
 
     }
