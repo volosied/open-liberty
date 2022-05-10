@@ -157,10 +157,18 @@ public class ClientConnector {
         //     System.out.println("ERROR " + e.toString());
         // }
 
+        SSLContext sslContext = null;
+        try {
+            sslContext = SSLContext.getDefault();
+            sslContext.init(null, null, new SecureRandom()); 
+        } catch (Exception e) {
+            System.out.println("ERROR: " + e.getMessage());
+        }
+;
 
+        Builder builder = ClientEndpointConfig.Builder.create().sslContext(sslContext);
 
-
-        Builder builder = ClientEndpointConfig.Builder.create();
+        // ClientEndpointConfig.Builder.create().sslContext(sslContext).build();
 
         if (helper.getDecoders() != null) {
             builder.decoders(helper.getDecoders());
