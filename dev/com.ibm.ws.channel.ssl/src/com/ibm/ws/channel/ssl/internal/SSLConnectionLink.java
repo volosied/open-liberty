@@ -1023,10 +1023,21 @@ public class SSLConnectionLink extends OutboundProtocolLink implements Connectio
             this.sslContext = getChannel().getSSLContextForOutboundLink(this, getVirtualConnection(), address);
             // Discrimination has not happened yet. Create new SSL engine.
             // PK46069 - use engine that allows session id re-use
-            this.sslEngine = SSLUtils.getOutboundSSLEngine(sslContext, getLinkConfig(),
-                                                           targetAddress.getRemoteAddress().getHostName(),
-                                                           targetAddress.getRemoteAddress().getPort(),
-                                                           this);
+            if(address instanceof com.ibm.ws.wsoc.outbound.WsocAddress){
+                this.sslEngine = sslContext.createSSLEngine(targetAddress.getRemoteAddress().getHostName(), targetAddress.getRemoteAddress().getPort());
+                sslEngine.setUseClientMode(true);
+                javax.net.ssl.SSLParameters sslParams = sslEngine.getSSLParameters();
+                // sslParams.setEndpointIdentificationAlgorithm("HTTPS");
+                this.sslEngine.setSSLParameters(sslParams);
+                this.sslEngine.beginHandshake();
+
+            } else {
+                this.sslEngine = SSLUtils.getOutboundSSLEngine(sslContext, getLinkConfig(),
+                targetAddress.getRemoteAddress().getHostName(),
+                targetAddress.getRemoteAddress().getPort(),
+                this);
+            }
+
         }
         if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
             Tr.debug(tc, "SSL engine hc=" + getSSLEngine().hashCode() + " associated with vc=" + getVCHash());
