@@ -56,7 +56,7 @@ public class HttpSessionImpl extends SessionData implements IHttpSession, IFacad
    */
   public Object getFacade()
   {
-    return (Object) _httpSessionFacade;
+    return (Object) returnFacade();
   }
 
 }
