@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 1997, 2022 IBM Corporation and others.
+ * Copyright (c) 2022 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,68 +8,61 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package com.ibm.ws.session;
+package io.openliberty.session;
 
 import java.util.Enumeration;
 import java.util.Vector;
 import java.util.logging.Level;
 
-import javax.servlet.ServletContext;
-
-import com.ibm.ws.session.http.HttpSessionImpl;
+import com.ibm.ws.session.SessionContext;
 import com.ibm.ws.session.utils.LoggingUtil;
 import com.ibm.ws.util.ArrayEnumeration;
 import com.ibm.wsspi.session.ISession;
 
-/**
+import io.openliberty.session.http.HttpSessionImpl60;
+import jakarta.servlet.ServletContext;
+
+/*
  * The WAS Http Session adaptation.  Extends the core HttpSessionImpl and adds WAS-specific function
- * <p>
- * Servlet 6 update: 
- *      - common methods/APIs are moved to AbstractSessionData
- *      - Keep some methods (including supportive methods) here to override the HttpSessionImpl
+ *
+ * Since Servlet 6.0
  */
-public class SessionData extends HttpSessionImpl {
+public class SessionData60 extends HttpSessionImpl60 {
 
     private static final long serialVersionUID = -76305717244905946L;
-    protected HttpSessionFacade _httpSessionFacade;
-    private static final String methodClassName = "SessionData";
+    protected HttpSessionFacade60 _httpSessionFacade;
 
-    //protected boolean _hasSecurityInfo = true; // used in
-                                               // getAttributeNames/getValueNames
-    // we have to assume true and we'll set to false
-    // in getValueNames if the sec prop isn't found
-
-    String sipCookieInfo = null;
-
-    public SessionData(ISession session, SessionContext sessCtx, ServletContext servCtx) {
+    public SessionData60(ISession session, SessionContext sessCtx, ServletContext servCtx) {
         super(session);
         _httpSessionFacade = returnFacade();
         _sessCtx = sessCtx;
         appName = _sessCtx.getAppName();
         setServletContext(servCtx);
-        
-        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && LoggingUtil.SESSION_LOGGER_CORE.isLoggable(Level.FINER)) {
-            LoggingUtil.SESSION_LOGGER_CORE.entering(methodClassName, "Constructor ; _httpSessionFacade [", _httpSessionFacade +"]");
+
+        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && LoggingUtil.SESSION_LOGGER_CORE.isLoggable(Level.FINE)) {
+            LoggingUtil.SESSION_LOGGER_CORE.log(Level.FINE, "SessionData60" + "Constructor");
         }
     }
 
-    protected HttpSessionFacade returnFacade() {
-        return new HttpSessionFacade(this);
+    protected HttpSessionFacade60 returnFacade() {
+        return new HttpSessionFacade60(this);
     }
 
     /*
      * @see javax.servlet.http.HttpSession#getValue(java.lang.String)
      */
+    @Override
     public Object getValue(String pName) {
         return getSessionValue(pName, false);
     }
-    
-    /* 
-     * Servlet 6 Update: 
-     *  - Keep here to support getValueNames(); looping of move to AbstractSessionData
-     * 
+
+    /*
+     * Servlet 6 Update:
+     * - Keep here to support getValueNames(); looping of move to AbstractSessionData
+     *
      * @see javax.servlet.http.HttpSession#getAttributeNames()
      */
+    @Override
     public Enumeration getAttributeNames() {
         Enumeration attrNameEnum;
         if (!_hasSecurityInfo) {
@@ -80,10 +73,11 @@ public class SessionData extends HttpSessionImpl {
         }
         return attrNameEnum;
     }
-  
+
     /*
      * @see javax.servlet.http.HttpSession#getValueNames()
      */
+    @Override
     public String[] getValueNames() {
 
         Enumeration enumeration = super.getAttributeNames();
@@ -107,6 +101,7 @@ public class SessionData extends HttpSessionImpl {
      * @see javax.servlet.http.HttpSession#putValue(java.lang.String,
      * java.lang.Object)
      */
+    @Override
     public void putValue(String pName, Object pValue) {
         putSessionValue(pName, pValue, false);
     }
@@ -114,6 +109,7 @@ public class SessionData extends HttpSessionImpl {
     /*
      * @see javax.servlet.http.HttpSession#removeValue(java.lang.String)
      */
+    @Override
     public void removeValue(String pName) {
         removeSessionValue(pName);
     }
