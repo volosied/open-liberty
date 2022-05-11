@@ -20,6 +20,7 @@ import com.ibm.sip.util.log.LogMgr;
 import com.ibm.websphere.servlet.session.IBMApplicationSession;
 import com.ibm.websphere.servlet.session.IBMSession;
 import com.ibm.ws.session.HttpSessionFacade;
+import com.ibm.ws.session.AbstractHttpSessionFacade;
 import com.ibm.ws.session.IBMApplicationSessionImpl;
 import com.ibm.ws.session.SessionContext;
 import com.ibm.ws.session.SessionManager;
@@ -60,13 +61,13 @@ public class ConvergedHttpSessionImpl extends HttpSessionImpl implements Converg
 		}
     }
     
-    protected HttpSessionFacade returnFacade() {
-    	 if (c_logger.isTraceDebugEnabled()) {
-     		c_logger.traceDebug(this, "returnFacade", "returnFacade");
- 		}
-        return new WsHttpSessionFacade(this);
+    protected AbstractHttpSessionFacade returnFacade() {
+    	if (c_logger.isTraceDebugEnabled()) {
+    		c_logger.traceDebug(this, "returnFacade", "WsHttpSessionFacade");
+    	}
+    	return new WsHttpSessionFacade(this);
     }
-    
+
   	public void setSIPCookieInfo(HttpServletRequest _request) {
   		 if (c_logger.isTraceEntryExitEnabled()) {
       		c_logger.traceEntry(this, "setSIPCookieInfo", "setSIPCookieInfo");
