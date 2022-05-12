@@ -10,13 +10,30 @@
  *******************************************************************************/
 package com.ibm.ws.channel.ssl.internal;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.InetAddress;
 import java.nio.ReadOnlyBufferException;
+import java.security.KeyStore;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import java.io.File;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.KeyStore;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLEngine;
 import javax.net.ssl.SSLEngineResult;
@@ -1020,7 +1037,42 @@ public class SSLConnectionLink extends OutboundProtocolLink implements Connectio
         // First check if the sslContext and sslEngine have already been set (discrimination case)
         if (sslContext == null || getSSLEngine() == null) {
             // Create a new SSL context based on the current properties in the ssl config.
-            this.sslContext = getChannel().getSSLContextForOutboundLink(this, getVirtualConnection(), address);
+            // TrustManager[] trustManagers = null;
+
+            // String tsPath = "/Users/siedlecki/Downloads/sslengine.example-master/src/main/resources/trustedCerts.jks";
+            // String tsPassword = "storepass";
+            // if (tsPath != null) {
+            //     TrustManagerFactory tmFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+            //     File tsFile = new File(tsPath);
+
+            //     KeyStore trustStore = null;
+            //     try {
+            //             trustStore = KeyStore.getInstance("JKS");
+            //             InputStream tsStream = new FileInputStream(tsFile);
+            //             trustStore.load(tsStream, tsPassword.toCharArray());
+            //     } catch (Exception e) {
+            //             throw e;
+            //     }
+
+            //     tmFactory.init(trustStore);
+
+            //     trustManagers = tmFactory.getTrustManagers();
+
+            // }
+            // this.sslContext = SSLContext.getInstance("TLSv1.2");
+            // this.sslContext.init(null, trustManagers, null);
+
+
+            this.sslContext = SSLContext.getInstance("SSL");
+            File trustStoreFile = new File("/Users/siedlecki/libertyGit/open-liberty/dev/build.image/wlp/usr/servers/websocketServer/resources/security/key.p12");
+            KeyStore ks = KeyStore.getInstance("PKCS12");
+            try (InputStream is = new FileInputStream(trustStoreFile)) {
+                load(ks, is,"password".toCharArray());
+            }
+            TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+            tmf.init(ks);
+            this.sslContext.init(null,  tmf.getTrustManagers(), null);
+
             // Discrimination has not happened yet. Create new SSL engine.
             // PK46069 - use engine that allows session id re-use
             if(address instanceof com.ibm.ws.wsoc.outbound.WsocAddress){
@@ -1028,10 +1080,12 @@ public class SSLConnectionLink extends OutboundProtocolLink implements Connectio
                 sslEngine.setUseClientMode(true);
                 javax.net.ssl.SSLParameters sslParams = sslEngine.getSSLParameters();
                 // sslParams.setEndpointIdentificationAlgorithm("HTTPS");
-                this.sslEngine.setSSLParameters(sslParams);
+                // this.sslEngine.setSSLParameters(sslParams);
                 this.sslEngine.beginHandshake();
 
             } else {
+                this.sslContext = getChannel().getSSLContextForOutboundLink(this, getVirtualConnection(), address);
+
                 this.sslEngine = SSLUtils.getOutboundSSLEngine(sslContext, getLinkConfig(),
                 targetAddress.getRemoteAddress().getHostName(),
                 targetAddress.getRemoteAddress().getPort(),
@@ -1048,6 +1102,40 @@ public class SSLConnectionLink extends OutboundProtocolLink implements Connectio
         if (TraceComponent.isAnyTracingEnabled() && tc.isEntryEnabled()) {
             Tr.exit(tc, "connect");
         }
+    }
+    public static void load(KeyStore keystore, InputStream is, char[] storePass)
+            throws NoSuchAlgorithmException, CertificateException, IOException {
+        if (keystore.getType().equals("PKCS12")) {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            byte[] buf = new byte[8192];
+            int numRead;
+            while ((numRead = is.read(buf)) >= 0) {
+                baos.write(buf, 0, numRead);
+            }
+            baos.close();
+            // Don't close is. That remains the callers responsibility.
+
+            ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+
+            keystore.load(bais, storePass);
+        } else {
+            keystore.load(is, storePass);
+        }
+    }
+
+    protected KeyManager[] createKeyManagers(String filepath, String keystorePassword, String keyPassword) throws Exception {
+        KeyStore keyStore = KeyStore.getInstance("JKS");
+        InputStream keyStoreIS = new FileInputStream(filepath);
+        try {
+            keyStore.load(keyStoreIS, keystorePassword.toCharArray());
+        } finally {
+            if (keyStoreIS != null) {
+                keyStoreIS.close();
+            }
+        }
+        KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+        kmf.init(keyStore, keyPassword.toCharArray());
+        return kmf.getKeyManagers();
     }
 
     /**
