@@ -38,7 +38,9 @@ tested.features: \
     appsecurity-4.0, \
     expressionlanguage-4.0, \
     websocket-2.1, \
-    servlet-6.0
+    servlet-6.0, \
+    cdi-4.0, \
+    xmlbinding-4.0
 
 -buildpath: \
     com.ibm.websphere.javaee.ejb.3.2;version=latest,\
