@@ -25,6 +25,7 @@ import com.ibm.ws.jsp23.fat.tests.JSPPrepareJSPThreadCountNonDefaultValueTests;
 import com.ibm.ws.jsp23.fat.tests.JSPSkipMetaInfTests;
 import com.ibm.ws.jsp23.fat.tests.JSPTests;
 import com.ibm.ws.jsp23.fat.tests.JSTLTests;
+import com.ibm.ws.jsp23.fat.tests.JSTLTestsEE10;
 
 import componenttest.rules.repeater.EmptyAction;
 import componenttest.rules.repeater.FeatureReplacementAction;
@@ -44,7 +45,8 @@ import componenttest.rules.repeater.RepeatTests;
                 JSP23JSP22ServerTest.class,
                 JSPPrepareJSPThreadCountNonDefaultValueTests.class,
                 JSPPrepareJSPThreadCountDefaultValueTests.class,
-                JSTLTests.class
+                JSTLTests.class,
+                JSTLTestsEE10.class
 })
 public class FATSuite {
 
@@ -67,5 +69,6 @@ public class FATSuite {
                                     .withID("CDI-2.0")
                                     .forceAddFeatures(false)
                                     .fullFATOnly())
+                    .andWith(FeatureReplacementAction.EE9_FEATURES().fullFATOnly())
                     .andWith(FeatureReplacementAction.EE9_FEATURES());
 }
