@@ -26,8 +26,8 @@ public class JSPExtensionProcessor extends AbstractJSPExtensionProcessor {
     public JSPExtensionProcessor(IServletContext webapp, 
                                  JspXmlExtConfig webAppConfig, 
                                  GlobalTagLibraryCache globalTagLibraryCache,
-                                 JspClassloaderContext jspClassloaderContext, String loadedPagesVersion) throws Exception {
-        super(webapp, webAppConfig, globalTagLibraryCache, jspClassloaderContext, loadedPagesVersion);
+                                 JspClassloaderContext jspClassloaderContext) throws Exception {
+        super(webapp, webAppConfig, globalTagLibraryCache, jspClassloaderContext);
     }
 
     //PK81387 - added checkWEBINF param

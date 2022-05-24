@@ -96,8 +96,6 @@ public abstract class AbstractJSPExtensionServletWrapper extends GenericServletW
     public static boolean dispatcherRethrowSERROR = WCCustomProperties.DISPATCHER_RETHROW_SERROR;       //PM22919
 
     private boolean warningStatusSet = false;
-    
-    private String loadedPagesVersion = null;
 
     public AbstractJSPExtensionServletWrapper(IServletContext parent, 
                                       JspOptions options, 
@@ -114,7 +112,7 @@ public abstract class AbstractJSPExtensionServletWrapper extends GenericServletW
         this.dependentsList = new ArrayList();
     }
 
-    public void initialize(IServletConfig config, String loadedPagesVersion) throws Exception {
+    public void initialize(IServletConfig config) throws Exception {
         if (config.getFileName() == null || config.getFileName().equals("")) {
             throw new UnavailableException(JspCoreException.getMsg("jsp.error.failed.to.find.resource", new Object[] { config.getFileName() }));
         }
@@ -123,8 +121,6 @@ public abstract class AbstractJSPExtensionServletWrapper extends GenericServletW
         //} else {
             inputSource = tcontext.getJspInputSourceFactory().createJspInputSource(config.getFileName());
         //}
-            
-        this.loadedPagesVersion = loadedPagesVersion;
         
         super.initialize(config);
     }
@@ -380,7 +376,7 @@ public abstract class AbstractJSPExtensionServletWrapper extends GenericServletW
 
                             if (tmpJCI != null) {
                                 //get the current JSP version the server is running for this request
-                                String currentJspVersion = this.loadedPagesVersion;
+                                String currentJspVersion = com.ibm.ws.jsp.webcontainerext.JSPExtensionFactory.loadedSpecLevel.toString();
                                 //if this does not match the version from the previously compiled version of the JSP then we need to re-translate and re-compile the JSP
                                 if (!currentJspVersion.equals(tmpJCI.getVersionInformation())) {
                                     translationRequired = true;

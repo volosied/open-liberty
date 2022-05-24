@@ -13,6 +13,7 @@ package com.ibm.ws.jsp.webcontainerext;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -108,20 +109,10 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
     private ClassLoadingService classLoadingService;
     private BundleContext bundleContext;
 
-    private ServiceReference<PagesVersion> versionRef;
+    public static Double loadedSpecLevel = loadServletVersion();
 
-    public static final String SPEC_LEVEL_UNLOADED = "0.0";
+    private static Double DEFAULT_VERSION = 2.2;
 
-    private static final String DEFAULT_VERSION = "2.2";
-
-    private static String loadedSpecLevel = SPEC_LEVEL_UNLOADED;
-
-    protected static volatile CountDownLatch selfInit = new CountDownLatch(1);
-
-    // See OL #15317 
-    private boolean isPagesVersionLoaded = false;
-    ArrayList<GlobalTagLibConfig> storedGlobalTagLibConfigs = new ArrayList<GlobalTagLibConfig>();
-    
     /**
      * Active JSPExtensionFactory instance. May be null between deactivate and activate
      * calls.
@@ -177,7 +168,6 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
     protected void deactivate(ComponentContext ctx) {
         // Clear this as the active instance
         instance.compareAndSet(this, null);
-        selfInit = new CountDownLatch(1);
         expressionFactoryService.deactivate(ctx);
     }
 
@@ -197,24 +187,6 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
         }
     }
 
-    @Reference(service = PagesVersion.class, cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.DYNAMIC, policyOption = ReferencePolicyOption.GREEDY)
-    protected synchronized void setVersion(ServiceReference<PagesVersion> reference) {
-      this.versionRef = reference;
-      JSPExtensionFactory.loadedSpecLevel = (String) reference.getProperty("version");
-      isPagesVersionLoaded = true;
-      if(!storedGlobalTagLibConfigs.isEmpty()){
-        storedGlobalTagLibConfigs.forEach(tagConfig ->  setGlobalTagLibConfig(tagConfig));
-        storedGlobalTagLibConfigs.clear();
-      }
-    }
-
-    protected synchronized void unsetVersion(ServiceReference<PagesVersion> reference) {
-      if (reference == this.versionRef) {
-        this.versionRef = null;
-        JSPExtensionFactory.loadedSpecLevel = JSPExtensionFactory.DEFAULT_VERSION;
-      }
-    }
-    
     private final static HashMap<String, String> FullyQualifiedPropertiesMap = new HashMap<String, String>();
     static { 
         JSPExtensionFactory.FullyQualifiedPropertiesMap.put("keepGenerated", "keepgenerated");
@@ -591,7 +563,7 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
     protected ExtensionProcessor createProcessor(IServletContext webapp,
                                                  JspXmlExtConfig webAppConfig,
                                                  JspClassloaderContext jspClassloaderContext) throws Exception {
-        JSPExtensionProcessor processor = new JSPExtensionProcessor(webapp, webAppConfig, globalTagLibraryCache, jspClassloaderContext, getLoadedPagesSpecLevel() );
+        JSPExtensionProcessor processor = new JSPExtensionProcessor(webapp, webAppConfig, globalTagLibraryCache, jspClassloaderContext);
         processor.startPreTouch(prepareJspHelperFactory);
         return processor;
     }
@@ -607,22 +579,8 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
      * DS method for setting (providing) a global tag lib config
      */
     @Reference(cardinality=ReferenceCardinality.MULTIPLE, policy=ReferencePolicy.DYNAMIC)
-    protected void setGlobalTagLibConfig(GlobalTagLibConfig globalTagLibConfig) {
-            
-            /*  
-                Cache the globalTagLibConfig argument until setVersion is called. 
-
-                setGlobalTagLibConfig creates the GlobalTagLibraryCache if it doesn't exist yet 
-                isPages30orHigher is called with in the GlobalTagLibraryCache constuctor.  
-                setGlobalTagLibConfig is called before setVersion and it created a problem 
-                since the JSP/Pages version is needed to determine which JSTL/Tags TLDs to load. 
-            */  
-            
-            if(!isPagesVersionLoaded){
-                storedGlobalTagLibConfigs.add(globalTagLibConfig);
-            } else {
-                getGlobalTagLibraryCache().addGlobalTagLibConfig(globalTagLibConfig);
-            }
+    protected void setGlobalTagLibConfig(GlobalTagLibConfig globalTagLibConfig) {  
+        getGlobalTagLibraryCache().addGlobalTagLibConfig(globalTagLibConfig);
     }
 
     /**
@@ -645,38 +603,50 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
         return locationService.resolveString(x);
     }
 
-    public static String getLoadedPagesSpecLevel() {
-        if(JSPExtensionFactory.loadedSpecLevel.equals(SPEC_LEVEL_UNLOADED)){
+    private static synchronized Double loadServletVersion(){
+        String methodName = "loadServletVersion";
 
-            CountDownLatch currentLatch = selfInit;
-            // wait for activation
-            try {
-                currentLatch.await(5, TimeUnit.SECONDS);
-            } catch (InterruptedException e) {
-                // auto-FFDC
-                Thread.currentThread().interrupt();
-            }
-            currentLatch.countDown(); // don't wait again
+        try (InputStream input = JSPExtensionFactory.class.getClassLoader().getResourceAsStream("com/ibm/ws/jsp/speclevel/jspSpecLevel.properties")) {
 
-            if(JSPExtensionFactory.loadedSpecLevel.equals(SPEC_LEVEL_UNLOADED)){
-              logger.logp(Level.WARNING, CLASS_NAME, "getLoadedPagesSpecLevel", "jsp.feature.not.loaded.correctly");
-              return JSPExtensionFactory.DEFAULT_VERSION;
+            // null check fixes errors in wc unit tests 
+            if(input != null){
+                Properties prop = new Properties();
+                prop.load(input);
+                Double loadedVersion = Double.parseDouble(prop.getProperty("version"));
+                // if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
+                //     logger.logp(Level.FINE, CLASS_NAME, methodName, "Loaded JSP version from jspSpecLevel.properties: " + loadedVersion.toString() );
+                // }
+                return loadedVersion;
+            } else {
+                if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
+                    logger.logp(Level.FINE, CLASS_NAME, methodName, "InputStream was null for jspSpecLevel.properties" );
+                }
             }
-        }
-        return JSPExtensionFactory.loadedSpecLevel;
+
+        } catch (Exception ex) {
+            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
+                logger.logp(Level.FINE, CLASS_NAME, methodName, "Exception occured: " + ex.getCause() );
+            }
+        } 
+
+        logger.logp(Level.WARNING, CLASS_NAME, "getLoadedPagesSpecLevel", "jsp.feature.not.loaded.correctly");
+
+        return DEFAULT_VERSION;
     }
-    
+
+    // public static String getLoadedPagesSpecLevel(){
+    //     return loadedSpecLevel.toString();
+    // }
+
     public static boolean isPages30(){
-        String version = getLoadedPagesSpecLevel();
-        if(version.equals("3.0")){
-            return tru;
+        if(JSPExtensionFactory.loadedSpecLevel == 3.0 ){
+            return true;
         }
         return false;
     }
 
     public static boolean isPages31(){
-        String version = getLoadedPagesSpecLevel();
-        if(version.equals("3.1" )){
+        if(JSPExtensionFactory.loadedSpecLevel == 3.1){
             return true;
         }
         return true;

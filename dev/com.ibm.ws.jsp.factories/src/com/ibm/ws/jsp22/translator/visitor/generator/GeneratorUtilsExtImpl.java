@@ -83,7 +83,7 @@ public class GeneratorUtilsExtImpl implements GeneratorUtilsExt {
 	
 	@Override
     public String getClassFileVersion() {
-        return JSPExtensionFactory.getLoadedPagesSpecLevel();
+        return JSPExtensionFactory.loadedSpecLevel.toString();
     }
 
     //PI59436 start
