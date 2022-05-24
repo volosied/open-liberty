@@ -666,10 +666,18 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
         return JSPExtensionFactory.loadedSpecLevel;
     }
     
-    public static boolean isPages30orHigher(){
+    public static boolean isPages30(){
         String version = getLoadedPagesSpecLevel();
-        if(version.equals("2.2" ) || version.equals("2.3")){
-            return false;
+        if(version.equals("3.0")){
+            return tru;
+        }
+        return false;
+    }
+
+    public static boolean isPages31(){
+        String version = getLoadedPagesSpecLevel();
+        if(version.equals("3.1" )){
+            return true;
         }
         return true;
     }
