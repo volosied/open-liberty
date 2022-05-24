@@ -119,6 +119,7 @@ Include-Resource: \
    com/ibm/ws/jsp/webcontainerext/packageinfo=src/com/ibm/ws/jsp/webcontainerext/packageinfo, \
    com/ibm/ws/jsp/resources/taglibcacheconfig.xml=resources/com/ibm/ws/jsp/resources/taglibcacheconfig.xml, \
    com/ibm/ws/jsp/resources/taglibcacheconfig.tags.2.0.xml=resources/com/ibm/ws/jsp/resources/taglibcacheconfig.tags.2.0.xml, \
+   com/ibm/ws/jsp/resources/taglibcacheconfig.tags.3.0.xml=resources/com/ibm/ws/jsp/resources/taglibcacheconfig.tags.3.0.xml, \
    com/ibm/ws/jsp/resources/optimizedjstltags.xml=resources/com/ibm/ws/jsp/resources/optimizedjstltags.xml, \
    com/ibm/ws/jsp/resources/optimizedtags.xml=resources/com/ibm/ws/jsp/resources/optimizedtags.xml, \
    com/ibm/ws/jsp/jsx/tags/jsxFunction.tld=src/com/ibm/ws/jsp/jsx/tags/jsxFunction.tld, \
