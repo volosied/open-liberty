@@ -70,5 +70,5 @@ public class FATSuite {
                                     .forceAddFeatures(false)
                                     .fullFATOnly())
                     .andWith(FeatureReplacementAction.EE9_FEATURES().fullFATOnly())
-                    .andWith(FeatureReplacementAction.EE9_FEATURES());
+                    .andWith(FeatureReplacementAction.EE10_FEATURES());
 }
