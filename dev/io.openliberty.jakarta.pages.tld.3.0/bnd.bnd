@@ -33,7 +33,7 @@ Export-Package: \
     org.apache.taglibs.standard.tag.rt.sql;version="2.0.0", \
     org.apache.taglibs.standard.tag.rt.xml;version="2.0.0"
 
--includeresource: @${repo;org.glassfish.web:jakarta.servlet.jsp.jstl;2.0}!/!com/oracle/wls/shaded/*
+-includeresource: @${repo;org.glassfish.web:jakarta.servlet.jsp.jstl;2.0.0;EXACT}!/!com/oracle/wls/shaded/*
 
 instrument.disabled: true
 
