@@ -18,7 +18,7 @@
    
     <include location="../fatTestPorts.xml"/>
     
-    <httpSession maxInMemorySessionCount="1" allowOverflow="false" hideSessionValues="false" invalidationTimeout="10m"/>
+    <httpSession  debugCrossover="true" maxInMemorySessionCount="1" allowOverflow="false" hideSessionValues="false" invalidationTimeout="10m"/>
 
     <!-- 
          Include the session cache configuration file for this specific run.
