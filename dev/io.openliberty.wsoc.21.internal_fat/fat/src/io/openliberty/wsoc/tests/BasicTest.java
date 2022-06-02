@@ -180,4 +180,10 @@ public class BasicTest {
         at.testAnnotatedByteArraySuccess();
     }
 
+    @Mode(TestMode.FULL)
+    @Test
+    public void testSSCAnnotatedByteArraySuccess() throws Exception {
+        this.runAsLSAndVerifyResponse("AnnotatedTest", "testAnnotatedByteArraySuccess");
+    }
+
 }
