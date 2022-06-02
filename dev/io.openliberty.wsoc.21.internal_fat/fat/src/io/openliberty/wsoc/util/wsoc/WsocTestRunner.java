@@ -15,12 +15,12 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
-import javax.websocket.ClientEndpointConfig;
-import javax.websocket.ClientEndpointConfig.Builder;
-import javax.websocket.CloseReason;
-import javax.websocket.Session;
-import javax.websocket.WebSocketContainer;
-import javax.websocket.Endpoint;
+import jakarta.websocket.ClientEndpointConfig;
+import jakarta.websocket.ClientEndpointConfig.Builder;
+import jakarta.websocket.CloseReason;
+import jakarta.websocket.Session;
+import jakarta.websocket.WebSocketContainer;
+import jakarta.websocket.Endpoint;
 
 import io.openliberty.wsoc.common.Constants;
 

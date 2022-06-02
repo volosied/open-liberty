@@ -10,8 +10,8 @@
  *******************************************************************************/
 package io.openliberty.wsoc.util.wsoc;
 
-import javax.websocket.ContainerProvider;
-import javax.websocket.WebSocketContainer;
+import jakarta.websocket.ContainerProvider;
+import jakarta.websocket.WebSocketContainer;
 
 /**
  *

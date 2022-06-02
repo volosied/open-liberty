@@ -14,12 +14,12 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.logging.Logger;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.websocket.server.ServerContainer;
-import javax.websocket.server.ServerEndpointConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.websocket.server.ServerContainer;
+import jakarta.websocket.server.ServerEndpointConfig;
 
 import com.ibm.websphere.wsoc.WsWsocServerContainer;
 
@@ -93,7 +93,7 @@ public class WsocUpgradeServlet extends HttpServlet {
 
         }
 
-        ServerContainer container = (ServerContainer) req.getServletContext().getAttribute("javax.websocket.server.ServerContainer");
+        ServerContainer container = (ServerContainer) req.getServletContext().getAttribute("jakarta.websocket.server.ServerContainer");
         if (container instanceof WsWsocServerContainer) {
             WsWsocServerContainer ws = (WsWsocServerContainer) container;
             ws.doUpgrade(req, resp, sec, null);

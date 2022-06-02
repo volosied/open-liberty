@@ -13,7 +13,7 @@ package io.openliberty.wsoc.util.wsoc;
 import java.net.URI;
 import java.util.logging.Logger;
 
-import javax.websocket.ClientEndpointConfig;
+import jakarta.websocket.ClientEndpointConfig;
 
 import org.junit.Assert;
 

@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.logging.Logger;
 
-import javax.websocket.Session;
+import jakarta.websocket.Session;
 
 /**
  * WebSocket Java clients are multi-threaded - even when running a single client. WsocTextContext enhances an endpoint with test information such as storing expected messages,
