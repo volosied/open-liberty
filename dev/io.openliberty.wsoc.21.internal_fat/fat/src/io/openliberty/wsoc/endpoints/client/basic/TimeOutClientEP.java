@@ -44,46 +44,44 @@ import io.openliberty.wsoc.tests.all.AnnotatedTest;
 /**
  *
  */
-public class AnnotatedClientEP implements TestHelper {
+public class TimeOutClientEP implements TestHelper {
+
 
     public WsocTestContext _wtr = null;
-    private static final Logger LOG = Logger.getLogger(AnnotatedClientEP.class.getName());
+    private static final Logger LOG = Logger.getLogger(TimeOutClientEP.class.getName());
     protected boolean EXPECT_TIMEOUT_ERROR = false;
     private final String CLOSE_1006_ERROR_EXCEPTION = "org.eclipse.jetty.websocket.api.ProtocolException: Frame forbidden close status code: 1006";
 
     @ClientEndpoint
-    public static class ByteArrayTest extends AnnotatedClientEP {
+    public static class TimeOutTest extends TimeOutClientEP {
 
-        public byte[][] _data = {};
-        public int _counter = 0;
+        public String[] _data = {};
 
-        public ByteArrayTest(byte[][] data) {
+        public TimeOutTest(String[] data) {
             _data = data;
-        }
-
-        @OnMessage
-        public byte[] echoData(byte[] data) {
-            _wtr.addMessage(data);
-            if (_wtr.limitReached()) {
-                _wtr.terminateClient();
-            } else {
-                return _data[_counter++];
-            }
-
-            return null;
+            // this.EXPECT_TIMEOUT_ERROR = true;
         }
 
         @OnOpen
         public void onOpen(Session sess) {
             try {
-
-                byte[] ba = _data[_counter++];
-                sess.getBasicRemote().sendBinary(ByteBuffer.wrap(ba));
+                sess.getBasicRemote().sendText(_data[0]);
             } catch (Exception e) {
-                _wtr.addExceptionAndTerminate("Error publishing initial message", e);
-
+                //TODO: handle exception
             }
         }
+
+        @OnMessage
+        public String echoText(String data) {
+    
+            _wtr.addMessage(data);
+    
+            _wtr.terminateClient();
+    
+            return null;
+        }
+
+
 
     }
 

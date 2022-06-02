@@ -19,7 +19,7 @@ import jakarta.websocket.WebSocketContainer;
 
 import io.openliberty.wsoc.common.Constants;
 import io.openliberty.wsoc.common.Utils;
-import io.openliberty.wsoc.endpoints.client.basic.AnnotatedClientEP;
+import io.openliberty.wsoc.endpoints.client.basic.TimeOutClientEP;
 import io.openliberty.wsoc.util.wsoc.TestWsocContainer;
 import io.openliberty.wsoc.util.wsoc.WsocTest;
 import junit.framework.Assert;
@@ -42,11 +42,11 @@ public class AnnotatedTest {
      */
     public void testAnnotatedByteArraySuccess() throws Exception {
 
-        byte[][] data = Utils.getRandomBinaryByteArray(5, 100);
-        byte[][] orig = Utils.duplicateByteArray(data);
+        String[] input1 = { "Text1" };
+        String[] output1 = { "SUCCESS" }; // "output" here is actually set in the onClose on the Client side
         //server endpoint uri is /annotatedByteArray/{boolean-var}
-        String uri = "/basic/annotatedByteArray/true";
-        wsocTest.runEchoTest(new AnnotatedClientEP.ByteArrayTest(data), uri, orig);
+        String uri = "/basic/zeroTimeout";
+        wsocTest.runEchoTest(new TimeOutClientEP.TimeOutTest(input1), uri, output1);
 
     }
 }

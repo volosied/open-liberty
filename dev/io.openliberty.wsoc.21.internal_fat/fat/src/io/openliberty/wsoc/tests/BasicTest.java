@@ -10,6 +10,8 @@
  *******************************************************************************/
 package io.openliberty.wsoc.tests;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.io.File;
 import java.util.logging.Logger;
 
@@ -83,6 +85,7 @@ public class BasicTest {
         // Build the war app and add the dependencies
         WebArchive BasicApp = ShrinkHelper.buildDefaultApp(BASIC_WAR_NAME + ".war",
                                                            "basic.war",
+                                                           "basic.war.*",
                                                         //    "basic.war.coding",
                                                         //    "basic.war.configurator",
                                                         //    "basic.war.servlet",
@@ -177,7 +180,11 @@ public class BasicTest {
     @Mode(TestMode.LITE)
     @Test
     public void testAnnotatedByteArraySuccess() throws Exception {
+        LS.setMarkToEndOfLog();
         at.testAnnotatedByteArraySuccess();
+        String result  = LS.waitForStringInLogUsingMark("Session idle timeout is default which is no time out");
+        System.out.println(result);
+        assertNotNull("Timeout message not found!", result);
     }
 
     @Mode(TestMode.FULL)

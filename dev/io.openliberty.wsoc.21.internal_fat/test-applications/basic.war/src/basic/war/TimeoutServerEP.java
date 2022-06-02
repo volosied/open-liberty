@@ -28,17 +28,36 @@ import io.openliberty.wsoc.common.Utils;
 /**
  *
  */
-public class AnnotatedServerEP {
+public class TimeoutServerEP {
 
-    @ServerEndpoint(value = "/annotatedByteArray/{boolean-var}")
-    public static class ByteArrayTest extends AnnotatedServerEP {
-        //test which shows boolean pair, session, @PathParam and actual message. Parameters can be in any order
-        @OnMessage
-        public byte[] echoText(boolean last, Session session, @PathParam("boolean-var") boolean booleanVar, byte[] data) { //session, msg and last can be at different param index
-            if (session != null && last && booleanVar) {
-                return data;
-            } else {
-                return null;
+    // @ServerEndpoint(value = "/zeroTimeout/")
+    // public static class ZeroTimeOutTest extends TimeoutServerEP {
+
+    //     @OnOpen
+    //     public void onOpen(final Session session) {
+    //         if (session != null) {
+    //             System.out.println("Timeout Server EP");
+    //             //set idle timeout as 15 seconds
+    //             session.setMaxIdleTimeout(0);
+    //             try {
+    //                 session.close();
+    //             } catch (Exception e) {
+    //                 //TODO: handle exception
+    //             }
+    //         }
+    //     }
+
+    // }
+
+    @ServerEndpoint(value = "/negativeTimeout/")
+    public static class NegativeTimeOutTest extends TimeoutServerEP {
+
+        @OnOpen
+        public void onOpen(final Session session) {
+            if (session != null) {
+                //set idle timeout as 15 seconds
+                session.setMaxIdleTimeout(-1);
+
             }
         }
 
