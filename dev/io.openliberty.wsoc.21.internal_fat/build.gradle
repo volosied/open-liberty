@@ -14,23 +14,24 @@ dependencies {
     'org.apache.httpcomponents.client5:httpclient5:5.0',
     'org.apache.httpcomponents.core5:httpcore5:5.0',
 
-    'jakarta.websocket:jakarta.websocket-api:2.1.0',
-    'jakarta.websocket:jakarta.websocket-client-api:2.1.0',
-
     project(':io.openliberty.org.apache.commons.codec'),
     project(':com.ibm.ws.org.apache.httpcomponents'),
     project(':io.openliberty.org.apache.commons.logging'),
+
+    'jakarta.websocket:jakarta.websocket-api:2.1.0',
+    'jakarta.websocket:jakarta.websocket-client-api:2.1.0',
     
-    files ('./jetty-io-11.0.9.jar'), 
-    files('./jetty-util-11.0.9.jar'), 
-    files ('./websocket-jakarta-common-11.0.9.jar'),
-    files ('./websocket-jakarta-client-11.0.9.jar'), 
-    files ('./jetty-http-11.0.9.jar'), 
-    files ('./jetty-client-11.0.9.jar'), 
-    files ('./websocket-jetty-client-11.0.9.jar'), 
-    files ('./websocket-jetty-api-11.0.9.jar'),
-    files ('./websocket-core-client-11.0.9.jar'),
-    files ('./websocket-core-common-11.0.9.jar')
+    'org.eclipse.jetty:jetty-io:11.0.9',
+    'org.eclipse.jetty:jetty-util:11.0.9',
+    'org.eclipse.jetty:jetty-http:11.0.9',
+    'org.eclipse.jetty:jetty-client:11.0.9',
+
+    'org.eclipse.jetty.websocket:websocket-jakarta-common:11.0.9',
+    'org.eclipse.jetty.websocket:websocket-jakarta-client:11.0.9'  
+    'org.eclipse.jetty.websocket:websocket-core-common:11.0.9',
+    'org.eclipse.jetty.websocket:websocket-core-client:11.0.9',
+    'org.eclipse.jetty.websocket:websocket-jetty-api:11.0.9',
+    'org.eclipse.jetty.websocket:websocket-jetty-client:11.0.9'
 }
 
 addRequiredLibraries {
