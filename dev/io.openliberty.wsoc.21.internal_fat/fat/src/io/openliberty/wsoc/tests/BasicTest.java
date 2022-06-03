@@ -180,9 +180,17 @@ public class BasicTest {
     @Mode(TestMode.LITE)
     @Test
     public void testAnnotatedByteArraySuccess() throws Exception {
-        LS.setMarkToEndOfLog();
         at.testAnnotatedByteArraySuccess();
-        String result  = LS.waitForStringInLogUsingMark("Session idle timeout is default which is no time out");
+        String result  = LS.waitForStringInTraceUsingMark("Session timeout 0 is less than 1. No timeout enabled");
+        System.out.println(result);
+        assertNotNull("Timeout message not found!", result);
+    }
+
+    @Mode(TestMode.LITE)
+    @Test
+    public void testAnnotatedByteArraySuccess2() throws Exception {
+        at.testAnnotatedByteArraySuccess2();
+        String result  = LS.waitForStringInTraceUsingMark("Session timeout -12 is less than 1. No timeout enabled");
         System.out.println(result);
         assertNotNull("Timeout message not found!", result);
     }

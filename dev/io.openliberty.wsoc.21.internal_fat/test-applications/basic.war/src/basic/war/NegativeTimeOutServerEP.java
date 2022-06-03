@@ -18,7 +18,7 @@ import java.nio.ByteBuffer;
 import jakarta.websocket.OnMessage;
 import jakarta.websocket.OnOpen;
 import jakarta.websocket.Session;
-import jakarta.websocket.server.PathParam;
+
 import jakarta.websocket.server.ServerEndpoint;
 
 import io.openliberty.wsoc.common.Utils;
@@ -28,38 +28,23 @@ import io.openliberty.wsoc.common.Utils;
 /**
  *
  */
-public class TimeoutServerEP {
+@ServerEndpoint(value = "/negativeTimeout")
+public class NegativeTimeOutServerEP {
 
-    // @ServerEndpoint(value = "/zeroTimeout/")
-    // public static class ZeroTimeOutTest extends TimeoutServerEP {
-
-    //     @OnOpen
-    //     public void onOpen(final Session session) {
-    //         if (session != null) {
-    //             System.out.println("Timeout Server EP");
-    //             //set idle timeout as 15 seconds
-    //             session.setMaxIdleTimeout(0);
-    //             try {
-    //                 session.close();
-    //             } catch (Exception e) {
-    //                 //TODO: handle exception
-    //             }
-    //         }
-    //     }
-
-    // }
-
-    @ServerEndpoint(value = "/negativeTimeout/")
-    public static class NegativeTimeOutTest extends TimeoutServerEP {
+    Session session;
 
         @OnOpen
         public void onOpen(final Session session) {
             if (session != null) {
-                //set idle timeout as 15 seconds
-                session.setMaxIdleTimeout(-1);
-
+                this.session = session;
+                System.out.println("NegativeTimeOutServerEP onOpen");
+                session.setMaxIdleTimeout(-12);
             }
         }
 
-    }
+        @OnMessage
+        public String echo(String input) {    
+            return String.valueOf(this.session.getMaxIdleTimeout());
+        }
+
 }
