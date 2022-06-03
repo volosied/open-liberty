@@ -36,6 +36,7 @@ public class SessionIdleTimeout implements Runnable {
     public SessionIdleTimeout(String sessionID, long maxIdleTimeout, WsocConnLink wsocLink) {
         this.sessionID = sessionID;
         this.maxIdleTimeout = maxIdleTimeout;
+        Thread.dumpStack();
         this.wsocLink = wsocLink;
     }
 
@@ -44,7 +45,8 @@ public class SessionIdleTimeout implements Runnable {
         //no action. session timeout is infinite. 
         if (maxIdleTimeout < 1) {
             if (tc.isDebugEnabled()) {
-                Tr.debug(tc, "Session idle timeout is default which is no time out");
+                System.out.println("debug idle");
+                Tr.debug(tc, "Session timeout " + maxIdleTimeout + " is less than 1. No timeout enabled.");
             }
             return;
         }
