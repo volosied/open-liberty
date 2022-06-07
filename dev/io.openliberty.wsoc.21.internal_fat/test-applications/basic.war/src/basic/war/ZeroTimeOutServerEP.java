@@ -32,7 +32,7 @@ public class ZeroTimeOutServerEP {
     public void onOpen(final Session session) {
         if (session != null) {
             this.session = session;
-            System.out.println("Timeout Server EP");
+            // 0 will be searched in logs
             session.setMaxIdleTimeout(0);
         }
     }
