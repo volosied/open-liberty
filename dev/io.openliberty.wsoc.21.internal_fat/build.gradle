@@ -27,7 +27,7 @@ dependencies {
     'org.eclipse.jetty:jetty-client:11.0.9',
 
     'org.eclipse.jetty.websocket:websocket-jakarta-common:11.0.9',
-    'org.eclipse.jetty.websocket:websocket-jakarta-client:11.0.9'  
+    'org.eclipse.jetty.websocket:websocket-jakarta-client:11.0.9',
     'org.eclipse.jetty.websocket:websocket-core-common:11.0.9',
     'org.eclipse.jetty.websocket:websocket-core-client:11.0.9',
     'org.eclipse.jetty.websocket:websocket-jetty-api:11.0.9',

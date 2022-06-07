@@ -46,10 +46,8 @@ import io.openliberty.wsoc.tests.all.TimeOutTest;
  */
 public class TimeOutClientEP implements TestHelper {
 
-
     public WsocTestContext _wtr = null;
     private static final Logger LOG = Logger.getLogger(TimeOutClientEP.class.getName());
-    private final String CLOSE_1006_ERROR_EXCEPTION = "org.eclipse.jetty.websocket.api.ProtocolException: Frame forbidden close status code: 1006";
 
     @ClientEndpoint
     public static class TimeOutTest extends TimeOutClientEP {
@@ -85,14 +83,8 @@ public class TimeOutClientEP implements TestHelper {
 
     @OnError
     public void onError(Session session, java.lang.Throwable throwable) {
-        // Client automatically throws an error when a 1006 response is added. Verify if this
-        // is what is happening on this client and do not throw error when it does since as seen above
-        // on the onClose we expect it to behave this way and need to verify it
         LOG.warning(throwable.toString());
-        if (this.EXPECT_TIMEOUT_ERROR && throwable.toString().equals(CLOSE_1006_ERROR_EXCEPTION))
-            LOG.info("Skipping error when receiving a 1006 response since it is expected.");
-        else
-            _wtr.addExceptionAndTerminate("Error during wsoc session", throwable);
+         _wtr.addExceptionAndTerminate("Error during wsoc session", throwable);
     }
 
     @Override
