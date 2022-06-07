@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2021 IBM Corporation and others.
+ * Copyright (c) 2022 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,14 +36,7 @@ import io.openliberty.wsoc.tests.BasicTest;
 })
 public class FATSuite {
     private static final Class<?> c = FATSuite.class;
-
-    //websocket-1.0 is not part of EE6/7/8, so we are doing a manual replacement
-    // @ClassRule
-    // public static RepeatTests repeat = RepeatTests.with(new EmptyAction())
-    //                 .andWith(FeatureReplacementAction.EE9_FEATURES()
-    //                                 .removeFeature("websocket-1.0")
-    //                                 .addFeature("websocket-2.0"));
-
+    
     /**
      * @see {@link FatLogHandler#generateHelpFile()}
      */

@@ -23,8 +23,6 @@ import jakarta.websocket.server.ServerEndpoint;
 
 import io.openliberty.wsoc.common.Utils;
 
-// import test.common.zos.ZFatNativeHelper;
-
 /**
  *
  */
@@ -37,8 +35,8 @@ public class NegativeTimeOutServerEP {
         public void onOpen(final Session session) {
             if (session != null) {
                 this.session = session;
-                System.out.println("NegativeTimeOutServerEP onOpen");
-                session.setMaxIdleTimeout(-12);
+                // -12 will be searched in logs
+                session.setMaxIdleTimeout(-12); 
             }
         }
 
