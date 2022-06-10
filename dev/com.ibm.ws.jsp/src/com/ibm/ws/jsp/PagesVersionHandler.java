@@ -24,7 +24,7 @@ public class PagesVersionHandler {
         logger = Logger.getLogger("com.ibm.ws.jsp");
     }
 
-    public static String loadedSpecLevel = loadPagesVersion();
+    public static String LOADED_SPEC_LEVEL = loadPagesVersion();
 
     private static String DEFAULT_VERSION = "2.2";
     
@@ -56,7 +56,14 @@ public class PagesVersionHandler {
     }
 
     public static boolean isPages30Loaded(){
-        if( PagesVersionHandler.loadedSpecLevel.equals("3.0")) {
+        if( PagesVersionHandler.LOADED_SPEC_LEVEL.equals("3.0")) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isPages31Loaded(){
+        if( PagesVersionHandler.LOADED_SPEC_LEVEL.equals("3.1")) {
             return true;
         }
         return false;
