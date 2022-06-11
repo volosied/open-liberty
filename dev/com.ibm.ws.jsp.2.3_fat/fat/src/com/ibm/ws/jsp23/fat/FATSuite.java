@@ -61,11 +61,27 @@ public class FATSuite {
      * using @SkipForRepeat("CDI-2.0").
      */
     @ClassRule
-    public static RepeatTests r = RepeatTests
+    public static RepeatTests repeat;
+
+    static {
+        if(JavaInfo.JAVA_VERSION>=11)
+        {
+            repeat = RepeatTests
                     .with(new EmptyAction().fullFATOnly())
                     .andWith(new FeatureReplacementAction("cdi-1.2", "cdi-2.0")
-                                    .withID("CDI-2.0")
-                                    .forceAddFeatures(false)
-                                    .fullFATOnly())
-                    .andWith(FeatureReplacementAction.EE9_FEATURES());
+                            .withID("CDI-2.0")
+                            .forceAddFeatures(false)
+                            .fullFATOnly())
+                    .andWith(FeatureReplacementAction.EE9_FEATURES().fullFATOnly())
+                    .andWith(FeatureReplacementAction.EE10_FEATURES());
+        } else {
+            repeat = RepeatTests
+                        .with(new EmptyAction().fullFATOnly())
+                        .andWith(new FeatureReplacementAction("cdi-1.2", "cdi-2.0")
+                                        .withID("CDI-2.0")
+                                        .forceAddFeatures(false)
+                                        .fullFATOnly())
+                        .andWith(FeatureReplacementAction.EE9_FEATURES());
+        }
+    }
 }
