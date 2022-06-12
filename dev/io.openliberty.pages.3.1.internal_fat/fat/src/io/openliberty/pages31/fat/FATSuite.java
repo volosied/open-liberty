@@ -17,14 +17,6 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 import com.ibm.ws.fat.util.FatLogHandler;
-import com.ibm.ws.jsp23.fat.tests.JSP23JSP22ServerTest;
-import com.ibm.ws.jsp23.fat.tests.JSPCdiTest;
-import com.ibm.ws.jsp23.fat.tests.JSPJava8Test;
-import com.ibm.ws.jsp23.fat.tests.JSPPrepareJSPThreadCountDefaultValueTests;
-import com.ibm.ws.jsp23.fat.tests.JSPPrepareJSPThreadCountNonDefaultValueTests;
-import com.ibm.ws.jsp23.fat.tests.JSPSkipMetaInfTests;
-import com.ibm.ws.jsp23.fat.tests.JSPTests;
-import com.ibm.ws.jsp23.fat.tests.JSTLTests;
 import com.ibm.ws.jsp23.fat.tests.TagsTestsEE10;
 
 import componenttest.rules.repeater.EmptyAction;
@@ -32,7 +24,7 @@ import componenttest.rules.repeater.FeatureReplacementAction;
 import componenttest.rules.repeater.RepeatTests;
 
 /**
- * JSP 2.3 Tests
+ * Pages 3.0 Tests
  *
  * The tests for both features should be included in this test component.
  */
@@ -50,17 +42,4 @@ public class FATSuite {
         FatLogHandler.generateHelpFile();
     }
 
-    /**
-     * Run the tests again with the cdi-2.0 feature. Tests should be skipped where appropriate
-     * using @SkipForRepeat("CDI-2.0").
-     */
-    @ClassRule
-    public static RepeatTests r = RepeatTests
-                    .with(new EmptyAction().fullFATOnly())
-                    .andWith(new FeatureReplacementAction("cdi-1.2", "cdi-2.0")
-                                    .withID("CDI-2.0")
-                                    .forceAddFeatures(false)
-                                    .fullFATOnly())
-                    .andWith(FeatureReplacementAction.EE9_FEATURES().fullFATOnly())
-                    .andWith(FeatureReplacementAction.EE10_FEATURES());
 }

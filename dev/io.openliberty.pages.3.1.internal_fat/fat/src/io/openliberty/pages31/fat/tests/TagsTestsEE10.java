@@ -43,7 +43,6 @@ import java.util.Locale;
 /**
  *  Smoke Tests for JSTL EE10 Tags
  */
-@SkipForRepeat({ SkipForRepeat.EE9_FEATURES, SkipForRepeat.NO_MODIFICATION, "CDI-2.0" })
 @RunWith(FATRunner.class)
 public class TagsTestsEE10 {
     private static final String APP_NAME = "TestTagsEE10";
@@ -58,8 +57,6 @@ public class TagsTestsEE10 {
     @BeforeClass
     public static void setup() throws Exception {
         ShrinkHelper.defaultDropinApp(server, APP_NAME + ".war");
-        // ShrinkHelper.defaultDropinApp(server, IMPORT_APP_NAME + ".war");
-
         server.startServer(JSTLTests.class.getSimpleName() + ".log");
     }
 
