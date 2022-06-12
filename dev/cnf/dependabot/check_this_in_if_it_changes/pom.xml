@@ -802,6 +802,11 @@
       <version>2.0.0</version>
     </dependency>
     <dependency>
+      <groupId>jakarta.servlet.jsp.jstl</groupId>
+      <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+      <version>3.0.0</version>
+    </dependency>
+    <dependency>
       <groupId>jakarta.servlet.jsp</groupId>
       <artifactId>jakarta.servlet.jsp-api</artifactId>
       <version>3.0.0</version>
@@ -1924,7 +1929,7 @@
     <dependency>
       <groupId>org.eclipse.jetty.websocket</groupId>
       <artifactId>websocket-jetty-api</artifactId>
-      <version>11.0.9</version>
+      <version>11.0.9'</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.jetty.websocket</groupId>
@@ -2485,6 +2490,11 @@
       <groupId>org.glassfish.web</groupId>
       <artifactId>jakarta.servlet.jsp.jstl</artifactId>
       <version>2.0.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.glassfish.web</groupId>
+      <artifactId>jakarta.servlet.jsp.jstl</artifactId>
+      <version>3.0.0</version>
     </dependency>
     <dependency>
       <groupId>org.glassfish</groupId>
