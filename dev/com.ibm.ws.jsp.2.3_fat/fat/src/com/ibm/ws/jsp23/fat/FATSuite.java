@@ -26,6 +26,8 @@ import com.ibm.ws.jsp23.fat.tests.JSPSkipMetaInfTests;
 import com.ibm.ws.jsp23.fat.tests.JSPTests;
 import com.ibm.ws.jsp23.fat.tests.JSTLTests;
 
+import com.ibm.ws.kernel.service.util.JavaInfo;
+
 import componenttest.rules.repeater.EmptyAction;
 import componenttest.rules.repeater.FeatureReplacementAction;
 import componenttest.rules.repeater.RepeatTests;
