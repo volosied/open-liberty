@@ -22,8 +22,8 @@ Bundle-Description: Jakarta Standard Tag Library Implementation, version 3.0
 Fragment-Host: com.ibm.ws.jsp.jakarta
 
 Import-Package: \
-   !com.oracle.wls.shaded.org.apache.xml.serialize,\
-   !com.oracle.wls.shaded.org.apache.xml.serializer,\
+   !org.eclipse.tags.shaded.org.apache.xml.serialize,\
+   !org.eclipse.tags.shaded.org.apache.xml.serializer,\
    !org.apache.xerces*, \
    *
 
