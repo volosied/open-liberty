@@ -137,9 +137,9 @@ public class SessionImpl {
 
         connLink.setEndpointManager(things.getEndpointManager());
 
-        // Not sure if we should do this right before or right after onOpen, spec is ambigioius, seems like right before is better.
-        userProperties = new HashMap<String, Object>();
-        things.setUserProperties(userProperties);
+        // WebSocket-2.1: Use User Properties from EndPointConfig
+        // See JavaDoc jakarta/websocket/Session#getUserProperties
+        things.setUserProperties(endpointConfig.getUserProperties());
 
         things.setSessionID(sessionID);
 

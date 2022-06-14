@@ -256,6 +256,7 @@ public class HandshakeProcessor {
         // create handshake response object to give to modifier
         HandshakeResponseExt handshakeResponse = new HandshakeResponseExt(responseHeaders);
 
+        // new PerEndpointConfigCopy(endpointConfig)
         endpointConfigurator.modifyHandshake(endpointConfig, handshakeRequest, handshakeResponse);
         Map<String, List<String>> hdrs = handshakeResponse.getHeaders();
 
