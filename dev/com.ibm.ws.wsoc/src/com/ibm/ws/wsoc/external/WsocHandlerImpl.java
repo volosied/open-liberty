@@ -31,7 +31,9 @@ import com.ibm.ws.webcontainer.servlet.WsocHandler;
 import com.ibm.ws.wsoc.AnnotatedEndpoint;
 import com.ibm.ws.wsoc.HandshakeProcessor;
 import com.ibm.ws.wsoc.ParametersOfInterest;
+import com.ibm.ws.wsoc.ServerEndpointConfigCopyPerSession;
 import com.ibm.ws.wsoc.WebSocketContainerManager;
+import com.ibm.ws.wsoc.WebSocketVersionServiceManager;
 import com.ibm.ws.wsoc.WsocUpgradeHandler;
 import com.ibm.ws.wsoc.util.Utils;
 
@@ -197,6 +199,9 @@ public class WsocHandlerImpl implements WsocHandler {
         }
 
         if (endPointConfig != null) {
+            if(WebSocketVersionServiceManager.isWsoc21rHigher()){
+                endPointConfig = new ServerEndpointConfigCopyPerSession(endPointConfig);
+            }
             endPointClass = endPointConfig.getEndpointClass();
         } else {
             if (tc.isDebugEnabled()) {
