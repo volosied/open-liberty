@@ -21,8 +21,9 @@ fat.project: true
     io.openliberty.jakarta.cdi.4.0;version=latest,\
     io.openliberty.jakarta.servlet.6.0;version=latest,\
     io.openliberty.jakarta.expressionLanguage.5.0;version=latest,\
-    com.ibm.ws.jsp.3.1.jakarta;version=latest,\
     httpunit:httpunit;version=1.5.4,\
     io.openliberty.jakarta.interceptor.2.1;version=latest,\
     org.apache.httpcomponents:httpclient;version=4.1.2,\
-    org.apache.httpcomponents:httpcore;version=4.1.2
+    org.apache.httpcomponents:httpcore;version=4.1.2,\
+    io.openliberty.org.apache.commons.logging;version=latest,\
+    io.openliberty.org.apache.commons.codec;version=latest

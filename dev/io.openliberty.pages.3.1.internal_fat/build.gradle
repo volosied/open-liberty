@@ -9,9 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 dependencies {
-    requiredLibs project(':io.openliberty.org.apache.commons.codec'),
-      project(':io.openliberty.org.apache.commons.logging'),
-      'net.sf.jtidy:jtidy:9.3.8',
+    requiredLibs 'net.sf.jtidy:jtidy:9.3.8',
       'org.apache.httpcomponents:httpclient:4.1.2',
       'org.apache.httpcomponents:httpcore:4.1.2',
       'httpunit:httpunit:1.5.4'

@@ -47,7 +47,7 @@ import java.util.Locale;
 public class TagsTestsEE10 {
     private static final String APP_NAME = "TestTagsEE10";
     // private static final String IMPORT_APP_NAME = "TestJSTLImport";
-    private static final Logger LOG = Logger.getLogger(JSTLTests.class.getName());
+    private static final Logger LOG = Logger.getLogger(TagsTestsEE10.class.getName());
 
     private String newLine = System.getProperty("line.separator");
 
@@ -57,7 +57,7 @@ public class TagsTestsEE10 {
     @BeforeClass
     public static void setup() throws Exception {
         ShrinkHelper.defaultDropinApp(server, APP_NAME + ".war");
-        server.startServer(JSTLTests.class.getSimpleName() + ".log");
+        server.startServer(TagsTestsEE10.class.getSimpleName() + ".log");
     }
 
     @AfterClass
