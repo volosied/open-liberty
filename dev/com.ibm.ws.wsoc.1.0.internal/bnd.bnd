@@ -1,0 +1,30 @@
+#*******************************************************************************
+# Copyright (c) 2017, 2022 IBM Corporation and others.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License v1.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/epl-v10.html
+#
+# Contributors:
+#     IBM Corporation - initial API and implementation
+#*******************************************************************************
+-include= ~../cnf/resources/bnd/bundle.props
+
+bVersion=1.0
+
+Bundle-Name: WebSocket Servlet Container 1.0
+Bundle-SymbolicName: com.ibm.ws.wsoc.1.0.internal; singleton:=true
+Bundle-Description: WebSocket, version ${bVersion}
+
+-dsannotations: com.ibm.ws.wsoc.servercontainer10.ServerContainerExt10
+
+Export-Package: \
+  com.ibm.ws.wsoc.servercontainer10
+
+-buildpath: \
+	com.ibm.ws.wsoc;version=latest,\
+	com.ibm.websphere.javaee.websocket.1.0;version=latest, \
+	com.ibm.ws.webcontainer;version=latest, \
+	com.ibm.websphere.javaee.servlet.3.1;version=latest, \
+	com.ibm.wsspi.org.osgi.service.component.annotations, \
+	com.ibm.ws.org.osgi.annotation.versioning;version=latest
