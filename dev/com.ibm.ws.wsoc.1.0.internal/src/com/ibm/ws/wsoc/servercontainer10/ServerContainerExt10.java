@@ -26,13 +26,8 @@ import javax.websocket.server.ServerContainer;
 
 import javax.websocket.*;
 
-// import com.ibm.ws.wsoc.external.WsocHandlerImpl;
-
 import com.ibm.ws.webcontainer.servlet.WsocHandler;
 
-import org.osgi.service.component.annotations.Component;
-
-@Component(property = { "service.vendor=IBM" })
 public class ServerContainerExt10 extends ServerContainerExt implements WsWsocServerContainer {
 
     /*

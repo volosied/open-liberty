@@ -14,14 +14,15 @@ import com.ibm.ws.wsoc.servercontainer.ServerContainerExt;
 import com.ibm.ws.wsoc.servercontainer.ServletContainerFactory;
 import org.osgi.service.component.annotations.Component;
 
-@Component(property = { "service.vendor=IBM" })
-public class ServerContainerImplFactory10 implements ServletContainerFactory {
+// // @SuppressWarnings("restriction")
+// @Component(service = { ServletContainerFactory.class }, configurationPolicy = ConfigurationPolicy.IGNORE, immediate = true)
 
-    private static final ServerContainerExt10 serverContainerExt10 = new ServerContainerExt10();
+@Component(service = ServletContainerFactory.class, property = { "service.vendor=IBM" })
+public class ServerContainerImplFactory10 implements ServletContainerFactory {
 
     @Override
     public ServerContainerExt getServletContainer() {
-        return serverContainerExt10;
+        return new ServerContainerExt10();
     }
 
 }
