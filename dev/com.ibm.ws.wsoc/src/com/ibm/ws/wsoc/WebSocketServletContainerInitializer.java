@@ -28,8 +28,9 @@ import javax.websocket.server.ServerEndpointConfig;
 import com.ibm.websphere.ras.Tr;
 import com.ibm.websphere.ras.TraceComponent;
 import com.ibm.ws.webcontainer31.osgi.webapp.WebApp31;
-import com.ibm.ws.wsoc.external.ServerContainerExt;
 import com.ibm.ws.wsoc.external.WsocHandlerImpl;
+import com.ibm.ws.wsoc.servercontainer.ServerContainerExt;
+import com.ibm.ws.wsoc.servercontainer.ServerContainerHandler;
 
 /**
  * 
@@ -51,7 +52,8 @@ public class WebSocketServletContainerInitializer implements ServletContainerIni
             WsocHandlerImpl wsocServletHandler = new WsocHandlerImpl();
             ((WebApp31) servletContext).registerWebSocketHandler(wsocServletHandler);
 
-            ServerContainerExt serverContainer = new ServerContainerExt();
+            ServerContainerExt serverContainer = ServerContainerHandler.getServerContainerExt();
+            //new ServerContainerExt(); // DYNAMIC VS DEBUG
 
             servletContext.setAttribute(WebSocketContainerManager.SERVER_CONTAINER_ATTRIBUTE, serverContainer);
 

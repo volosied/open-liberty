@@ -16,7 +16,7 @@
 bVersion=1.0
 bSymbolicName=com.ibm.ws.wsoc
 
-
+-dsannotations: com.ibm.ws.wsoc.servercontainer.ServerContainerHandler
 
 app-resources= \
   META-INF/services/javax.websocket.server.ServerEndpointConfig$Configurator | \
@@ -27,6 +27,7 @@ Export-Package: \
   com.ibm.ws.wsoc.outbound, \
   com.ibm.ws.wsoc.injection, \
   com.ibm.ws.wsoc, \
+  com.ibm.ws.wsoc.servercontainer, \
   com.ibm.websphere.wsoc, \
   com.ibm.ws.wsoc.configurator.*;thread-context=true
 
