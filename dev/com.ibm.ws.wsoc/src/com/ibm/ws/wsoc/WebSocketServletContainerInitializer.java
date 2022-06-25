@@ -52,8 +52,10 @@ public class WebSocketServletContainerInitializer implements ServletContainerIni
             WsocHandlerImpl wsocServletHandler = new WsocHandlerImpl();
             ((WebApp31) servletContext).registerWebSocketHandler(wsocServletHandler);
 
-            ServerContainerExt serverContainer = ServerContainerHandler.getServerContainerExt();
+            ServerContainerExt serverContainer = ServiceManager.createServerContainerExt();
+            //ServerContainerHandler.getServerContainerExt();
             //new ServerContainerExt(); // DYNAMIC VS DEBUG
+            System.out.println("serverContainer -> " + serverContainer);
 
             servletContext.setAttribute(WebSocketContainerManager.SERVER_CONTAINER_ATTRIBUTE, serverContainer);
 

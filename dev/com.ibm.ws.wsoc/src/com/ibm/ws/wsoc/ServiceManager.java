@@ -16,6 +16,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.component.ComponentContext;
 
+import org.osgi.service.component.annotations.Reference;
+
 import com.ibm.websphere.channelfw.osgi.CHFWBundle;
 import com.ibm.websphere.ras.Tr;
 import com.ibm.websphere.ras.TraceComponent;
@@ -31,9 +33,16 @@ import com.ibm.wsspi.injectionengine.InjectionEngine;
 import com.ibm.wsspi.injectionengine.ReferenceContext;
 import com.ibm.wsspi.kernel.service.utils.AtomicServiceReference;
 
+import com.ibm.ws.wsoc.servercontainer.ServerContainerHandler;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.ConfigurationPolicy;
+
+import com.ibm.ws.wsoc.servercontainer.ServletContainerFactory;
+import com.ibm.ws.wsoc.servercontainer.ServerContainerExt;
 /**
  *
  */
+@Component(name="com.ibm.ws.wsoc.ServiceManager", configurationPid="com.ibm.ws.wsoc.ServiceManager", configurationPolicy=ConfigurationPolicy.REQUIRE, property={"service.vendor=IBM","type:String=web"})
 public class ServiceManager {
 
     private static final TraceComponent tc = Tr.register(ServiceManager.class);
@@ -46,6 +55,10 @@ public class ServiceManager {
     private static final AtomicServiceReference<InjectionService12> injectionService12SRRef = new AtomicServiceReference<InjectionService12>("injectionService12");
 
     private static final AtomicServiceReference<InjectionEngine> injectionEngineSRRef = new AtomicServiceReference<InjectionEngine>("injectionEngine");
+
+    /** Reference for delayed activation of the dispatcher */
+    // private static final AtomicServiceReference<ServerContainerHandler> serverContainerHandlerSRRef = new AtomicServiceReference<ServerContainerHandler>("serverContainerHandler");
+    private static final AtomicServiceReference<ServletContainerFactory> servletContainerFactorySRRef = new AtomicServiceReference<ServletContainerFactory>("servletContainerFactory");
 
     //JDK's Executor service to be used in SessionIdleTimeout functionality
     private static final AtomicServiceReference<ScheduledExecutorService> scheduledExecSvcRef =
@@ -60,12 +73,14 @@ public class ServiceManager {
      * @param context
      */
     protected synchronized void activate(ComponentContext context) {
+        System.out.println("Activating ServiceManager");
         cfwBundleRef.activate(context);
         scheduledExecSvcRef.activate(context);
         injectionServiceSRRef.activate(context);
         injectionService12SRRef.activate(context);
         executorServiceRef.activate(context);
         injectionEngineSRRef.activate(context);
+        servletContainerFactorySRRef.activate(context);
     }
 
     /**
@@ -80,6 +95,7 @@ public class ServiceManager {
         injectionService12SRRef.deactivate(context);
         executorServiceRef.deactivate(context);
         injectionEngineSRRef.deactivate(context);
+        servletContainerFactorySRRef.deactivate(context);
     }
 
     /**
@@ -113,6 +129,17 @@ public class ServiceManager {
 
     protected void unsetInjectionEngine(ServiceReference<InjectionEngine> ref) {
         injectionEngineSRRef.unsetReference(ref);
+    }
+
+    @Reference(service=ServletContainerFactory.class, name="servletContainerFactory")
+    protected void setServletContainerFactory(ServiceReference<ServletContainerFactory> ref) {
+        System.out.println("setServerContainerHandler");
+        servletContainerFactorySRRef.setReference(ref);
+    }
+
+    protected void unsetServletContainerFactory(ServiceReference<ServletContainerFactory> ref) {
+        System.out.println("unsetServerContainerHandler");
+        servletContainerFactorySRRef.unsetReference(ref);
     }
 
     public static ReferenceContext getInjectionServiceReferenceContext(ModuleMetaData mmd) {
@@ -220,6 +247,16 @@ public class ServiceManager {
 
     public static ExecutorService getExecutorThreadService() {
         return executorServiceRef.getService();
+    }
+
+
+    protected static ServerContainerExt createServerContainerExt() {
+
+        ServletContainerFactory servletContainerFactory = servletContainerFactorySRRef.getService();
+        if (servletContainerFactory != null) {
+            return servletContainerFactory.getServletContainer();
+        }
+        return null;
     }
 
 }

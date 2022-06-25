@@ -16,7 +16,7 @@
 bVersion=1.0
 bSymbolicName=com.ibm.ws.wsoc
 
--dsannotations: com.ibm.ws.wsoc.servercontainer.ServerContainerHandler
+-dsannotations: com.ibm.ws.wsoc.ServiceManager
 
 app-resources= \
   META-INF/services/javax.websocket.server.ServerEndpointConfig$Configurator | \
@@ -58,6 +58,7 @@ Service-Component: \
     injectionEngine=com.ibm.wsspi.injectionengine.InjectionEngine; \
     injectionService=com.ibm.ws.wsoc.injection.InjectionService; \
     injectionService12=com.ibm.ws.wsoc.injection.InjectionService12; \
+    servletContainerFactory=com.ibm.ws.wsoc.servercontainer.ServletContainerFactory; \
     optional:='injectionEngine,injectionService,injectionService12'; \
     dynamic:='injectionEngine,injectionService,injectionService12'; \
     properties:="service.vendor=IBM", \

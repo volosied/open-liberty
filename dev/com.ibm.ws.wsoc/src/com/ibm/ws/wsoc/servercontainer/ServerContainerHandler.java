@@ -17,21 +17,21 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 
-@Component(service={ServerContainerHandler.class}, property={"service.vendor=IBM"})
+// @Component(service={ServerContainerHandler.class}, property={"service.vendor=IBM"})
 public class ServerContainerHandler {
 
     private static ServletContainerFactory servletContainerFactory;
 
-    @Reference(cardinality=ReferenceCardinality.MANDATORY, policy=ReferencePolicy.DYNAMIC, policyOption=ReferencePolicyOption.GREEDY)
-    protected synchronized void setServletContainerFactory(ServletContainerFactory factory) {
-        System.out.println("Setting servletContainerFactory " + factory);
-        servletContainerFactory = factory;
-    }
+    // @Reference(cardinality=ReferenceCardinality.MANDATORY, policy=ReferencePolicy.DYNAMIC, policyOption=ReferencePolicyOption.GREEDY)
+    // protected synchronized void setServletContainerFactory(ServletContainerFactory factory) {
+    //     System.out.println("Setting servletContainerFactory " + factory);
+    //     servletContainerFactory = factory;
+    // }
 
-    protected synchronized void unsetServletContainerFactory(ServletContainerFactory factory) {
-        System.out.println("UnSetting servletContainerFactory " + factory);
-        servletContainerFactory = null;
-    }
+    // protected synchronized void unsetServletContainerFactory(ServletContainerFactory factory) {
+    //     System.out.println("UnSetting servletContainerFactory " + factory);
+    //     servletContainerFactory = null;
+    // }
 
 
     public static ServerContainerExt getServerContainerExt(){
