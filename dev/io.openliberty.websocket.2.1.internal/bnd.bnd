@@ -16,7 +16,7 @@ Bundle-Name: WebSocket Servlet Container 2.1
 Bundle-SymbolicName: io.openliberty.websocket.2.1.internal; singleton:=true
 Bundle-Description: WebSocket, version ${bVersion}
 
--dsannotations: com.ibm.ws.wsoc.servercontainer21.ServerContainerExt21
+-dsannotations: com.ibm.ws.wsoc.servercontainer21.ServerContainerImplFactory21
 
 Export-Package: \
   com.ibm.ws.wsoc.servercontainer21

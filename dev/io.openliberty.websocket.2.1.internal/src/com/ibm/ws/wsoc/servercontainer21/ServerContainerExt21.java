@@ -36,7 +36,7 @@ import jakarta.websocket.*;
 import jakarta.websocket.DeploymentException;
 import org.osgi.service.component.annotations.Component;
 
-@Component(property = { "service.vendor=IBM" })
+
 public class ServerContainerExt21 extends ServerContainerExt implements ServerContainer {
 
     /*
