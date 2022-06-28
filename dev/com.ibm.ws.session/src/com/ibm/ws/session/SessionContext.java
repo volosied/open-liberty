@@ -439,14 +439,12 @@ public class SessionContext {
      * calling unlockSession or setting the crossover threadlocal to null - may be
      * done
      * multiple times. This is ok.
-     * 
-     * Updated for Servlet 6.0: change to AbstractSessionData
      */
     public void sessionPostInvoke(HttpSession sess) {
         if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && LoggingUtil.SESSION_LOGGER_CORE.isLoggable(Level.FINE)) {
             LoggingUtil.SESSION_LOGGER_CORE.entering(methodClassName, methodNames[SESSION_POST_INVOKE]);
         }
-        AbstractSessionData s = (AbstractSessionData) sess;
+        SessionData s = (SessionData) sess;
 
         if (_smc.getAllowSerializedSessionAccess()) {
             unlockSession(sess);
