@@ -10,6 +10,9 @@
  *******************************************************************************/
 package io.openliberty.wsoc.common;
 
+/*
+ * Taken from io.openliberty.wsoc.internal_fat
+ */
 public class Constants {
 
     public static final String SUCCESS = "SUCCESS";

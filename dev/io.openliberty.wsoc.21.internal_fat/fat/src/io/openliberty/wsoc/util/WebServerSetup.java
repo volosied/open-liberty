@@ -34,8 +34,8 @@ import com.ibm.websphere.simplicity.log.Log;
 
 import componenttest.topology.impl.LibertyServer;
 
-/**
- *
+/*
+ * Taken from io.openliberty.wsoc.internal_fat
  */
 public class WebServerSetup {
     private static final Class<?> c = WebServerSetup.class;

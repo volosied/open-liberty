@@ -23,8 +23,8 @@ import jakarta.websocket.server.ServerEndpointConfig;
 
 import com.ibm.websphere.wsoc.WsWsocServerContainer;
 
-/**
- *
+/*
+ * Taken from io.openliberty.wsoc.internal_fat
  */
 public class WsocUpgradeServlet extends HttpServlet {
     private static final Logger LOG = Logger.getLogger(WsocUpgradeServlet.class.getName());

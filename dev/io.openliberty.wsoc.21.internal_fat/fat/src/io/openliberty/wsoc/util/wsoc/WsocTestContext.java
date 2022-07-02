@@ -21,6 +21,8 @@ import jakarta.websocket.Session;
  * WebSocket Java clients are multi-threaded - even when running a single client. WsocTextContext enhances an endpoint with test information such as storing expected messages,
  * message counts, test run timeouts. Endpoints should use the text context to store data they want to verify upon completion of the test.
  * etc.
+ * 
+ *  Taken from io.openliberty.wsoc.internal_fat
  */
 public class WsocTestContext {
     private static final Logger LOG = Logger.getLogger(WsocTestContext.class.getName());

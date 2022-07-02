@@ -21,8 +21,8 @@ import componenttest.topology.impl.LibertyServer;
 import io.openliberty.wsoc.common.Constants;
 import io.openliberty.wsoc.util.WebServerControl;
 
-/**
- *
+/*
+ * Taken from io.openliberty.wsoc.internal_fat
  */
 public class WsocTest {
 

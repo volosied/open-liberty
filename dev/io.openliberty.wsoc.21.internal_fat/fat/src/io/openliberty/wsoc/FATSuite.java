@@ -21,10 +21,10 @@ import com.ibm.ws.fat.util.FatLogHandler;
 import componenttest.rules.repeater.EmptyAction;
 import componenttest.rules.repeater.FeatureReplacementAction;
 import componenttest.rules.repeater.RepeatTests;
-import io.openliberty.wsoc.tests.BasicTest;
+import io.openliberty.wsoc.tests.Basic21Test;
 
 /**
- * Collection of all example tests
+ * WebSocket tests for 2.1 and above
  */
 @RunWith(Suite.class)
 /*
@@ -32,7 +32,7 @@ import io.openliberty.wsoc.tests.BasicTest;
  * below should represent all of the test cases for this FAT.
  */
 @SuiteClasses({
-                BasicTest.class
+    Basic21Test.class
 })
 public class FATSuite {
     private static final Class<?> c = FATSuite.class;

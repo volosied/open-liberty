@@ -12,6 +12,7 @@ package io.openliberty.wsoc.util.wsoc;
 
 /**
  * tests should implement this so test runners can get set and get a hold of stored test result info.
+ * Taken from io.openliberty.wsoc.internal_fat
  */
 public interface TestHelper {
 

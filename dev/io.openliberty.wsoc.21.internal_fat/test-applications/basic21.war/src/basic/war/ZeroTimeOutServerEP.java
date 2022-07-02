@@ -23,26 +23,24 @@ import jakarta.websocket.server.ServerEndpoint;
 
 import io.openliberty.wsoc.common.Utils;
 
-/**
- *
- */
-@ServerEndpoint(value = "/negativeTimeout")
-public class NegativeTimeOutServerEP {
+@ServerEndpoint(value = "/zeroTimeout")
+public class ZeroTimeOutServerEP {
 
     Session session;
 
-        @OnOpen
-        public void onOpen(final Session session) {
-            if (session != null) {
-                this.session = session;
-                // -12 will be searched in logs
-                session.setMaxIdleTimeout(-12); 
-            }
+    @OnOpen
+    public void onOpen(final Session session) {
+        if (session != null) {
+            this.session = session;
+            // 0 will be searched in logs
+            session.setMaxIdleTimeout(0);
         }
+    }
 
-        @OnMessage
-        public String echo(String input) {    
-            return String.valueOf(this.session.getMaxIdleTimeout());
-        }
+    @OnMessage
+    public String echo(String input) {
+        
+        return String.valueOf(this.session.getMaxIdleTimeout());
+    }
 
 }

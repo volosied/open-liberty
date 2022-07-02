@@ -26,6 +26,9 @@ import com.ibm.ws.fat.util.Props;
 
 import componenttest.exception.TopologyException;
 
+/*
+ * Taken from io.openliberty.wsoc.internal_fat
+ */
 public class WebServerControl {
     private static final Class<?> c = WebServerControl.class;
     private static Boolean webserverInFront = false;

@@ -23,8 +23,8 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import io.openliberty.wsoc.util.wsoc.WsocTest;
 
-/**
- *
+/*
+ * Taken from io.openliberty.wsoc.internal_fat
  */
 public class SingleRequestClientTestRunner extends HttpServlet {
 

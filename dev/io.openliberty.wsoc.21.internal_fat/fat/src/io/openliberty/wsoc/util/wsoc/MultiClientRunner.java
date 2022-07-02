@@ -28,6 +28,7 @@ import io.openliberty.wsoc.common.Constants;
 
 /**
  * Class to run multiple websocket client tests.
+ * Taken from io.openliberty.wsoc.internal_fat
  */
 public class MultiClientRunner {
 

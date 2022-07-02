@@ -11,7 +11,7 @@
 package io.openliberty.wsoc.util.wsoc;
 
 /**
- *
+ * Taken from io.openliberty.wsoc.internal_fat
  */
 public class MultiClientTestContext {
 

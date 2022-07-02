@@ -13,8 +13,8 @@ package io.openliberty.wsoc.util.wsoc;
 import jakarta.websocket.ContainerProvider;
 import jakarta.websocket.WebSocketContainer;
 
-/**
- *
+/*
+ * Taken from io.openliberty.wsoc.internal_fat
  */
 public class TestWsocContainer {
 

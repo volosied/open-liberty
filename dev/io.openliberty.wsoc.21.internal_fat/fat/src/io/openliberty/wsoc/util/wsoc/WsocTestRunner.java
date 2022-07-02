@@ -26,6 +26,7 @@ import io.openliberty.wsoc.common.Constants;
 
 /**
  * Simple websocket test runner class that will run a test until endpoint terminates the test (often using numMsgsExcpected)or until specified timeout occurs.
+ * Taken from io.openliberty.wsoc.internal_fat
  */
 public class WsocTestRunner {
 

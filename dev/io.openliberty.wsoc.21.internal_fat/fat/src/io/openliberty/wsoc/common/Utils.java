@@ -16,8 +16,8 @@ import java.io.Reader;
 import java.nio.ByteBuffer;
 import java.util.Random;
 
-/**
- *
+/*
+ * Taken from io.openliberty.wsoc.internal_fat
  */
 public class Utils {
 

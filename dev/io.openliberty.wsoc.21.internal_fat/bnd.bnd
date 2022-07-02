@@ -13,7 +13,7 @@ bVersion=1.0
 
 src:\
     fat/src,\
-    test-applications/basic.war/src
+    test-applications/basic21.war/src
 
 fat.project: true
 
@@ -35,4 +35,4 @@ javac.target: 11
     com.ibm.tx.jta;version=latest,\
     com.ibm.ws.tx.embeddable;version=latest,\
     com.ibm.ws.transaction.test.util;version=latest,\
-    com.ibm.ws.org.slf4j.api;version=latest, \
+    com.ibm.ws.org.slf4j.api;version=latest

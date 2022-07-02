@@ -45,20 +45,12 @@ import io.openliberty.wsoc.util.WebServerControl;
 import io.openliberty.wsoc.util.WebServerSetup;
 import io.openliberty.wsoc.util.wsoc.WsocTest;
 
-// comment #1 (referenced below): Some tests use the AllowedFFDC annotation because these Jetty client test will not run on Z, as desired
-// due to the notOnZRule, but the test framework will still look for the "ExpectedFFDC" if that annotation is used, and not finding it, will
-// fail the test on Z.
-
-// comment #2 (referenced below): Some tests we found didn't run for "test" reasons, not product code reasons, test were commented out and
-// not deleted so the same pattern would not be repeated.
 
 /**
- * Tests WebSocket Stuff
- *
- * @author unknown
+ *  WebSocket 2.1 Tests 
  */
 @RunWith(FATRunner.class)
-public class BasicTest {
+public class Basic21Test {
     public static final String SERVER_NAME = "basicTestServer";
 
     @Server(SERVER_NAME)
@@ -73,15 +65,12 @@ public class BasicTest {
     private static TimeOutTest timeout = null;
 
     private static final Logger LOG = Logger.getLogger(BasicTest.class.getName());
-
-    private static final String BASIC_JAR_NAME = "basic";
-    private static final String BASIC_WAR_NAME = "basic";
+    
+    private static final String BASIC_WAR_NAME = "basic21";
 
     @BeforeClass
     public static void setUp() throws Exception {
-        // // Build the basic jar to add to the war app as a lib
-        // JavaArchive BasicJar = ShrinkHelper.buildJavaArchive(BASIC_JAR_NAME + ".jar",
-        //                                                      "basic.jar");
+
         // Build the war app and add the dependencies
         WebArchive BasicApp = ShrinkHelper.buildDefaultApp(BASIC_WAR_NAME + ".war",
                                                            "basic.war",
@@ -177,6 +166,13 @@ public class BasicTest {
     //
     //
 
+
+    /*
+     * The four tests below are used to test negative and zero timeouts
+     * by confirming the "No timeout enabled" string is found in the logs. 
+     * Spec clarification as part of 2.1  
+     * https://github.com/jakartaee/websocket/issues/382
+     */
     @Mode(TestMode.LITE)
     @Test
     public void testZeroTimeOut() throws Exception {
@@ -195,6 +191,10 @@ public class BasicTest {
         assertNotNull("Timeout message not found!", result);
     }
 
+    /*
+     * testSSC means liberty wsoc impl is the client and server
+     * tests above use Jetty as the client
+     */
     @Mode(TestMode.FULL)
     @Test
     public void testSSCZeroTimeOut() throws Exception {
