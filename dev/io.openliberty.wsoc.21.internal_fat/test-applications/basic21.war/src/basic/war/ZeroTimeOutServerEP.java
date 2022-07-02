@@ -23,6 +23,10 @@ import jakarta.websocket.server.ServerEndpoint;
 
 import io.openliberty.wsoc.common.Utils;
 
+/*
+ * Server endpoint which sets an IdleTimeout of 0
+ * Logs are searched to confirm 0 value is found
+ */
 @ServerEndpoint(value = "/zeroTimeout")
 public class ZeroTimeOutServerEP {
 

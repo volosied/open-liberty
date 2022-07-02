@@ -23,8 +23,9 @@ import jakarta.websocket.server.ServerEndpoint;
 
 import io.openliberty.wsoc.common.Utils;
 
-/**
- *
+/*
+ * Server endpoint which sets a negative IdleTimeout
+ * Logs are searched to confirm -12 value is found
  */
 @ServerEndpoint(value = "/negativeTimeout")
 public class NegativeTimeOutServerEP {

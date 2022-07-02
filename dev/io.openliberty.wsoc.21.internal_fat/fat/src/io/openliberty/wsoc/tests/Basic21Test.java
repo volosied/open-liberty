@@ -64,7 +64,7 @@ public class Basic21Test {
     private static WsocTest wt = null;
     private static TimeOutTest timeout = null;
 
-    private static final Logger LOG = Logger.getLogger(BasicTest.class.getName());
+    private static final Logger LOG = Logger.getLogger(Basic21Test.class.getName());
     
     private static final String BASIC_WAR_NAME = "basic21";
 
