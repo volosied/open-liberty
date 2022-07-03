@@ -178,7 +178,6 @@ public class Basic21Test {
     public void testZeroTimeOut() throws Exception {
         timeout.testZeroTimeOut();
         String result  = LS.waitForStringInTraceUsingMark("Session timeout 0 is less than 1. No timeout enabled");
-        System.out.println(result);
         assertNotNull("Timeout message not found!", result);
     }
 
@@ -187,7 +186,6 @@ public class Basic21Test {
     public void testNegativeoTimeOut() throws Exception {
         timeout.testNegativeoTimeOut();
         String result  = LS.waitForStringInTraceUsingMark("Session timeout -12 is less than 1. No timeout enabled");
-        System.out.println(result);
         assertNotNull("Timeout message not found!", result);
     }
 
@@ -200,7 +198,6 @@ public class Basic21Test {
     public void testSSCZeroTimeOut() throws Exception {
         this.runAsLSAndVerifyResponse("TimeOutTest", "testZeroTimeOut");
         String result  = LS.waitForStringInTraceUsingMark("Session timeout 0 is less than 1. No timeout enabled");
-        System.out.println(result);
         assertNotNull("Timeout message not found!", result);
     }
 
@@ -209,7 +206,6 @@ public class Basic21Test {
     public void testSSCNegativeoTimeOut() throws Exception {
         this.runAsLSAndVerifyResponse("TimeOutTest", "testNegativeoTimeOut");
         String result  = LS.waitForStringInTraceUsingMark("Session timeout -12 is less than 1. No timeout enabled");
-        System.out.println(result);
         assertNotNull("Timeout message not found!", result);
     }
 

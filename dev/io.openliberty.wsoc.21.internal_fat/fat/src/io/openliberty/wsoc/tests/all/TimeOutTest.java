@@ -45,7 +45,7 @@ public class TimeOutTest {
         String[] input1 = { "Text1" };
         String[] output1 = { "0" }; // "output" here is actually set in the onClose on the Client side
         //server endpoint uri is /annotatedByteArray/{boolean-var}
-        String uri = "/basic/zeroTimeout";
+        String uri = "/basic21/zeroTimeout";
         wsocTest.runEchoTest(new TimeOutClientEP.TimeOutTest(input1), uri, output1);
 
     }
@@ -55,7 +55,7 @@ public class TimeOutTest {
         String[] input1 = { "Text1" };
         String[] output1 = { "-12" }; // "output" here is actually set in the onClose on the Client side
         //server endpoint uri is /annotatedByteArray/{boolean-var}
-        String uri = "/basic/negativeTimeout";
+        String uri = "/basic21/negativeTimeout";
         wsocTest.runEchoTest(new TimeOutClientEP.TimeOutTest(input1), uri, output1);
 
     }
