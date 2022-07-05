@@ -46,6 +46,7 @@ import componenttest.custom.junit.runner.FATRunner;
 import componenttest.custom.junit.runner.Mode;
 import componenttest.custom.junit.runner.Mode.TestMode;
 import componenttest.rules.repeater.JakartaEE9Action;
+import componenttest.rules.repeater.JakartaEE10Action;
 import componenttest.topology.impl.LibertyServer;
 
 /**
@@ -751,7 +752,7 @@ public class JSPTests {
                                         "Testing StreamELResolver with distinct method (Expected: [1, 4, 3, 2, 5]): [1, 4, 3, 2, 5]",
                                         "Testing StreamELResolver with filter method (Expected: [4, 3, 5, 3]): [4, 3, 5, 3]" };
 
-        if (JakartaEE9Action.isActive()) {
+        if (JakartaEE9Action.isActive() || JakartaEE10Action.isActive()) {
             for (int i = 0; i < expectedInResponse.length; i++) {
                 expectedInResponse[i] = expectedInResponse[i].replace("javax.el", "jakarta.el");
             }
@@ -998,7 +999,7 @@ public class JSPTests {
     }
 
     private void verifyExceptionInResponse(String expectedException, String responseText) throws Exception {
-        if (JakartaEE9Action.isActive()) {
+        if (JakartaEE9Action.isActive() || JakartaEE10Action.isActive()) {
             expectedException = "jakarta." + expectedException;
         } else {
             expectedException = "javax." + expectedException;
