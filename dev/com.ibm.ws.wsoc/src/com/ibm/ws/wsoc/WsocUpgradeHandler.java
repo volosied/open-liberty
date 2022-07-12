@@ -76,6 +76,8 @@ public class WsocUpgradeHandler implements HttpUpgradeHandler, TransportConnecti
         sessionImpl.setPathParameters();
         sessionImpl.signalAppOnOpen();
 
+        System.out.println(WebSocketVersionServiceManager.LOADED_SPEC_LEVEL);
+
         // release ref to the endpoint
         endpoint = null;
     }

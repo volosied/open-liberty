@@ -222,9 +222,10 @@ endpoint.instance.error=CWWKH0051E: The server cannot access the {0} endpoint cl
 endpoint.instance.error.explanation=When the server attempted to access the specified endpoint class, an error occurred.
 endpoint.instance.error.useraction=Review the exception details to determine why the endpoint class cannot be accessed, and fix the problem.
 
-missingslashornull.uri=CWWKH0052E: An exception occurred during deployment/start of server Endpoint: {0} with uri: "{1}". Endpoint URI is either null or does not start with /.
+missingslashornull.uri=CWWKH0052E: An exception occurred during deployment/start of server Endpoint: {0} with uri: {1}. Endpoint URI is either null or does not start with /.
 missingslashornull.uri.explanation=ServerEndpoint is invalid because Endpoint URI is either null or does not start with / in endpoint class. WebSocket application is not available for requests. 
 missingslashornull.uri.useraction=Define non null Endpoint URI beginning with /. After you resolve the problem, deploy the application again.
 
-
-
+wsoc.feature.not.loaded.correctly=CWWKH0053E: The websocket feature did not load with an acceptable version.
+wsoc.feature.not.loaded.correctly.explanation=The websocket feature is loaded with a version that corresponds to the Java [Jakarta] EE specification of that websocket feature. The feature was loaded with no version defined.
+wsoc.feature.not.loaded.correctly.useraction=Check the server.xml file for existence of either a websocket feature. Only one should be specified.
