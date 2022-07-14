@@ -896,9 +896,16 @@ public class TransactionUserBase extends ReplicatableImpl {
 	 */
 	synchronized void setHandler(String name) throws ServletException {
 
+
+		SipAppDesc appDesc = null;
+		// When going through SipLogExtension, m_sipServletDesc will be null. 
+		// ServletException will then be thrown an caught and ignored in SipSessionImplementation#init()
+		if(m_sipServletDesc != null) {
+			appDesc = m_sipServletDesc.getSipApp();
+		}
+
 		//Call on the router to search through the installed apps for a
 		// matching siplet. We need to convert the name to a sip servlet descriptor.
-		SipAppDesc appDesc = m_sipServletDesc.getSipApp();
 		SipServletDesc desc = appDesc == null ? null : appDesc.getSipServlet(name);
 
 		if (null != desc) {
