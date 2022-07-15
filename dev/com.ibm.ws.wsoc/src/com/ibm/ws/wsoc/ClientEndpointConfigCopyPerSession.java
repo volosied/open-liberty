@@ -21,6 +21,9 @@ import java.util.Map;
 
 /*
  * For WebSockets 2.1 : https://github.com/jakartaee/websocket/issues/235
+ * 
+ * Based off Tomcat's  org.apache.tomcat.websocket.server.WsPerSessionServerEndpointConfig class
+ * Wraps the ClientEndpointConfig and produces an indivdualized copy of the user properties.
  */
 public class ClientEndpointConfigCopyPerSession implements ClientEndpointConfig {
     
