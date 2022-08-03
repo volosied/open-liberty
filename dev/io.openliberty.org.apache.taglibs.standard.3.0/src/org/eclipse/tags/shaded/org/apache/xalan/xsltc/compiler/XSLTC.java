@@ -19,7 +19,7 @@
  * $Id$
  */
 
-package org.apache.xalan.xsltc.compiler;
+package org.eclipse.tags.shaded.org.apache.xalan.xsltc.compiler;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
@@ -40,7 +40,7 @@ import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 
 import org.apache.bcel.classfile.JavaClass;
-import org.apache.xalan.xsltc.compiler.util.ErrorMsg;
+import org.eclipse.tags.shaded.org.apache.xalan.xsltc.compiler.util.ErrorMsg;
 import org.apache.xalan.xsltc.compiler.util.Util;
 import org.apache.xml.dtm.DTM;
 
@@ -55,6 +55,8 @@ import org.xml.sax.XMLReader;
  * @author John Howard (johnh@schemasoft.com)
  */
 public final class XSLTC {
+
+    private String VS_DEBUG = "OVERLAYED";
 
     // A reference to the main stylesheet parser object.
     private Parser _parser;
