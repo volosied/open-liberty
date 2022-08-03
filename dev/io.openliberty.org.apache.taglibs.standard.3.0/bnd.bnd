@@ -32,10 +32,10 @@ Export-Package: \
    org.apache.taglibs.standard.tei;thread-context=true;version=3.0, \
    org.apache.taglibs*;version=3.0
 
--privatepackage: \
-  org.eclipse.tags.shaded.*
+
 
 -buildpath: \
   org.glassfish.web:jakarta.servlet.jsp.jstl;version=3.0, \
+  xalan:xalan;version=2.7.2, \
   io.openliberty.jakarta.servlet.6.0;version=latest,\
   io.openliberty.jakarta.pages.3.0;version=latest
