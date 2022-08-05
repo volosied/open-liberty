@@ -19,9 +19,6 @@ Bundle-Description: WebSocket, version ${bVersion}
 
 Export-Package: \
  io.openliberty.wsoc.speclevel
- 
--includeresource: \
-  io/openliberty/wsoc/speclevel=resources/10
 
 -buildpath: \
   com.ibm.ws.org.osgi.annotation.versioning;version=latest
