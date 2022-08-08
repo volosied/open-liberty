@@ -21,6 +21,7 @@ import org.w3c.dom.Element;
 
 import com.ibm.ws.jsp.Constants;
 import com.ibm.ws.jsp.JspCoreException;
+import com.ibm.ws.jsp.PagesVersionHandler;
 import com.ibm.ws.jsp.configuration.JspConfiguration;
 import com.ibm.ws.jsp.translator.visitor.JspVisitorInputMap;
 import com.ibm.ws.jsp.translator.visitor.JspVisitorResult;
@@ -83,6 +84,9 @@ public class GenerateJspVisitor extends GenerateVisitor {
 					logger.logp(Level.FINEST, CLASS_NAME, "visit","entering code generation phase CLASS_SECTION");
 				}
                 generateClassSection(validatorResult);
+                if(PagesVersionHandler.isPages31Loaded()){
+                    generatePropertiesMethod(validatorResult.isErrorOnELNotFound() || jspConfiguration.errorOnELNotFound());
+                }
                 break;
             }
             
@@ -200,6 +204,23 @@ public class GenerateJspVisitor extends GenerateVisitor {
 
     }
 
+    // Added for Pages 3.1's errorOnELNotFound option
+    private void generatePropertiesMethod(boolean errorOnELNotFound) {
+      writer.println();
+      writer.println("private java.util.HashMap<String, Boolean> pageProperties = null;");
+      writer.println();
+
+      writer.println();
+      writer.println("public java.util.HashMap<String,Boolean> getPropertyInfo() {");
+      writer.println("if(pageProperties == null) { ");
+      writer.println("pageProperties = new java.util.HashMap<String, Boolean>();");
+      writer.println("pageProperties.put(\"errorOnELNotFound\"," + errorOnELNotFound + ");");
+      writer.println("}");
+      writer.println("return pageProperties; ");
+      writer.println("}");
+      writer.println();
+    }
+
     protected void generateImportSection(ValidateJspResult validatorResult) {
         String servletPackageName = jspPackageName;
 
@@ -258,6 +279,7 @@ public class GenerateJspVisitor extends GenerateVisitor {
 		writer.println();
 		writer.println("private boolean _jspx_isJspInited = false;");
 		writer.println();
+
         // PK81147 end
         if (validatorResult.getInfo() != null) {
             writer.println();

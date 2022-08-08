@@ -68,4 +68,13 @@ public class PagesVersionHandler {
         }
         return false;
     }
+
+    public static boolean isPages31OrHigherLoaded(){
+        if( Double.parseDouble(PagesVersionHandler.LOADED_SPEC_LEVEL) >= 3.1) {
+            return true;
+        }
+        return false;
+    }
+
+    
 }

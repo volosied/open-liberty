@@ -37,6 +37,18 @@ public interface JSPPropertyGroup
      */
     boolean isElIgnored();
 
+        /**
+     * @return true if &lt;el-ignored> is specified
+     * @see #isErrorOnELNotFound
+     */
+    boolean isSetErrorOnELNotFound();
+
+    /**
+     * @return &lt;el-ignored> if specified
+     * @see #isErrorOnELNotFound
+     */
+    boolean isErrorOnELNotFound();
+
     /**
      * @return &lt;page-encoding>, or null if unspecified
      */

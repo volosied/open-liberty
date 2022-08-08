@@ -20,6 +20,7 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 import com.ibm.ws.jsp.JspCoreException;
+import com.ibm.ws.jsp.PagesVersionHandler;
 import com.ibm.ws.jsp.configuration.JspConfiguration;
 import com.ibm.ws.jsp.translator.JspTranslationException;
 import com.ibm.ws.jsp.translator.utils.JspId;
@@ -322,6 +323,23 @@ public class ValidateJspVisitor extends ValidateVisitor {
                     }
                     else if (!jspConfiguration.getDeferredSyntaxAllowedAsLiteral().equals(directiveValue)) {
 	                        throw new JspTranslationException(jspElement, "jsp.error.page.conflict.deferredsyntaxallowedasliteral");
+                    }
+
+                    if(PagesVersionHandler.isPages31OrHigherLoaded()){
+                        if (directiveName.equals("errorOnELNotFound")) {
+                            valid = true;
+                            if (directiveValue.equalsIgnoreCase("true")) {
+                                jspResult.setErrorOnELNotFound(true);
+                                jspConfiguration.setErrorOnELNotFound(true);
+                                jspConfiguration.setErrorOnELNotFoundSetTrueInPage(true);
+                            }
+                            else if (directiveValue.equalsIgnoreCase("false")) {
+                                jspResult.setErrorOnELNotFound(false);
+                                jspConfiguration.setErrorOnELNotFound(false);
+                            }
+                            else
+                                throw new JspTranslationException(jspElement, "jsp.error.page.invalid.erroronelnotfound");
+                        }
                     }
                 }
                 if (valid == false) {

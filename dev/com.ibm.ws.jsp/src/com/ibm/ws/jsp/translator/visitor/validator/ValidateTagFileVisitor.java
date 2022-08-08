@@ -116,6 +116,20 @@ public class ValidateTagFileVisitor extends ValidateVisitor {
                     else
                         throw new JspTranslationException(jspElement, "jsp.error.page.invalid.iselignored");
                 }
+                else if (directiveName.equals("errorOnELNotFound")) {
+                    valid = true;
+                    if (directiveValue.equalsIgnoreCase("true")) {
+                        result.setErrorOnELNotFound(true); 
+                        jspConfiguration.setErrorOnELNotFound(true);
+                        jspConfiguration.setElIgnoredSetTrueInPage(true);
+                    }
+                    else if (directiveValue.equalsIgnoreCase("false")) {
+                        result.setErrorOnELNotFound(false); 
+                        jspConfiguration.setErrorOnELNotFound(false);
+                    }
+                    else
+                        throw new JspTranslationException(jspElement, "jsp.error.page.invalid.iselignored");
+                }
                 else if (directiveName.equals("display-name")) {
                     valid = true;
                     tagFileResult.setDisplayName(directiveValue);

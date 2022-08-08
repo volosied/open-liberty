@@ -115,6 +115,11 @@ public abstract class HttpJspBase extends HttpServlet implements HttpJspPage {
         return null;
     }
 
+        // Added for Pages 3.1
+        public HashMap<String,Boolean> getPropertyInfo() {
+            return new HashMap<String, Boolean>();
+       }
+
     public int getSharingPolicy(HttpServletRequest request) {
         return SHARE_POLICY;
     }
