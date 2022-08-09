@@ -33,8 +33,10 @@ public class ServerEndpointConfigCopyPerSession implements ServerEndpointConfig 
 
     public ServerEndpointConfigCopyPerSession (ServerEndpointConfig epc){
         this.epc = epc;
-        for (Map.Entry<String,Object> entry : this.epc.getUserProperties().entrySet()){
-            copy.put(entry.getKey(),entry.getValue());
+        if(this.epc.getUserProperties() != null){
+            for (Map.Entry<String,Object> entry : this.epc.getUserProperties().entrySet()){
+                copy.put(entry.getKey(),entry.getValue());
+            }
         }
     }
 
