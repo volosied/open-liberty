@@ -139,6 +139,9 @@ public class SessionImpl {
 
         if(WebSocketVersionServiceManager.isWsoc21rHigher()){
             things.setUserProperties(endpointConfig.getUserProperties());
+        } else {
+            userProperties = new HashMap<String, Object>();
+            things.setUserProperties(userProperties);
         }
         
         things.setSessionID(sessionID);
