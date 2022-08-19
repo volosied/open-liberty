@@ -28,7 +28,6 @@ public class UserPropertiesServerEndpointConfig implements ServerEndpointConfig 
     
     static {
       SERVER_USER_PROPERTIES.put("SERVER-1", new Object());
-      SERVER_USER_PROPERTIES.put("SERVER-2", new Object());
     }
     
     public Map<String, Object> getUserProperties() {

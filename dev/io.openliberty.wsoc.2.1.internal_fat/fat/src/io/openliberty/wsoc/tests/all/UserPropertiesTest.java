@@ -11,6 +11,8 @@ import jakarta.websocket.ClientEndpointConfig.Builder;
 
 import jakarta.websocket.ClientEndpointConfig;
 
+import java.util.List;
+
 import org.junit.Assert;
 
 public class UserPropertiesTest {
@@ -26,13 +28,17 @@ public class UserPropertiesTest {
         // Also avoids sending the properties to the client
         String uri = "/basic21/userproperties";
 
-        WsocTestContext testdata = wsocTest.runWsocTest(new ServerUserPropertiesClientEP.UserPropertiesTest(), uri,WsocTestRunner.getDefaultConfig(), 0, Constants.getDefaultTimeout());
+        WsocTestContext testdata = wsocTest.runWsocTest(new ServerUserPropertiesClientEP.UserPropertiesTest(), uri,WsocTestRunner.getDefaultConfig(), 2, Constants.getDefaultTimeout());
+        List<Object> list = testdata.getMessage();
+        Assert.assertEquals(list.size(), 2);
+        Assert.assertTrue(list.contains("MODIFY-2"));
+        Assert.assertTrue(list.contains("SERVER-1"));
         testdata.reThrowException();
 
         // User Properties must be independent of each session.
         // Modifications in the first run should not be reflected in the second run
         // IllegalStateException is thrown on the endpoint if the properties are not correct.
-        WsocTestContext secondRunTestData = wsocTest.runWsocTest(new ServerUserPropertiesClientEP.UserPropertiesTest(), uri,WsocTestRunner.getDefaultConfig(), 0, Constants.getDefaultTimeout());
+        WsocTestContext secondRunTestData = wsocTest.runWsocTest(new ServerUserPropertiesClientEP.UserPropertiesTest(), uri,WsocTestRunner.getDefaultConfig(), 2, Constants.getDefaultTimeout());
         secondRunTestData.reThrowException();
 
     }
@@ -41,6 +47,10 @@ public class UserPropertiesTest {
         // Checks are performed within client endpoint because wsoc Impl uses HashMap which doesn't guarentee order.
         String uri = "/basic21/echo";
         WsocTestContext testdata = wsocTest.runWsocTest(new ClientUserPropertiesClientEP.UserPropertiesTest(), uri, (ClientEndpointConfig) new ClientUserPropertiesClientEP.UserPropertyClientEndpointConfig(), 0, Constants.getDefaultTimeout());
+        List<Object> list = testdata.getMessage();
+        Assert.assertEquals(list.size(), 2);
+        Assert.assertTrue(list.contains("MODIFY-1"));
+        Assert.assertTrue(list.contains("CLIENT-1"));
         testdata.reThrowException();
 
         // User Properties must be independent between the two runs 

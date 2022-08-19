@@ -78,22 +78,20 @@ public abstract class ClientUserPropertiesClientEP extends Endpoint implements T
             
             Map<String, Object> userProperties = session.getUserProperties();
                 
-            if (userProperties.size() != 2) {
-                throw new IllegalStateException("User properties map size differs. Expected: 2, Actual: " + userProperties.size());
+            if (userProperties.size() != 1) {
+                throw new IllegalStateException("User properties map size differs. Expected: 1, Actual: " + userProperties.size());
             }
             
-            checkKey(userProperties, "CLIENT-1");
-            checkKey(userProperties, "CLIENT-2");
+            if (!userProperties.containsKey("CLIENT-1"))
+                throw new IllegalStateException("User properties map is missing entry with key [CLIENT-1]");
 
-            userProperties.remove("CLIENT-2");
             userProperties.put("MODIFY-1", new Object());
 
-            _wtr.terminateClient();
-        }
+            for (Map.Entry<String, Object> entry : userProperties.entrySet()) {
+                _wtr.addMessage(entry.getKey());
+            }
 
-        private void checkKey(Map<String, Object> map, String key) {
-            if (!map.containsKey(key))
-                throw new IllegalStateException("User properties map is missing entry with key [" + key + "]");
+            _wtr.terminateClient();
         }
     }
 
@@ -103,7 +101,6 @@ public abstract class ClientUserPropertiesClientEP extends Endpoint implements T
 
         static {
             CLIENT_USER_PROPERTIES.put("CLIENT-1", new Object());
-            CLIENT_USER_PROPERTIES.put("CLIENT-2", new Object());
         }
 
         public Map<String, Object> getUserProperties() {

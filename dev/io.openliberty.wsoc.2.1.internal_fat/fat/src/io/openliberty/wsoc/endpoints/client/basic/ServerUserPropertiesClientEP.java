@@ -64,7 +64,10 @@ public class ServerUserPropertiesClientEP implements TestHelper {
 
         @OnMessage
         public String onMessage(String data) {
-            _wtr.terminateClient();
+            _wtr.addMessage(data);
+            if(_wtr.limitReached()){
+                _wtr.terminateClient();
+            }
             return null;
         }
     }

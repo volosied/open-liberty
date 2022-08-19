@@ -19,23 +19,20 @@ import java.util.Map;
  * Based off TCK: https://github.com/eclipse-ee4j/jakartaee-tck/pull/783
  */
 public class UserPropertiesConfigurator extends ServerEndpointConfig.Configurator {
-  
+
   public void modifyHandshake(ServerEndpointConfig sec, HandshakeRequest request, HandshakeResponse response) {
-    
+
     Map<String, Object> userProperties = sec.getUserProperties();
-    
-    if (userProperties.size() != 2) {
-      throw new IllegalStateException("User properties map size differs. Expected: 2, Actual: " + userProperties.size());
+
+    if (userProperties.size() != 1) {
+      throw new IllegalStateException("User properties map size differs. Expected: 1, Actual: " + userProperties.size());
     }
 
-    checkKey(userProperties, "SERVER-1");
-    checkKey(userProperties, "SERVER-2");;
-    
+    if (!userProperties.containsKey("SERVER-1")) {
+      throw new IllegalStateException("User properties map is missing key: SERVER-1");
+    }
+
     userProperties.put("MODIFY-1", new Object());
   }
-  
-  private void checkKey(Map<String, Object> map, String key) {
-    if (!map.containsKey(key))
-      throw new IllegalStateException("User properties map is missing key: " + key ); 
-  }
+
 }

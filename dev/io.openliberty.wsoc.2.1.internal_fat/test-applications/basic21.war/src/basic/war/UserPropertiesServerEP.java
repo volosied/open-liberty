@@ -33,28 +33,21 @@ public class UserPropertiesServerEP extends Endpoint implements MessageHandler.W
   public void onMessage(String msg) {
 
     Map<String, Object> userProperties = this.session.getUserProperties();
-    if (userProperties.size() != 3) {
-      throw new IllegalStateException("User properties map size differs. Expected: 3, Actual: " + userProperties.size());
-    }
-
-    checkKey(userProperties, "SERVER-1");
-    checkKey(userProperties, "SERVER-2");
-    checkKey(userProperties, "MODIFY-1");
-
-    try {
-      this.session.getBasicRemote().sendText("PASSES");
-    } catch (Exception e) {
-      e.printStackTrace();
+    if (userProperties.size() != 2) {
+      throw new IllegalStateException("User properties map size differs. Expected: 2, Actual: " + userProperties.size());
     }
 
     // Modify user properties to test if they do not affect other endpoint sessions
-    userProperties.remove("SERVER-2");
+    userProperties.remove("MODIFY-1");
     userProperties.put("MODIFY-2", new Object());
-  }
 
-  private void checkKey(Map<String, Object> map, String key) {
-    if (!map.containsKey(key))
-      throw new IllegalStateException("User properties map is missing entry with key [" + key + "]");
+    for (Map.Entry<String, Object> entry : userProperties.entrySet()) {
+      try {
+        this.session.getBasicRemote().sendText(entry.getKey());
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
   }
 
   public void onError(Session session, Throwable error) {
