@@ -5,7 +5,7 @@
     are made available under the terms of the Eclipse Public License v1.0
     which accompanies this distribution, and is available at
     http://www.eclipse.org/legal/epl-v10.html
-   
+
     Contributors:
         IBM Corporation - initial API and implementation
  -->
@@ -23,5 +23,17 @@
         <servlet-name>SingleRequestTestRunner</servlet-name>
         <url-pattern>/SingleRequest</url-pattern>
     </servlet-mapping>
-	
+
+		<servlet>
+			 <servlet-name>UpgradeServlet</servlet-name>
+			 <servlet-class>basic.war.UpgradeServlet</servlet-class>
+			 <load-on-startup>1</load-on-startup>
+	 </servlet>
+
+	 <servlet-mapping>
+		<servlet-name>UpgradeServlet</servlet-name>
+		<url-pattern>/httpUpgradeServlet/*</url-pattern>
+</servlet-mapping>
+
+
 </web-app>

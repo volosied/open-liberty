@@ -47,7 +47,7 @@ import io.openliberty.wsoc.util.wsoc.WsocTest;
 
 
 /**
- *  WebSocket 2.1 Tests 
+ *  WebSocket 2.1 Tests
  */
 @RunWith(FATRunner.class)
 public class Basic21Test {
@@ -66,7 +66,7 @@ public class Basic21Test {
     private static UserPropertiesTest userprop = null;
 
     private static final Logger LOG = Logger.getLogger(Basic21Test.class.getName());
-    
+
     private static final String BASIC_WAR_NAME = "basic21";
 
     @BeforeClass
@@ -158,17 +158,10 @@ public class Basic21Test {
         return response;
     }
 
-    //
-    //
-    //  ANNOTATED TESTS
-    //
-    //
-
-
     /*
      * The four tests below are used to test negative and zero timeouts
-     * by confirming the "No timeout enabled" string is found in the logs. 
-     * Spec clarification as part of 2.1  
+     * by confirming the "No timeout enabled" string is found in the logs.
+     * Spec clarification as part of 2.1
      * https://github.com/jakartaee/websocket/issues/382
      */
     @Mode(TestMode.LITE)
@@ -219,16 +212,16 @@ public class Basic21Test {
         this.runAsLSAndVerifyResponse("UserPropertiesTest", "testUserPropertiesOnServer");
     }
 
-    /* 
+    /*
      * Currently fails on Eclipse Jetty. Doesn't appear to be spec compliant.
-     * This test passes when run on Tomcat 10.1.0, however. 
-     * 
+     * This test passes when run on Tomcat 10.1.0, however.
+     *
      *   @Mode(TestMode.LITE)
      *   @Test
      *   public void testUserPropertiesonClient() throws Exception {
-     *      userprop.testUserPropertiesonClient(); 
+     *      userprop.testUserPropertiesonClient();
      *   }
-     * 
+     *
      */
 
     @Mode(TestMode.LITE)
