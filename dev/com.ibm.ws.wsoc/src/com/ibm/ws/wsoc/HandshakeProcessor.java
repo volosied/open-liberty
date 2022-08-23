@@ -130,7 +130,7 @@ public class HandshakeProcessor {
         }
 
         requestURI = new URI(httpRequest.getRequestURI());
-
+        
         things.setParameterMap(parameterMap);
         things.setQueryString(httpRequest.getQueryString());
         things.setURI(requestURI);

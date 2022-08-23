@@ -187,4 +187,11 @@ public class WebSocketVersionServiceManager {
         return false;
     }
 
+    public static boolean isWsoc20orBelow(){
+        if(Double.parseDouble(WebSocketVersionServiceManager.LOADED_SPEC_LEVEL) <= 2.0) {
+            return true;
+        }
+        return false;
+    }
+
 }

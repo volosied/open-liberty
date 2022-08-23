@@ -71,8 +71,10 @@ public class WsocHandlerImpl implements WsocHandler {
             return false;
         }
 
-        //call setNoMoreAddEndPoints only once per webapp
-        if (!noMoreAddsCalled) {
+        //  For WebSocket 2.1, this restricution has been removed
+        //  See https://github.com/jakartaee/websocket/issues/211
+        //  call setNoMoreAddEndPoints only once per webapp (Websocket 2.0 and below)
+        if (WebSocketVersionServiceManager.isWsoc20orBelow() && !noMoreAddsCalled) {
             ((ServerContainerExt) wsocContainer).setNoMoreAddEndpointsAllowed();
             noMoreAddsCalled = true;
         }
