@@ -29,6 +29,7 @@ import com.ibm.ws.fat.util.browser.WebBrowser;
 import com.ibm.ws.fat.util.browser.WebBrowserFactory;
 import com.ibm.ws.fat.util.browser.WebResponse;
 
+import basic.war.UpgradeServlet;
 import componenttest.annotation.AllowedFFDC;
 import componenttest.annotation.ExpectedFFDC;
 import componenttest.annotation.Server;
@@ -39,6 +40,7 @@ import componenttest.topology.impl.LibertyServer;
 import componenttest.topology.utils.HttpUtils;
 
 import io.openliberty.wsoc.tests.all.TimeOutTest;
+import io.openliberty.wsoc.tests.all.UpgradeTest;
 import io.openliberty.wsoc.tests.all.UserPropertiesTest;
 import io.openliberty.wsoc.util.OnlyRunNotOnZRule;
 import io.openliberty.wsoc.util.WebServerControl;
@@ -64,6 +66,7 @@ public class Basic21Test {
     private static WsocTest wt = null;
     private static TimeOutTest timeout = null;
     private static UserPropertiesTest userprop = null;
+    private static UpgradeTest upgrade = null;
 
     private static final Logger LOG = Logger.getLogger(Basic21Test.class.getName());
 
@@ -91,6 +94,7 @@ public class Basic21Test {
         wt = new WsocTest(LS, false);
         timeout = new TimeOutTest(wt);
         userprop = new UserPropertiesTest(wt);
+        upgrade = new UpgradeTest(wt);
         bwst.setUp();
     }
 
@@ -164,13 +168,13 @@ public class Basic21Test {
      * Spec clarification as part of 2.1
      * https://github.com/jakartaee/websocket/issues/382
      */
-    @Mode(TestMode.LITE)
-    @Test
-    public void testZeroTimeOut() throws Exception {
-        timeout.testZeroTimeOut();
-        String result  = LS.waitForStringInTraceUsingMark("Session timeout 0 is less than 1. No timeout enabled");
-        assertNotNull("Timeout message not found!", result);
-    }
+    // @Mode(TestMode.LITE)
+    // @Test
+    // public void testZeroTimeOut() throws Exception {
+    //     timeout.testZeroTimeOut();
+    //     String result  = LS.waitForStringInTraceUsingMark("Session timeout 0 is less than 1. No timeout enabled");
+    //     assertNotNull("Timeout message not found!", result);
+    // }
 
     @Mode(TestMode.LITE)
     @Test
@@ -228,5 +232,17 @@ public class Basic21Test {
     @Test
     public void testSSCUserPropertiesOnClient() throws Exception {
         this.runAsLSAndVerifyResponse("UserPropertiesTest", "testUserPropertiesOnClient");
+    }
+
+    @Mode(TestMode.LITE)
+    @Test
+    public void testUpgradeViaServletToWS() throws Exception {
+        upgrade.testUpgradeViaServletToWS();
+    }
+
+    @Mode(TestMode.LITE)
+    @Test
+    public void testSSCUpgrade() throws Exception {
+        this.runAsLSAndVerifyResponse("UpgradeTest", "testUpgradeViaServletToWS");
     }
 }

@@ -9,14 +9,15 @@
     Contributors:
         IBM Corporation - initial API and implementation
  -->
-<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd" version="6.0">
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd" version="6.0">
 
-	 <display-name>BasicWeb</display-name>
+    <display-name>BasicWeb</display-name>
 
-	<servlet>
+    <servlet>
         <servlet-name>SingleRequestTestRunner</servlet-name>
- 	      <servlet-class>io.openliberty.wsoc.common.SingleRequestClientTestRunner</servlet-class>
-          <load-on-startup>1</load-on-startup>
+        <servlet-class>io.openliberty.wsoc.common.SingleRequestClientTestRunner</servlet-class>
+        <load-on-startup>1</load-on-startup>
     </servlet>
 
     <servlet-mapping>
@@ -24,16 +25,16 @@
         <url-pattern>/SingleRequest</url-pattern>
     </servlet-mapping>
 
-		<servlet>
-			 <servlet-name>UpgradeServlet</servlet-name>
-			 <servlet-class>basic.war.UpgradeServlet</servlet-class>
-			 <load-on-startup>1</load-on-startup>
-	 </servlet>
+    <servlet>
+        <servlet-name>UpgradeServlet</servlet-name>
+        <servlet-class>basic.war.UpgradeServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
 
-	 <servlet-mapping>
-		<servlet-name>UpgradeServlet</servlet-name>
-		<url-pattern>/httpUpgradeServlet/*</url-pattern>
-</servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpgradeServlet</servlet-name>
+        <url-pattern>/upgradeEcho</url-pattern>
+    </servlet-mapping>
 
 
 </web-app>

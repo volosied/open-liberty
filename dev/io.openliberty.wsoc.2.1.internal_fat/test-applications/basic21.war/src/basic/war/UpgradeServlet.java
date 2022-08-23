@@ -21,6 +21,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.websocket.server.ServerContainer;
+import jakarta.websocket.server.ServerEndpointConfig;
 
 import jakarta.websocket.DeploymentException;
 
@@ -35,15 +36,12 @@ public class UpgradeServlet extends HttpServlet {
 
         ServerContainer container = (ServerContainer) req.getServletContext().getAttribute("jakarta.websocket.server.ServerContainer");
         try{
-            container.upgradeHttpToWebSocket(req, resp, new UpgradeServletPathEndpointConfig(), Collections.emptyMap());
+            // echo endpoint is used into another test, so I am reusing it here. 
+            container.upgradeHttpToWebSocket(req, resp, ServerEndpointConfig.Builder.create(EchoServerEP.class, "/echo").build(), new HashMap<String, String>());
         } catch(DeploymentException ex){
-
+            
         }
 
-        // Our response should be committed by now
-        if (resp.getStatus() != 101) {
-            resp.setStatus(500);
-        }
     }
 
 }
