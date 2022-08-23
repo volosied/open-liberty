@@ -37,21 +37,41 @@ import jakarta.websocket.DeploymentException;
 import org.osgi.service.component.annotations.Component;
 
 
-public class ServerContainerExt21 extends ServerContainerExt implements ServerContainer {
+public class ServerContainerExt21 extends ServerContainerExt implements ServerContainer, WsWsocServerContainer {
 
     /*
      * Since Websocket 2.1
      */
-   // public void doUpgrade(HttpServletRequest request, HttpServletResponse response, ServerEndpointConfig endpointConfig, Map<String, String> pathParams) throws ServletException, IOException {
-
     @Override
     public void upgradeHttpToWebSocket(Object httpServletRequest, Object httpServletResponse, ServerEndpointConfig sec,
             Map<String, String> pathParameters) throws IOException, DeploymentException {
 
-        wsocUpgradeHandler.handleRequest( ((HttpServletRequest) httpServletRequest), ((HttpServletResponse) httpServletResponse), sec, pathParameters, true);
+        try {
+          wsocUpgradeHandler.handleRequest( ((HttpServletRequest) httpServletRequest), ((HttpServletResponse) httpServletResponse), sec, pathParameters, true);
 
-        if (!((HttpServletResponse) httpServletResponse).isCommitted()) {
-            ((HttpServletResponse) httpServletResponse).getOutputStream().close();
+          if (!((HttpServletResponse) httpServletResponse).isCommitted()) {
+              ((HttpServletResponse) httpServletResponse).getOutputStream().close();
+          }
+        } catch (ServletException ex){
+          throw new DeploymentException();
+        }
+
+    }
+
+    /*
+     * Kept for WebSocket 2.1, but will be removed from the next release.
+     * (non-Javadoc)
+     *
+     * @see com.ibm.websphere.wsoc.WsWsocServerContainer#upgrade(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, javax.websocket.EndpointConfig,
+     * java.lang.String)
+     */
+    @Deprecated
+    @Override
+    public void doUpgrade(HttpServletRequest request, HttpServletResponse response, ServerEndpointConfig endpointConfig, Map<String, String> pathParams) throws ServletException, IOException {
+
+        wsocUpgradeHandler.handleRequest(request, response, endpointConfig, pathParams, true);
+        if (!response.isCommitted()) {
+            response.getOutputStream().close();
         }
 
     }
