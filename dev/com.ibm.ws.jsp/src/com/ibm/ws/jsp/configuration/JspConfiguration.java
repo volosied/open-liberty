@@ -75,7 +75,7 @@ public class JspConfiguration {
     protected JspConfiguration(JspConfigurationManager configManager) {
 		if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINER)){
 			logger.logp(Level.FINER, CLASS_NAME, "JspConfiguration", "default values isXml = [{0}] isXmlSpecified = [{1}] elIgnored = [{2}] scriptingInvalid = [{3}] pageEncoding = [{4}] trimDirectiveWhitespacesValue = [{5}] deferredSyntaxAllowedAsLiteralValue = [{6}] trimDirectiveWhitespaces = [{7}] deferredSyntaxAllowedAsLiteral = [{8}] elIgnoredSetTrueInPropGrp = [{9}] elIgnoredSetTrueInPage = [{10}]", 
-			new Object[] {new Boolean(isXml), new Boolean(isXmlSpecified), new Boolean(elIgnored), new Boolean(scriptingInvalid), pageEncoding, trimDirectiveWhitespacesValue, deferredSyntaxAllowedAsLiteralValue, trimDirectiveWhitespaces, deferredSyntaxAllowedAsLiteral,elIgnoredSetTrueInPropGrp,elIgnoredSetTrueInPage  });
+			new Object[] {Boolean.valueOf(isXml), Boolean.valueOf(isXmlSpecified), Boolean.valueOf(elIgnored), Boolean.valueOf(scriptingInvalid), pageEncoding, trimDirectiveWhitespacesValue, deferredSyntaxAllowedAsLiteralValue, trimDirectiveWhitespaces, deferredSyntaxAllowedAsLiteral,elIgnoredSetTrueInPropGrp,elIgnoredSetTrueInPage  });
 		} 
         this.configManager = configManager;
     }
@@ -103,7 +103,7 @@ public class JspConfiguration {
 		
 		if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINER)){
 			logger.logp(Level.FINER, CLASS_NAME, "JspConfiguration", "isXml = [{0}] isXmlSpecified = [{1}] elIgnored = [{2}] scriptingInvalid = [{3}] pageEncoding = [{4}] trimDirectiveWhitespacesValue = [{5}] deferredSyntaxAllowedAsLiteralValue = [{6}] trimDirectiveWhitespaces = [{7}] deferredSyntaxAllowedAsLiteral = [{8}] elIgnoredSetTrueInPropGrp = [{9}] elIgnoredSetTrueInPage = [{10}] errorOnELNotFoundInPropGroup = [{11}] errorOnELNotFoundInPage = [{12}]", 
-						new Object[] {new Boolean(isXml), new Boolean(isXmlSpecified), new Boolean(elIgnored), new Boolean(errorOnELNotFound), new Boolean(scriptingInvalid), pageEncoding, trimDirectiveWhitespacesValue, deferredSyntaxAllowedAsLiteralValue, trimDirectiveWhitespaces, deferredSyntaxAllowedAsLiteral, elIgnoredSetTrueInPropGrp, elIgnoredSetTrueInPage, errorOnELNotFoundInPropGroup, errorOnELNotFoundInPage });
+						new Object[] {Boolean.valueOf(isXml), Boolean.valueOf(isXmlSpecified), Boolean.valueOf(elIgnored), Boolean.valueOf(errorOnELNotFound), Boolean.valueOf(scriptingInvalid), pageEncoding, trimDirectiveWhitespacesValue, deferredSyntaxAllowedAsLiteralValue, trimDirectiveWhitespaces, deferredSyntaxAllowedAsLiteral, elIgnoredSetTrueInPropGrp, elIgnoredSetTrueInPage, errorOnELNotFoundInPropGroup, errorOnELNotFoundInPage });
 		}
         this.servletVersion=servletVersion;
         this.jspVersion=jspVersion;
