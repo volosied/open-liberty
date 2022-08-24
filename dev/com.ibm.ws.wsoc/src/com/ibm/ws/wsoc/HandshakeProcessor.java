@@ -128,8 +128,12 @@ public class HandshakeProcessor {
                 parameterMap.put(key, Arrays.asList(extraParamMap.get(key)));
             }
         }
-
-        requestURI = new URI(httpRequest.getRequestURI());
+        
+        if(WebSocketVersionServiceManager.isWsoc21rHigher()){
+            requestURI = buildFullURI(httpRequest);
+        } else {
+            requestURI = new URI(httpRequest.getRequestURI());
+        }
         
         things.setParameterMap(parameterMap);
         things.setQueryString(httpRequest.getQueryString());
@@ -475,4 +479,42 @@ public class HandshakeProcessor {
         }
         return extensions;
     }
+
+    private URI buildFullURI(HttpServletRequest req) throws Exception {
+            StringBuilder builder = new StringBuilder();
+
+            System.out.println("getRequestURL " + req.getRequestURL());
+
+            String scheme = null;
+
+            if(req.getScheme().equals("http") || req.getScheme().equals("ws")){
+                scheme = "ws";
+            } else if(req.getScheme().equals("https") || req.getScheme().equals("wss")){
+                scheme = "wss";
+            } else {
+                throw new Exception("URI Scheme cannot be determined.");
+            }
+
+            builder.append(scheme);
+            builder.append("://");
+
+            builder.append(req.getServerName());
+
+            int port = req.getServerPort();
+            if(port != 80 || port != 443){
+                builder.append(":");
+                builder.append(req.getServerPort());
+            }
+
+            builder.append(req.getRequestURI());
+           
+           if(req.getQueryString() != null){
+                builder.append("?");
+                builder.append(req.getQueryString());
+           }
+        
+             return  new URI(builder.toString());
+          
+    }
+
 }
