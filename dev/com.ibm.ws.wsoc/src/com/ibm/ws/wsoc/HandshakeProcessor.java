@@ -483,37 +483,28 @@ public class HandshakeProcessor {
     private URI buildFullURI(HttpServletRequest req) throws Exception {
             StringBuilder builder = new StringBuilder();
 
-            System.out.println("getRequestURL " + req.getRequestURL());
+            String url = req.getRequestURL().toString();
+            String https = "https";
+            String http = "http";
 
-            String scheme = null;
-
-            if(req.getScheme().equals("http") || req.getScheme().equals("ws")){
-                scheme = "ws";
-            } else if(req.getScheme().equals("https") || req.getScheme().equals("wss")){
-                scheme = "wss";
-            } else {
-                throw new Exception("URI Scheme cannot be determined.");
+            if(url.startsWith(https)){
+                url = "wss" + url.substring(https.length(), url.length());
+            } else if(url.startsWith(http)){
+                url = "ws" + url.substring(http.length(), url.length());
             }
 
-            builder.append(scheme);
-            builder.append("://");
-
-            builder.append(req.getServerName());
-
-            int port = req.getServerPort();
-            if(port != 80 || port != 443){
-                builder.append(":");
-                builder.append(req.getServerPort());
+            if( !(url.startsWith("ws:") || url.startsWith("wss:")) ){
+                throw new Exception("Scheme is not of type ws or wss.");
             }
 
-            builder.append(req.getRequestURI());
+            builder.append(url);
            
            if(req.getQueryString() != null){
                 builder.append("?");
                 builder.append(req.getQueryString());
            }
         
-             return  new URI(builder.toString());
+            return  new URI(builder.toString());
           
     }
 
