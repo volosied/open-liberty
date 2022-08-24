@@ -325,9 +325,15 @@ public abstract class JspVisitor {
                     visitJspSetPropertyEnd(jspElement);
                 }
                 else if (jspElementType.equals(Constants.JSP_PLUGIN_TYPE)) {
-                    visitJspPluginStart(jspElement);
-                    processChildren(jspElement);
-                    visitJspPluginEnd(jspElement);
+                    if(PagesVersionHandler.isPages30OrLowerLoaded()){
+                        visitJspPluginStart(jspElement);
+                        processChildren(jspElement);
+                        visitJspPluginEnd(jspElement);
+                    } else {
+                        if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINEST)){
+                            logger.logp(Level.FINEST, CLASS_NAME, "processJspElement","Skipping jsp:plugin.");
+                        }
+                    }
                 }
                 else if (jspElementType.equals(Constants.JSP_ATTRIBUTE_TYPE)) {
                     visitJspAttributeStart(jspElement);
