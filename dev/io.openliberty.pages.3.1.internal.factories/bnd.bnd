@@ -23,6 +23,8 @@ com.ibm.ws.jsp23.webcontainerext.ws.PrepareJspHelper23Factory, \
 com.ibm.ws.jsp23.translator.visitor.validator.ElValidatorExtFactoryImpl, \
 com.ibm.ws.jsp23.translator.visitor.generator.GeneratorUtilsExtFactoryImpl
 
+# Note these factories were copied from the com.ibm.ws.jsp.2.3 bundle
+
 Export-Package: \
 	com.ibm.ws.jsp.speclevel, \
 	com.ibm.ws.jsp23.webcontainerext;version="2.3", \
