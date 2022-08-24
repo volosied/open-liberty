@@ -1267,6 +1267,6 @@ jsp.error.page.invalid.erroronelnotfound=CWWJS0002E: Invalid value for errorOnEL
 jsp.error.page.invalid.erroronelnotfound.explanation=
 jsp.error.page.invalid.erroronelnotfound.useraction=
 
-jsp.isthreadsafe.warning==CWWJS0003W: Per the Pages 3.1 specification, pages developers are strongly advised not to use the deprecated page directive isThreadSafe. 
+jsp.isthreadsafe.warning=CWWJS0003W: Per the Pages 3.1 specification, pages developers are strongly advised not to use the deprecated page directive isThreadSafe. 
 jsp.isthreadsafe.warning.explanation=SingleThreadModel has been removed from Servlet 6.0. Pages 3.1 has deprecated isThreadSafe with plans to remove it in Page 4.0.
-jsp.isthreadsafe.warning.useraction=Remove the isThreadSafe directive from all pages.  
+jsp.isthreadsafe.warning.useraction=Remove the isThreadSafe directive from all pages.
