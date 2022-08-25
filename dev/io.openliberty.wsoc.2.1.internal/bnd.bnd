@@ -21,12 +21,19 @@ Service-Component: \
   io.openliberty.wsoc.servercontainer21; \
     implementation:=io.openliberty.wsoc.servercontainer21.ServerContainerImplFactory21; \
     provide:=com.ibm.ws.wsoc.servercontainer.ServletContainerFactory; \
+  io.openliberty.wsoc.httprequestor; \
+    implementation:= io.openliberty.wsoc.httprequestor.HttpRequestorWsoc21FactoryImpl; \
+    provide:=com.ibm.ws.wsoc.outbound.HttpRequestorFactory; \
     configuration-policy:=ignore;\
     immediate:=true;\
     properties:="service.vendor=IBM"
 
 Export-Package: \
- io.openliberty.wsoc.speclevel
+  io.openliberty.wsoc.speclevel
+
+Private-Package: \
+  io.openliberty.wsoc.httprequestor,\
+  io.openliberty.wsoc.test
 
  Private-Package: \
   io.openliberty.wsoc.servercontainer21
@@ -39,4 +46,6 @@ Export-Package: \
  	com.ibm.ws.webcontainer;version=latest, \
  	com.ibm.ws.logging;version=latest,\
  	com.ibm.wsspi.org.osgi.service.component.annotations, \
- 	com.ibm.ws.org.osgi.annotation.versioning;version=latest
+ 	com.ibm.ws.org.osgi.annotation.versioning;version=latest,\
+  com.ibm.ws.channelfw;version=latest,\
+  com.ibm.ws.transport.http;version=latest

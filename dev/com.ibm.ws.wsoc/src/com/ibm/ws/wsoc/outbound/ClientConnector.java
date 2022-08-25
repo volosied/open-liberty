@@ -15,7 +15,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import javax.websocket.ClientEndpoint;
+import javax.websocket.ClientEndpoint; 
 import javax.websocket.ClientEndpointConfig;
 import javax.websocket.ClientEndpointConfig.Builder;
 import javax.websocket.Decoder;
@@ -65,7 +65,7 @@ public class ClientConnector {
 
     public Session connectClass(Object clazz, URI path, ClientEndpointConfig config, WebSocketContainer wsc) throws DeploymentException, IOException {
 
-        WsocAddress endpointAddress = new WsocAddress(path);
+        WsocAddress endpointAddress = new Wsoc10Address(path);
         endpointAddress.validateURI();
 
         ParametersOfInterest things = new ParametersOfInterest();
@@ -75,7 +75,9 @@ public class ClientConnector {
             things.setUserProperties(config.getUserProperties());
         }
 
-        HttpRequestor requestor = new HttpRequestor(endpointAddress, config, things);
+        // VS
+        // HttpRequestor requestor = new HttpRequestorWsoc10(endpointAddress, config, things);
+        HttpRequestor requestor = WebSocketVersionServiceManager.getHttpRequestorFactory().getHttpRequestor(endpointAddress, config, things);
         WsByteBuffer remainingBuf = null;
 
         try {
