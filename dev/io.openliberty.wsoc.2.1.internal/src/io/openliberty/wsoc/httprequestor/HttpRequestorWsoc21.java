@@ -35,9 +35,7 @@ public class HttpRequestorWsoc21 extends HttpRequestorWsoc10 {
 
         access = new ClientTransportAccess();
 
-        if(WebSocketVersionServiceManager.isWsoc21rHigher()){
-            ((Wsoc21Address) endpointAddress).setSSLContext(config.getSSLContext());
-        }
+        ((Wsoc21Address) endpointAddress).setSSLContext(config.getSSLContext());
 
         vc = (OutboundVirtualConnection) WsocOutboundChain.getVCFactory(endpointAddress);;
         access.setVirtualConnection(vc);

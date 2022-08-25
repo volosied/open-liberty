@@ -76,6 +76,7 @@ public class ClientConnector {
         }
 
         // VS
+        System.out.println("connectClass");
         // HttpRequestor requestor = new HttpRequestorWsoc10(endpointAddress, config, things);
         HttpRequestor requestor = WebSocketVersionServiceManager.getHttpRequestorFactory().getHttpRequestor(endpointAddress, config, things);
         WsByteBuffer remainingBuf = null;

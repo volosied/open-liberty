@@ -74,7 +74,7 @@ public class WebSocketVersionServiceManager {
         cfwBundleRef.activate(context);
         websocketFactoryServiceRef.activate(context);
         servletContainerFactorySRRef.activate(context);
-
+        httpRequestorFactoryServiceRef.activate(context);
     }
 
     /**
@@ -86,6 +86,7 @@ public class WebSocketVersionServiceManager {
         cfwBundleRef.deactivate(context);
         websocketFactoryServiceRef.deactivate(context);
         servletContainerFactorySRRef.deactivate(context);
+        httpRequestorFactoryServiceRef.deactivate(context);
     }
 
     /**
