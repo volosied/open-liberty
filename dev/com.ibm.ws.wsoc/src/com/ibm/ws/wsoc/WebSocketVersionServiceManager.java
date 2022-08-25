@@ -56,11 +56,14 @@ public class WebSocketVersionServiceManager {
     private static final AtomicServiceReference<HttpRequestorFactory> httpRequestorFactoryServiceRef =
                     new AtomicServiceReference<HttpRequestorFactory>("httpRequestorFactoryService");
 
+    private static final AtomicServiceReference<ClientEndpointConfigCopyFactory> clientEndpointConfigCopyFactoryServiceRef =
+                    new AtomicServiceReference<ClientEndpointConfigCopyFactory>("clientEndpointConfigCopyFactoryService");
+
     private static final WebSocketFactory DEFAULT_WEBSOCKET_FACTORY = new WebSocketFactoryImpl();
 
     private static final HttpRequestorFactory DEFAULT_HTTPREQUESTOR_FACTORY = new HttpRequestorWsoc10FactoryImpl();
 
-
+    private static final ClientEndpointConfigCopyFactory DEFAULT_CLIENT_CONFIG_COPY_FACTORY = new ClientEndpointConfigCopyWsoc10FactoryImpl();
     public static String LOADED_SPEC_LEVEL = loadWsocVersion();
 
     private static String DEFAULT_VERSION = "1.0";
@@ -75,6 +78,7 @@ public class WebSocketVersionServiceManager {
         websocketFactoryServiceRef.activate(context);
         servletContainerFactorySRRef.activate(context);
         httpRequestorFactoryServiceRef.activate(context);
+        clientEndpointConfigCopyFactoryServiceRef.activate(context);
     }
 
     /**
@@ -87,6 +91,7 @@ public class WebSocketVersionServiceManager {
         websocketFactoryServiceRef.deactivate(context);
         servletContainerFactorySRRef.deactivate(context);
         httpRequestorFactoryServiceRef.deactivate(context);
+        clientEndpointConfigCopyFactoryServiceRef.deactivate(context);
     }
 
     /**
@@ -178,6 +183,25 @@ public class WebSocketVersionServiceManager {
 
     protected void unsetHttpRequestorFactoryService(ServiceReference<HttpRequestorFactory> ref) {
         httpRequestorFactoryServiceRef.unsetReference(ref);
+    }
+
+    public static ClientEndpointConfigCopyFactory getClientEndpointConfigCopyFactory() {
+        //if websocket 1.1 feature is enabled, then get WebSocketFactoryV11 instance, else use the default
+        //WebSocketFactoryV10 instance
+        ClientEndpointConfigCopyFactory clientEndpointConfigCopyFactory = clientEndpointConfigCopyFactoryServiceRef.getService();
+        // if (clientEndpointConfigCopyFactory == null) {
+            System.out.println("returning " + clientEndpointConfigCopyFactory);
+            return clientEndpointConfigCopyFactory;
+        // }
+        // return clientEndpointConfigCopyFactory;
+    }
+
+    protected void setClientEndpointConfigCopyFactoryService(ServiceReference<ClientEndpointConfigCopyFactory> ref) {
+        clientEndpointConfigCopyFactoryServiceRef.setReference(ref);
+    }
+
+    protected void unsetClientEndpointConfigCopyFactoryService(ServiceReference<ClientEndpointConfigCopyFactory> ref) {
+        clientEndpointConfigCopyFactoryServiceRef.unsetReference(ref);
     }
 
     private static synchronized String loadWsocVersion(){

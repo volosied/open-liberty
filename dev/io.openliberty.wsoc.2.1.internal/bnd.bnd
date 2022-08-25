@@ -26,13 +26,21 @@ Service-Component: \
     provide:=com.ibm.ws.wsoc.outbound.HttpRequestorFactory; \
     configuration-policy:=ignore;\
     immediate:=true;\
+    properties:="service.vendor=IBM",\
+  io.openliberty.wsoc.clientconfig; \
+    implementation:= io.openliberty.wsoc.clientconfig.ClientEndpointConfigCopyWsoc21FactoryImpl; \
+    provide:=com.ibm.ws.wsoc.ClientEndpointConfigCopyFactory; \
+    configuration-policy:=ignore;\
+    immediate:=true;\
     properties:="service.vendor=IBM"
+
 
 Export-Package: \
   io.openliberty.wsoc.speclevel
 
 Private-Package: \
-  io.openliberty.wsoc.httprequestor
+  io.openliberty.wsoc.httprequestor, \
+  io.openliberty.wsoc.clientconfig
 
  Private-Package: \
   io.openliberty.wsoc.servercontainer21

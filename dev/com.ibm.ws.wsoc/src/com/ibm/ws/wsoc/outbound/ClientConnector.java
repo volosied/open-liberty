@@ -32,7 +32,7 @@ import com.ibm.ws.threadContext.ComponentMetaDataAccessorImpl;
 import com.ibm.ws.wsoc.AnnotatedEndpoint;
 import com.ibm.ws.wsoc.EndpointHelper;
 import com.ibm.ws.wsoc.ParametersOfInterest;
-import com.ibm.ws.wsoc.ClientEndpointConfigCopyPerSession;
+import com.ibm.ws.wsoc.ClientEndpointConfigCopyPerSession10;
 import com.ibm.ws.wsoc.SessionImpl;
 import com.ibm.ws.wsoc.WebSocketVersionServiceManager;
 import com.ibm.ws.wsoc.external.SessionExt;
@@ -64,14 +64,23 @@ public class ClientConnector {
     }
 
     public Session connectClass(Object clazz, URI path, ClientEndpointConfig config, WebSocketContainer wsc) throws DeploymentException, IOException {
+       
+        WsocAddress endpointAddress;
 
-        WsocAddress endpointAddress = new Wsoc10Address(path);
+        if(WebSocketVersionServiceManager.isWsoc21rHigher()){
+            endpointAddress  = new Wsoc21Address(path);
+        } else {
+            endpointAddress = new Wsoc10Address(path);
+        }
+        
+        
         endpointAddress.validateURI();
 
         ParametersOfInterest things = new ParametersOfInterest();
 
         if(WebSocketVersionServiceManager.isWsoc21rHigher()){
-            config  = new ClientEndpointConfigCopyPerSession(config);
+            // config  = new ClientEndpointConfigCopyPerSession10(config);
+            config = WebSocketVersionServiceManager.getClientEndpointConfigCopyFactory().getClientEndpointConfig(config);
             things.setUserProperties(config.getUserProperties());
         }
 
