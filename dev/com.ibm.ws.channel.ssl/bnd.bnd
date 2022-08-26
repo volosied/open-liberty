@@ -66,7 +66,6 @@ instrument.disabled: true
 	com.ibm.ws.org.osgi.annotation.versioning;version=latest, \
     com.ibm.ws.wsoc;version=latest, \
     com.ibm.ws.transport.http;version=latest
-    
 
 #  <property name="extra.vmargs" value="-Dexception.log.enabled=false" />
 

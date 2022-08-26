@@ -1019,14 +1019,32 @@ public class SSLConnectionLink extends OutboundProtocolLink implements Connectio
 
         // First check if the sslContext and sslEngine have already been set (discrimination case)
         if (sslContext == null || getSSLEngine() == null) {
-            // Create a new SSL context based on the current properties in the ssl config.
-            this.sslContext = getChannel().getSSLContextForOutboundLink(this, getVirtualConnection(), address);
+
             // Discrimination has not happened yet. Create new SSL engine.
             // PK46069 - use engine that allows session id re-use
-            this.sslEngine = SSLUtils.getOutboundSSLEngine(sslContext, getLinkConfig(),
-                                                           targetAddress.getRemoteAddress().getHostName(),
-                                                           targetAddress.getRemoteAddress().getPort(),
-                                                           this);
+
+            // For WebSocket-2.1 Custom SSLContext
+            if(address instanceof com.ibm.ws.wsoc.outbound.Wsoc21Address && ((com.ibm.ws.wsoc.outbound.Wsoc21Address) address).getSSLContext() != null ){
+
+                this.sslContext = ((com.ibm.ws.wsoc.outbound.Wsoc21Address) address).getSSLContext();
+
+                this.sslEngine = sslContext.createSSLEngine(targetAddress.getRemoteAddress().getHostName(), targetAddress.getRemoteAddress().getPort());
+                sslEngine.setUseClientMode(true);
+                javax.net.ssl.SSLParameters sslParams = sslEngine.getSSLParameters();
+                // sslParams.setEndpointIdentificationAlgorithm("HTTPS");
+                // this.sslEngine.setSSLParameters(sslParams);
+                this.sslEngine.beginHandshake();
+            } else {
+
+                // Create a new SSL context based on the current properties in the ssl config.
+                this.sslContext = getChannel().getSSLContextForOutboundLink(this, getVirtualConnection(), address);
+
+                this.sslEngine = SSLUtils.getOutboundSSLEngine(sslContext, getLinkConfig(),
+                targetAddress.getRemoteAddress().getHostName(),
+                targetAddress.getRemoteAddress().getPort(),
+                this);
+            }
+
         }
         if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
             Tr.debug(tc, "SSL engine hc=" + getSSLEngine().hashCode() + " associated with vc=" + getVCHash());
