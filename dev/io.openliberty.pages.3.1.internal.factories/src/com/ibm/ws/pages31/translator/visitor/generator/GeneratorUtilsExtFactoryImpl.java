@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package com.ibm.ws.jsp23.translator.visitor.generator;
+package com.ibm.ws.pages31.translator.visitor.generator;
 
 import org.osgi.service.component.annotations.Component;
 

@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package com.ibm.ws.jsp23.translator.visitor.validator;
+package com.ibm.ws.pages31.translator.visitor.validator;
 
 import jakarta.el.ELException;
 import jakarta.el.ExpressionFactory;

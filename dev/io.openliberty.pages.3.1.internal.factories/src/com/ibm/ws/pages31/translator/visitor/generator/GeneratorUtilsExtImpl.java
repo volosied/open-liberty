@@ -11,7 +11,7 @@
 //  Revisions:
 //  Defect PI59436 03/22/2015   hmpadill    EL expressions returning null in EL 3.0 could produce NPE
 
-package com.ibm.ws.jsp23.translator.visitor.generator;
+package com.ibm.ws.pages31.translator.visitor.generator;
 
 import java.util.Iterator;
 

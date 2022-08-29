@@ -352,7 +352,7 @@ public class JspConfiguration {
 		 	"elIgnored =                          [" + elIgnored +"]"+separatorString+
 		 	"elIgnoredSetTrueInPropGrp =          [" + elIgnoredSetTrueInPropGrp +"]"+separatorString+
 		 	"elIgnoredSetTrueInPage =             [" + elIgnoredSetTrueInPage +"]"+separatorString+
-            "errorOnELNotFoundInPropGroup =       [" + errorOnELNotFoundInPropGroup +"]"+separatorString+
+		 	"errorOnELNotFoundInPropGroup =       [" + errorOnELNotFoundInPropGroup +"]"+separatorString+
 		 	"errorOnELNotFoundInPage =            [" + errorOnELNotFoundInPage +"]"+separatorString+
 		 	"scriptingInvalid              		  [" + scriptingInvalid +"]"+separatorString+
 			"pageEncoding                  		  [" + pageEncoding +"]"+separatorString+
