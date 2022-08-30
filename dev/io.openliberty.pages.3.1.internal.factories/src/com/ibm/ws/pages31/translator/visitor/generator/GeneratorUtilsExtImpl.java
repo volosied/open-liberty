@@ -31,11 +31,6 @@ public class GeneratorUtilsExtImpl implements GeneratorUtilsExt {
     public void generateELFunctionCode(JavaCodeWriter writer,
                                        ValidateResult validatorResult) throws JspCoreException {
 
-
-        // writer.println("public boolean isErrorOnELNotFound() {");
-        // writer.println("   return " + validatorResult.isErrorOnELNotFound() + ";");
-        // writer.println("}");
-
         writer.println("private static org.apache.jasper.runtime.ProtectedFunctionMapper _jspx_fnmap = null;");
 
         if (validatorResult.getValidateFunctionMapper().getFnMap().size() > 0) { //LIDB4147-9
