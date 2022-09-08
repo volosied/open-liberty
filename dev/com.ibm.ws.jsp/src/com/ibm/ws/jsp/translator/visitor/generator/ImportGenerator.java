@@ -52,9 +52,9 @@ public class ImportGenerator extends CodeGeneratorBase {
 						while (tokenizer.hasMoreTokens()) {
 							String singleImport = ((String) tokenizer.nextToken()).trim();
 							if(singleImport.endsWith(".*")){
-								writer.println("importPackage.add(\"" + singleImport.replace(".*", "") + "\");");
+								writer.println("importPackageList.add(\"" + singleImport.replace(".*", "") + "\");");
 							} else {
-								writer.println("importClass.add(\"" + singleImport + "\");");
+								writer.println("importClassList.add(\"" + singleImport + "\");");
 							}
 							
 						}

@@ -216,11 +216,11 @@ public class GenerateJspVisitor extends GenerateVisitor {
     private void generateImportGetters() {
 
         writer.println(" public java.util.List<String> getImportClassList() {");
-        writer.println("return importClass;");
+        writer.println("return importClassList;");
         writer.println("}");
         writer.println();
         writer.println(" public java.util.List<String> getImportPackageList() {");
-        writer.println("return importPackage;");
+        writer.println("return importPackageList;");
         writer.println("}");
     }
 
@@ -303,8 +303,8 @@ public class GenerateJspVisitor extends GenerateVisitor {
 
         if(PagesVersionHandler.isPages31OrHigherLoaded()){
             writer.println();
-            writer.println("private static java.util.List<String> importPackage = new java.util.ArrayList<String>();");
-            writer.println("private static java.util.List<String> importClass = new java.util.ArrayList<String>();");
+            writer.println("private static java.util.List<String> importPackageList = new java.util.ArrayList<String>();");
+            writer.println("private static java.util.List<String> importClassList = new java.util.ArrayList<String>();");
             writer.println();
         }
 
