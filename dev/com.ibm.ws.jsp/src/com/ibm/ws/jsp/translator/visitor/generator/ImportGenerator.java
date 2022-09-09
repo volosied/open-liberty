@@ -63,9 +63,9 @@ public class ImportGenerator extends CodeGeneratorBase {
 				}
 			}
 			// Pages 1.10 Directive Packages java.lang.*, jakarta.servlet.*, jakarta.servlet.jsp.*, and jakarta.servlet.http.* are imported implicitly by the JSP container.
-			// writer.println("importPackage.add(\"jakarta.servlet.*\");");
-			// writer.println("importPackage.add(\"jakarta.servlet.jsp.*\");");
-			// writer.println("importPackage.add(\"jakarta.servlet.http.*\");");
+			writer.println("importPackageList.add(\"jakarta.servlet\");");
+			writer.println("importPackageList.add(\"jakarta.servlet.jsp\");");
+			writer.println("importPackageList.add(\"jakarta.servlet.http\");");
 			//Caused by: java.lang.IllegalArgumentException: Resource osgi.identity; osgi.identity="gateway.bundle.Thread_Context.WebModule_test-el_test-el.war"; type="osgi.bundle"; version:Version="0.0.0" cannot dynamically import package 'jakarta.servlet.http' since it already has access to it.
 		}
 	}
