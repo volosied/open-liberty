@@ -140,8 +140,9 @@ public class ClassicTagGenerator extends BaseTagGenerator {
                 tagStartWriter.print(tagClassInfo.getTagClassName());
                 tagStartWriter.println("();");
             }
-            
-            tagStartWriter.println();
+
+            tagStartWriter.println("try {"); // OLGH 11453
+
         }
         else {
         	//PM26777 start
@@ -155,6 +156,7 @@ public class ClassicTagGenerator extends BaseTagGenerator {
             tagStartWriter.println(" = (" + tagClassInfo.getTagClassName() + ")_jspx_TagLookup.get(\"" + tagHandlerVar + "\");");
             //247815 End
         }
+
         generateSetParent(tagStartWriter);
         //PK60565 saves original pushBodyCountVarDeclaration value
         if (tagClassInfo.implementsTryCatchFinally()) {
@@ -322,24 +324,6 @@ public class ClassicTagGenerator extends BaseTagGenerator {
         tagEndWriter.print(tagHandlerVar);
         tagEndWriter.println(".doEndTag() == javax.servlet.jsp.tagext.Tag.SKIP_PAGE) {");
         
-        if (reuseTag == false || tagClassInfo.implementsJspIdConsumer()) {//jsp2.1work
-            // LIDB4147-24
-             
-        	if (!jspOptions.isDisableResourceInjection()){		//PM06063
-            	    tagEndWriter.print ("_jspx_iaHelper.doPreDestroy(");
-            	    tagEndWriter.print (tagHandlerVar);
-            	    tagEndWriter.println (");");
-            	
-                    tagEndWriter.print ("_jspx_iaHelper.cleanUpTagHandlerFromCdiMap(");
-                    tagEndWriter.print (tagHandlerVar);
-                    tagEndWriter.println (");");
-        	} 
-             
-            tagEndWriter.println();
-             
-            tagEndWriter.println(tagHandlerVar + ".release();");
-        }
-        
         if (isTagFile || isFragment) {
         	// begin 242714: enhance error reporting for SkipPageException.
         	//tagEndWriter.println("throw new javax.servlet.jsp.SkipPageException();");
@@ -384,22 +368,25 @@ public class ClassicTagGenerator extends BaseTagGenerator {
         }
 
         if (reuseTag == false || tagClassInfo.implementsJspIdConsumer()) {//jsp2.1work
-            //           LIDB4147-24
+            // LIDB4147-24
              
+            tagEndWriter.println("} finally {"); // OLGH 11453
+
         	if (!jspOptions.isDisableResourceInjection()){		//PM06063
             	    tagEndWriter.print ("_jspx_iaHelper.doPreDestroy(");
             	    tagEndWriter.print (tagHandlerVar);
             	    tagEndWriter.println (");");
             	
-            	    tagEndWriter.print ("_jspx_iaHelper.cleanUpTagHandlerFromCdiMap(");
-            	    tagEndWriter.print (tagHandlerVar);
-            	    tagEndWriter.println (");");
-        	}
-             
-            tagEndWriter.println();
+                    tagEndWriter.print ("_jspx_iaHelper.cleanUpTagHandlerFromCdiMap(");
+                    tagEndWriter.print (tagHandlerVar);
+                    tagEndWriter.println (");");
+        	} 
              
             tagEndWriter.println(tagHandlerVar + ".release();");
+
+            tagEndWriter.println("}"); // OLGH 11453
         }
+
         
         //PK60565 putting back the orig value for pushBodyCountVarDeclaration
         if (tagClassInfo.implementsTryCatchFinally()) {

@@ -156,6 +156,11 @@ public class OptimizedTagGenerator extends BaseTagGenerator implements TagGenera
                 tagStartWriter.print("();");
                 tagStartWriter.println();
             }
+
+	    /* Unsure where this tag is used anymore, but for consistency
+	     * I've added this try code after the tag class creation.
+             */
+	     tagStartWriter.println("try {"); // OLGH 11453
             
             tagStartWriter.println();
         }

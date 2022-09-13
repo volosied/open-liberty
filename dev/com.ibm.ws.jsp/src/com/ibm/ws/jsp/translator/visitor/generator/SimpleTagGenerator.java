@@ -87,7 +87,7 @@ public class SimpleTagGenerator extends BaseTagGenerator {
             tagStartWriter.print(tagHandlerVar);   
             tagStartWriter.print(" = ");           
             tagStartWriter.println("("+tagClassInfo.getTagClassName()+")"+tagHandlerVar+"_mo.getObject();"); 
-
+            
             tagStartWriter.print ("_jspx_iaHelper.doPostConstruct(");
             tagStartWriter.print (tagHandlerVar);
             tagStartWriter.println (");");
@@ -107,6 +107,8 @@ public class SimpleTagGenerator extends BaseTagGenerator {
             tagStartWriter.println("();");
 
         }
+
+        tagStartWriter.println("try {"); // OLGH 11453
         
         generateSetParent(tagStartWriter);
         return tagStartWriter;
@@ -141,7 +143,9 @@ public class SimpleTagGenerator extends BaseTagGenerator {
         int methodNesting =  ((Integer)persistentData.get("methodNesting")).intValue();
         tagEndWriter.print(tagHandlerVar);
         tagEndWriter.println(".doTag();");
-        
+
+        tagEndWriter.println("} finally { "); // OLGH 11453
+
         if (!jspOptions.isDisableResourceInjection()){		//PM06063
         	tagEndWriter.print ("_jspx_iaHelper.doPreDestroy(");
         	tagEndWriter.print (tagHandlerVar);
@@ -151,6 +155,8 @@ public class SimpleTagGenerator extends BaseTagGenerator {
         	tagEndWriter.print (tagHandlerVar);
         	tagEndWriter.println (");");
         }
+        
+        tagEndWriter.println("}");
 
         restoreScriptingVars(tagEndWriter, VariableInfo.AT_BEGIN);
         syncScriptingVars(tagEndWriter, VariableInfo.AT_BEGIN);
