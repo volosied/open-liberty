@@ -59,8 +59,6 @@ public class WebSocketVersionServiceManager {
     private static final AtomicServiceReference<ClientEndpointConfigCopyFactory> clientEndpointConfigCopyFactoryServiceRef =
                     new AtomicServiceReference<ClientEndpointConfigCopyFactory>("clientEndpointConfigCopyFactoryService");
 
-    private static final WebSocketFactory DEFAULT_WEBSOCKET_FACTORY = new WebSocketFactoryImpl();
-
     private static final HttpRequestorFactory DEFAULT_HTTPREQUESTOR_FACTORY = new HttpRequestorWsoc10FactoryImpl();
 
     private static final ClientEndpointConfigCopyFactory DEFAULT_CLIENT_CONFIG_COPY_FACTORY = new ClientEndpointConfigCopyWsoc10FactoryImpl();

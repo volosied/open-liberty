@@ -18,9 +18,6 @@ Bundle-SymbolicName: io.openliberty.wsoc.2.1.internal
 Bundle-Description: WebSocket, version ${bVersion}
 
 Service-Component: \
-  io.openliberty.wsoc.servercontainer21; \
-    implementation:=io.openliberty.wsoc.servercontainer21.ServerContainerImplFactory21; \
-    provide:=com.ibm.ws.wsoc.servercontainer.ServletContainerFactory; \
   io.openliberty.wsoc.httprequestor; \
     implementation:= io.openliberty.wsoc.httprequestor.HttpRequestorWsoc21FactoryImpl; \
     provide:=com.ibm.ws.wsoc.outbound.HttpRequestorFactory; \
@@ -32,17 +29,20 @@ Service-Component: \
     provide:=com.ibm.ws.wsoc.ClientEndpointConfigCopyFactory; \
     configuration-policy:=ignore;\
     immediate:=true;\
+    properties:="service.vendor=IBM",\
+  io.openliberty.wsoc.servercontainer21; \
+    implementation:=io.openliberty.wsoc.servercontainer21.ServerContainerImplFactory21; \
+    provide:=com.ibm.ws.wsoc.servercontainer.ServletContainerFactory; \
+    configuration-policy:=ignore;\
+    immediate:=true;\
     properties:="service.vendor=IBM"
-
 
 Export-Package: \
   io.openliberty.wsoc.speclevel
 
 Private-Package: \
   io.openliberty.wsoc.httprequestor, \
-  io.openliberty.wsoc.clientconfig
-
- Private-Package: \
+  io.openliberty.wsoc.clientconfig, \
   io.openliberty.wsoc.servercontainer21
 
 -buildpath: \
