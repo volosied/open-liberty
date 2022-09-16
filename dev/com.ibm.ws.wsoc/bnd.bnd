@@ -67,8 +67,10 @@ Service-Component: \
     immediate:=true;\
     websocketFactoryService='com.ibm.ws.wsoc.external.WebSocketFactory(service.vendor=IBM)'; \
     servletContainerFactoryService='com.ibm.ws.wsoc.servercontainer.ServletContainerFactory(service.vendor=IBM)'; \
-    dynamic:='websocketFactoryService,servletContainerFactoryService'; \
-    optional:='websocketFactoryService,servletContainerFactoryService'; \
+    httpRequestorFactoryService='com.ibm.ws.wsoc.outbound.HttpRequestorFactory(service.vendor=IBM)'; \
+    clientEndpointConfigCopyFactoryService='com.ibm.ws.wsoc.ClientEndpointConfigCopyFactory(service.vendor=IBM)'; \
+    dynamic:='websocketFactoryService,servletContainerFactoryService,httpRequestorFactoryService,clientEndpointConfigCopyFactoryService'; \
+    optional:='websocketFactoryService,servletContainerFactoryService,httpRequestorFactoryService,clientEndpointConfigCopyFactoryService'; \
     properties:="service.vendor=IBM", \
   com.ibm.ws.wsoc.outbound.wsocOutbound;\
     implementation:=com.ibm.ws.wsoc.outbound.WsocOutboundChain;\
