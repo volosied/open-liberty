@@ -1023,19 +1023,12 @@ public class SSLConnectionLink extends OutboundProtocolLink implements Connectio
             // Discrimination has not happened yet. Create new SSL engine.
             // PK46069 - use engine that allows session id re-use
 
-            // For WebSocket-2.1 Custom SSLContext
+            // For WebSocket-2.1's SSLContext
             if(address instanceof com.ibm.ws.wsoc.outbound.Wsoc21Address && ((com.ibm.ws.wsoc.outbound.Wsoc21Address) address).getSSLContext() != null ){
 
-                this.sslContext = ((com.ibm.ws.wsoc.outbound.Wsoc21Address) address).getSSLContext();
-
-                this.sslEngine = sslContext.createSSLEngine(targetAddress.getRemoteAddress().getHostName(), targetAddress.getRemoteAddress().getPort());
-                sslEngine.setUseClientMode(true);
-                javax.net.ssl.SSLParameters sslParams = sslEngine.getSSLParameters();
-                // sslParams.setEndpointIdentificationAlgorithm("HTTPS");
-                // this.sslEngine.setSSLParameters(sslParams);
-                this.sslEngine.beginHandshake();
+                initalizeSSLforWebsocket21(((com.ibm.ws.wsoc.outbound.Wsoc21Address) address).getSSLContext());
+;
             } else {
-
                 // Create a new SSL context based on the current properties in the ssl config.
                 this.sslContext = getChannel().getSSLContextForOutboundLink(this, getVirtualConnection(), address);
 
@@ -1054,6 +1047,22 @@ public class SSLConnectionLink extends OutboundProtocolLink implements Connectio
         readyOutbound(getVirtualConnection(), false);
         if (TraceComponent.isAnyTracingEnabled() && tc.isEntryEnabled()) {
             Tr.exit(tc, "connect");
+        }
+    }
+
+    private void initalizeSSLforWebsocket21(SSLContext sslContext) throws SSLException{
+
+        this.sslContext = sslContext;
+        this.sslEngine = sslContext.createSSLEngine(this.targetAddress.getRemoteAddress().getHostName(), this.targetAddress.getRemoteAddress().getPort());
+        
+        // custom SSLContext can only be passed in via a websocket client
+        sslEngine.setUseClientMode(true);
+
+        // 
+        this.sslEngine.beginHandshake();
+
+        if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
+            Tr.debug(tc, "initalizeSSLforWebsocket21: Using passed in sslContext: " + this.sslContext);
         }
     }
 
