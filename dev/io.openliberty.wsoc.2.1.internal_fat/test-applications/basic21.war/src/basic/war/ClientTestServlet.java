@@ -33,12 +33,17 @@ public class ClientTestServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
+        boolean success = true;
+        String reasonForFailure = "";
+        
         SSLContext sslContext = null;
         try {
             sslContext = SSLContext.getDefault();
             sslContext.init(null, null, new SecureRandom());
         } catch (Exception e) {
-            System.out.println("Error creating sslContext: " + e.getMessage());
+            e.printStackTrace();
+            success = false; 
+            reasonForFailure = e.getMessage();
         }
 
         ClientEndpointConfig cec  = ClientEndpointConfig.Builder.create().sslContext(sslContext).build();
@@ -46,13 +51,19 @@ public class ClientTestServlet extends HttpServlet {
             WebSocketContainer container = ContainerProvider.getWebSocketContainer();
             container.connectToServer(new EchoClientEP(), cec, buildFullURI(req));
         } catch(Exception ex){
-            System.out.print("Something went wrong! " + ex);
             ex.printStackTrace();
+            success = false; 
+            reasonForFailure = ex.getMessage();
         }
- 
 
         PrintWriter printWriter = resp.getWriter();
-        printWriter.print("good");
+
+        if(success){
+            printWriter.print("SUCCESS!");
+        } else {
+            printWriter.print("FAILURE! -> " + reasonForFailure);
+        }
+
         printWriter.close();
     }
 

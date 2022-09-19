@@ -32,7 +32,6 @@ import com.ibm.ws.threadContext.ComponentMetaDataAccessorImpl;
 import com.ibm.ws.wsoc.AnnotatedEndpoint;
 import com.ibm.ws.wsoc.EndpointHelper;
 import com.ibm.ws.wsoc.ParametersOfInterest;
-import com.ibm.ws.wsoc.ClientEndpointConfigCopyPerSession10;
 import com.ibm.ws.wsoc.SessionImpl;
 import com.ibm.ws.wsoc.WebSocketVersionServiceManager;
 import com.ibm.ws.wsoc.external.SessionExt;
