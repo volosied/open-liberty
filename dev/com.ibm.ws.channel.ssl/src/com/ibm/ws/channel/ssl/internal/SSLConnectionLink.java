@@ -29,6 +29,7 @@ import com.ibm.websphere.ras.Tr;
 import com.ibm.websphere.ras.TraceComponent;
 import com.ibm.ws.channel.ssl.internal.SSLAlpnNegotiator.ThirdPartyAlpnNegotiator;
 import com.ibm.ws.ffdc.FFDCFilter;
+import com.ibm.ws.channel.ssl.internal.wsoc.SSLEnabledAddress;
 import com.ibm.wsspi.bytebuffer.WsByteBuffer;
 import com.ibm.wsspi.bytebuffer.WsByteBufferUtils;
 import com.ibm.wsspi.channelfw.ConnectionLink;
@@ -1024,9 +1025,9 @@ public class SSLConnectionLink extends OutboundProtocolLink implements Connectio
             // PK46069 - use engine that allows session id re-use
 
             // For WebSocket-2.1's SSLContext
-            if(address instanceof com.ibm.ws.wsoc.outbound.Wsoc21Address && ((com.ibm.ws.wsoc.outbound.Wsoc21Address) address).getSSLContext() != null ){
+            if(address instanceof SSLEnabledAddress && ((SSLEnabledAddress) address).getSSLContext() != null ){
 
-                initalizeSSLforWebsocket21(((com.ibm.ws.wsoc.outbound.Wsoc21Address) address).getSSLContext());
+                initalizeSSLforWebsocket21(((SSLEnabledAddress) address).getSSLContext());
 ;
             } else {
                 // Create a new SSL context based on the current properties in the ssl config.
