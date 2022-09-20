@@ -19,12 +19,12 @@ import com.ibm.websphere.ras.Tr;
 import com.ibm.websphere.ras.TraceComponent;
 import com.ibm.wsspi.http.channel.outbound.HttpAddress;
 
-import com.ibm.ws.channel.ssl.internal.wsoc.SSLEnabledAddress;
+import io.openliberty.wsoc.ssl.SSLContextEnabledAddress;
 
 /**
  *
  */
-public class Wsoc21Address extends Wsoc10Address implements SSLEnabledAddress {
+public class Wsoc21Address extends Wsoc10Address implements SSLContextEnabledAddress {
 
     private SSLContext context = null;
 

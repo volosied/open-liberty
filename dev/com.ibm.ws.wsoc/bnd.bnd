@@ -33,6 +33,7 @@ Import-Package: \
   !*.internal.*, \
   !com.ibm.ws.kernel.boot.cmdline, \
   io.openliberty.wsoc.speclevel, \
+  io.openliberty.wsoc.ssl, \
   *
 
 Private-Package: \
@@ -102,7 +103,6 @@ instrument.classesExcludes: \
 -buildpath: \
 	com.ibm.websphere.javaee.websocket.1.0;version=latest,\
 	com.ibm.ws.channelfw;version=latest,\
-  com.ibm.ws.channel.ssl;version=latest,\
 	com.ibm.websphere.appserver.spi.kernel.service;version=latest,\
 	com.ibm.websphere.org.osgi.core;version=latest,\
 	com.ibm.websphere.org.osgi.service.component;version=latest,\
@@ -115,7 +115,8 @@ instrument.classesExcludes: \
 	com.ibm.ws.webcontainer;version=latest,\
 	com.ibm.websphere.javaee.servlet.3.1;version=latest,\
 	com.ibm.wsspi.org.osgi.service.component.annotations;version=latest, \
-	com.ibm.ws.org.osgi.annotation.versioning;version=latest
+	com.ibm.ws.org.osgi.annotation.versioning;version=latest, \
+  io.openliberty.wsoc.ssl.internal;version=latest
 
 -testpath: \
 	../build.sharedResources/lib/junit/old/junit.jar;version=file, \
