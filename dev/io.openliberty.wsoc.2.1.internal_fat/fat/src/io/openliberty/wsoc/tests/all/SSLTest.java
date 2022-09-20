@@ -43,17 +43,7 @@ public class SSLTest{
         this.wsocTest = test;
     }
 
-    // public void testPassedInSSLContext() throws Exception {
-
-    //     String[] input1 = { "echoValue" };
-    //     String[] output1 = { "echoValue" };
-
-    //     String uri = "/basic21/ClientSSLTestServlet";
-    //     wsocTest.runEchoTest(new ClientHelper.BasicClientEP(input1), uri, output1);
-
-    // }
-
-    public void testPassedInSSLContextv2() throws Exception {
+    public void testPassedInSSLContext() throws Exception {
 
         // Checks are performed within client endpoint because wsoc Impl uses HashMap which doesn't guarentee order.
         // Also avoids sending the properties to the client

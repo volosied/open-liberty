@@ -163,8 +163,8 @@ public class SSLBasic21Test {
 
     @Mode(TestMode.LITE)
     @Test
-    public void testPassedInSSLContextv2() throws Exception {
-        this.runAsLSAndVerifyResponse("SSLTest", "testPassedInSSLContextv2");
+    public void testPassedInSSLContext() throws Exception {
+        this.runAsLSAndVerifyResponse("SSLTest", "testPassedInSSLContext");
     }
 
 
