@@ -37,13 +37,13 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>ClientTestServlet</servlet-name>
- 	    <servlet-class>basic.war.ClientTestServlet</servlet-class>
+        <servlet-name>ClientSSLTestServlet</servlet-name>
+ 	    <servlet-class>basic.war.ClientSSLTestServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>ClientTestServlet</servlet-name>
-        <url-pattern>/ClientTestServlet</url-pattern>
+        <servlet-name>ClientSSLTestServlet</servlet-name>
+        <url-pattern>/ClientSSLTestServlet</url-pattern>
     </servlet-mapping>
 
 </web-app>

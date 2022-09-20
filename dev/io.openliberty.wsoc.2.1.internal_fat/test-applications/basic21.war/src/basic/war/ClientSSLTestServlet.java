@@ -16,6 +16,8 @@ import java.net.URI;
 import java.security.SecureRandom;
 
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import jakarta.servlet.http.HttpServlet;
 
@@ -28,7 +30,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import jakarta.servlet.ServletException;
 
-public class ClientTestServlet extends HttpServlet {
+public class ClientSSLTestServlet extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -38,15 +40,17 @@ public class ClientTestServlet extends HttpServlet {
         
         SSLContext sslContext = null;
         try {
-            sslContext = SSLContext.getDefault();
-            sslContext.init(null, null, new SecureRandom());
+            // sslContext = SSLContext.getDefault();
+            sslContext = SSLContext.getInstance("TLS");
+            sslContext.init(null, trustAllCerts, new SecureRandom());
         } catch (Exception e) {
             e.printStackTrace();
             success = false; 
             reasonForFailure = e.getMessage();
         }
 
-        ClientEndpointConfig cec  = ClientEndpointConfig.Builder.create().sslContext(sslContext).build();
+        ClientEndpointConfig cec  = ClientEndpointConfig.Builder.create().build();
+
         try{
             WebSocketContainer container = ContainerProvider.getWebSocketContainer();
             container.connectToServer(new EchoClientEP(), cec, buildFullURI(req));
@@ -67,6 +71,19 @@ public class ClientTestServlet extends HttpServlet {
         printWriter.close();
     }
 
+    private static TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
+        @Override
+        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+            return new java.security.cert.X509Certificate[] { null };
+        }
+
+        @Override
+        public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType) {}
+
+        @Override
+        public void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType) {}
+    } };
+
     /* Copied from com.ibm.ws.wsoc.HandshakeProcessor.java  */
     private URI buildFullURI(HttpServletRequest req) throws Exception {
         StringBuilder builder = new StringBuilder();
@@ -86,7 +103,7 @@ public class ClientTestServlet extends HttpServlet {
         }
 
         //Server Endpoint is echo 
-        url = url.replace("ClientTestServlet", "echo");
+        url = url.replace("ClientSSLTestServlet", "echo");
 
         builder.append(url);
 
