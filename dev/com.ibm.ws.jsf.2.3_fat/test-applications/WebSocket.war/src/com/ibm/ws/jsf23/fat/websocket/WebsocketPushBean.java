@@ -24,6 +24,13 @@ import javax.faces.push.PushContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import javax.faces.annotation.FacesConfig;
+
+import javax.faces.annotation.FacesConfig.Version;
+
+
+
+@FacesConfig(version = Version.JSF_2_3)
 @Named
 @ApplicationScoped
 public class WebsocketPushBean implements Serializable {

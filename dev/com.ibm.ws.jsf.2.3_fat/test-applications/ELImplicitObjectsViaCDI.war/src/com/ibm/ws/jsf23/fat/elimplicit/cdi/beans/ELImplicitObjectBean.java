@@ -46,7 +46,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Named("elImplicitObjectBean")
 @RequestScoped
-@FacesConfig
+@FacesConfig(version = FacesConfig.Version.JSF_2_3)
 public class ELImplicitObjectBean implements Serializable {
 
     /**  */
