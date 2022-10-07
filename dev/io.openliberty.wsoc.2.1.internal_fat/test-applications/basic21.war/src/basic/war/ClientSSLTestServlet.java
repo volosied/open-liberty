@@ -30,6 +30,10 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import jakarta.servlet.ServletException;
 
+/*
+ * Not used by FAT, but kept for testing / troubleshooting.
+ * Just hit this servlet endpoint via HTTPS to test ssl connection
+ */
 public class ClientSSLTestServlet extends HttpServlet {
 
     @Override
@@ -63,7 +67,7 @@ public class ClientSSLTestServlet extends HttpServlet {
         PrintWriter printWriter = resp.getWriter();
 
         if(success){
-            printWriter.print("SUCCESS!");
+            printWriter.print("SUCCESS! Verify logs for messages.");
         } else {
             printWriter.print("FAILURE! -> " + reasonForFailure);
         }
@@ -71,6 +75,7 @@ public class ClientSSLTestServlet extends HttpServlet {
         printWriter.close();
     }
 
+        //Trust all as it's easily to work with during testing
     private static TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
         @Override
         public java.security.cert.X509Certificate[] getAcceptedIssuers() {

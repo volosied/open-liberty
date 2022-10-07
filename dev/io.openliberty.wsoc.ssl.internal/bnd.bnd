@@ -20,4 +20,4 @@ Export-Package: io.openliberty.wsoc.ssl
 
 -buildpath: \
     com.ibm.wsspi.org.osgi.service.component.annotations, \
-    com.ibm.ws.org.osgi.annotation.versioning;version=latest,\
+    com.ibm.ws.org.osgi.annotation.versioning;version=latest

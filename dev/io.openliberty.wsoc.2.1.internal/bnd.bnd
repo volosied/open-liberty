@@ -55,4 +55,5 @@ Private-Package: \
  	com.ibm.wsspi.org.osgi.service.component.annotations, \
  	com.ibm.ws.org.osgi.annotation.versioning;version=latest,\
   com.ibm.ws.channelfw;version=latest,\
-  com.ibm.ws.transport.http;version=latest
+  com.ibm.ws.transport.http;version=latest,\
+  io.openliberty.wsoc.ssl.internal;version=latest

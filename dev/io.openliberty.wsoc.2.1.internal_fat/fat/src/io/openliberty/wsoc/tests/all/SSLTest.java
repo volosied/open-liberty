@@ -55,7 +55,6 @@ public class SSLTest{
         SSLContext sslContext = null;
         
         try {
-            // sslContext = SSLContext.getDefault();
             sslContext = SSLContext.getInstance("TLS");
             sslContext.init(null, trustAllCerts, new SecureRandom());
         } catch (Exception e) {
@@ -74,7 +73,7 @@ public class SSLTest{
 
     }
 
-
+    
     private static TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
         @Override
         public java.security.cert.X509Certificate[] getAcceptedIssuers() {
