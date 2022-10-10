@@ -18,6 +18,9 @@ import java.util.Properties;
 
 import com.ibm.websphere.channelfw.osgi.CHFWBundle;
 import com.ibm.ws.wsoc.external.WebSocketFactory;
+import com.ibm.ws.wsoc.outbound.HttpRequestor;
+import com.ibm.ws.wsoc.outbound.HttpRequestorFactory;
+import com.ibm.ws.wsoc.outbound.HttpRequestorWsoc10FactoryImpl;
 import com.ibm.wsspi.bytebuffer.WsByteBufferPoolManager;
 import com.ibm.wsspi.channelfw.ChannelFramework;
 import com.ibm.wsspi.channelfw.ChannelFrameworkFactory;
@@ -50,6 +53,14 @@ public class WebSocketVersionServiceManager {
 
     private static final ServletContainerFactory DEFAULT_SERVLET_CONTAINER_FACTORY = new ServerContainerImplFactory10();
 
+    private static final AtomicServiceReference<HttpRequestorFactory> httpRequestorFactoryServiceRef =
+                    new AtomicServiceReference<HttpRequestorFactory>("httpRequestorFactoryService");
+
+    private static final AtomicServiceReference<ClientEndpointConfigCopyFactory> clientEndpointConfigCopyFactoryServiceRef =
+                    new AtomicServiceReference<ClientEndpointConfigCopyFactory>("clientEndpointConfigCopyFactoryService");
+
+    private static final HttpRequestorFactory DEFAULT_HTTPREQUESTOR_FACTORY = new HttpRequestorWsoc10FactoryImpl();
+
     public static String LOADED_SPEC_LEVEL = loadWsocVersion();
 
     private static String DEFAULT_VERSION = "1.0";
@@ -63,7 +74,8 @@ public class WebSocketVersionServiceManager {
         cfwBundleRef.activate(context);
         websocketFactoryServiceRef.activate(context);
         servletContainerFactorySRRef.activate(context);
-
+        httpRequestorFactoryServiceRef.activate(context);
+        clientEndpointConfigCopyFactoryServiceRef.activate(context);
     }
 
     /**
@@ -75,6 +87,8 @@ public class WebSocketVersionServiceManager {
         cfwBundleRef.deactivate(context);
         websocketFactoryServiceRef.deactivate(context);
         servletContainerFactorySRRef.deactivate(context);
+        httpRequestorFactoryServiceRef.deactivate(context);
+        clientEndpointConfigCopyFactoryServiceRef.deactivate(context);
     }
 
     /**
@@ -148,6 +162,39 @@ public class WebSocketVersionServiceManager {
 
     protected void unsetWebsocketFactoryService(ServiceReference<WebSocketFactory> ref) {
         websocketFactoryServiceRef.unsetReference(ref);
+    }
+
+    public static HttpRequestorFactory getHttpRequestorFactory() {
+        //if websocket 1.1 feature is enabled, then get WebSocketFactoryV11 instance, else use the default
+        //WebSocketFactoryV10 instance
+        HttpRequestorFactory httpRequestorFactory = httpRequestorFactoryServiceRef.getService();
+        if (httpRequestorFactory == null) {
+            return DEFAULT_HTTPREQUESTOR_FACTORY;
+        }
+        return httpRequestorFactory;
+    }
+
+    protected void setHttpRequestorFactoryService(ServiceReference<HttpRequestorFactory> ref) {
+        httpRequestorFactoryServiceRef.setReference(ref);
+    }
+
+    protected void unsetHttpRequestorFactoryService(ServiceReference<HttpRequestorFactory> ref) {
+        httpRequestorFactoryServiceRef.unsetReference(ref);
+    }
+
+    public static ClientEndpointConfigCopyFactory getClientEndpointConfigCopyFactory() {
+
+        ClientEndpointConfigCopyFactory clientEndpointConfigCopyFactory = clientEndpointConfigCopyFactoryServiceRef.getService();
+
+        return clientEndpointConfigCopyFactory;
+    }
+
+    protected void setClientEndpointConfigCopyFactoryService(ServiceReference<ClientEndpointConfigCopyFactory> ref) {
+        clientEndpointConfigCopyFactoryServiceRef.setReference(ref);
+    }
+
+    protected void unsetClientEndpointConfigCopyFactoryService(ServiceReference<ClientEndpointConfigCopyFactory> ref) {
+        clientEndpointConfigCopyFactoryServiceRef.unsetReference(ref);
     }
 
     private static synchronized String loadWsocVersion(){
