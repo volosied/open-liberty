@@ -904,7 +904,7 @@ public class UIRepeat extends UIComponentBase implements NamingContainer
         Integer begin = getBegin();
         Integer end = getEnd();
         Integer size = getSize();
-        _emptyModel =  false; //getDataModel() == EMPTY_MODEL && begin != -1 && end != -1;
+        _emptyModel = getDataModel() == EMPTY_MODEL && begin != null && end != null;
         Integer count = getRowCount();
         Integer offset = getOffset();
         if (begin == null)
@@ -915,7 +915,7 @@ public class UIRepeat extends UIComponentBase implements NamingContainer
             }
         }      
        
-        if (end == -1 && size == -1) 
+        if (end == null && size == null) 
         {
             if (begin == null) 
             {
@@ -928,10 +928,17 @@ public class UIRepeat extends UIComponentBase implements NamingContainer
         }
         
         Integer step = getStep();
+
+        if (!_emptyModel && step == null)
+        {
+            setStep(1);
+            step = 1;
+        }
+
         boolean sizeIsEnd = _emptyModel;
         boolean countdown = _emptyModel && end < begin;
 
-        if (size == -1)
+        if (size == null)
         {
             if (begin == null)
             {
@@ -974,11 +981,11 @@ public class UIRepeat extends UIComponentBase implements NamingContainer
             {
                 throw new LocationAwareFacesException("iteration size cannot be greater than collection size", this);
             }
-            else if (!sizeIsEnd && (begin >= 0) && (begin + size) > end+1)
+            else if (!sizeIsEnd && (begin >= 0) && (begin + size) > end)
             {
                 throw new LocationAwareFacesException("iteration size cannot be greater than collection size", this);
             }
-            else if(!sizeIsEnd && (begin >= 0) && (end+1 > count))
+            else if(!sizeIsEnd && (begin >= 0) && (end > count))
             {
                 throw new LocationAwareFacesException("end cannot be greater than collection size", this);
             }
@@ -992,25 +999,21 @@ public class UIRepeat extends UIComponentBase implements NamingContainer
         // {
         //     throw new LocationAwareFacesException("begin cannot be greater than end", this);
         // }
-        // if (size > -1 && offset > end)
-        // {
-        //     throw new LocationAwareFacesException("iteration offset cannot be greater than collection size", this);
-        // }
 
-        // if (!_emptyModel && step == -1)
-        // {
-        //     setStep(1);
-        // }
+        if (size > -1 && offset > end)
+        {
+            throw new LocationAwareFacesException("iteration offset cannot be greater than collection size", this);
+        }
 
-        // if (!_emptyModel && step < 0)
-        // {
-        //     throw new LocationAwareFacesException("iteration step size cannot be less than zero", this);
-        // }
+        if (!_emptyModel && step < 0)
+        {
+            throw new LocationAwareFacesException("iteration step size cannot be less than zero", this);
+        }
 
-        // else if (step == 0)
-        // {
-        //     throw new LocationAwareFacesException("iteration step size cannot be equal to zero", this);
-        // }
+        else if (step == 0)
+        {
+            throw new LocationAwareFacesException("iteration step size cannot be equal to zero", this);
+        }
 
         _end = end;
         
@@ -1025,8 +1028,8 @@ public class UIRepeat extends UIComponentBase implements NamingContainer
         }
         
         // validate attributes
-        // _validateAttributes();
-        getDataModel();
+        _validateAttributes();
+        // getDataModel();
         
         // reset index
         _captureScopeValues();
