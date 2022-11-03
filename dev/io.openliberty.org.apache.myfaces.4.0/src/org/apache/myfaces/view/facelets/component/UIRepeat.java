@@ -101,11 +101,11 @@ public class UIRepeat extends UIComponentBase implements NamingContainer
     
     private boolean _emptyModel = false;
 
-    private int _end = -1;
+    private Integer _end = -1;
     
-    private int _count;
+    private Integer _count;
     
-    private int _index = -1;
+    private Integer _index = -1;
 
     private transient Object _origValue;
     private transient Object _origVarStatus;
@@ -124,56 +124,56 @@ public class UIRepeat extends UIComponentBase implements NamingContainer
     }
     
     @JSFProperty
-    public int getOffset()
+    public Integer getOffset()
     {
-        return (Integer) getStateHelper().eval(PropertyKeys.offset, 0);
+        return (Integer) getStateHelper().eval(PropertyKeys.offset, null);
     }
 
-    public void setOffset(int offset)
+    public void setOffset(Integer offset)
     {
         getStateHelper().put(PropertyKeys.offset, offset );
     }
     
     @JSFProperty
-    public int getSize()
+    public Integer getSize()
     {
-        return (Integer) getStateHelper().eval(PropertyKeys.size, -1);
+        return (Integer) getStateHelper().eval(PropertyKeys.size, null);
     }
 
-    public void setSize(int size)
+    public void setSize(Integer size)
     {
         getStateHelper().put(PropertyKeys.size, size );
     }
     
     @JSFProperty
-    public int getStep()
+    public Integer getStep()
     {
-        return (Integer) getStateHelper().eval(PropertyKeys.step, 1);
+        return (Integer) getStateHelper().eval(PropertyKeys.step, null);
     }
 
-    public void setStep(int step)
+    public void setStep(Integer step)
     {
         getStateHelper().put(PropertyKeys.step, step );
     }
     
     @JSFProperty
-    public int getBegin()
+    public Integer getBegin()
     {
-        return (Integer) getStateHelper().eval(PropertyKeys.begin, -1);
+        return (Integer) getStateHelper().eval(PropertyKeys.begin, null);
     }
 
-    public void setBegin(int begin)
+    public void setBegin(Integer begin)
     {
         getStateHelper().put(PropertyKeys.begin, begin );
     }
     
     @JSFProperty
-    public int getEnd()
+    public Integer getEnd()
     {
-        return (Integer) getStateHelper().eval(PropertyKeys.end, -1);
+        return (Integer) getStateHelper().eval(PropertyKeys.end, null);
     }
 
-    public void setEnd(int end)
+    public void setEnd(Integer end)
     {
         getStateHelper().put(PropertyKeys.end, end );
     }
@@ -225,7 +225,32 @@ public class UIRepeat extends UIComponentBase implements NamingContainer
 
         if (value == null)
         {
-            return EMPTY_MODEL;
+            Integer begin = getBegin();
+            Integer end = getEnd();
+            if(end == null){
+                if(begin == null){
+                    return EMPTY_MODEL;
+                } else {
+                    System.out.println("END IS NULL");
+                    throw new IllegalStateException("End is missing");
+                }
+            } else {
+                begin = begin == null ? 0 : begin;
+                Integer step = null;
+                if( begin <= end){
+                    step = 1;
+                } else {
+                    step = -1;
+                }
+                Integer length = Math.abs(end - begin) + 1;
+                Integer[] arr = new Integer[length];
+                for(int i = 0; i < length; i++){
+                    arr[i] = begin + (i * step);
+                }
+                setBegin(0);
+                setEnd(length);
+                return new ArrayDataModel(arr);
+            }
         }
         else if (value instanceof DataModel)
         {
@@ -312,7 +337,7 @@ public class UIRepeat extends UIComponentBase implements NamingContainer
         //MYFACES-2744 UIData.getClientId() should not append rowIndex, instead use UIData.getContainerClientId()
         String clientId = super.getContainerClientId(context);
         
-        int index = getIndex();
+        Integer index = getIndex();
         if (index == -1)
         {
             return clientId;
@@ -324,8 +349,8 @@ public class UIRepeat extends UIComponentBase implements NamingContainer
     
     private RepeatStatus _getRepeatStatus()
     {
-        int begin = getBegin();
-        if (begin == -1) 
+        Integer begin = getBegin();
+        if (begin == null) 
         {
             begin = getOffset();
         }
@@ -397,7 +422,7 @@ public class UIRepeat extends UIComponentBase implements NamingContainer
     private void restoreDescendantComponentStates(UIComponent parent, boolean iterateFacets, Object state,
                                                   boolean restoreChildFacets)
     {
-        int descendantStateIndex = -1;
+        Integer descendantStateIndex = -1;
         List<? extends Object[]> stateCollection = null;
         
         if (iterateFacets && parent.getFacetCount() > 0)
@@ -725,7 +750,7 @@ public class UIRepeat extends UIComponentBase implements NamingContainer
      * Returns the rowCount of the underlying DataModel.
      * @return
      */
-    public int getRowCount()
+    public Integer getRowCount()
     {
         if (_emptyModel) // empty model
         {
@@ -740,17 +765,17 @@ public class UIRepeat extends UIComponentBase implements NamingContainer
     /**
      * @return the current index.
      */
-    public int getIndex()
+    public Integer getIndex()
     {
         return _index;
     }
     
-    public void setRowIndex(int index)
+    public void setRowIndex(Integer index)
     {
         _setIndex(index);
     }
     
-    private void _setIndex(int index)
+    private void _setIndex(Integer index)
     {
         if (index < -1)
         {
@@ -868,7 +893,7 @@ public class UIRepeat extends UIComponentBase implements NamingContainer
      * @param index
      * @return
      */
-    private int _calculateCountForIndex(int index)
+    private Integer _calculateCountForIndex(Integer index)
     {
         return (index - getOffset()) / getStep();
     }
@@ -876,13 +901,13 @@ public class UIRepeat extends UIComponentBase implements NamingContainer
     private void _validateAttributes() throws FacesException
     {
         
-        int begin = getBegin();
-        int end = getEnd();
-        int size = getSize();
-        _emptyModel = getDataModel() == EMPTY_MODEL && begin != -1 && end != -1;
-        int count = getRowCount();
-        int offset = getOffset();
-        if (begin == -1)
+        Integer begin = getBegin();
+        Integer end = getEnd();
+        Integer size = getSize();
+        _emptyModel =  false; //getDataModel() == EMPTY_MODEL && begin != -1 && end != -1;
+        Integer count = getRowCount();
+        Integer offset = getOffset();
+        if (begin == null)
         {
             if (size >= 0)
             {
@@ -892,7 +917,7 @@ public class UIRepeat extends UIComponentBase implements NamingContainer
        
         if (end == -1 && size == -1) 
         {
-            if (begin == -1) 
+            if (begin == null) 
             {
                 end = getDataModel().getRowCount();
             } 
@@ -902,13 +927,13 @@ public class UIRepeat extends UIComponentBase implements NamingContainer
             }
         }
         
-        int step = getStep();
+        Integer step = getStep();
         boolean sizeIsEnd = _emptyModel;
         boolean countdown = _emptyModel && end < begin;
 
         if (size == -1)
         {
-            if (begin == -1)
+            if (begin == null)
             {
                 size =  end;
                 sizeIsEnd = true;
@@ -941,11 +966,11 @@ public class UIRepeat extends UIComponentBase implements NamingContainer
             {
                 throw new LocationAwareFacesException("iteration size cannot be less than zero", this);
             }
-            else if (!sizeIsEnd && (begin == -1) && (offset + size) > end)
+            else if (!sizeIsEnd && (begin == null) && (offset + size) > end)
             {
                 throw new LocationAwareFacesException("iteration size cannot be greater than collection size", this);
             }
-            else if (!sizeIsEnd && (begin == -1) && (offset + size) > count)
+            else if (!sizeIsEnd && (begin == null) && (offset + size) > count)
             {
                 throw new LocationAwareFacesException("iteration size cannot be greater than collection size", this);
             }
@@ -963,29 +988,29 @@ public class UIRepeat extends UIComponentBase implements NamingContainer
             }
         }
 
-        if (begin >= 0 && begin > end)
-        {
-            throw new LocationAwareFacesException("begin cannot be greater than end", this);
-        }
-        if (size > -1 && offset > end)
-        {
-            throw new LocationAwareFacesException("iteration offset cannot be greater than collection size", this);
-        }
+        // if (begin >= 0 && begin > end)
+        // {
+        //     throw new LocationAwareFacesException("begin cannot be greater than end", this);
+        // }
+        // if (size > -1 && offset > end)
+        // {
+        //     throw new LocationAwareFacesException("iteration offset cannot be greater than collection size", this);
+        // }
 
-        if (!_emptyModel && step == -1)
-        {
-            setStep(1);
-        }
+        // if (!_emptyModel && step == -1)
+        // {
+        //     setStep(1);
+        // }
 
-        if (!_emptyModel && step < 0)
-        {
-            throw new LocationAwareFacesException("iteration step size cannot be less than zero", this);
-        }
+        // if (!_emptyModel && step < 0)
+        // {
+        //     throw new LocationAwareFacesException("iteration step size cannot be less than zero", this);
+        // }
 
-        else if (step == 0)
-        {
-            throw new LocationAwareFacesException("iteration step size cannot be equal to zero", this);
-        }
+        // else if (step == 0)
+        // {
+        //     throw new LocationAwareFacesException("iteration step size cannot be equal to zero", this);
+        // }
 
         _end = end;
         
@@ -1000,7 +1025,8 @@ public class UIRepeat extends UIComponentBase implements NamingContainer
         }
         
         // validate attributes
-        _validateAttributes();
+        // _validateAttributes();
+        getDataModel();
         
         // reset index
         _captureScopeValues();
@@ -1011,21 +1037,35 @@ public class UIRepeat extends UIComponentBase implements NamingContainer
             // has children
             if (getChildCount() > 0)
             {
-                int i = getOffset();               
+                Integer offset = getOffset();               
                 
-                int begin = getBegin();
-                int end = getEnd(); 
-                if (begin == -1)
-                {
-                    end = getSize();
-                    end = (end >= 0) ? i + end - 1 : Integer.MAX_VALUE - 1;
+                Integer begin = getBegin();
+                Integer end = getEnd(); 
+                // if (begin == null)
+                // {
+                //     end = getSize();
+                //     end = (end >= 0) ? i + end - 1 : Integer.MAX_VALUE - 1;
+                // }
+
+                if (null != offset && offset > 0) {
+                    begin = offset;
                 }
                 
-                if (begin >= 0) 
-                {
-                    i = begin;
+                // if (begin >= 0) 
+                // {
+                //     i = begin;
+                // }
+                begin = begin == null ? 0 : begin;
+                end = end == null ? getDataModel().getRowCount() : end;
+
+                Integer step = getStep();
+                step = step == null ? 1 : step;
+
+                Integer size = getSize();
+                if(size != null && size > 0){
+                    end = size - 1;
                 }
-                int step = getStep();
+
                 // grab renderer
                 String rendererType = getRendererType();
                 Renderer renderer = null;
@@ -1035,6 +1075,8 @@ public class UIRepeat extends UIComponentBase implements NamingContainer
                 }
                 
                 _count = 0;
+
+                int i = begin;
                 
                 _setIndex(i);
                 
@@ -1303,9 +1345,9 @@ public class UIRepeat extends UIComponentBase implements NamingContainer
                         // visit the children once per "row"
                         if (getChildCount() > 0)
                         {
-                            int i = getOffset();
-                            int end = getSize();
-                            int step = getStep();
+                            Integer i = getOffset();
+                            Integer end = getSize();
+                            Integer step = getStep();
                             end = (end >= 0) ? i + end : Integer.MAX_VALUE - 1;
                             _count = 0;
 
@@ -1485,9 +1527,9 @@ public class UIRepeat extends UIComponentBase implements NamingContainer
     {
         private final FacesEvent _target;
 
-        private final int _index;
+        private final Integer _index;
 
-        public IndexedEvent(UIRepeat owner, FacesEvent target, int index)
+        public IndexedEvent(UIRepeat owner, FacesEvent target, Integer index)
         {
             super(owner);
             _target = target;
@@ -1544,7 +1586,7 @@ public class UIRepeat extends UIComponentBase implements NamingContainer
             }
         }
 
-        public int getIndex()
+        public Integer getIndex()
         {
             return _index;
         }
