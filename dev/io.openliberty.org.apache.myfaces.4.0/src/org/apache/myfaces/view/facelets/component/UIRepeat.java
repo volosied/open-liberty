@@ -576,8 +576,8 @@ public class UIRepeat extends UIComponentBase implements NamingContainer
     {
         Collection<Object[]> childStates = null;
         // Index to indicate how many components has been passed without state to save.
-        int childEmptyIndex = 0;
-        int totalChildCount = 0;
+        Integer childEmptyIndex = 0;
+        Integer totalChildCount = 0;
                 
         if (iterateFacets && parent.getFacetCount() > 0)
         {
@@ -1076,7 +1076,7 @@ public class UIRepeat extends UIComponentBase implements NamingContainer
                 
                 _count = 0;
 
-                int i = begin;
+                Integer i = begin;
                 
                 _setIndex(i);
                 
@@ -1194,12 +1194,12 @@ public class UIRepeat extends UIComponentBase implements NamingContainer
                     String clientRow = subId.substring(0, subId.indexOf(separator));
         
                     // safe the current index, count aside
-                    final int prevIndex = _index;
-                    final int prevCount = _count;
+                    final Integer prevIndex = _index;
+                    final Integer prevCount = _count;
                     
                     try
                     {
-                        int invokeIndex = Integer.parseInt(clientRow);
+                        Integer invokeIndex = Integer.parseInt(clientRow);
                         // save the current scope values and set the right index
                         _captureScopeValues();
                         if (invokeIndex != -1)
@@ -1299,8 +1299,8 @@ public class UIRepeat extends UIComponentBase implements NamingContainer
             }
 
             // save the current index, count aside
-            final int prevIndex = _index;
-            final int prevCount = _count;
+            final Integer prevIndex = _index;
+            final Integer prevCount = _count;
 
 
             // reset index and save scope values
@@ -1560,8 +1560,8 @@ public class UIRepeat extends UIComponentBase implements NamingContainer
             UIRepeat owner = (UIRepeat) getComponent();
             
             // safe the current index, count aside
-            final int prevIndex = owner._index;
-            final int prevCount = owner._count;
+            final Integer prevIndex = owner._index;
+            final Integer prevCount = owner._count;
             
             try
             {
@@ -1606,8 +1606,8 @@ public class UIRepeat extends UIComponentBase implements NamingContainer
             IndexedEvent idxEvent = (IndexedEvent) event;
             
             // safe the current index, count aside
-            final int prevIndex = _index;
-            final int prevCount = _count;
+            final Integer prevIndex = _index;
+            final Integer prevCount = _count;
             
             try
             {
