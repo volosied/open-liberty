@@ -11937,44 +11937,6 @@ See https://cwiki.apache.org/confluence/display/MYFACES/Handling+Server+Errors f
       <since>1.2.4</since>
     </webConfigParam>
     <webConfigParam>
-      <name>org.apache.myfaces.USE_MULTIPLE_JS_FILES_FOR_JSF_UNCOMPRESSED_JS</name>
-      <fieldName>USE_MULTIPLE_JS_FILES_FOR_JSF_UNCOMPRESSED_JS</fieldName>
-      <desc>If this param is true and the project stage is development mode,
-the source javascript files will be loaded separately instead have
-all in just one file, to preserve line numbers and make javascript
-debugging of the default jsf javascript file more simple</desc>
-      <longDesc>If this param is true and the project stage is development mode,
-the source javascript files will be loaded separately instead have
-all in just one file, to preserve line numbers and make javascript
-debugging of the default jsf javascript file more simple.</longDesc>
-      <defaultValue>false</defaultValue>
-      <expectedValues>true,false</expectedValues>
-      <sourceClassName>org.apache.myfaces.resource.InternalClassLoaderResourceLoader</sourceClassName>
-      <since>2.0.1</since>
-      <group>render</group>
-    </webConfigParam>
-    <webConfigParam>
-      <name>org.apache.myfaces.JSF_JS_MODE</name>
-      <fieldName>MYFACES_JSF_MODE</fieldName>
-      <desc>Define the mode used for faces</desc>
-      <longDesc>
-<![CDATA[
-Define the mode used for faces.js file:
-<ul>
-<li>normal : contains everything, including i18n (faces-i18n.js)</li>
-<li>minimal: contains everything, excluding i18n (faces-i18n.js)</li>
-</ul>
-<p>If org.apache.myfaces.USE_MULTIPLE_JS_FILES_FOR_JSF_UNCOMPRESSED_JS param is set to true and project stage
-is Development, this param is ignored.</p>
-]]>
-      </longDesc>
-      <defaultValue>normal</defaultValue>
-      <expectedValues>normal, minimal-modern, minimal</expectedValues>
-      <sourceClassName>org.apache.myfaces.resource.InternalClassLoaderResourceLoader</sourceClassName>
-      <since>2.0.10,2.1.4</since>
-      <group>render</group>
-    </webConfigParam>
-    <webConfigParam>
       <name>org.apache.myfaces.TEMPORAL_RESOURCEHANDLER_CACHE_ENABLED</name>
       <fieldName>INIT_PARAM_TEMPORAL_RESOURCEHANDLER_CACHE_ENABLED</fieldName>
       <desc>If this param is set to true (default false), a temporal directory is created and
