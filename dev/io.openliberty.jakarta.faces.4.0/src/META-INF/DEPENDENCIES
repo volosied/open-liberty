@@ -1,0 +1,15 @@
+// ------------------------------------------------------------------
+// Transitive dependencies of this project determined from the
+// maven pom organized by organization.
+// ------------------------------------------------------------------
+
+Apache MyFaces Core 4.0 - API
+
+
+From: 'Eclipse Foundation' (https://www.eclipse.org)
+  - Jakarta Bean Validation API (https://beanvalidation.org) jakarta.validation:jakarta.validation-api:jar:3.0.2
+    License: Apache License 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+
+
+
