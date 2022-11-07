@@ -36,8 +36,7 @@ DynamicImport-Package: \
 # Determine if we need the jakarta/faces entry here.
 # Determine if org.apache.myfaces.core:myfaces-api should be used instead.
 Include-Resource: \
-	@${repo;org.apache.myfaces.core.api;4.0.0.RC2;EXACT}!/jakarta/faces, \
-	@${repo;org.apache.myfaces.core.api;4.0.0.RC2;EXACT}!/META-INF/**
+	  META-INF=@src/META-INF
 
 instrument.disabled: true
 
