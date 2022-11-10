@@ -204,12 +204,13 @@ var faces;
          * @param channel the channel name/id
          * @param onopen The function to be invoked when the web socket is opened.
          * @param onmessage The function to be invoked when a message is received.
+         * @param onerror The function to be invoked when an error occurs.
          * @param onclose The function to be invoked when the web socket is closed.
          * @param behaviors functions which are invoked whenever a message is received
          * @param autoConnect Whether or not to automatically open the socket. Defaults to <code>false</code>.
          */
-        function init(socketClientId, url, channel, onopen, onmessage, onclose, behaviors, autoConnect) {
-            PushImpl_1.PushImpl.init(socketClientId, url, channel, onopen, onmessage, onclose, behaviors, autoConnect);
+        function init(socketClientId, url, channel, onopen, onmessage, onerror, onclose, behaviors, autoConnect) {
+            PushImpl_1.PushImpl.init(socketClientId, url, channel, onopen, onmessage, onerror, onclose, behaviors, autoConnect);
         }
         push.init = init;
         /**
@@ -919,12 +920,13 @@ exports.PushImpl = void 0;
  * Typescript port of the faces\.push part in the myfaces implementation
  */
 const Const_1 = __webpack_require__(/*! ./core/Const */ "./typescript/faces/impl/core/Const.ts");
+const mona_dish_1 = __webpack_require__(/*! mona-dish */ "./typescript/mona_dish/index_core.ts");
 /**
  * Implementation class for the push functionality
  */
 var PushImpl;
 (function (PushImpl) {
-    const URL_PROTOCOL = window.location.protocol.replace("http", "ws") + "//";
+    const URL_PROTOCOL = mona_dish_1.DQ.global().location.protocol.replace("http", "ws") + "//";
     // we expose the member variables for testing purposes
     // they are not directly touched outside of tests
     /* socket map by token */
@@ -949,14 +951,15 @@ var PushImpl;
      * @param channel the channel name/id
      * @param onopen The function to be invoked when the web socket is opened.
      * @param onmessage The function to be invoked when a message is received.
+     * @param onerror The function to be invoked when an error occurs.
      * @param onclose The function to be invoked when the web socket is closed.
      * @param behaviors functions which are invoked whenever a message is received
      * @param autoConnect Whether or not to automatically open the socket. Defaults to <code>false</code>.
      */
-    function init(socketClientId, url, channel, onopen, onmessage, onclose, behaviors, autoConnect) {
-        var _a;
+    function init(socketClientId, url, channel, onopen, onmessage, onerror, onclose, behaviors, autoConnect) {
+        var _a, _b, _c;
         onclose = resolveFunction(onclose);
-        if (!window.WebSocket) { // IE6-9.
+        if (!mona_dish_1.DQ.global().WebSocket) { // IE6-9.
             onclose(-1, channel);
             return;
         }
@@ -966,6 +969,7 @@ var PushImpl;
                 'channelToken': channelToken,
                 'onopen': resolveFunction(onopen),
                 'onmessage': resolveFunction(onmessage),
+                'onerror': resolveFunction(onerror),
                 'onclose': onclose,
                 'behaviors': behaviors,
                 'autoconnect': autoConnect
@@ -979,17 +983,17 @@ var PushImpl;
             }
         }
         if (autoConnect) {
-            ((_a = window === null || window === void 0 ? void 0 : window.faces) !== null && _a !== void 0 ? _a : window === null || window === void 0 ? void 0 : window.jsf).push.open(socketClientId);
+            ((_b = (_a = mona_dish_1.DQ.global()) === null || _a === void 0 ? void 0 : _a.faces) !== null && _b !== void 0 ? _b : (_c = mona_dish_1.DQ.global()) === null || _c === void 0 ? void 0 : _c.jsf).push.open(socketClientId);
         }
     }
     PushImpl.init = init;
     function open(socketClientId) {
         var _a;
-        getSocket((_a = PushImpl.components === null || PushImpl.components === void 0 ? void 0 : PushImpl.components[socketClientId]) === null || _a === void 0 ? void 0 : _a.channelToken).open();
+        getSocket((_a = PushImpl.components[socketClientId]) === null || _a === void 0 ? void 0 : _a.channelToken).open();
     }
     PushImpl.open = open;
     function close(socketClientId) {
-        getSocket(PushImpl.components === null || PushImpl.components === void 0 ? void 0 : PushImpl.components[socketClientId].channelToken).close();
+        getSocket(PushImpl.components[socketClientId].channelToken).close();
     }
     PushImpl.close = close;
     // Private helper classes
@@ -1019,28 +1023,53 @@ var PushImpl;
         }
         // noinspection JSUnusedLocalSymbols
         onopen(event) {
+            var _a, _b;
             if (!this.reconnectAttempts) {
                 let clientIds = PushImpl.clientIdsByTokens[this.channelToken];
                 for (let i = clientIds.length - 1; i >= 0; i--) {
                     let socketClientId = clientIds[i];
-                    PushImpl.components[socketClientId]['onopen'](this.channel);
+                    (_b = (_a = PushImpl.components[socketClientId]) === null || _a === void 0 ? void 0 : _a['onopen']) === null || _b === void 0 ? void 0 : _b.call(_a, this.channel);
                 }
             }
             this.reconnectAttempts = 0;
         }
+        onerror(event) {
+            var _a, _b;
+            let message = JSON.parse(event.data);
+            //TODO replace this with a more readable Stream code
+            for (let i = PushImpl.clientIdsByTokens[this.channelToken].length - 1; i >= 0; i--) {
+                let socketClientId = PushImpl.clientIdsByTokens[this.channelToken][i];
+                if (document.getElementById(socketClientId)) {
+                    try {
+                        (_b = (_a = PushImpl.components[socketClientId]) === null || _a === void 0 ? void 0 : _a['onerror']) === null || _b === void 0 ? void 0 : _b.call(_a, message, this.channel, event);
+                    }
+                    catch (e) {
+                        //Ignore
+                    }
+                }
+                else {
+                    PushImpl.clientIdsByTokens[this.channelToken].splice(i, 1);
+                }
+            }
+            if (PushImpl.clientIdsByTokens[this.channelToken].length == 0) {
+                // tag disappeared
+                this.close();
+            }
+        }
         onmmessage(event) {
+            var _a, _b, _c;
             let message = JSON.parse(event.data);
             for (let i = PushImpl.clientIdsByTokens[this.channelToken].length - 1; i >= 0; i--) {
                 let socketClientId = PushImpl.clientIdsByTokens[this.channelToken][i];
                 if (document.getElementById(socketClientId)) {
                     try {
-                        PushImpl.components[socketClientId]['onmessage'](message, this.channel, event);
+                        (_b = (_a = PushImpl.components[socketClientId]) === null || _a === void 0 ? void 0 : _a['onmessage']) === null || _b === void 0 ? void 0 : _b.call(_a, message, this.channel, event);
                     }
                     catch (e) {
                         //Ignore
                     }
-                    let behaviors = PushImpl.components[socketClientId]['behaviors'];
-                    let functions = behaviors[message];
+                    let behaviors = (_c = PushImpl.components === null || PushImpl.components === void 0 ? void 0 : PushImpl.components[socketClientId]) === null || _c === void 0 ? void 0 : _c['behaviors'];
+                    let functions = behaviors === null || behaviors === void 0 ? void 0 : behaviors[message];
                     if (functions && functions.length) {
                         for (let j = 0; j < functions.length; j++) {
                             try {
@@ -1062,6 +1091,7 @@ var PushImpl;
             }
         }
         onclose(event) {
+            var _a, _b;
             if (!this.socket
                 || (event.code == 1000 && event.reason == Const_1.REASON_EXPIRED)
                 || (event.code == 1008)
@@ -1070,7 +1100,7 @@ var PushImpl;
                 let clientIds = PushImpl.clientIdsByTokens[this.channelToken];
                 for (let i = clientIds.length - 1; i >= 0; i--) {
                     let socketClientId = clientIds[i];
-                    PushImpl.components[socketClientId]['onclose'](event === null || event === void 0 ? void 0 : event.code, this === null || this === void 0 ? void 0 : this.channel, event);
+                    (_b = (_a = PushImpl.components === null || PushImpl.components === void 0 ? void 0 : PushImpl.components[socketClientId]) === null || _a === void 0 ? void 0 : _a['onclose']) === null || _b === void 0 ? void 0 : _b.call(_a, event === null || event === void 0 ? void 0 : event.code, this === null || this === void 0 ? void 0 : this.channel, event);
                 }
             }
             else {
@@ -1092,12 +1122,13 @@ var PushImpl;
             this.socket.onopen = (event) => this.onopen(event);
             this.socket.onmessage = (event) => this.onmmessage(event);
             this.socket.onclose = (event) => this.onclose(event);
+            this.socket.onerror = (event) => this.onerror(event);
         }
     }
     // Private static functions ---------------------------------------------------------------------------------------
     function getBaseURL(url) {
         if (url.indexOf("://") < 0) {
-            let base = window.location.hostname + ":" + window.location.port;
+            let base = mona_dish_1.DQ.global().location.hostname + ":" + mona_dish_1.DQ.global().location.port;
             return URL_PROTOCOL + base + url;
         }
         else {
@@ -1122,7 +1153,7 @@ var PushImpl;
     }
     function resolveFunction(fn = () => {
     }) {
-        return ((typeof fn !== "function") && (fn = window[fn]), fn);
+        return ((typeof fn !== "function") && (fn = mona_dish_1.DQ.global()[fn]), fn);
     }
 })(PushImpl = exports.PushImpl || (exports.PushImpl = {}));
 
@@ -3262,12 +3293,17 @@ class XhrFormData extends mona_dish_1.Config {
         //a call to getViewState before must pass the encoded line
         //a call from getViewState passes the form element as datasource,
         //so we have two call points
+        // atm we basically encode twice, to keep the code leaner
+        // this will be later optmized, practically elements
+        // which are already covered by an external viewstate do not need
+        // the encoding a second time, because they are overwritten by the viewstate again
         if (isString(dataSource)) {
             this.assignEncodedString(this.dataSource);
         }
         else {
             this.applyFormDataToConfig();
         }
+        //now assign the external viewstate overrides
         if ('undefined' != typeof viewState) {
             this.assignEncodedString(viewState);
         }
@@ -3281,23 +3317,26 @@ class XhrFormData extends mona_dish_1.Config {
      * in our ajax request
      */
     postInit(...executes) {
-        let fetchInput = (id) => {
+        let fetchFileInputs = (id) => {
+            const INPUT_FILE = "input[type='file']";
             if (id == Const_1.IDENT_ALL) {
-                return mona_dish_1.DQ.querySelectorAllDeep("input[type='file']");
+                return mona_dish_1.DQ.querySelectorAllDeep(INPUT_FILE);
             }
             else if (id == Const_1.IDENT_FORM) {
-                return this.dataSource.querySelectorAllDeep("input[type='file']");
+                return this.dataSource.matchesSelector(INPUT_FILE) ?
+                    this.dataSource :
+                    this.dataSource.querySelectorAllDeep(INPUT_FILE);
             }
             else {
                 let element = mona_dish_1.DQ.byId(id, true);
-                return this.getFileInputs(element);
+                return element.matchesSelector(INPUT_FILE) ? element : this.getFileInputs(element);
             }
         };
         let inputExists = (item) => {
             return item.isPresent();
         };
         this.isMultipartRequest = mona_dish_1.LazyStream.of(...executes)
-            .map(fetchInput)
+            .map(fetchFileInputs)
             .filter(inputExists)
             .first().isPresent();
     }
@@ -3335,8 +3374,8 @@ class XhrFormData extends mona_dish_1.Config {
             var _a, _b;
             return keyVal.length < 3 ? [(_a = keyVal === null || keyVal === void 0 ? void 0 : keyVal[0]) !== null && _a !== void 0 ? _a : [], (_b = keyVal === null || keyVal === void 0 ? void 0 : keyVal[1]) !== null && _b !== void 0 ? _b : []] : keyVal;
         }
+        //TODO fix files...
         mona_dish_1.Stream.of(...keyValueEntries)
-            //split only the first =
             .map(line => splitToKeyVal(line))
             //special case of having keys without values
             .map(keyVal => fixKeyWithoutVal(keyVal))
@@ -3372,7 +3411,10 @@ class XhrFormData extends mona_dish_1.Config {
         }
         let entries = mona_dish_1.LazyStream.of(...Object.keys(this.value))
             .filter(key => this.value.hasOwnProperty(key))
-            .flatMap(key => mona_dish_1.Stream.of(...this.value[key]).map(val => [key, val]).collect(new mona_dish_1.ArrayCollector()))
+            .flatMap(key => mona_dish_1.Stream.of(...this.value[key]).map(val => [key, val])
+            //we cannot encode file elements that is handled by multipart requests anyway
+            .filter(([, value]) => !(value instanceof ExtDomQuery_1.ExtDomQuery.global().File))
+            .collect(new mona_dish_1.ArrayCollector()))
             .map(keyVal => {
             return `${encodeURIComponent(keyVal[0])}=${encodeURIComponent(keyVal[1])}`;
         })

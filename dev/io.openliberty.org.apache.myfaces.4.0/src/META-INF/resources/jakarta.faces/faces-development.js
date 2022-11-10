@@ -57,9 +57,9 @@ var faces;
     faces.implversion = 0;
     /**
      * SeparatorChar as defined by facesContext.getNamingContainerSeparatorChar()
-     * @type {Char}
      */
     faces.separatorchar = getSeparatorChar();
+    // noinspection JSUnusedGlobalSymbols
     /**
      * Context Path as defined externalContext.requestContextPath
      */
@@ -161,7 +161,7 @@ var faces;
          *     <li> eventData.responseXML: the requestInternal response xml </li>
          * </ul>
          *
-         * @param {function} errorListener error handler must be of the format <i>function errorListener(&lt;errorData&gt;)</i>
+         * @param errorListener error handler must be of the format <i>function errorListener(&lt;errorData&gt;)</i>
          */
         function addOnError(errorFunc) {
             AjaxImpl_1.Implementation.addOnError(errorFunc);
@@ -171,7 +171,7 @@ var faces;
          * Adds a global event listener to the ajax event queue. The event listener must be a function
          * of following format: <i>function eventListener(&lt;eventData&gt;)</i>
          *
-         * @param {function} eventListener event must be of the format <i>function eventListener(&lt;eventData&gt;)</i>
+         * @param eventListener event must be of the format <i>function eventListener(&lt;eventData&gt;)</i>
          */
         function addOnEvent(eventFunc) {
             AjaxImpl_1.Implementation.addOnEvent(eventFunc);
@@ -199,19 +199,24 @@ var faces;
     let push;
     (function (push) {
         /**
-         * @param {function} onopen The function to be invoked when the web socket is opened.
-         * @param {function} onmessage The function to be invoked when a message is received.
-         * @param {function} onclose The function to be invoked when the web socket is closed.
-         * @param {boolean} autoconnect Whether or not to immediately open the socket. Defaults to <code>false</code>.
+         * @param socketClientId the sockets client identifier
+         * @param url the uri to reach the socket
+         * @param channel the channel name/id
+         * @param onopen The function to be invoked when the web socket is opened.
+         * @param onmessage The function to be invoked when a message is received.
+         * @param onerror The function to be invoked when an error occurs.
+         * @param onclose The function to be invoked when the web socket is closed.
+         * @param behaviors functions which are invoked whenever a message is received
+         * @param autoConnect Whether or not to automatically open the socket. Defaults to <code>false</code>.
          */
-        function init(socketClientId, uri, channel, onopen, onmessage, onclose, behaviorScripts, autoconnect) {
-            PushImpl_1.PushImpl.init(socketClientId, uri, channel, onopen, onmessage, onclose, behaviorScripts, autoconnect);
+        function init(socketClientId, url, channel, onopen, onmessage, onerror, onclose, behaviors, autoConnect) {
+            PushImpl_1.PushImpl.init(socketClientId, url, channel, onopen, onmessage, onerror, onclose, behaviors, autoConnect);
         }
         push.init = init;
         /**
          * Open the web socket on the given channel.
-         * @param {string} channel The name of the web socket channel.
-         * @throws {Error} When channel is unknown.
+         * @param  channel The name of the web socket channel.
+         * @throws  Error is thrown, if the channel is unknown.
          */
         function open(socketClientId) {
             PushImpl_1.PushImpl.open(socketClientId);
@@ -219,8 +224,8 @@ var faces;
         push.open = open;
         /**
          * Close the web socket on the given channel.
-         * @param {string} channel The name of the web socket channel.
-         * @throws {Error} When channel is unknown.
+         * @param  channel The name of the web socket channel.
+         * @throws  Error is thrown, if the channel is unknown.
          */
         function close(socketClientId) {
             PushImpl_1.PushImpl.close(socketClientId);
@@ -311,8 +316,8 @@ var ProjectStages;
     ProjectStages["UnitTest"] = "UnitTest";
 })(ProjectStages || (ProjectStages = {}));
 /*
- *   blockfilter for the passthrough filtering; the attributes given here
- *   will not be transmitted from the options into the passthrough
+ *   Block-filter for the pass-through filtering; the attributes given here
+ *   will not be transmitted from the options into the pass-through
  */
 var BlockFilter;
 (function (BlockFilter) {
@@ -401,19 +406,9 @@ var Implementation;
      */
     function getSeparatorChar() {
         var _a, _b, _c;
-        return (_c = (_b = (_a = resolveGlobalConfig()) === null || _a === void 0 ? void 0 : _a.separator) !== null && _b !== void 0 ? _b : this === null || this === void 0 ? void 0 : this.separator) !== null && _c !== void 0 ? _c : (separator = ExtDomQuery_1.ExtDomquery.searchJsfJsFor(/separator=([^&;]*)/).orElse(":").value);
+        return (_c = (_b = (_a = resolveGlobalConfig()) === null || _a === void 0 ? void 0 : _a.separator) !== null && _b !== void 0 ? _b : this === null || this === void 0 ? void 0 : this.separator) !== null && _c !== void 0 ? _c : (separator = ExtDomQuery_1.ExtDomQuery.searchJsfJsFor(/separator=([^&;]*)/).orElse(":").value);
     }
     Implementation.getSeparatorChar = getSeparatorChar;
-    /**
-     * fetches the separator char from the given script tags
-     *
-     * @return {string} the separator char for the given script tags
-     */
-    function getContextPath() {
-        var _a, _b, _c;
-        return (_c = (_b = (_a = resolveGlobalConfig()) === null || _a === void 0 ? void 0 : _a.separator) !== null && _b !== void 0 ? _b : this === null || this === void 0 ? void 0 : this.separator) !== null && _c !== void 0 ? _c : (separator = ExtDomQuery_1.ExtDomquery.searchJsfJsFor(/separator=([^&;]*)/).orElse(":").value);
-    }
-    Implementation.getContextPath = getContextPath;
     /**
      * this is for testing purposes only, since AjaxImpl is a module
      * we need to reset for every unit test its internal states
@@ -442,7 +437,7 @@ var Implementation;
      */
     function resolveProjectStateFromURL() {
         /* run through all script tags and try to find the one that includes faces.js */
-        const foundStage = ExtDomQuery_1.ExtDomquery.searchJsfJsFor(/stage=([^&;]*)/).value;
+        const foundStage = ExtDomQuery_1.ExtDomQuery.searchJsfJsFor(/stage=([^&;]*)/).value;
         return (foundStage in ProjectStages) ? foundStage : null;
     }
     Implementation.resolveProjectStateFromURL = resolveProjectStateFromURL;
@@ -499,7 +494,7 @@ var Implementation;
         const delay = (0, RequestDataResolver_1.resolveDelay)(options);
         const timeout = (0, RequestDataResolver_1.resolveTimeout)(options);
         requestCtx.assignIf(!!windowId, Const_1.P_WINDOW_ID).value = windowId;
-        requestCtx.assign(Const_1.CTX_PARAM_PASS_THR).value = filterPassthroughValues(options.value);
+        requestCtx.assign(Const_1.CTX_PARAM_PASS_THR).value = filterPassThroughValues(options.value);
         requestCtx.assignIf(!!resolvedEvent, Const_1.CTX_PARAM_PASS_THR, Const_1.P_EVT).value = resolvedEvent === null || resolvedEvent === void 0 ? void 0 : resolvedEvent.type;
         /**
          * ajax pass through context with the source
@@ -657,15 +652,15 @@ var Implementation;
     function getClientWindow(node) {
         const ALTERED = "___mf_id_altered__";
         const INIT = "___init____";
-        /**
+        /*
          * the search root for the dom element search
          */
         let searchRoot = new mona_dish_1.DQ(node || document.body).querySelectorAll(`form input [name='${Const_1.P_CLIENT_WINDOW}']`);
-        /**
+        /*
          * lazy helper to fetch the window id from the window url
          */
-        let fetchWindowIdFromUrl = () => ExtDomQuery_1.ExtDomquery.searchJsfJsFor(/jfwid=([^&;]*)/).orElse(null).value;
-        /**
+        let fetchWindowIdFromUrl = () => ExtDomQuery_1.ExtDomQuery.searchJsfJsFor(/jfwid=([^&;]*)/).orElse(null).value;
+        /*
          * functional double check based on stream reduction
          * the values should be identical or on INIT value which is a premise to
          * skip the first check
@@ -682,23 +677,22 @@ var Implementation;
             }
             return value2;
         };
-        /**
+        /*
          * helper for cleaner code, maps the value from an item
          *
          * @param item
          */
         let getValue = (item) => item.attr("value").value;
-        /**
+        /*
          * fetch the window id from the forms
          * window ids must be present in all forms
-         * or non existent. If they exist all of them must be the same
+         * or non-existent. If they exist all of them must be the same
          */
         let formWindowId = searchRoot.stream.map(getValue).reduce(differenceCheck, INIT);
         //if the resulting window id is set on altered then we have an unresolvable problem
         assert(ALTERED != formWindowId.value, "Multiple different windowIds found in document");
-        /**
+        /*
          * return the window id or null
-         * prio, forms under node/document and if not given then from the url
          */
         return formWindowId.value != INIT ? formWindowId.value : fetchWindowIdFromUrl();
     }
@@ -713,7 +707,7 @@ var Implementation;
      */
     function getViewState(form) {
         /**
-         *  typecheck assert!, we opt for strong typing here
+         *  type-check assert!, we opt for strong typing here
          *  because it makes it easier to detect bugs
          */
         let element = mona_dish_1.DQ.byId(form, true);
@@ -731,7 +725,7 @@ var Implementation;
      */
     Implementation.queueHandler = {
         /**
-         * public to make it shimmable for tests
+         * public to make it accessible for tests
          *
          * adds a new request to our queue for further processing
          */
@@ -853,12 +847,12 @@ var Implementation;
         return targetConfig;
     }
     /**
-     * filter the options given with a blacklist so that only
-     * the values required for passthough land in the ajax request
+     * Filter the options given with a blacklist, so that only
+     * the values required for pass-through are processed in the ajax request
      *
      * @param {Context} mappedOpts the options to be filtered
      */
-    function filterPassthroughValues(mappedOpts) {
+    function filterPassThroughValues(mappedOpts) {
         //we now can use the full code reduction given by our stream api
         //to filter
         return mona_dish_1.Stream.ofAssoc(mappedOpts)
@@ -923,27 +917,25 @@ var Implementation;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PushImpl = void 0;
 /**
- * Typescript port of the faces.push part in the myfaces implementation
+ * Typescript port of the faces\.push part in the myfaces implementation
  */
-//TODO still work in progress
-//this is a 1:1 port for the time being
 const Const_1 = __webpack_require__(/*! ./core/Const */ "./typescript/faces/impl/core/Const.ts");
-;
+const mona_dish_1 = __webpack_require__(/*! mona-dish */ "./typescript/mona_dish/index_core.ts");
 /**
  * Implementation class for the push functionality
  */
 var PushImpl;
 (function (PushImpl) {
-    const URL_PROTOCOL = window.location.protocol.replace("http", "ws") + "//";
-    //we expose the member variables for testing purposes
-    //they are not directly touched outside of tests
+    const URL_PROTOCOL = mona_dish_1.DQ.global().location.protocol.replace("http", "ws") + "//";
+    // we expose the member variables for testing purposes
+    // they are not directly touched outside of tests
     /* socket map by token */
     PushImpl.sockets = {};
     /* component attributes by clientId */
     PushImpl.components = {};
     /* client ids by token (share websocket connection) */
     PushImpl.clientIdsByTokens = {};
-    //needed for testing
+    // needed for testing
     function reset() {
         PushImpl.sockets = {};
         PushImpl.components = {};
@@ -954,49 +946,54 @@ var PushImpl;
      * Api implementations, exposed functions
      */
     /**
-     *
-     * @param {function} onopen The function to be invoked when the web socket is opened.
-     * @param {function} onmessage The function to be invoked when a message is received.
-     * @param {function} onclose The function to be invoked when the web socket is closed.
-     * @param {boolean} autoconnect Whether or not to immediately open the socket. Defaults to <code>false</code>.
+     * @param socketClientId the sockets client identifier
+     * @param url the uri to reach the socket
+     * @param channel the channel name/id
+     * @param onopen The function to be invoked when the web socket is opened.
+     * @param onmessage The function to be invoked when a message is received.
+     * @param onerror The function to be invoked when an error occurs.
+     * @param onclose The function to be invoked when the web socket is closed.
+     * @param behaviors functions which are invoked whenever a message is received
+     * @param autoConnect Whether or not to automatically open the socket. Defaults to <code>false</code>.
      */
-    function init(socketClientId, uri, channel, onopen, onmessage, onclose, behaviorScripts, autoconnect) {
-        var _a;
+    function init(socketClientId, url, channel, onopen, onmessage, onerror, onclose, behaviors, autoConnect) {
+        var _a, _b, _c;
         onclose = resolveFunction(onclose);
-        if (!window.WebSocket) { // IE6-9.
+        if (!mona_dish_1.DQ.global().WebSocket) { // IE6-9.
             onclose(-1, channel);
             return;
         }
-        let channelToken = uri.substr(uri.indexOf('?') + 1);
+        let channelToken = url.substr(url.indexOf('?') + 1);
         if (!PushImpl.components[socketClientId]) {
             PushImpl.components[socketClientId] = {
                 'channelToken': channelToken,
                 'onopen': resolveFunction(onopen),
                 'onmessage': resolveFunction(onmessage),
+                'onerror': resolveFunction(onerror),
                 'onclose': onclose,
-                'behaviors': behaviorScripts,
-                'autoconnect': autoconnect
+                'behaviors': behaviors,
+                'autoconnect': autoConnect
             };
             if (!PushImpl.clientIdsByTokens[channelToken]) {
                 PushImpl.clientIdsByTokens[channelToken] = [];
             }
             PushImpl.clientIdsByTokens[channelToken].push(socketClientId);
             if (!PushImpl.sockets[channelToken]) {
-                PushImpl.sockets[channelToken] = new Socket(channelToken, getBaseURL(uri), channel);
+                PushImpl.sockets[channelToken] = new Socket(channelToken, getBaseURL(url), channel);
             }
         }
-        if (autoconnect) {
-            ((_a = window === null || window === void 0 ? void 0 : window.faces) !== null && _a !== void 0 ? _a : window === null || window === void 0 ? void 0 : window.jsf).push.open(socketClientId);
+        if (autoConnect) {
+            ((_b = (_a = mona_dish_1.DQ.global()) === null || _a === void 0 ? void 0 : _a.faces) !== null && _b !== void 0 ? _b : (_c = mona_dish_1.DQ.global()) === null || _c === void 0 ? void 0 : _c.jsf).push.open(socketClientId);
         }
     }
     PushImpl.init = init;
     function open(socketClientId) {
         var _a;
-        getSocket((_a = PushImpl.components === null || PushImpl.components === void 0 ? void 0 : PushImpl.components[socketClientId]) === null || _a === void 0 ? void 0 : _a.channelToken).open();
+        getSocket((_a = PushImpl.components[socketClientId]) === null || _a === void 0 ? void 0 : _a.channelToken).open();
     }
     PushImpl.open = open;
     function close(socketClientId) {
-        getSocket(PushImpl.components === null || PushImpl.components === void 0 ? void 0 : PushImpl.components[socketClientId].channelToken).close();
+        getSocket(PushImpl.components[socketClientId].channelToken).close();
     }
     PushImpl.close = close;
     // Private helper classes
@@ -1024,29 +1021,55 @@ var PushImpl;
             this.socket = new WebSocket(this.url);
             this.bindCallbacks();
         }
+        // noinspection JSUnusedLocalSymbols
         onopen(event) {
+            var _a, _b;
             if (!this.reconnectAttempts) {
                 let clientIds = PushImpl.clientIdsByTokens[this.channelToken];
                 for (let i = clientIds.length - 1; i >= 0; i--) {
                     let socketClientId = clientIds[i];
-                    PushImpl.components[socketClientId]['onopen'](this.channel);
+                    (_b = (_a = PushImpl.components[socketClientId]) === null || _a === void 0 ? void 0 : _a['onopen']) === null || _b === void 0 ? void 0 : _b.call(_a, this.channel);
                 }
             }
             this.reconnectAttempts = 0;
         }
+        onerror(event) {
+            var _a, _b;
+            let message = JSON.parse(event.data);
+            //TODO replace this with a more readable Stream code
+            for (let i = PushImpl.clientIdsByTokens[this.channelToken].length - 1; i >= 0; i--) {
+                let socketClientId = PushImpl.clientIdsByTokens[this.channelToken][i];
+                if (document.getElementById(socketClientId)) {
+                    try {
+                        (_b = (_a = PushImpl.components[socketClientId]) === null || _a === void 0 ? void 0 : _a['onerror']) === null || _b === void 0 ? void 0 : _b.call(_a, message, this.channel, event);
+                    }
+                    catch (e) {
+                        //Ignore
+                    }
+                }
+                else {
+                    PushImpl.clientIdsByTokens[this.channelToken].splice(i, 1);
+                }
+            }
+            if (PushImpl.clientIdsByTokens[this.channelToken].length == 0) {
+                // tag disappeared
+                this.close();
+            }
+        }
         onmmessage(event) {
+            var _a, _b, _c;
             let message = JSON.parse(event.data);
             for (let i = PushImpl.clientIdsByTokens[this.channelToken].length - 1; i >= 0; i--) {
                 let socketClientId = PushImpl.clientIdsByTokens[this.channelToken][i];
                 if (document.getElementById(socketClientId)) {
                     try {
-                        PushImpl.components[socketClientId]['onmessage'](message, this.channel, event);
+                        (_b = (_a = PushImpl.components[socketClientId]) === null || _a === void 0 ? void 0 : _a['onmessage']) === null || _b === void 0 ? void 0 : _b.call(_a, message, this.channel, event);
                     }
                     catch (e) {
                         //Ignore
                     }
-                    let behaviors = PushImpl.components[socketClientId]['behaviors'];
-                    let functions = behaviors[message];
+                    let behaviors = (_c = PushImpl.components === null || PushImpl.components === void 0 ? void 0 : PushImpl.components[socketClientId]) === null || _c === void 0 ? void 0 : _c['behaviors'];
+                    let functions = behaviors === null || behaviors === void 0 ? void 0 : behaviors[message];
                     if (functions && functions.length) {
                         for (let j = 0; j < functions.length; j++) {
                             try {
@@ -1063,11 +1086,12 @@ var PushImpl;
                 }
             }
             if (PushImpl.clientIdsByTokens[this.channelToken].length == 0) {
-                //tag dissapeared
+                // tag disappeared
                 this.close();
             }
         }
         onclose(event) {
+            var _a, _b;
             if (!this.socket
                 || (event.code == 1000 && event.reason == Const_1.REASON_EXPIRED)
                 || (event.code == 1008)
@@ -1076,7 +1100,7 @@ var PushImpl;
                 let clientIds = PushImpl.clientIdsByTokens[this.channelToken];
                 for (let i = clientIds.length - 1; i >= 0; i--) {
                     let socketClientId = clientIds[i];
-                    PushImpl.components[socketClientId]['onclose'](event === null || event === void 0 ? void 0 : event.code, this === null || this === void 0 ? void 0 : this.channel, event);
+                    (_b = (_a = PushImpl.components === null || PushImpl.components === void 0 ? void 0 : PushImpl.components[socketClientId]) === null || _a === void 0 ? void 0 : _a['onclose']) === null || _b === void 0 ? void 0 : _b.call(_a, event === null || event === void 0 ? void 0 : event.code, this === null || this === void 0 ? void 0 : this.channel, event);
                 }
             }
             else {
@@ -1098,12 +1122,13 @@ var PushImpl;
             this.socket.onopen = (event) => this.onopen(event);
             this.socket.onmessage = (event) => this.onmmessage(event);
             this.socket.onclose = (event) => this.onclose(event);
+            this.socket.onerror = (event) => this.onerror(event);
         }
     }
     // Private static functions ---------------------------------------------------------------------------------------
     function getBaseURL(url) {
         if (url.indexOf("://") < 0) {
-            let base = window.location.hostname + ":" + window.location.port;
+            let base = mona_dish_1.DQ.global().location.hostname + ":" + mona_dish_1.DQ.global().location.port;
             return URL_PROTOCOL + base + url;
         }
         else {
@@ -1112,9 +1137,9 @@ var PushImpl;
     }
     /**
      * Get socket associated with given channelToken.
-     * @param {string} channelToken The name of the web socket channelToken.
-     * @return {Socket} Socket associated with given channelToken.
-     * @throws {Error} When channelToken is unknown, you may need to initialize
+     * @param channelToken The name of the web socket channelToken.
+     * @return Socket associated with given channelToken.
+     * @throws Error, when the channelToken is unknown, you may need to initialize
      *                 it first via <code>init()</code> function.
      */
     function getSocket(channelToken) {
@@ -1128,7 +1153,7 @@ var PushImpl;
     }
     function resolveFunction(fn = () => {
     }) {
-        return ((typeof fn !== "function") && (fn = window[fn]), fn);
+        return ((typeof fn !== "function") && (fn = mona_dish_1.DQ.global()[fn]), fn);
     }
 })(PushImpl = exports.PushImpl || (exports.PushImpl = {}));
 
@@ -1515,7 +1540,7 @@ var Assertions;
     Assertions.assertRequestIntegrity = assertRequestIntegrity;
     function assertUrlExists(node) {
         if (node.attr(Const_1.ATTR_URL).isAbsent()) {
-            throw Assertions.raiseError(new Error(), getMessage("ERR_RED_URL", null, "_Ajaxthis.processRedirect"), "processRedirect");
+            throw Assertions.raiseError(new Error(), getMessage("ERR_RED_URL", null, "processRedirect"), "processRedirect");
         }
     }
     Assertions.assertUrlExists = assertUrlExists;
@@ -1698,7 +1723,7 @@ exports.AsynchronousQueue = AsynchronousQueue;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.ExtConfig = exports.ExtDQ = exports.ExtDomquery = void 0;
+exports.ExtConfig = exports.ExtDQ = exports.ExtDomQuery = void 0;
 /*! Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -1736,9 +1761,12 @@ const IS_FACES_SOURCE = (source) => {
         (source === null || source === void 0 ? void 0 : source.search(/\/jsf[^.]*\.js.*ln=javax.faces.*/gi)) != -1);
 };
 /**
- * namespace myfaces.testscripts can be used as extension point for internal
- * tests, those will be handled similarly to faces.js - regarding
- * reload blocking on ajax requests
+ * namespace myfaces\.testscripts can be used as extension point for internal
+ * tests, those will be handled similarly to faces.js, in regard
+ * to reload blocking on ajax requests
+ *
+ * Note: atm not used, used to be used in the old implementation
+ * but still is reserved for now
  *
  * @param source the source to check
  * @constructor
@@ -1749,19 +1777,19 @@ const IS_INTERNAL_SOURCE = (source) => {
 const ATTR_SRC = 'src';
 /**
  * Extension which adds implementation specific
- * meta data to our dom query
+ * meta-data to our dom query
  *
  * Usage
  * el = new ExtDQ(oldReference)
  * nonce = el.nonce
  * windowId = el.getWindowId
  */
-class ExtDomquery extends mona_dish_1.DQ {
+class ExtDomQuery extends mona_dish_1.DQ {
     static get windowId() {
-        return new ExtDomquery(document.body).windowId;
+        return new ExtDomQuery(document.body).windowId;
     }
     static get nonce() {
-        return new ExtDomquery(document.body).nonce;
+        return new ExtDomQuery(document.body).nonce;
     }
     get windowId() {
         const fetchWindowIdFromURL = function () {
@@ -1800,7 +1828,7 @@ class ExtDomquery extends mona_dish_1.DQ {
         let curScript = new mona_dish_1.DQ(document.currentScript);
         //since our baseline atm is ie11 we cannot use document.currentScript globally
         if (!!this.extractNonce(curScript)) {
-            // fastpath for modern browsers
+            // fast-path for modern browsers
             return this.extractNonce(curScript);
         }
         // fallback if the currentScript method fails, we just search the jsf tags for nonce, this is
@@ -1816,44 +1844,42 @@ class ExtDomquery extends mona_dish_1.DQ {
         }
         return null;
     }
-    extractNonce(curScript) {
-        var _a, _b;
-        return (_b = (_a = curScript.getAsElem(0).value) === null || _a === void 0 ? void 0 : _a.nonce) !== null && _b !== void 0 ? _b : curScript.attr("nonce").value;
-    }
     static searchJsfJsFor(item) {
-        return new ExtDomquery(document).searchJsfJsFor(item);
+        return new ExtDomQuery(document).searchJsfJsFor(item);
     }
     /**
-     * searches the embedded faces.js for items like separator char etc..
+     * searches the embedded faces.js for items like separator char etc.
      * expects a match as variable under position 1 in the result match
-     * @param rexp
+     * @param regExp
      */
-    searchJsfJsFor(rexp) {
+    searchJsfJsFor(regExp) {
         //perfect application for lazy stream
         return mona_dish_1.DQ.querySelectorAll("script[src], link[src]").lazyStream
             .filter(item => IS_FACES_SOURCE(item.attr(ATTR_SRC).value))
-            .map(item => item.attr(ATTR_SRC).value.match(rexp))
+            .map(item => item.attr(ATTR_SRC).value.match(regExp))
             .filter(item => item != null && item.length > 1)
             .map((result) => {
             return decodeURIComponent(result[1]);
         }).first();
     }
     globalEval(code, nonce) {
-        return new ExtDomquery(super.globalEval(code, nonce !== null && nonce !== void 0 ? nonce : this.nonce));
+        return new ExtDomQuery(super.globalEval(code, nonce !== null && nonce !== void 0 ? nonce : this.nonce));
     }
+    // called from base class runScripts, do not delete
+    // noinspection JSUnusedGlobalSymbols
     globalEvalSticky(code, nonce) {
-        return new ExtDomquery(super.globalEvalSticky(code, nonce !== null && nonce !== void 0 ? nonce : this.nonce));
+        return new ExtDomQuery(super.globalEvalSticky(code, nonce !== null && nonce !== void 0 ? nonce : this.nonce));
     }
     /**
      * decorated run scripts which takes our jsf extensions into consideration
      * (standard DomQuery will let you pass anything)
      * @param sticky if set to true the internally generated element for the script is left in the dom
-     * @param whilteListed
+     * @param whiteListed
      */
-    runScripts(sticky = false, whilteListed) {
+    runScripts(sticky = false, whiteListed) {
         const whitelistFunc = (src) => {
             var _a;
-            return ((_a = whilteListed === null || whilteListed === void 0 ? void 0 : whilteListed(src)) !== null && _a !== void 0 ? _a : true) && !IS_FACES_SOURCE(src) && !IS_INTERNAL_SOURCE(src);
+            return ((_a = whiteListed === null || whiteListed === void 0 ? void 0 : whiteListed(src)) !== null && _a !== void 0 ? _a : true) && !IS_FACES_SOURCE(src) && !IS_INTERNAL_SOURCE(src);
         };
         return super.runScripts(sticky, whitelistFunc);
     }
@@ -1863,7 +1889,7 @@ class ExtDomquery extends mona_dish_1.DQ {
      * @param suppressDoubleIncludes checks for existing elements in the head before running the insert
      */
     runHeadInserts(suppressDoubleIncludes = true) {
-        let head = ExtDomquery.byId(document.head);
+        let head = ExtDomQuery.byId(document.head);
         //automated nonce handling
         let processedScripts = [];
         // the idea is only to run head inserts on resources
@@ -1876,7 +1902,8 @@ class ExtDomquery extends mona_dish_1.DQ {
             }
             const tagName = element.tagName.value;
             if (!tagName) {
-                // textnode
+                // text node they do not have tag names, so we can process them as they are without
+                // any further ado
                 return true;
             }
             let reference = element.attr("href")
@@ -1894,7 +1921,7 @@ class ExtDomquery extends mona_dish_1.DQ {
             .each(element => {
             if (element.tagName.value != "SCRIPT") {
                 //we need to run runScripts properly to deal with the rest
-                new ExtDomquery(...processedScripts).runScripts(true);
+                new ExtDomQuery(...processedScripts).runScripts(true);
                 processedScripts = [];
                 head.append(element);
             }
@@ -1902,7 +1929,7 @@ class ExtDomquery extends mona_dish_1.DQ {
                 processedScripts.push(element);
             }
         });
-        new ExtDomquery(...processedScripts).runScripts(true);
+        new ExtDomQuery(...processedScripts).runScripts(true);
     }
     /**
      * byId producer
@@ -1913,11 +1940,15 @@ class ExtDomquery extends mona_dish_1.DQ {
      */
     static byId(selector, deep = false) {
         const ret = mona_dish_1.DomQuery.byId(selector, deep);
-        return new ExtDomquery(ret);
+        return new ExtDomQuery(ret);
+    }
+    extractNonce(curScript) {
+        var _a, _b;
+        return (_b = (_a = curScript.getAsElem(0).value) === null || _a === void 0 ? void 0 : _a.nonce) !== null && _b !== void 0 ? _b : curScript.attr("nonce").value;
     }
 }
-exports.ExtDomquery = ExtDomquery;
-exports.ExtDQ = ExtDomquery;
+exports.ExtDomQuery = ExtDomQuery;
+exports.ExtDQ = ExtDomQuery;
 /**
  * in order to reduce the number of interception points for the fallbacks we add
  * the namespace remapping straight to our config accessors
@@ -1927,23 +1958,23 @@ class ExtConfig extends mona_dish_1.Config {
         super(root);
     }
     assignIf(condition, ...accessPath) {
-        const acessPathMapped = this.remap(accessPath);
-        return super.assignIf(condition, ...acessPathMapped);
+        const accessPathMapped = this.remap(accessPath);
+        return super.assignIf(condition, ...accessPathMapped);
     }
     assign(...accessPath) {
-        const acessPathMapped = this.remap(accessPath);
-        return super.assign(...acessPathMapped);
+        const accessPathMapped = this.remap(accessPath);
+        return super.assign(...accessPathMapped);
     }
     append(...accessPath) {
         return super.append(...accessPath);
     }
     appendIf(condition, ...accessPath) {
-        const acessPathMapped = this.remap(accessPath);
-        return super.appendIf(condition, ...acessPathMapped);
+        const accessPathMapped = this.remap(accessPath);
+        return super.appendIf(condition, ...accessPathMapped);
     }
     getIf(...accessPath) {
-        const acessPathMapped = this.remap(accessPath);
-        return super.getIf(...acessPathMapped);
+        const accessPathMapped = this.remap(accessPath);
+        return super.getIf(...accessPathMapped);
     }
     get(defaultVal) {
         return super.get((0, Const_1.$nsp)(defaultVal));
@@ -1975,6 +2006,11 @@ class ExtConfig extends mona_dish_1.Config {
     get deepCopy() {
         return new ExtConfig(super.deepCopy$());
     }
+    /**
+     * helper to remap the namespaces of an array of access paths
+     * @param accessPath the access paths to be remapped
+     * @private returns an array of access paths with version remapped namespaces
+     */
     remap(accessPath) {
         return mona_dish_1.Stream.of(...accessPath).map(key => (0, Const_1.$nsp)(key)).collect(new mona_dish_1.ArrayCollector());
     }
@@ -2029,11 +2065,11 @@ var ExtLang;
     ExtLang.getLanguage = getLanguage;
     //should be in lang, but for now here to avoid recursive imports, not sure if typescript still has a problem with those
     /**
-     * helper function to savely resolve anything
+     * helper function to safely resolve anything
      * this is not an elvis operator, it resolves
      * a value without exception in a tree and if
      * it is not resolvable then an optional of
-     * a default value is restored or Optional.empty
+     * a default value is restored or Optional\.empty
      * if none is given
      *
      * usage
@@ -2042,7 +2078,7 @@ var ExtLang;
      * </code>
      *
      * @param resolverProducer a lambda which can produce the value
-     * @param defaultValue an optional default value if the producer failes to produce anything
+     * @param defaultValue an optional default value if the producer fails to produce anything
      * @returns an Optional of the produced value
      */
     function failSaveResolve(resolverProducer, defaultValue = null) {
@@ -2066,10 +2102,10 @@ var ExtLang;
      * returns a given localized message upon a given key
      * basic java log like templating functionality is included
      *
-     * @param {String} key the key for the message
-     * @param {String} defaultMessage optional default message if none was found
+     * @param  key the key for the message
+     * @param  defaultMessage optional default message if none was found
      *
-     * Additionally you can pass additional arguments, which are used
+     * Additionally, you can pass additional arguments, which are used
      * in the same way java log templates use the params
      *
      * @param templateParams the param list to be filled in
@@ -2095,15 +2131,15 @@ var ExtLang;
     }
     ExtLang.keyValToStr = keyValToStr;
     /**
-     * creates an exeption with additional internal parameters
+     * creates an exception with additional internal parameters
      * for extra information
      *
      * @param error
-     * @param {String} title the exception title
-     * @param {String} name  the exception name
-     * @param {String} callerCls the caller class
-     * @param {String} callFunc the caller function
-     * @param {String} message the message for the exception
+     * @param  title the exception title
+     * @param  name  the exception name
+     * @param  callerCls the caller class
+     * @param  callFunc the caller function
+     * @param  message the message for the exception
      */
     function makeException(error, title, name, callerCls, callFunc, message) {
         var _a;
@@ -2112,15 +2148,15 @@ var ExtLang;
     ExtLang.makeException = makeException;
     /**
      * fetches a global config entry
-     * @param {String} configName the name of the configuration entry
-     * @param {Object} defaultValue
+     * @param  configName the name of the configuration entry
+     * @param  defaultValue
      *
      * @return either the config entry or if none is given the default value
      */
     function getGlobalConfig(configName, defaultValue) {
         var _a, _b, _c;
         /**
-         * note we could use exists but this is an heavy operation, since the config name usually
+         * note we could use exists but this is a heavy operation, since the config name usually
          * given this function here is called very often
          * is a single entry without . in between we can do the lighter shortcut
          */
@@ -2128,7 +2164,7 @@ var ExtLang;
     }
     ExtLang.getGlobalConfig = getGlobalConfig;
     /**
-     * fetches the form in an fuzzy manner depending
+     * fetches the form in a fuzzy manner depending
      * on an element or event target.
      *
      * The idea is that according to the jsf spec
@@ -2137,7 +2173,7 @@ var ExtLang;
      * This is fine, but since then html5 came into the picture with the form attribute the element
      * can be anywhere referencing its parent form.
      *
-     * Also theoretically you can have the case of an issuing element enclosing a set of forms
+     * Also, theoretically you can have the case of an issuing element enclosing a set of forms
      * (not really often used, but theoretically it could be input button allows to embed html for instance)
      *
      * So the idea is not to limit the issuing form determination to the spec case
@@ -2173,10 +2209,11 @@ var ExtLang;
      * gets the local or global options with local ones having higher priority
      * if no local or global one was found then the default value is given back
      *
-     * @param {String} configName the name of the configuration entry
-     * @param {String} localOptions the local options root for the configuration myfaces as default marker is added implicitely
+     * @param  configName the name of the configuration entry
+     * @param  localOptions the local options root for the configuration myfaces as default marker is added
+     * implicitly
      *
-     * @param {Object} defaultValue
+     * @param  defaultValue
      *
      * @return either the config entry or if none is given the default value
      */
@@ -2377,7 +2414,7 @@ const ExtDomQuery_1 = __webpack_require__(/*! ../util/ExtDomQuery */ "./typescri
  * parts of the response classes
  */
 /**
- * resolves the event handlers lazly
+ * resolves the event handlers lazily
  * so that if some decoration happens in between we can deal with it
  *
  * @param requestContext
@@ -2436,13 +2473,13 @@ function resolveDelay(options) {
 }
 exports.resolveDelay = resolveDelay;
 /**
- * resolves the window Id from various sources
+ * resolves the window-id from various sources
  *
  * @param options
  */
 function resolveWindowId(options) {
     var _a, _b;
-    return (_b = (_a = options === null || options === void 0 ? void 0 : options.value) === null || _a === void 0 ? void 0 : _a.windowId) !== null && _b !== void 0 ? _b : ExtDomQuery_1.ExtDomquery.windowId;
+    return (_b = (_a = options === null || options === void 0 ? void 0 : options.value) === null || _a === void 0 ? void 0 : _a.windowId) !== null && _b !== void 0 ? _b : ExtDomQuery_1.ExtDomQuery.windowId;
 }
 exports.resolveWindowId = resolveWindowId;
 /**
@@ -2450,20 +2487,21 @@ exports.resolveWindowId = resolveWindowId;
  * browser save event resolution
  * @param evt the event object
  * (with a fallback for ie events if none is present)
+ * @deprecated soon will be removed
  */
 function getEventTarget(evt) {
     var _a, _b;
-    //ie6 and 7 fallback
+    // ie6 and 7 fallback
     let finalEvent = evt;
-    /**
+    /*
      * evt source is defined in the jsf events
-     * seems like some component authors use our code
+     * seems like some component authors use our code,
      * so we add it here see also
      * https://issues.apache.org/jira/browse/MYFACES-2458
      * not entirely a bug but makes sense to add this
-     * behavior. I dont use it that way but nevertheless it
+     * behavior. I don´t use it that way but nevertheless it
      * does not break anything so why not
-     * */
+     */
     let t = (_b = (_a = finalEvent === null || finalEvent === void 0 ? void 0 : finalEvent.srcElement) !== null && _a !== void 0 ? _a : finalEvent === null || finalEvent === void 0 ? void 0 : finalEvent.target) !== null && _b !== void 0 ? _b : finalEvent === null || finalEvent === void 0 ? void 0 : finalEvent.source;
     while ((t) && (t.nodeType != 1)) {
         t = t.parentNode;
@@ -2532,7 +2570,7 @@ const ExtDomQuery_1 = __webpack_require__(/*! ../util/ExtDomQuery */ "./typescri
  *
  * @param request the request hosting the responseXML
  *
- * Throws an error in case of non existent or wrong xml data
+ * Throws an error in case of non-existent or wrong xml data
  *
  */
 function resolveResponseXML(request) {
@@ -2542,8 +2580,8 @@ function resolveResponseXML(request) {
 }
 exports.resolveResponseXML = resolveResponseXML;
 /**
- * Splits the incoming passthrough context apart
- * in an internal and an external nomalized context
+ * Splits the incoming pass-through context apart
+ * in an internal and an external normalized context
  * the internal one is just for our internal processing
  *
  * @param context the root context as associative array
@@ -2568,10 +2606,10 @@ function resolveContexts(context) {
 }
 exports.resolveContexts = resolveContexts;
 /**
- * fetches the source element out of our conexts
+ * fetches the source element out of our contexts
  *
- * @param context the external context which shpuld host the source id
- * @param internalContext internal passthrough fall back
+ * @param context the external context which should host the source id
+ * @param internalContext internal pass-through fall back
  *
  */
 function resolveSourceElement(context, internalContext) {
@@ -2653,15 +2691,15 @@ var Response;
         let responseXML = (0, ResonseDataResolver_1.resolveResponseXML)(req);
         let responseProcessor = new ResponseProcessor_1.ResponseProcessor(req, externalContext, internalContext);
         internalContext.assign(Const_1.RESPONSE_XML).value = responseXML;
-        //we now process the partial tags, or in none given raise an error
+        // we now process the partial tags, or in none given raise an error
         responseXML.querySelectorAll(Const_1.RESP_PARTIAL)
             .each(item => processPartialTag(item, responseProcessor, internalContext));
-        //we now process the viewstates, client windows and the evals deferred
-        //the reason for this is that often it is better
-        //to wait until the document has caught up before
-        //doing any evals even on embedded scripts
-        //usually this does not matter, the client window comes in almost last always anyway
-        //we maybe drop this deferred assignment in the future, but myfaces did it until now
+        // We now process the viewStates, client windows and the elements to be evaluated are delayed.
+        // The reason for this is that often it is better
+        // to wait until the document has caught up before
+        // doing any evaluations even on embedded scripts.
+        // Usually this does not matter, the client window comes in almost last always anyway
+        // we maybe drop this deferred assignment in the future, but myfaces did it until now.
         responseProcessor.fixViewStates();
         responseProcessor.fixClientWindow();
         responseProcessor.globalEval();
@@ -2674,7 +2712,7 @@ var Response;
     function processPartialTag(node, responseProcessor, internalContext) {
         internalContext.assign(Const_1.PARTIAL_ID).value = node.id;
         const SEL_SUB_TAGS = [Const_1.CMD_ERROR, Const_1.CMD_REDIRECT, Const_1.CMD_CHANGES].join(",");
-        //now we can process the main operations
+        // now we can process the main operations
         node.querySelectorAll(SEL_SUB_TAGS).each((node) => {
             switch (node.tagName.value) {
                 case Const_1.CMD_ERROR:
@@ -2690,11 +2728,11 @@ var Response;
         });
     }
     let processInsert = function (responseProcessor, node) {
-        //path1 insert after as child tags
+        // path1 insert after as child tags
         if (node.querySelectorAll([Const_1.TAG_BEFORE, Const_1.TAG_AFTER].join(",")).length) {
-            responseProcessor.insertWithSubtags(node);
+            responseProcessor.insertWithSubTags(node);
         }
-        else { //insert before after with id
+        else { // insert before after with id
             responseProcessor.insert(node);
         }
     };
@@ -2742,14 +2780,14 @@ var Response;
     }
     /**
      * branch tag update. drill further down into the updates
-     * special case viewstate in that case it is a leaf
-     * and the viewstate must be processed
+     * special case viewState in that case it is a leaf
+     * and the viewState must be processed
      *
      * @param node
      * @param responseProcessor
      */
     function processUpdateTag(node, responseProcessor) {
-        //early state storing, if no state we perform a normal update cycle
+        // early state storing, if no state we perform a normal update cycle
         if (!storeState(responseProcessor, node)) {
             handleElementUpdate(node, responseProcessor);
         }
@@ -2775,7 +2813,7 @@ var Response;
             case (0, Const_1.$nsp)(Const_1.P_RESOURCE):
                 responseProcessor.addToHead(mona_dish_1.DQ.fromMarkup(cdataBlock));
                 break;
-            default: //htmlItem replacement
+            default: // htmlItem replacement
                 responseProcessor.update(node, cdataBlock);
                 break;
         }
@@ -2847,14 +2885,14 @@ class ResponseProcessor {
         if (!shadowHead.isPresent()) {
             return;
         }
-        let oldHead = ExtDomQuery_1.ExtDomquery.querySelectorAll(Const_1.TAG_HEAD);
+        let oldHead = ExtDomQuery_1.ExtDomQuery.querySelectorAll(Const_1.TAG_HEAD);
         //delete all to avoid script and style overlays
         oldHead.querySelectorAll(Const_1.SEL_SCRIPTS_STYLES).delete();
         // we cannot replace new elements in the head, but we can eval the elements
         // eval means the scripts will get attached (eval script attach method)
         // but this is done by DomQuery not in this code
         this.storeForEval(shadowHead);
-        //incoming either the outer head tag or its childs
+        //incoming either the outer head tag or its children
         //shadowHead = (shadowHead.tagName.value === "HEAD") ? shadowHead.childNodes : shadowHead;
         //this.addToHead(shadowHead);
     }
@@ -2875,20 +2913,21 @@ class ResponseProcessor {
             return;
         }
         let shadowInnerHTML = shadowBody.html().value;
-        let resultingBody = ExtDomQuery_1.ExtDomquery.querySelectorAll(Const_1.TAG_BODY).html(shadowInnerHTML);
+        let resultingBody = ExtDomQuery_1.ExtDomQuery.querySelectorAll(Const_1.TAG_BODY).html(shadowInnerHTML);
         let updateForms = resultingBody.querySelectorAll(Const_1.TAG_FORM);
         // main difference, we cannot replace the body itself, but only its content
-        // we need a separate step for post processing the incoming attributes, like classes, styles etc...
+        // we need a separate step for post-processing the incoming
+        // attributes, like classes, styles etc...
         resultingBody.copyAttrs(shadowBody);
         this.storeForPostProcessing(updateForms, resultingBody);
     }
     /**
-     * Leaf Tag eval... process whatever is in the evals cdata block
+     * Leaf Tag eval... process whatever is in the eval cdata block
      *
      * @param node the node to eval
      */
     eval(node) {
-        ExtDomQuery_1.ExtDomquery.globalEval(node.cDATAAsString);
+        ExtDomQuery_1.ExtDomQuery.globalEval(node.cDATAAsString);
     }
     /**
      * processes an incoming error from the response
@@ -2910,11 +2949,11 @@ class ResponseProcessor {
         let hasResponseXML = this.internalContext.get(Const_1.RESPONSE_XML).isPresent();
         //we now store the response xml also in the error data for further details
         mergedErrorData.assignIf(hasResponseXML, Const_1.RESPONSE_XML).value = this.internalContext.getIf(Const_1.RESPONSE_XML).value.get(0).value;
-        // error post processing and enrichment (standard messages from keys)
+        // error post-processing and enrichment (standard messages from keys)
         let errorData = ErrorData_1.ErrorData.fromServerError(mergedErrorData);
-        // we now trigger an internally stored onError function which might be a attached to the context
-        // either we haven an internal on error, or an on error has been bassed via params from the outside
-        // in both cases they are attached to our contexts
+        // we now trigger an internally stored onError function which might be an attached to the context
+        // either we do not have an internal on error, or an on error has been based via params from the outside.
+        // In both cases they are attached to our contexts
         this.triggerOnError(errorData);
         AjaxImpl_1.Implementation.sendError(errorData);
     }
@@ -2936,14 +2975,14 @@ class ResponseProcessor {
      * @param cdataBlock the cdata block with the new html code
      */
     update(node, cdataBlock) {
-        let result = ExtDomQuery_1.ExtDomquery.byId(node.id.value, true).outerHTML(cdataBlock, false, false);
+        let result = ExtDomQuery_1.ExtDomQuery.byId(node.id.value, true).outerHTML(cdataBlock, false, false);
         let sourceForm = result === null || result === void 0 ? void 0 : result.parents(Const_1.TAG_FORM).orElseLazy(() => result.byTagName(Const_1.TAG_FORM, true));
         if (sourceForm) {
             this.storeForPostProcessing(sourceForm, result);
         }
     }
     /**
-     * Delete handler, simply deleetes the node referenced by the xml data
+     * Delete handler, simply deletes the node referenced by the xml data
      * @param node
      */
     delete(node) {
@@ -2992,7 +3031,7 @@ class ResponseProcessor {
      *
      * @param node the node hosting the insert data
      */
-    insertWithSubtags(node) {
+    insertWithSubTags(node) {
         let before = node.querySelectorAll(Const_1.TAG_BEFORE);
         let after = node.querySelectorAll(Const_1.TAG_AFTER);
         before.each(item => {
@@ -3014,7 +3053,7 @@ class ResponseProcessor {
     }
     /**
      * Process the viewState update, update the affected
-     * forms with their respective new viewstate values
+     * forms with their respective new viewState values
      *
      */
     processViewState(node) {
@@ -3037,10 +3076,10 @@ class ResponseProcessor {
      */
     globalEval() {
         //  phase one, if we have head inserts, we build up those before going into the script eval phase
-        let insertHeadElems = new ExtDomQuery_1.ExtDomquery(...this.internalContext.getIf(Const_1.DEFERRED_HEAD_INSERTS).value);
+        let insertHeadElems = new ExtDomQuery_1.ExtDomQuery(...this.internalContext.getIf(Const_1.DEFERRED_HEAD_INSERTS).value);
         insertHeadElems.runHeadInserts(true);
         // phase 2 we run a script eval on all updated elements in the body
-        let updateElems = new ExtDomQuery_1.ExtDomquery(...this.internalContext.getIf(Const_1.UPDATE_ELEMS).value);
+        let updateElems = new ExtDomQuery_1.ExtDomQuery(...this.internalContext.getIf(Const_1.UPDATE_ELEMS).value);
         updateElems.runCss();
         // phase 3, we do the same for the css
         updateElems.runScripts();
@@ -3085,19 +3124,19 @@ class ResponseProcessor {
         AjaxImpl_1.Implementation.sendEvent(eventData, eventHandler);
     }
     /**
-     * proper viewstate -> form assignment
+     * proper viewState -> form assignment
      *
-     * @param forms the forms to append the viewstate to
-     * @param viewState the final viewstate
+     * @param forms the forms to append the viewState to
+     * @param viewState the final viewState
      */
     appendViewStateToForms(forms, viewState) {
         this.assignState(forms, (0, Const_1.$nsp)(Const_1.SEL_VIEWSTATE_ELEM), viewState);
     }
     /**
-     * proper clientwindow -> form assignment
+     * proper clientWindow -> form assignment
      *
-     * @param forms the forms to append the viewstate to
-     * @param clientWindow the final viewstate
+     * @param forms the forms to append the viewState to
+     * @param clientWindow the final viewState
      */
     appendClientWindowToForms(forms, clientWindow) {
         this.assignState(forms, (0, Const_1.$nsp)(Const_1.SEL_CLIENT_WINDOW_ELEM), clientWindow);
@@ -3121,7 +3160,7 @@ class ResponseProcessor {
     /**
      * Helper to Create a new JSF ViewState Element
      *
-     * @param parent, the parent node to attach the viewstate element to
+     * @param parent, the parent node to attach the viewState element to
      * (usually a form node)
      */
     static newViewStateElement(parent) {
@@ -3130,17 +3169,17 @@ class ResponseProcessor {
         return newViewState;
     }
     /**
-     * Stores certain aspects of the dom for later post processing
+     * Stores certain aspects of the dom for later post-processing
      *
      * @param updateForms the update forms which should receive standardized internal jsf data
-     * @param toBeEvaled the resulting elements which should be evaled
+     * @param toBeEvaluated the resulting elements which should be evaluated
      */
-    storeForPostProcessing(updateForms, toBeEvaled) {
+    storeForPostProcessing(updateForms, toBeEvaluated) {
         this.storeForUpdate(updateForms);
-        this.storeForEval(toBeEvaled);
+        this.storeForEval(toBeEvaluated);
     }
     /**
-     * helper to store a given form for the update post processing (viewstate)
+     * helper to store a given form for the update post-processing (viewState)
      *
      * @param updateForms the dom query object pointing to the forms which need to be updated
      */
@@ -3150,20 +3189,16 @@ class ResponseProcessor {
     /**
      * same for eval (js and css)
      *
-     * @param toBeEvaled
+     * @param toBeEvaluated
      */
-    storeForEval(toBeEvaled) {
-        this.internalContext.assign(Const_1.UPDATE_ELEMS).value.push(toBeEvaled);
-    }
-    // head eval is always sticky
-    storeForHeadEval(toBeEvaled, sticky) {
-        this.internalContext.assign(Const_1.DEFERRED_HEAD_INSERTS).value.push(toBeEvaled);
+    storeForEval(toBeEvaluated) {
+        this.internalContext.assign(Const_1.UPDATE_ELEMS).value.push(toBeEvaluated);
     }
     /**
-     * check whether a given XMLQuery node is an explicit viewstate node
+     * check whether a given XMLQuery node is an explicit viewState node
      *
      * @param node the node to check
-     * @returns true of it ii
+     * @returns if it is a viewState node
      */
     static isViewStateNode(node) {
         var _a, _b, _c, _d, _e, _f, _g;
@@ -3239,7 +3274,7 @@ class XhrFormData extends mona_dish_1.Config {
      * data collector from a given form
      *
      * @param dataSource either a form as DomQuery object or an encoded url string
-     * @param viewState the form view state or an external viewstate coming in as string
+     * @param viewState the form view state or an external viewState coming in as string
      * @param executes the executes id list for the elements to being processed
      * @param partialIds partial ids to collect, to reduce the data sent down
      */
@@ -3258,12 +3293,17 @@ class XhrFormData extends mona_dish_1.Config {
         //a call to getViewState before must pass the encoded line
         //a call from getViewState passes the form element as datasource,
         //so we have two call points
+        // atm we basically encode twice, to keep the code leaner
+        // this will be later optmized, practically elements
+        // which are already covered by an external viewstate do not need
+        // the encoding a second time, because they are overwritten by the viewstate again
         if (isString(dataSource)) {
             this.assignEncodedString(this.dataSource);
         }
         else {
             this.applyFormDataToConfig();
         }
+        //now assign the external viewstate overrides
         if ('undefined' != typeof viewState) {
             this.assignEncodedString(viewState);
         }
@@ -3272,27 +3312,31 @@ class XhrFormData extends mona_dish_1.Config {
         }
     }
     /**
-     * generic post init code, for now, this peforms some post assign data post processing
-     * @param executes
+     * generic post init code, for now, this performs some post assign data post-processing
+     * @param executes the executable dom nodes which need to be processed into the form data, which we can send
+     * in our ajax request
      */
     postInit(...executes) {
-        let fetchInput = (id) => {
+        let fetchFileInputs = (id) => {
+            const INPUT_FILE = "input[type='file']";
             if (id == Const_1.IDENT_ALL) {
-                return mona_dish_1.DQ.querySelectorAllDeep("input[type='file']");
+                return mona_dish_1.DQ.querySelectorAllDeep(INPUT_FILE);
             }
             else if (id == Const_1.IDENT_FORM) {
-                return this.dataSource.querySelectorAllDeep("input[type='file']");
+                return this.dataSource.matchesSelector(INPUT_FILE) ?
+                    this.dataSource :
+                    this.dataSource.querySelectorAllDeep(INPUT_FILE);
             }
             else {
                 let element = mona_dish_1.DQ.byId(id, true);
-                return this.getFileInputs(element);
+                return element.matchesSelector(INPUT_FILE) ? element : this.getFileInputs(element);
             }
         };
         let inputExists = (item) => {
             return item.isPresent();
         };
         this.isMultipartRequest = mona_dish_1.LazyStream.of(...executes)
-            .map(fetchInput)
+            .map(fetchFileInputs)
             .filter(inputExists)
             .first().isPresent();
     }
@@ -3330,8 +3374,8 @@ class XhrFormData extends mona_dish_1.Config {
             var _a, _b;
             return keyVal.length < 3 ? [(_a = keyVal === null || keyVal === void 0 ? void 0 : keyVal[0]) !== null && _a !== void 0 ? _a : [], (_b = keyVal === null || keyVal === void 0 ? void 0 : keyVal[1]) !== null && _b !== void 0 ? _b : []] : keyVal;
         }
+        //TODO fix files...
         mona_dish_1.Stream.of(...keyValueEntries)
-            //split only the first =
             .map(line => splitToKeyVal(line))
             //special case of having keys without values
             .map(keyVal => fixKeyWithoutVal(keyVal))
@@ -3367,7 +3411,10 @@ class XhrFormData extends mona_dish_1.Config {
         }
         let entries = mona_dish_1.LazyStream.of(...Object.keys(this.value))
             .filter(key => this.value.hasOwnProperty(key))
-            .flatMap(key => mona_dish_1.Stream.of(...this.value[key]).map(val => [key, val]).collect(new mona_dish_1.ArrayCollector()))
+            .flatMap(key => mona_dish_1.Stream.of(...this.value[key]).map(val => [key, val])
+            //we cannot encode file elements that is handled by multipart requests anyway
+            .filter(([, value]) => !(value instanceof ExtDomQuery_1.ExtDomQuery.global().File))
+            .collect(new mona_dish_1.ArrayCollector()))
             .map(keyVal => {
             return `${encodeURIComponent(keyVal[0])}=${encodeURIComponent(keyVal[1])}`;
         })
@@ -3474,7 +3521,7 @@ const RequestDataResolver_1 = __webpack_require__(/*! ./RequestDataResolver */ "
 var failSaveExecute = Lang_1.ExtLang.failSaveExecute;
 /**
  * Faces XHR Request Wrapper
- * as Asyncrunnable for our Asynchronous queue
+ * as AsyncRunnable for our Asynchronous queue
  *
  * The idea is that we basically just enqueue
  * a single ajax request into our queue
@@ -3483,11 +3530,11 @@ var failSaveExecute = Lang_1.ExtLang.failSaveExecute;
  */
 class XhrRequest {
     /**
-     * Reqired Parameters
+     * Required Parameters
      *
      * @param source the issuing element
      * @param sourceForm the form which is related to the issuing element
-     * @param requestContext the request context with allö pass through values
+     * @param requestContext the request context with all pass through values
      *
      * Optional Parameters
      *
@@ -3496,7 +3543,7 @@ class XhrRequest {
      * @param timeout optional xhr timeout
      * @param ajaxType optional request type, default "POST"
      * @param contentType optional content type, default "application/x-www-form-urlencoded"
-     * @param xhrObject optional xhr object which must fullfill the XMLHTTPRequest api, default XMLHttpRequest
+     * @param xhrObject optional xhr object which must fulfill the XMLHTTPRequest api, default XMLHttpRequest
      */
     constructor(source, sourceForm, requestContext, internalContext, partialIdsArray = [], timeout = Const_1.NO_TIMEOUT, ajaxType = Const_1.REQ_TYPE_POST, contentType = Const_1.URL_ENCODED, xhrObject = new XMLHttpRequest()) {
         this.source = source;
@@ -3512,12 +3559,11 @@ class XhrRequest {
         /**
          * helper support so that we do not have to drag in Promise shims
          */
-        this.catchFuncs = [];
-        this.thenFunc = [];
-        /*
-        * we omit promises here
-        * some browsers do not support it and we do not need shim code
-        */
+        this.catchFunctions = [];
+        this.thenFunctions = [];
+        // we omit promises here because we have to deal with cancel functionality,
+        // and promises to not provide that (yet) instead we have our async queue
+        // which uses an api internally, which is very close to promises
         this.registerXhrCallbacks((data) => {
             this.resolve(data);
         }, (data) => {
@@ -3534,18 +3580,18 @@ class XhrRequest {
         try {
             let formElement = this.sourceForm.getAsElem(0).value;
             let viewState = ((_a = window === null || window === void 0 ? void 0 : window.faces) !== null && _a !== void 0 ? _a : window === null || window === void 0 ? void 0 : window.jsf).getViewState(formElement);
-            //encoded we need to decode
-            //We generated a base representation of the current form
-            //in case someone has overloaded the viewstate with addtional decorators we merge
-            //that in, there is no way around it, the spec allows it and getViewState
-            //must be called, so whatever getViewState delivers has higher priority then
-            //whatever the formData object delivers
-            //the partialIdsArray arr is almost deprecated legacy code where we allowed to send a separate list of partial
-            //ids for reduced load and server processing, this will be removed soon, we can handle the same via execute
-            //anyway TODO remove the partial ids array
+            // encoded we need to decode
+            // We generated a base representation of the current form
+            // in case someone has overloaded the viewState with additional decorators we merge
+            // that in, there is no way around it, the spec allows it and getViewState
+            // must be called, so whatever getViewState delivers has higher priority then
+            // whatever the formData object delivers
+            // the partialIdsArray arr is almost deprecated legacy code where we allowed to send a separate list of partial
+            // ids for reduced load and server processing, this will be removed soon, we can handle the same via execute
+            // anyway TODO remove the partial ids array
             let formData = new XhrFormData_1.XhrFormData(this.sourceForm, viewState, executesArr(), this.partialIdsArray);
             this.contentType = formData.isMultipartRequest ? "undefined" : this.contentType;
-            //next step the pass through parameters are merged in for post params
+            // next step the pass through parameters are merged in for post params
             let requestContext = this.requestContext;
             let passThroughParams = requestContext.getIf(Const_1.CTX_PARAM_PASS_THR);
             // this is an extension where we allow pass through parameters to be sent down additionally
@@ -3553,31 +3599,31 @@ class XhrRequest {
             // information
             formData.shallowMerge(passThroughParams, true, true);
             this.responseContext = passThroughParams.deepCopy;
-            //we have to shift the internal passthroughs around to build up our response context
+            // we have to shift the internal passthroughs around to build up our response context
             let responseContext = this.responseContext;
             responseContext.assign(Const_1.CTX_PARAM_MF_INTERNAL).value = this.internalContext.value;
-            //per spec the onevent and onerrors must be passed through to the response
+            // per spec the onevent and onerror handlers must be passed through to the response
             responseContext.assign(Const_1.ON_EVENT).value = requestContext.getIf(Const_1.ON_EVENT).value;
             responseContext.assign(Const_1.ON_ERROR).value = requestContext.getIf(Const_1.ON_ERROR).value;
             xhrObject.open(this.ajaxType, (0, RequestDataResolver_1.resolveFinalUrl)(this.sourceForm, formData, this.ajaxType), true);
-            //adding timeout
+            // adding timeout
             this.timeout ? xhrObject.timeout = this.timeout : null;
-            //a bug in the xhr stub library prevents the setRequestHeader to be properly executed on fake xhr objects
-            //normal browsers should resolve this
-            //tests can quietly fail on this one
+            // a bug in the xhr stub library prevents the setRequestHeader to be properly executed on fake xhr objects
+            // normal browsers should resolve this
+            // tests can quietly fail on this one
             if (this.contentType != "undefined") {
                 ignoreErr(() => xhrObject.setRequestHeader(Const_1.CONTENT_TYPE, `${this.contentType}; charset=utf-8`));
             }
             ignoreErr(() => xhrObject.setRequestHeader(Const_1.HEAD_FACES_REQ, Const_1.VAL_AJAX));
-            //probably not needed anymore, will test this
-            //some webkit based mobile browsers do not follow the w3c spec of
+            // probably not needed anymore, will test this
+            // some webkit based mobile browsers do not follow the w3c spec of
             // setting, they accept headers automatically
             ignoreErr(() => xhrObject.setRequestHeader(Const_1.REQ_ACCEPT, Const_1.STD_ACCEPT));
             this.sendEvent(Const_1.BEGIN);
             this.sendRequest(formData);
         }
         catch (e) {
-            //_onError//_onError
+            // _onError
             this.handleError(e);
         }
         return this;
@@ -3591,28 +3637,27 @@ class XhrRequest {
         }
     }
     resolve(data) {
-        mona_dish_1.Stream.of(...this.thenFunc).reduce((inputVal, thenFunc) => {
+        mona_dish_1.Stream.of(...this.thenFunctions).reduce((inputVal, thenFunc) => {
             return thenFunc(inputVal);
         }, data);
     }
     reject(data) {
-        mona_dish_1.Stream.of(...this.catchFuncs).reduce((inputVal, catchFunc) => {
+        mona_dish_1.Stream.of(...this.catchFunctions).reduce((inputVal, catchFunc) => {
             return catchFunc(inputVal);
         }, data);
     }
     catch(func) {
-        this.catchFuncs.push(func);
+        this.catchFunctions.push(func);
         return this;
     }
     finally(func) {
-        //no ie11 support we probably are going to revert to shims for that one
-        this.catchFuncs.push(func);
-        this.thenFunc.push(func);
+        // no ie11 support we probably are going to revert to shims for that one
+        this.catchFunctions.push(func);
+        this.thenFunctions.push(func);
         return this;
     }
     then(func) {
-        //this.$promise.then(func);
-        this.thenFunc.push(func);
+        this.thenFunctions.push(func);
         return this;
     }
     /**
@@ -3652,7 +3697,7 @@ class XhrRequest {
         };
     }
     isCancelledResponse(currentTarget) {
-        return (currentTarget === null || currentTarget === void 0 ? void 0 : currentTarget.status) === 0 && //cancelled by browser
+        return (currentTarget === null || currentTarget === void 0 ? void 0 : currentTarget.status) === 0 && // cancelled by browser
             (currentTarget === null || currentTarget === void 0 ? void 0 : currentTarget.readyState) === 4 &&
             (currentTarget === null || currentTarget === void 0 ? void 0 : currentTarget.responseText) === '' &&
             (currentTarget === null || currentTarget === void 0 ? void 0 : currentTarget.responseXML) === null;
@@ -3673,7 +3718,8 @@ class XhrRequest {
     onSuccess(resolve) {
         var _a, _b, _c;
         this.sendEvent(Const_1.COMPLETE);
-        //malforms always result in empty response xml
+        // malformed responses always result in empty response xml
+        // per spec a valid response cannot be empty
         if (!((_a = this === null || this === void 0 ? void 0 : this.xhrObject) === null || _a === void 0 ? void 0 : _a.responseXML)) {
             this.handleMalFormedXML(resolve);
             return;
@@ -3700,7 +3746,7 @@ class XhrRequest {
             // reject would clean up the queue
             resolve(errorData);
         }
-        //non blocking non clearing
+        // non blocking non clearing
     }
     onDone(data, resolve) {
         // if stop progress a special handling including resolve is already performed
@@ -3716,11 +3762,11 @@ class XhrRequest {
     sendRequest(formData) {
         let isPost = this.ajaxType != Const_1.REQ_TYPE_GET;
         if (formData.isMultipartRequest) {
-            //in case of a multipart request we send in a formData object as body
+            // in case of a multipart request we send in a formData object as body
             this.xhrObject.send((isPost) ? formData.toFormData() : null);
         }
         else {
-            //in case of a normal request we send it normally
+            // in case of a normal request we send it normally
             this.xhrObject.send((isPost) ? formData.toString() : null);
         }
     }
@@ -3730,10 +3776,10 @@ class XhrRequest {
     sendEvent(evtType) {
         let eventData = EventData_1.EventData.createFromRequest(this.xhrObject, this.requestContext, evtType);
         try {
-            //user code error, we might cover
-            //this in onError but also we cannot swallow it
-            //we need to resolve the local handlers lazily,
-            //because some frameworks might decorate them over the context in the response
+            // User code error, we might cover
+            // this in onError, but also we cannot swallow it.
+            // We need to resolve the local handlers lazily,
+            // because some frameworks might decorate them over the context in the response
             let eventHandler = (0, RequestDataResolver_1.resolveHandlerFunc)(this.requestContext, this.responseContext, Const_1.ON_EVENT);
             AjaxImpl_1.Implementation.sendEvent(eventData, eventHandler);
         }
@@ -3894,7 +3940,7 @@ var oam;
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      http:// www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -3918,10 +3964,10 @@ const Stream_1 = __webpack_require__(/*! ./Stream */ "./typescript/mona_dish/Str
 const SourcesCollectors_1 = __webpack_require__(/*! ./SourcesCollectors */ "./typescript/mona_dish/SourcesCollectors.ts");
 const Lang_1 = __webpack_require__(/*! ./Lang */ "./typescript/mona_dish/Lang.ts");
 var trim = Lang_1.Lang.trim;
-var objToArray = Lang_1.Lang.objToArray;
 var isString = Lang_1.Lang.isString;
-var equalsIgnoreCase = Lang_1.Lang.equalsIgnoreCase;
+var eIgnoreC = Lang_1.Lang.equalsIgnoreCase;
 const Global_1 = __webpack_require__(/*! ./Global */ "./typescript/mona_dish/Global.ts");
+var objToArray = Lang_1.Lang.objToArray;
 /**
  *
  *        // - submit checkboxes and radio inputs only if checked
@@ -3929,16 +3975,16 @@ const Global_1 = __webpack_require__(/*! ./Global */ "./typescript/mona_dish/Glo
  && elemType != "reset" && elemType != "submit" && elemType != "image")
  && ((elemType != "checkbox" && elemType != "radio"
  */
-var Submittables;
-(function (Submittables) {
-    Submittables["SELECT"] = "select";
-    Submittables["BUTTON"] = "button";
-    Submittables["SUBMIT"] = "submit";
-    Submittables["RESET"] = "reset";
-    Submittables["IMAGE"] = "image";
-    Submittables["RADIO"] = "radio";
-    Submittables["CHECKBOX"] = "checkbox";
-})(Submittables || (Submittables = {}));
+var ALLOWED_SUBMITTABLE_ELEMENTS;
+(function (ALLOWED_SUBMITTABLE_ELEMENTS) {
+    ALLOWED_SUBMITTABLE_ELEMENTS["SELECT"] = "select";
+    ALLOWED_SUBMITTABLE_ELEMENTS["BUTTON"] = "button";
+    ALLOWED_SUBMITTABLE_ELEMENTS["SUBMIT"] = "submit";
+    ALLOWED_SUBMITTABLE_ELEMENTS["RESET"] = "reset";
+    ALLOWED_SUBMITTABLE_ELEMENTS["IMAGE"] = "image";
+    ALLOWED_SUBMITTABLE_ELEMENTS["RADIO"] = "radio";
+    ALLOWED_SUBMITTABLE_ELEMENTS["CHECKBOX"] = "checkbox";
+})(ALLOWED_SUBMITTABLE_ELEMENTS || (ALLOWED_SUBMITTABLE_ELEMENTS = {}));
 /**
  * helper to fix a common problem that a system has to wait, until a certain condition is reached.
  * Depending on the browser this uses either the Mutation Observer or a semi compatible interval as fallback.
@@ -3956,8 +4002,8 @@ function waitUntilDom(root, condition, options = {
     return new Promise((success, error) => {
         let observer = null;
         const MUT_ERROR = new Error("Mutation observer timeout");
-        //we do the same but for now ignore the options on the dom query
-        //we cannot use absent here, because the condition might search for an absent element
+        // we do the same but for now ignore the options on the dom query
+        // we cannot use absent here, because the condition might search for an absent element
         function findElement(root, condition) {
             let found = null;
             if (!!condition(root)) {
@@ -4001,7 +4047,7 @@ function waitUntilDom(root, condition, options = {
                 observer.observe(item, observableOpts);
             });
         }
-        else { //fallback for legacy browsers without mutation observer
+        else { // fallback for legacy browsers without mutation observer
             let interval = setInterval(() => {
                 let found = findElement(root, condition);
                 if (!!found) {
@@ -4096,32 +4142,30 @@ const DEFAULT_WHITELIST = () => {
  * the reduced code footprint of querying dom trees and traversing
  * by using functional patterns.
  *
- * Also a few convenience methods are added to reduce
+ * Also, a few convenience methods are added to reduce
  * the code footprint of standard dom processing
  * operations like eval
  *
- * TODO add jquery fallback support, since it is supported
  * in most older systems
  * Note parts of this code still stem from the Dom.js I have written 10 years
- * ago, those parts look a little bit ancient and will be replaced over time.
+ * ago, those parts look a bit ancient and will be replaced over time.
  *
  */
 class DomQuery {
     constructor(...rootNode) {
         this.rootNode = [];
         this.pos = -1;
-        //TODO this part probably will be removed
-        //because we can stream from an array stream directly into the dom query
+        // because we can stream from an array stream directly into the dom query
         this._limits = -1;
         if (Monad_1.Optional.fromNullable(rootNode).isAbsent() || !rootNode.length) {
             return;
         }
         else {
-            //we need to flatten out the arrays
+            // we need to flatten out the arrays
             for (let cnt = 0; cnt < rootNode.length; cnt++) {
                 if (!rootNode[cnt]) {
-                    //we skip possible null entries which can happen in
-                    //certain corner conditions due to the constructor re-wrapping single elements into arrays.
+                    // we skip possible null entries which can happen in
+                    // certain corner conditions due to the constructor re-wrapping single elements into arrays.
                 }
                 else if (isString(rootNode[cnt])) {
                     let foundElement = DomQuery.querySelectorAll(rootNode[cnt]);
@@ -4226,7 +4270,7 @@ class DomQuery {
         this.eachElem(el => el.checked = newChecked);
     }
     get elements() {
-        //a simple querySelectorAll should suffice
+        // a simple querySelectorAll should suffice
         return this.querySelectorAll("input, checkbox, select, textarea, fieldset");
     }
     get deepElements() {
@@ -4234,8 +4278,8 @@ class DomQuery {
         return this.querySelectorAllDeep(elemStr);
     }
     /**
-     * a deep search which treats the single isolated shadow doms
-     * separately and runs the query on earch shadow dom
+     * a deep search which treats the single isolated shadow dom areas
+     * separately and runs the query on each shadow dom
      * @param queryStr
      */
     querySelectorAllDeep(queryStr) {
@@ -4254,7 +4298,7 @@ class DomQuery {
         return new DomQuery(...found);
     }
     /**
-     * todo align this api with the rest of the apis
+     * disabled flag
      */
     get disabled() {
         return this.attr("disabled").isPresent();
@@ -4286,7 +4330,7 @@ class DomQuery {
     }
     /**
      * fetches a lazy stream representation
-     * lazy should be applied if you have some filters etc
+     * lazy should be applied if you have some filters etc.
      * in between, this can reduce the number of post filter operations
      * and ram usage
      * significantly because the operations are done lazily and stop
@@ -4296,7 +4340,7 @@ class DomQuery {
         return Stream_1.LazyStream.of(...this.asArray);
     }
     get asArray() {
-        //filter not supported by IE11
+        // filter not supported by IE11
         return [].concat(Stream_1.LazyStream.of(...this.rootNode).filter(item => {
             return item != null;
         })
@@ -4386,16 +4430,16 @@ class DomQuery {
     /**
      * builds the ie nodes properly in a placeholder
      * and bypasses a non script insert bug that way
-     * @param markup the marku code
+     * @param markup the markup code to be executed from
      */
     static fromMarkup(markup) {
-        //https://developer.mozilla.org/de/docs/Web/API/DOMParser license creative commons
+        // https:// developer.mozilla.org/de/docs/Web/API/DOMParser license creative commons
         const doc = document.implementation.createHTMLDocument("");
         markup = trim(markup);
         let lowerMarkup = markup.toLowerCase();
         if (lowerMarkup.indexOf('<!doctype') != -1 ||
             lowerMarkup.indexOf('<html') != -1 ||
-            lowerMarkup.indexOf('<head') != -1 || //TODO proper regexps here to avoid embedded tags with same element names to be triggered
+            lowerMarkup.indexOf('<head') != -1 ||
             lowerMarkup.indexOf('<body') != -1) {
             doc.documentElement.innerHTML = markup;
             return new DomQuery(doc.documentElement);
@@ -4407,7 +4451,7 @@ class DomQuery {
                 return (str.indexOf(tag1) == 0) || (str.indexOf(tag2) == 0);
             };
             let dummyPlaceHolder = new DomQuery(document.createElement("div"));
-            //table needs special treatment due to the browsers auto creation
+            // table needs special treatment due to the browsers auto creation
             if (startsWithTag(lowerMarkup, "thead") || startsWithTag(lowerMarkup, "tbody")) {
                 dummyPlaceHolder.html(`<table>${markup}</table>`);
                 return dummyPlaceHolder.querySelectorAll("table").get(0).childNodes.detach();
@@ -4429,9 +4473,9 @@ class DomQuery {
         }
     }
     /**
-     * returns the nth element as domquery
+     * returns the nth element as DomQuery
      * from the internal elements
-     * note if you try to reach a non existing element position
+     * note if you try to reach a non-existing element position
      * you will get back an absent entry
      *
      * @param index the nth index
@@ -4442,13 +4486,13 @@ class DomQuery {
     /**
      * returns the nth element as optional of an Element object
      * @param index the number from the index
-     * @param defaults the default value if the index is overrun default Optional.absent
+     * @param defaults the default value if the index is overrun default Optional\.absent
      */
     getAsElem(index, defaults = Monad_1.Optional.absent) {
         return (index < this.rootNode.length) ? Monad_1.Optional.fromNullable(this.rootNode[index]) : defaults;
     }
     /**
-     * returns the files from a given elmement
+     * returns the files from a given element
      * @param index
      */
     filesFromElem(index) {
@@ -4470,7 +4514,7 @@ class DomQuery {
     /**
      * should make the code clearer
      * note if you pass a function
-     * this refers to the active dopmquery object
+     * this refers to the active DomQuery object
      */
     isPresent(presentRunnable) {
         let absent = this.isAbsent();
@@ -4482,7 +4526,7 @@ class DomQuery {
     /**
      * should make the code clearer
      * note if you pass a function
-     * this refers to the active dopmquery object
+     * this refers to the active DomQuery object
      *
      *
      * @param presentRunnable
@@ -4503,54 +4547,13 @@ class DomQuery {
         });
     }
     querySelectorAll(selector) {
-        //We could merge both methods, but for now this is more readable
+        // We could merge both methods, but for now this is more readable
         if (selector.indexOf("/shadow/") != -1) {
             return this._querySelectorAllDeep(selector);
         }
         else {
             return this._querySelectorAll(selector);
         }
-    }
-    /**
-     * query selector all on the existing dom queryX object
-     *
-     * @param selector the standard selector
-     * @return a DomQuery with the results
-     */
-    _querySelectorAll(selector) {
-        var _a, _b;
-        if (!((_a = this === null || this === void 0 ? void 0 : this.rootNode) === null || _a === void 0 ? void 0 : _a.length)) {
-            return this;
-        }
-        let nodes = [];
-        for (let cnt = 0; cnt < this.rootNode.length; cnt++) {
-            if (!((_b = this.rootNode[cnt]) === null || _b === void 0 ? void 0 : _b.querySelectorAll)) {
-                continue;
-            }
-            let res = this.rootNode[cnt].querySelectorAll(selector);
-            nodes = nodes.concat(objToArray(res));
-        }
-        return new DomQuery(...nodes);
-    }
-    /*deep with a selector and a peudo /shadow/ marker to break into the next level*/
-    _querySelectorAllDeep(selector) {
-        var _a;
-        if (!((_a = this === null || this === void 0 ? void 0 : this.rootNode) === null || _a === void 0 ? void 0 : _a.length)) {
-            return this;
-        }
-        let foundNodes = new DomQuery(...this.rootNode);
-        let selectors = selector.split(/\/shadow\//);
-        for (let cnt2 = 0; cnt2 < selectors.length; cnt2++) {
-            if (selectors[cnt2] == "") {
-                continue;
-            }
-            let levelSelector = selectors[cnt2];
-            foundNodes = foundNodes.querySelectorAll(levelSelector);
-            if (cnt2 < selectors.length - 1) {
-                foundNodes = foundNodes.shadowRoot;
-            }
-        }
-        return foundNodes;
     }
     /**
      * core byId method
@@ -4565,9 +4568,9 @@ class DomQuery {
                 .map(item => new DomQuery(item))
                 .collect(new SourcesCollectors_1.ArrayCollector()));
         }
-        //for some strange kind of reason the # selector fails
-        //on hidden elements we use the attributes match selector
-        //that works
+        // for some strange kind of reason the # selector fails
+        // on hidden elements we use the attributes match selector
+        // that works
         res = res.concat(this.querySelectorAll(`[id="${id}"]`));
         return new DomQuery(...res);
     }
@@ -4587,7 +4590,7 @@ class DomQuery {
     }
     /**
      * same as byId just for the tag name
-     * @param tagName the tagname to search for
+     * @param tagName the tag-name to search for
      * @param includeRoot shall the root element be part of this search
      * @param deep do we also want to go into shadow dom areas
      */
@@ -4616,7 +4619,7 @@ class DomQuery {
         return new Style(this, cssProperty, defaultValue);
     }
     /**
-     * hasclass, checks for an existing class in the class attributes
+     * Checks for an existing class in the class attributes
      *
      * @param clazz the class to search for
      */
@@ -4659,19 +4662,19 @@ class DomQuery {
                 this.querySelectorAllDeep(FILE_INPUT)).first().isPresent();
     }
     /**
-     * innerHtml equivalkent
-     * equivalent to jqueries html
+     * innerHtml
+     * equivalent to jQueries html
      * as setter the html is set and the
      * DomQuery is given back
      * as getter the html string is returned
      *
-     * @param inval
+     * @param newInnerHTML the inner html to be inserted
      */
-    html(inval) {
-        if (Monad_1.Optional.fromNullable(inval).isAbsent()) {
+    html(newInnerHTML) {
+        if (Monad_1.Optional.fromNullable(newInnerHTML).isAbsent()) {
             return this.isPresent() ? Monad_1.Optional.fromNullable(this.innerHTML) : Monad_1.Optional.absent;
         }
-        this.innerHTML = inval;
+        this.innerHTML = newInnerHTML;
         return this;
     }
     /**
@@ -4681,37 +4684,33 @@ class DomQuery {
         this.eachElem(elem => elem.dispatchEvent(evt));
         return this;
     }
-    set innerHTML(inVal) {
-        this.eachElem(elem => elem.innerHTML = inVal);
+    /**
+     * abbreviation property to use innerHTML directly like on the dom tree
+     * @param newInnerHTML  the new inner html which should be attached to "this" domQuery
+     */
+    set innerHTML(newInnerHTML) {
+        this.eachElem(elem => elem.innerHTML = newInnerHTML);
     }
+    /**
+     * getter abbreviation to use innerHTML directly
+     */
     get innerHTML() {
         let retArr = [];
         this.eachElem(elem => retArr.push(elem.innerHTML));
         return retArr.join("");
     }
-    set innerHtml(inval) {
-        this.innerHTML = inval;
+    /**
+     * since the dom allows both innerHTML and innerHtml we also have to implement both
+     * @param newInnerHtml see above
+     */
+    set innerHtml(newInnerHtml) {
+        this.innerHTML = newInnerHtml;
     }
+    /**
+     * same here, getter for allowing innerHtml directly
+     */
     get innerHtml() {
         return this.innerHTML;
-    }
-    //source: https://developer.mozilla.org/en-US/docs/Web/API/Element/matches
-    //code snippet license: https://creativecommons.org/licenses/by-sa/2.5/
-    _mozMatchesSelector(toMatch, selector) {
-        let prot = toMatch;
-        let matchesSelector = prot.matches ||
-            prot.matchesSelector ||
-            prot.mozMatchesSelector ||
-            prot.msMatchesSelector ||
-            prot.oMatchesSelector ||
-            prot.webkitMatchesSelector ||
-            function (s) {
-                let matches = (document || ownerDocument).querySelectorAll(s), i = matches.length;
-                while (--i >= 0 && matches.item(i) !== toMatch) {
-                }
-                return i > -1;
-            };
-        return matchesSelector.call(toMatch, selector);
     }
     /**
      * filters the current dom query elements
@@ -4743,9 +4742,9 @@ class DomQuery {
     }
     /**
      * easy node traversal, you can pass
-     * a set of node selectors which are joined as direct childs
+     * a set of node selectors which are joined as direct children
      *
-     * not the rootnodes are not in the getIf, those are always the child nodes
+     * Note!!! The root nodes are not in the getIf, those are always the child nodes
      *
      * @param nodeSelector
      */
@@ -4782,7 +4781,7 @@ class DomQuery {
     each(func) {
         Stream_1.Stream.of(...this.rootNode)
             .each((item, cnt) => {
-            //we could use a filter, but for the best performance we dont
+            // we could use a filter, but for the best performance we don´t
             if (item == null) {
                 return;
             }
@@ -4827,16 +4826,16 @@ class DomQuery {
         });
         return new DomQuery(...reArr);
     }
-    //TODO append prepend
     /**
      * global eval head appendix method
      * no other methods are supported anymore
-     * @param code the code to be evaled
+     * @param code the code to be evaluated
      * @param  nonce optional  nonce key for higher security
      */
     globalEval(code, nonce) {
-        let head = document.getElementsByTagName("head")[0] || document.documentElement;
-        let script = document.createElement("script");
+        var _a, _b, _c;
+        const head = (_b = (_a = document.getElementsByTagName("head")) === null || _a === void 0 ? void 0 : _a[0]) !== null && _b !== void 0 ? _b : (_c = document.documentElement.getElementsByTagName("head")) === null || _c === void 0 ? void 0 : _c[0];
+        const script = document.createElement("script");
         if (nonce) {
             if ('undefined' != typeof (script === null || script === void 0 ? void 0 : script.nonce)) {
                 script.nonce = nonce;
@@ -4854,20 +4853,13 @@ class DomQuery {
     /**
      * global eval head appendix method
      * no other methods are supported anymore
-     * @param code the code to be evaled
+     * @param code the code to be evaluated
      * @param  nonce optional  nonce key for higher security
      */
     globalEvalSticky(code, nonce) {
         let head = document.getElementsByTagName("head")[0] || document.documentElement;
         let script = document.createElement("script");
-        if (nonce) {
-            if ('undefined' != typeof (script === null || script === void 0 ? void 0 : script.nonce)) {
-                script.nonce = nonce;
-            }
-            else {
-                script.setAttribute("nonce", nonce);
-            }
-        }
+        this.applyNonce(nonce, script);
         script.type = "text/javascript";
         script.innerHTML = code;
         head.appendChild(script);
@@ -4875,7 +4867,7 @@ class DomQuery {
     }
     /**
      * detaches a set of nodes from their parent elements
-     * in a browser independend manner
+     * in a browser independent manner
      * @return {Array} an array of nodes with the detached dom nodes
      */
     detach() {
@@ -4906,63 +4898,25 @@ class DomQuery {
         return this;
     }
     /**
-     * loads and evals a script from a source uri
+     * loads and evaluates a script from a source uri
      *
-     * @param src the source to be loaded and evaled
-     * @param defer in miliseconds execution default (0 == no defer)
-     * @param charSet
+     * @param src the source to be loaded and evaluated
+     * @param delay in milliseconds execution default (0 == no delay)
+     * @param nonce optional nonce value to allow increased security via nonce crypto token
      */
-    loadScriptEval(src, defer = 0, nonce) {
-        this._loadScriptEval(false, src, defer, nonce);
+    loadScriptEval(src, delay = 0, nonce) {
+        this._loadScriptEval(false, src, delay, nonce);
         return this;
     }
     /**
-     * loads and evals a script from a source uri
+     * loads and evaluates a script from a source uri
      *
-     * @param src the source to be loaded and evaled
-     * @param defer in miliseconds execution default (0 == no defer)
-     * @param charSet
+     * @param src the source to be loaded and evaluated
+     * @param delay in milliseconds execution default (0 == no delay)
+     * @param nonce optional nonce parameter for increased security via nonce crypto token
      */
-    loadScriptEvalSticky(src, defer = 0, nonce) {
-        this._loadScriptEval(true, src, defer, nonce);
-        return this;
-    }
-    _loadScriptEval(sticky, src, defer = 0, nonce) {
-        let srcNode = this.createSourceNode(src, nonce);
-        let nonceCheck = this.createSourceNode(null, nonce);
-        let marker = `nonce_${Date.now()}_${Math.random()}`;
-        nonceCheck.innerHTML = `document.head["${marker}"] = true`; //noop
-        let head = document.head;
-        //  upfront nonce check, needed mostly for testing
-        //  but cannot hurt to block src calls which have invalid nonce on localhost
-        // the reason for doing this up until now we have a similar construct automatically
-        // by loading the scripts via xhr and then embedding them.
-        // this is not needed anymore but the nonce is more relaxed with script src
-        // we now enforce it the old way
-        head.appendChild(nonceCheck);
-        head.removeChild(nonceCheck);
-        if (!head[marker]) {
-            return;
-        }
-        try {
-            if (!defer) {
-                head.appendChild(srcNode);
-                if (!sticky) {
-                    head.removeChild(srcNode);
-                }
-            }
-            else {
-                setTimeout(() => {
-                    head.appendChild(srcNode);
-                    if (!sticky) {
-                        head.removeChild(srcNode);
-                    }
-                }, defer);
-            }
-        }
-        finally {
-            delete head[marker];
-        }
+    loadScriptEvalSticky(src, delay = 0, nonce) {
+        this._loadScriptEval(true, src, delay, nonce);
         return this;
     }
     insertAfter(...toInsertParams) {
@@ -5033,7 +4987,7 @@ class DomQuery {
             while (item.parentNode || item.host) {
                 item = (_a = item === null || item === void 0 ? void 0 : item.parentNode) !== null && _a !== void 0 ? _a : item === null || item === void 0 ? void 0 : item.host;
                 resolveItem(item);
-                //nested forms not possible, performance shortcut
+                // nested forms not possible, performance shortcut
                 if (tagName == "form" && retArr.length) {
                     return false;
                 }
@@ -5065,25 +5019,14 @@ class DomQuery {
         return this;
     }
     /**
-     * resolves an attribute holder compared
-     * @param attrName the attribute name
-     */
-    resolveAttributeHolder(attrName = "value") {
-        let ret = [];
-        ret[attrName] = null;
-        return (attrName in this.getAsElem(0).value) ?
-            this.getAsElem(0).value :
-            ret;
-    }
-    /**
-     * outerhtml convenience method
+     * outerHTML convenience method
      * browsers only support innerHTML but
      * for instance for your jsf.js we have a full
      * replace pattern which needs outerHTML processing
      *
      * @param markup the markup which should replace the root element
      * @param runEmbeddedScripts if true the embedded scripts are executed
-     * @param runEmbeddedCss if true the embeddec css are executed
+     * @param runEmbeddedCss if true the embedded css are executed
      * @param deep should this also work for shadow dom (run scripts etc...)
      */
     outerHTML(markup, runEmbeddedScripts, runEmbeddedCss, deep = false) {
@@ -5101,7 +5044,7 @@ class DomQuery {
         let replaced = firstInsert.getAsElem(0).value;
         parentNode.replaceChild(replaced, toReplace);
         res.push(new DomQuery(replaced));
-        //no replacement possible
+        // no replacement possible
         if (this.isAbsent()) {
             return this;
         }
@@ -5125,16 +5068,16 @@ class DomQuery {
     }
     /**
      * Run through the given nodes in the DomQuery execute the inline scripts
-     * @param sticky if set to true the evaled elements will stick to the head, default false
-     * @param whilteListed: optional whitelist function which can filter out script tags which are not processed
+     * @param sticky if set to true the evaluated elements will stick to the head, default false
+     * @param whitelisted: optional whitelist function which can filter out script tags which are not processed
      * defaults to the standard jsf.js exclusion (we use this code for myfaces)
      */
-    runScripts(sticky = false, whilteListed = DEFAULT_WHITELIST) {
+    runScripts(sticky = false, whitelisted = DEFAULT_WHITELIST) {
         const evalCollectedScripts = (scriptsToProcess) => {
             if (scriptsToProcess.length) {
-                //script source means we have to eval the existing
-                //scripts before running the include
-                //this.globalEval(finalScripts.join("\n"));
+                // script source means we have to eval the existing
+                // scripts before we run the 'include' command
+                // this.globalEval(finalScripts.join("\n"));
                 let joinedScripts = [];
                 Stream_1.Stream.of(...scriptsToProcess).each(item => {
                     if (!item.nonce) {
@@ -5159,42 +5102,39 @@ class DomQuery {
             }
             return scriptsToProcess;
         };
-        let finalScripts = [], equi = equalsIgnoreCase, execScrpt = (item) => {
-            var _a, _b, _c;
+        let finalScripts = [], allowedItemTypes = ["", "script", "text/javascript", "text/ecmascript", "ecmascript"], execScript = (item) => {
+            var _a, _b, _c, _d;
             let tagName = item.tagName;
-            let itemType = item.type || "";
-            if (tagName && equi(tagName, "script") &&
-                (itemType === "" || equi(itemType, "text/javascript") ||
-                    equi(itemType, "javascript") ||
-                    equi(itemType, "text/ecmascript") ||
-                    equi(itemType, "ecmascript"))) {
+            let itemType = ((_a = item === null || item === void 0 ? void 0 : item.type) !== null && _a !== void 0 ? _a : '').toLowerCase();
+            if (tagName &&
+                eIgnoreC(tagName, "script") &&
+                allowedItemTypes.indexOf(itemType) != -1) {
                 let src = item.getAttribute('src');
                 if ('undefined' != typeof src
                     && null != src
                     && src.length > 0) {
-                    let nonce = (_a = item === null || item === void 0 ? void 0 : item.nonce) !== null && _a !== void 0 ? _a : item.getAttribute('nonce').value;
-                    //we have to move this into an inner if because chrome otherwise chokes
-                    //due to changing the and order instead of relying on left to right
-                    //if jsf.js is already registered we do not replace it anymore
-                    if (whilteListed(src)) {
-                        //we run the collected scripts before running, the include
+                    let nonce = (_b = item === null || item === void 0 ? void 0 : item.nonce) !== null && _b !== void 0 ? _b : item.getAttribute('nonce').value;
+                    // we have to move this into an inner if because chrome otherwise chokes
+                    // due to changing the and order instead of relying on left to right
+                    // if jsf.js is already registered we do not replace it anymore
+                    if (whitelisted(src)) {
+                        // we run the collected scripts, before we run the 'include' command
                         finalScripts = evalCollectedScripts(finalScripts);
                         if (!sticky) {
                             (!!nonce) ? this.loadScriptEval(src, 0, nonce) :
-                                //if no nonce is set we do not pass any once
+                                // if no nonce is set we do not pass any once
                                 this.loadScriptEval(src, 0);
                         }
                         else {
                             (!!nonce) ? this.loadScriptEvalSticky(src, 0, nonce) :
-                                //if no nonce is set we do not pass any once
+                                // if no nonce is set we do not pass any once
                                 this.loadScriptEvalSticky(src, 0);
                         }
                     }
                 }
                 else {
                     // embedded script auto eval
-                    //TODO this probably needs to be changed due to our new parsing structures
-                    //probably not needed anymore
+                    // probably not needed anymore
                     let evalText = trim(item.text || item.innerText || item.innerHTML);
                     let go = true;
                     while (go) {
@@ -5212,9 +5152,9 @@ class DomQuery {
                             go = true;
                         }
                     }
-                    let nonce = (_c = (_b = item === null || item === void 0 ? void 0 : item.nonce) !== null && _b !== void 0 ? _b : item.getAttribute('nonce').value) !== null && _c !== void 0 ? _c : '';
+                    let nonce = (_d = (_c = item === null || item === void 0 ? void 0 : item.nonce) !== null && _c !== void 0 ? _c : item.getAttribute('nonce').value) !== null && _d !== void 0 ? _d : '';
                     // we have to run the script under a global context
-                    //we store the script for less calls to eval
+                    // we store the script for fewer calls to eval
                     finalScripts.push({
                         nonce,
                         evalText
@@ -5224,31 +5164,31 @@ class DomQuery {
         };
         try {
             let scriptElements = new DomQuery(this.filterSelector("script"), this.querySelectorAll("script"));
-            //script execution order by relative pos in their dom tree
+            // script execution order by relative pos in their dom tree
             scriptElements.stream
                 .flatMap(item => Stream_1.Stream.of(item.values))
-                .sort((node1, node2) => node1.compareDocumentPosition(node2) - 3) //preceding 2, following == 4)
-                .each(item => execScrpt(item));
+                .sort((node1, node2) => node1.compareDocumentPosition(node2) - 3) // preceding 2, following == 4)
+                .each(item => execScript(item));
             evalCollectedScripts(finalScripts);
         }
         catch (e) {
             if (console && console.error) {
-                //not sure if we
-                //should use our standard
-                //error mechanisms here
-                //because in the head appendix
-                //method only a console
-                //error would be raised as well
+                // not sure if we
+                // should use our standard
+                // error mechanisms here
+                // because in the head appendix
+                // method only a console
+                // error would be raised as well
                 console.error(e.message || e.description);
             }
         }
         finally {
-            //the usual ie6 fix code
-            //the IE6 garbage collector is broken
-            //nulling closures helps somewhat to reduce
-            //mem leaks, which are impossible to avoid
-            //at this browser
-            execScrpt = null;
+            // the usual ie6 fix code
+            // the IE6 garbage collector is broken
+            // nulling closures helps somewhat to reduce
+            // mem leaks, which are impossible to avoid
+            // at this browser
+            execScript = null;
         }
         return this;
     }
@@ -5268,16 +5208,16 @@ class DomQuery {
             }
         }, execCss = (item) => {
             const tagName = item.tagName;
-            if (tagName && equalsIgnoreCase(tagName, "link") && equalsIgnoreCase(item.getAttribute("type"), "text/css")) {
+            if (tagName && eIgnoreC(tagName, "link") && eIgnoreC(item.getAttribute("type"), "text/css")) {
                 applyStyle(item, "@import url('" + item.getAttribute("href") + "');");
             }
-            else if (tagName && equalsIgnoreCase(tagName, "style") && equalsIgnoreCase(item.getAttribute("type"), "text/css")) {
+            else if (tagName && eIgnoreC(tagName, "style") && eIgnoreC(item.getAttribute("type"), "text/css")) {
                 let innerText = [];
-                //compliant browsers know child nodes
+                // compliant browsers know child nodes
                 let childNodes = Array.prototype.slice.call(item.childNodes);
                 if (childNodes) {
                     childNodes.forEach(child => innerText.push(child.innerHTML || child.data));
-                    //non compliant ones innerHTML
+                    // non-compliant elements innerHTML
                 }
                 else if (item.innerHTML) {
                     innerText.push(item.innerHTML);
@@ -5310,7 +5250,11 @@ class DomQuery {
     /**
      * fires an event
      */
-    fireEvent(eventName) {
+    fireEvent(eventName, options = {}) {
+        // merge with last one having the highest priority
+        let finalOptions = Stream_1.Stream.ofAssoc({
+            bubbles: true, cancelable: true
+        }).concat(Stream_1.Stream.ofAssoc(options)).collect(new SourcesCollectors_1.AssocArrayCollector());
         this.eachElem((node) => {
             let doc;
             if (node.ownerDocument) {
@@ -5325,27 +5269,34 @@ class DomQuery {
             }
             if (node.dispatchEvent) {
                 // Gecko-style approach (now the standard) takes more work
-                let eventClass = "";
+                let EventClass = Event;
                 // Different events have different event classes.
-                // If this switch statement can't map an eventName to an eventClass,
+                // If this switch statement can't map an eventName to an EventClass,
                 // the event firing is going to fail.
+                // extend this list on demand
                 switch (eventName) {
                     case "click": // Dispatching of 'click' appears to not work correctly in Safari. Use 'mousedown' or 'mouseup' instead.
                     case "mousedown":
                     case "mouseup":
-                        eventClass = "MouseEvents";
+                    case "mousemove":
+                        EventClass = this.global().MouseEvent;
+                        break;
+                    case "keyup":
+                    case "keydown":
+                    case "keypress":
+                        EventClass = this.global().KeyboardEvent;
                         break;
                     case "focus":
                     case "change":
                     case "blur":
                     case "select":
-                        eventClass = "HTMLEvents";
                         break;
                     default:
                         throw "fireEvent: Couldn't find an event class for event '" + eventName + "'.";
                 }
-                let event = doc.createEvent(eventClass);
-                event.initEvent(eventName, true, true); // All events created as bubbling and cancelable.
+                let event = new EventClass(eventName, finalOptions);
+                // this is added as an extra to allow internally the detection of synthetic events
+                // not used atm, but it does not hurt to have the extra info
                 event.synthetic = true; // allow detection of synthetic events
                 // The second parameter says go ahead with the default action
                 node.dispatchEvent(event);
@@ -5354,11 +5305,14 @@ class DomQuery {
                 // IE-old school style, you can drop this if you don't need to support IE8 and lower
                 let event = doc.createEventObject();
                 event.synthetic = true; // allow detection of synthetic events
+                Stream_1.Stream.ofAssoc(finalOptions).each(([key, value]) => {
+                    event[key] = value;
+                });
                 node.fireEvent("on" + eventName, event);
             }
         });
     }
-    textContent(joinstr = "") {
+    textContent(joinString = "") {
         return this.stream
             .map((value) => {
             let item = value.getAsElem(0).orElseLazy(() => {
@@ -5368,9 +5322,9 @@ class DomQuery {
             }).value;
             return item.textContent || "";
         })
-            .reduce((text1, text2) => text1 + joinstr + text2, "").value;
+            .reduce((text1, text2) => [text1, joinString, text2].join(""), "").value;
     }
-    innerText(joinstr = "") {
+    innerText(joinString = "") {
         return this.stream
             .map((value) => {
             let item = value.getAsElem(0).orElseLazy(() => {
@@ -5380,28 +5334,28 @@ class DomQuery {
             }).value;
             return item.innerText || "";
         })
-            .reduce((text1, text2) => [text1, text2].join(joinstr), "").value;
+            .reduce((text1, text2) => [text1, text2].join(joinString), "").value;
     }
     /**
      * encodes all input elements properly into respective
      * config entries, this can be used
-     * for legacy systems, for newer usecases, use the
+     * for legacy systems, for newer use-cases, use the
      * HTML5 Form class which all newer browsers provide
      *
      * @param toMerge optional config which can be merged in
      * @return a copy pf
      */
     encodeFormElement(toMerge = new Monad_1.Config({})) {
-        //browser behavior no element name no encoding (normal submit fails in that case)
-        //https://issues.apache.org/jira/browse/MYFACES-2847
+        // browser behavior no element name no encoding (normal submit fails in that case)
+        // https:// issues.apache.org/jira/browse/MYFACES-2847
         if (this.name.isAbsent()) {
             return;
         }
-        //lets keep it sideffects free
+        // let´s keep it side-effects free
         let target = toMerge.shallowCopy;
         this.each((element) => {
             var _a, _b;
-            if (element.name.isAbsent()) { //no name, no encoding
+            if (element.name.isAbsent()) { // no name, no encoding
                 return;
             }
             let name = element.name.value;
@@ -5410,8 +5364,8 @@ class DomQuery {
             elemType = elemType.toLowerCase();
             // routine for all elements
             // rules:
-            // - process only inputs, textareas and selects
-            // - elements muest have attribute "name"
+            // - process only input, textarea and select elements
+            // - elements must have attribute "name"
             // - elements must not be disabled
             if (((tagName == "input" || tagName == "textarea" || tagName == "select") &&
                 (name != null && name != "")) && !element.disabled) {
@@ -5421,16 +5375,16 @@ class DomQuery {
                 // (also if value empty => "name=")
                 // - if select-one and value-Attribute don't exist =>
                 // "name=DisplayValue"
-                // - if select multi and multple selected => "name=value1&name=value2"
+                // - if select multi and multiple selected => "name=value1&name=value2"
                 // - if select and selectedIndex=-1 don't submit
                 if (tagName == "select") {
-                    // selectedIndex must be >= 0 sein to be submittet
+                    // selectedIndex must be >= 0 to be submitted
                     let selectElem = element.getAsElem(0).value;
                     if (selectElem.selectedIndex >= 0) {
                         let uLen = selectElem.options.length;
                         for (let u = 0; u < uLen; u++) {
                             // find all selected options
-                            //let subBuf = [];
+                            // let subBuf = [];
                             if (selectElem.options[u].selected) {
                                 let elementOption = selectElem.options[u];
                                 target.append(name).value = (elementOption.getAttribute("value") != null) ?
@@ -5443,15 +5397,15 @@ class DomQuery {
                 // rules:
                 // - don't submit no selects (processed above), buttons, reset buttons, submit buttons,
                 // - submit checkboxes and radio inputs only if checked
-                if ((tagName != Submittables.SELECT &&
-                    elemType != Submittables.BUTTON &&
-                    elemType != Submittables.RESET &&
-                    elemType != Submittables.SUBMIT &&
-                    elemType != Submittables.IMAGE) && ((elemType != Submittables.CHECKBOX && elemType != Submittables.RADIO) ||
+                if ((tagName != ALLOWED_SUBMITTABLE_ELEMENTS.SELECT &&
+                    elemType != ALLOWED_SUBMITTABLE_ELEMENTS.BUTTON &&
+                    elemType != ALLOWED_SUBMITTABLE_ELEMENTS.RESET &&
+                    elemType != ALLOWED_SUBMITTABLE_ELEMENTS.SUBMIT &&
+                    elemType != ALLOWED_SUBMITTABLE_ELEMENTS.IMAGE) && ((elemType != ALLOWED_SUBMITTABLE_ELEMENTS.CHECKBOX && elemType != ALLOWED_SUBMITTABLE_ELEMENTS.RADIO) ||
                     element.checked)) {
                     let files = (_b = (_a = element.value.value) === null || _a === void 0 ? void 0 : _a.files) !== null && _b !== void 0 ? _b : [];
                     if (files === null || files === void 0 ? void 0 : files.length) {
-                        //xhr level2
+                        // xhr level2
                         target.append(name).value = files[0];
                     }
                     else {
@@ -5532,7 +5486,7 @@ class DomQuery {
     }
     /**
      * helper to fix a common dom problem
-     * we have to wait until a certain condition is met, in most of the cases we just want to know whether an element is present in the subdome before being able to proceed
+     * we have to wait until a certain condition is met, in most of the cases we just want to know whether an element is present in the sub dom-tree before being able to proceed
      * @param condition
      * @param options
      */
@@ -5573,23 +5527,23 @@ class DomQuery {
         }
         return false;
     }
-    //from
-    // http://blog.vishalon.net/index.php/javascript-getting-and-setting-caret-position-in-textarea/
+    // from
+    // http:// blog.vishalon.net/index.php/javascript-getting-and-setting-caret-position-in-textarea/
     static getCaretPosition(ctrl) {
         let caretPos = 0;
         try {
             if (document === null || document === void 0 ? void 0 : document.selection) {
                 ctrl.focus();
                 let selection = document.selection.createRange();
-                //the selection now is start zero
+                // the selection now is start zero
                 selection.moveStart('character', -ctrl.value.length);
-                //the caretposition is the selection start
+                // the caret-position is the selection start
                 caretPos = selection.text.length;
             }
         }
         catch (e) {
-            //now this is ugly, but not supported input types throw errors for selectionStart
-            //just in case someone dumps this code onto unsupported browsers
+            // now this is ugly, but not supported input types throw errors for selectionStart
+            // just in case someone dumps this code onto unsupported browsers
         }
         return caretPos;
     }
@@ -5605,7 +5559,7 @@ class DomQuery {
      */
     static setCaretPosition(ctrl, pos) {
         (ctrl === null || ctrl === void 0 ? void 0 : ctrl.focus) ? ctrl === null || ctrl === void 0 ? void 0 : ctrl.focus() : null;
-        //the selection range is our caret position
+        // the selection range is our caret position
         (ctrl === null || ctrl === void 0 ? void 0 : ctrl.setSelectiongRange) ? ctrl === null || ctrl === void 0 ? void 0 : ctrl.setSelectiongRange(pos, pos) : null;
     }
     /**
@@ -5625,17 +5579,17 @@ class DomQuery {
         };
     }
     /**
-     * concats the elements of two Dom Queries into a single one
+     * Concatenates the elements of two Dom Queries into a single one
      * @param toAttach the elements to attach
      * @param filterDoubles filter out possible double elements (aka same markup)
      */
     concat(toAttach, filterDoubles = true) {
         const ret = this.lazyStream.concat(toAttach.lazyStream).collect(new DomQueryCollector());
-        //we now filter the doubles out
+        // we now filter the doubles out
         if (!filterDoubles) {
             return ret;
         }
-        let idx = {}; //ie11 does not support sets, we have to fake it
+        let idx = {}; // ie11 does not support sets, we have to fake it
         return ret.lazyStream.filter(node => {
             const notFound = !(idx === null || idx === void 0 ? void 0 : idx[node.value.value.outerHTML]);
             idx[node.value.value.outerHTML] = true;
@@ -5658,35 +5612,132 @@ class DomQuery {
         });
         return this;
     }
-    /*[observable](): Observable<DomQuery> {
-        return this.observable;
-    }
-
-    get observable(): Observable<DomQuery> {
-        let observerFunc = (observer:Subscriber<DomQuery>) => {
-            try {
-                this.each(dqNode => {
-                    observer.next(dqNode);
-                });
-            } catch (e) {
-                observer.error(e);
+    /**
+     * query selector all on the existing dom queryX object
+     *
+     * @param selector the standard selector
+     * @return a DomQuery with the results
+     */
+    _querySelectorAll(selector) {
+        var _a, _b;
+        if (!((_a = this === null || this === void 0 ? void 0 : this.rootNode) === null || _a === void 0 ? void 0 : _a.length)) {
+            return this;
+        }
+        let nodes = [];
+        for (let cnt = 0; cnt < this.rootNode.length; cnt++) {
+            if (!((_b = this.rootNode[cnt]) === null || _b === void 0 ? void 0 : _b.querySelectorAll)) {
+                continue;
             }
-        };
-        return new Observable(observerFunc);
+            let res = this.rootNode[cnt].querySelectorAll(selector);
+            nodes = nodes.concat(objToArray(res));
+        }
+        return new DomQuery(...nodes);
     }
-
-    get observableElem(): Observable<Element> {
-        let observerFunc = (observer:Subscriber<Element>) => {
-            try {
-                this.eachElem(node => {
-                    observer.next(node);
-                });
-            } catch (e) {
-                observer.error(e);
+    /*deep with a selector and a pseudo /shadow/ marker to break into the next level*/
+    _querySelectorAllDeep(selector) {
+        var _a;
+        if (!((_a = this === null || this === void 0 ? void 0 : this.rootNode) === null || _a === void 0 ? void 0 : _a.length)) {
+            return this;
+        }
+        let foundNodes = new DomQuery(...this.rootNode);
+        let selectors = selector.split(/\/shadow\//);
+        for (let cnt2 = 0; cnt2 < selectors.length; cnt2++) {
+            if (selectors[cnt2] == "") {
+                continue;
             }
-        };
-        return new Observable(observerFunc);
-    }*/
+            let levelSelector = selectors[cnt2];
+            foundNodes = foundNodes.querySelectorAll(levelSelector);
+            if (cnt2 < selectors.length - 1) {
+                foundNodes = foundNodes.shadowRoot;
+            }
+        }
+        return foundNodes;
+    }
+    // source: https:// developer.mozilla.org/en-US/docs/Web/API/Element/matches
+    // code snippet license: https:// creativecommons.org/licenses/by-sa/2.5/
+    /**
+     * matches selector call in a browser independent manner
+     *
+     * @param toMatch
+     * @param selector
+     * @private
+     */
+    _mozMatchesSelector(toMatch, selector) {
+        let prototypeOwner = toMatch;
+        let matchesSelector = prototypeOwner.matches ||
+            prototypeOwner.matchesSelector ||
+            prototypeOwner.mozMatchesSelector ||
+            prototypeOwner.msMatchesSelector ||
+            prototypeOwner.oMatchesSelector ||
+            prototypeOwner.webkitMatchesSelector ||
+            function (s) {
+                let matches = (document || ownerDocument).querySelectorAll(s), i = matches.length;
+                while (--i >= 0 && matches.item(i) !== toMatch) {
+                }
+                return i > -1;
+            };
+        return matchesSelector.call(toMatch, selector);
+    }
+    /**
+     * sticky non-sticky unified code of the load script eval
+     * implementation if programmatic &gt;script src="... loading
+     *
+     * @param sticky if set to true a head element is left in the dom tree after the script has loaded
+     *
+     * @param src the sec to load
+     * @param delay delay the script loading x ms (default immediately === 0)
+     * @param nonce optional nonce token to be passed into the script tag
+     * @private
+     */
+    _loadScriptEval(sticky, src, delay = 0, nonce) {
+        let srcNode = this.createSourceNode(src, nonce);
+        let nonceCheck = this.createSourceNode(null, nonce);
+        let marker = `nonce_${Date.now()}_${Math.random()}`;
+        nonceCheck.innerHTML = `document.head["${marker}"] = true`; // noop
+        let head = document.head;
+        //  upfront nonce check, needed mostly for testing
+        //  but cannot hurt to block src calls which have invalid nonce on localhost
+        // the reason for doing this up until now we have a similar construct automatically
+        // by loading the scripts via xhr and then embedding them.
+        // this is not needed anymore but the nonce is more relaxed with script src
+        // we now enforce it the old way
+        head.appendChild(nonceCheck);
+        head.removeChild(nonceCheck);
+        if (!head[marker]) {
+            return;
+        }
+        try {
+            if (!delay) {
+                head.appendChild(srcNode);
+                if (!sticky) {
+                    head.removeChild(srcNode);
+                }
+            }
+            else {
+                setTimeout(() => {
+                    head.appendChild(srcNode);
+                    if (!sticky) {
+                        head.removeChild(srcNode);
+                    }
+                }, delay);
+            }
+        }
+        finally {
+            delete head[marker];
+        }
+        return this;
+    }
+    /**
+     * resolves an attribute holder compared
+     * @param attrName the attribute name
+     */
+    resolveAttributeHolder(attrName = "value") {
+        let ret = [];
+        ret[attrName] = null;
+        return (attrName in this.getAsElem(0).value) ?
+            this.getAsElem(0).value :
+            ret;
+    }
     createSourceNode(src, nonce) {
         let srcNode = document.createElement("script");
         srcNode.type = "text/javascript";
@@ -5702,6 +5753,16 @@ class DomQuery {
             srcNode.src = src;
         }
         return srcNode;
+    }
+    applyNonce(nonce, script) {
+        if (nonce) {
+            if ('undefined' != typeof (script === null || script === void 0 ? void 0 : script.nonce)) {
+                script.nonce = nonce;
+            }
+            else {
+                script.setAttribute("nonce", nonce);
+            }
+        }
     }
 }
 exports.DomQuery = DomQuery;
