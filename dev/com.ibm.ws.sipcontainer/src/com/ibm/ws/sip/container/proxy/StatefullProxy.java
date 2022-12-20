@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.servlet.sip.Proxy;
 import javax.servlet.sip.ProxyBranch;
@@ -107,6 +108,10 @@ public class StatefullProxy	extends BranchManager
 	private boolean _isFinalResponseForwarded = false;
 	
 	private boolean _noCancelOfBranchesOnComplete = false;
+
+	private AtomicBoolean cancellationInProgress = new AtomicBoolean();
+
+	private Object cancellationLock = new Object();
 
 	/**
 	 * Constructs a new Proxy for the given request.
@@ -437,64 +442,88 @@ public class StatefullProxy	extends BranchManager
 	/**
 	 * @see javax.servlet.sip.Proxy#cancel()
 	 */
-	public synchronized void cancel() {
+	public void cancel() {
 		cancel(null,null,null);
-
 	}
+	
 	/**
 	 * Cancels all the active branches of this proxy
 	 * @param reasons all the reason headers to be inserted to the outgoing cancel messages.
 	 * 
 	 */
-	public synchronized void cancel(String[] reasons) {
-		 if(c_logger.isTraceDebugEnabled()) {
-				c_logger.traceDebug(this, "cancel", getMyInfo() + "Proxy operation is canceled by the server");
-			}
-			
-		if(_bestResponse.getBestResponse() != null && 
-					isFinalResponse(_bestResponse.getBestResponse().getStatus())) {
+	public void cancel(String[] reasons) {
 
-				throw new IllegalStateException("Proxy completed");
-			}
-		 for (int i = 0; i < _proxyBranches.size(); i++) {
-				ProxyBranchImpl branch = (ProxyBranchImpl) _proxyBranches.get(i);
-				if (branch.isActive()) {
-					branch.cancel(reasons);
+		if(cancellationInProgress.compareAndSet(false, true)) {
+			synchronized(cancellationLock){
+				if(c_logger.isTraceDebugEnabled()) {
+					c_logger.traceDebug(this, "cancel", getMyInfo() + "Proxy operation is canceled by the server");
+				}
+				
+				if(_bestResponse.getBestResponse() != null && 
+						isFinalResponse(_bestResponse.getBestResponse().getStatus())) {
+	
+					throw new IllegalStateException("Proxy completed");
+				}
+
+			 	for (int i = 0; i < _proxyBranches.size(); i++) {
+					ProxyBranchImpl branch = (ProxyBranchImpl) _proxyBranches.get(i);
+					if (branch.isActive()) {
+						branch.cancel(reasons);
+					}
 				}
 			}
+			cancellationInProgress.set(false);  // set back to false
+		} else {
+			if(c_logger.isTraceDebugEnabled())
+			{
+				c_logger.traceDebug(this, "cancel", getMyInfo() + "Cancellation skipped as it is already in progress by another thread.");
+			}
+			return;
+		}
 	}
 
 	/**
 	/** @see javax.servlet.sip.Proxy#cancel(java.lang.String[], int[], java.lang.String[])
 	 */
 	public void cancel(String[] protocol, int[] reasonCode, String[] reasonText) {
-		if(_bestResponse.getBestResponse() != null && 
+
+		if(cancellationInProgress.compareAndSet(false, true)) {
+			synchronized(cancellationLock){
+				if(_bestResponse.getBestResponse() != null && 
 				isFinalResponse(_bestResponse.getBestResponse().getStatus())){
 
-			throw new IllegalStateException("Proxy completed");
-		}
+					throw new IllegalStateException("Proxy completed");
+				}
 
-	    if(c_logger.isTraceDebugEnabled())
-        {
-			c_logger.traceDebug(this, "cancel", getMyInfo() + "Proxy operation is canceled by the application");
+				if(c_logger.isTraceDebugEnabled())
+				{
+					c_logger.traceDebug(this, "cancel", getMyInfo() + "Proxy operation is canceled by the application");
+				}
+				
+				if((protocol  != null) && (reasonCode != null) && (reasonText != null)) {
+					//checking that reason header protocol field is unique
+					Set<String> uniqueProtocols = new HashSet<String>();
+					for(String prot : protocol){
+						if(uniqueProtocols.contains(prot)) {
+							throw new IllegalArgumentException(SipUtil.REASON_PROTOCOL_MULTIPLE);
+						}
+						else {
+							uniqueProtocols.add(prot);
+						}
+					}
+				
+				}
+				// Remove all branches
+				cancellAllActiveBranches(protocol,reasonCode,reasonText);
+			}
+			cancellationInProgress.set(false);  // set back to false
+		} else {
+			if(c_logger.isTraceDebugEnabled())
+			{
+				c_logger.traceDebug(this, "cancel", getMyInfo() + "Cancellation skipped as it is already in progress by another thread.");
+			}
+			return;
 		}
-		
-		if((protocol  != null) && (reasonCode != null) && (reasonText != null)) {
-			//checking that reason header protocol field is unique
-			Set<String> uniqueProtocols = new HashSet<String>();
-	        for(String prot : protocol){
-	        	if(uniqueProtocols.contains(prot)) {
-	        		throw new IllegalArgumentException(SipUtil.REASON_PROTOCOL_MULTIPLE);
-	        	}
-	        	else {
-	        		uniqueProtocols.add(prot);
-	        	}
-	        }
-        
-		}
-		cancellAllActiveBranches(protocol,reasonCode,reasonText);
-
-		// Remove all branches
 	}
 
 	/**
