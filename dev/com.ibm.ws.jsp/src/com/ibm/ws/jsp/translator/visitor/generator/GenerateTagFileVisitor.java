@@ -82,7 +82,6 @@ public class GenerateTagFileVisitor extends GenerateVisitor {
 					logger.logp(Level.FINEST, CLASS_NAME, "visit","entering code generation phase CLASS_SECTION");
 				}
                 generateClassSection(validatorResult);
-                generateInjectionCleanUpMethod();
                 break;
             }
             
@@ -421,6 +420,8 @@ public class GenerateTagFileVisitor extends GenerateVisitor {
             writer.println("if (uri == null) _jspx_dynamic_attrs.put(localName, value);");
             writer.println("}");
         }
+
+        generateInjectionCleanUpMethod();
         
     }
     
@@ -562,7 +563,9 @@ public class GenerateTagFileVisitor extends GenerateVisitor {
     }
 
 
-    // Added for Pages 3.1's errorOnELNotFound option
+    /* OLGH11453 / PH49514
+     * Added to avoid hitting the 65535 bytes limit in methods (especially when this clean up code is used for numerous tags)
+     */
     private void generateInjectionCleanUpMethod() {
         writer.println("public void _cdiCleanUp(Object _tag) {");
         writer.println(" _jspx_iaHelper.doPreDestroy(_tag);");

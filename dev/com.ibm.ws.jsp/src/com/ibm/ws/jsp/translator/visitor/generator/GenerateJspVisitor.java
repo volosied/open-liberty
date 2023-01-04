@@ -84,7 +84,6 @@ public class GenerateJspVisitor extends GenerateVisitor {
 					logger.logp(Level.FINEST, CLASS_NAME, "visit","entering code generation phase CLASS_SECTION");
 				}
                 generateClassSection(validatorResult);
-                generateInjectionCleanUpMethod();
                 if(PagesVersionHandler.isPages31Loaded()){
                     generateIsErrorOnELFoundMethod(jspConfiguration.errorOnELNotFound());
                     generateImportGetters();
@@ -204,7 +203,9 @@ public class GenerateJspVisitor extends GenerateVisitor {
 
     }
 
-    // Added for Pages 3.1's errorOnELNotFound option
+    /* OLGH11453 / PH49514
+     * Added to avoid hitting the 65535 bytes limit in methods (especially when this clean up code is used for numerous tags)
+     */
     private void generateInjectionCleanUpMethod() {
         writer.println("public void _cdiCleanUp(Object _tag) {");
         writer.println(" _jspx_iaHelper.doPreDestroy(_tag);");
@@ -214,11 +215,6 @@ public class GenerateJspVisitor extends GenerateVisitor {
         writer.println(" }");
         writer.println("}");
     }
-
-
-    // _jspx_iaHelper.doPreDestroy(_jspx_th_test_Sample_0);
-    // _jspx_iaHelper.cleanUpTagHandlerFromCdiMap(_jspx_th_test_Sample_0);
-    // _jspx_th_test_Sample_0.release();
 
     // Added for Pages 3.1's errorOnELNotFound option
     private void generateIsErrorOnELFoundMethod(boolean flag) {
@@ -355,6 +351,8 @@ public class GenerateJspVisitor extends GenerateVisitor {
         GeneratorUtils.generateInitSectionCode(writer, GeneratorUtils.JSP_FILE_TYPE, jspOptions);  //PM06063
         writer.println();
         GeneratorUtils.generateELFunctionCode(writer, validatorResult);
+        writer.println();
+        generateInjectionCleanUpMethod();
         writer.println();
     }
 

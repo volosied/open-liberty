@@ -370,22 +370,11 @@ public class ClassicTagGenerator extends BaseTagGenerator {
         if (reuseTag == false || tagClassInfo.implementsJspIdConsumer()) {//jsp2.1work
             // LIDB4147-24
              
-            tagEndWriter.println("} finally {"); // OLGH 11453
+            tagEndWriter.println("} finally {"); // OLGH11453 / PH49514
 
         	if (!jspOptions.isDisableResourceInjection()){		//PM06063
-            	    // tagEndWriter.print ("_jspx_iaHelper.doPreDestroy(");
-            	    // tagEndWriter.print (tagHandlerVar);
-            	    // tagEndWriter.println (");");
-            	
-                    // tagEndWriter.print ("_jspx_iaHelper.cleanUpTagHandlerFromCdiMap(");
-                    // tagEndWriter.print (tagHandlerVar);
-                    // tagEndWriter.println (");");
-
-                    tagEndWriter.print ("_cdiCleanUp(" + tagHandlerVar + ");");
-
+                    tagEndWriter.println("_cdiCleanUp(" + tagHandlerVar + ");");  // OLGH11453 / PH49514
         	} 
-             
-            // tagEndWriter.println(tagHandlerVar + ".release();");
 
             tagEndWriter.println("}"); // OLGH 11453
         }
