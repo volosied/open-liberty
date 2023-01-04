@@ -82,6 +82,7 @@ public class GenerateTagFileVisitor extends GenerateVisitor {
 					logger.logp(Level.FINEST, CLASS_NAME, "visit","entering code generation phase CLASS_SECTION");
 				}
                 generateClassSection(validatorResult);
+                generateInjectionCleanUpMethod();
                 break;
             }
             
@@ -558,6 +559,18 @@ public class GenerateTagFileVisitor extends GenerateVisitor {
                 }
             }
         }
+    }
+
+
+    // Added for Pages 3.1's errorOnELNotFound option
+    private void generateInjectionCleanUpMethod() {
+        writer.println("public void _cdiCleanUp(Object _tag) {");
+        writer.println(" _jspx_iaHelper.doPreDestroy(_tag);");
+        writer.println(" _jspx_iaHelper.cleanUpTagHandlerFromCdiMap(_tag);");
+        writer.println(" if(_tag instanceof javax.servlet.jsp.tagext.Tag) {");
+        writer.println(" ((javax.servlet.jsp.tagext.Tag) _tag).release();");
+        writer.println(" }");
+        writer.println("}");
     }
     
     protected void generateFinallySection() {
