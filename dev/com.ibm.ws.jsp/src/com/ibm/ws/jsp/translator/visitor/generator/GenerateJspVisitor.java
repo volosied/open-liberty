@@ -207,9 +207,11 @@ public class GenerateJspVisitor extends GenerateVisitor {
      * Added to avoid hitting the 65535 bytes limit in methods (especially when this clean up code is used for numerous tags)
      */
     private void generateInjectionCleanUpMethod() {
-        writer.println("public void _cdiCleanUp(Object _tag) {");
-        writer.println(" _jspx_iaHelper.doPreDestroy(_tag);");
-        writer.println(" _jspx_iaHelper.cleanUpTagHandlerFromCdiMap(_tag);");
+        writer.println("public void _tagCleanUp(Object _tag) {");
+        if (!jspOptions.isDisableResourceInjection()){		//PM06063
+            writer.println(" _jspx_iaHelper.doPreDestroy(_tag);");
+            writer.println(" _jspx_iaHelper.cleanUpTagHandlerFromCdiMap(_tag);");
+        }
         writer.println(" if(_tag instanceof javax.servlet.jsp.tagext.Tag) {");
         writer.println(" ((javax.servlet.jsp.tagext.Tag) _tag).release();");
         writer.println(" }");

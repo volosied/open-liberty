@@ -372,9 +372,7 @@ public class ClassicTagGenerator extends BaseTagGenerator {
              
             tagEndWriter.println("} finally {"); // OLGH11453 / PH49514
 
-        	if (!jspOptions.isDisableResourceInjection()){		//PM06063
-                    tagEndWriter.println("_cdiCleanUp(" + tagHandlerVar + ");");  // OLGH11453 / PH49514
-        	} 
+            tagEndWriter.println("_tagCleanUp(" + tagHandlerVar + ");"); // OLGH11453 / PH49514
 
             tagEndWriter.println("}"); // OLGH 11453
         }
