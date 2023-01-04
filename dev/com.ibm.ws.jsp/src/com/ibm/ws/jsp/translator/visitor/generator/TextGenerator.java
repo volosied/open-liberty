@@ -29,7 +29,7 @@ import com.ibm.wsspi.jsp.context.JspCoreContext;
 
 public class TextGenerator extends CodeGeneratorBase {
     protected static final int MAXSIZE = 32 * 1024;
-    protected static final String STANDARD_PREFIX = "private final static char[] _jsp_string";
+    protected static final String STANDARD_PREFIX = "private final static char[] _jsp_str";
     protected static final String STANDARD_SUFFIX = "\".toCharArray();";
     protected boolean elIgnored = false;
     protected boolean deferredIgnored = false;
@@ -302,12 +302,12 @@ public class TextGenerator extends CodeGeneratorBase {
                                             stringId = ++newCurrentStringCount;
                                         }
                                         if (attrName != null) {
-                                            writer.print("String " + attrName + " = String.valueOf(_jsp_string"+stringId+")");
+                                            writer.print("String " + attrName + " = String.valueOf(_jsp_str"+stringId+")");
                                             writer.print(";");
                                             writer.println();
                                         }
                                         else {
-                                            writer.print("out.write(_jsp_string"+stringId+");");
+                                            writer.print("out.write(_jsp_str"+stringId+");");
                                             writer.println();
                                         }
                                     }
@@ -398,12 +398,12 @@ public class TextGenerator extends CodeGeneratorBase {
                 }
                 
                 if (attrName != null) {
-                    writer.print("String " + attrName + " = String.valueOf(_jsp_string"+stringId+")");
+                    writer.print("String " + attrName + " = String.valueOf(_jsp_str"+stringId+")");
                     writer.print(";");
                     writer.println();
                 }
                 else {
-                    writer.print("out.write(_jsp_string"+stringId+");");
+                    writer.print("out.write(_jsp_str"+stringId+");");
                     writer.println();
                 }
             }
