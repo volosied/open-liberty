@@ -84,6 +84,7 @@ public class GenerateJspVisitor extends GenerateVisitor {
 					logger.logp(Level.FINEST, CLASS_NAME, "visit","entering code generation phase CLASS_SECTION");
 				}
                 generateClassSection(validatorResult);
+                generateInjectionCleanUpMethod();
                 if(PagesVersionHandler.isPages31Loaded()){
                     generateIsErrorOnELFoundMethod(jspConfiguration.errorOnELNotFound());
                     generateImportGetters();
@@ -202,6 +203,22 @@ public class GenerateJspVisitor extends GenerateVisitor {
         }
 
     }
+
+    // Added for Pages 3.1's errorOnELNotFound option
+    private void generateInjectionCleanUpMethod() {
+        writer.println("public void _cdiCleanUp(Object _tag) {");
+        writer.println(" _jspx_iaHelper.doPreDestroy(_tag);");
+        writer.println(" _jspx_iaHelper.cleanUpTagHandlerFromCdiMap(_tag);");
+        writer.println(" if(_tag instanceof javax.servlet.jsp.tagext.Tag) {");
+        writer.println(" ((javax.servlet.jsp.tagext.Tag) _tag).release();");
+        writer.println(" }");
+        writer.println("}");
+    }
+
+
+    // _jspx_iaHelper.doPreDestroy(_jspx_th_test_Sample_0);
+    // _jspx_iaHelper.cleanUpTagHandlerFromCdiMap(_jspx_th_test_Sample_0);
+    // _jspx_th_test_Sample_0.release();
 
     // Added for Pages 3.1's errorOnELNotFound option
     private void generateIsErrorOnELFoundMethod(boolean flag) {
