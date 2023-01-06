@@ -36,6 +36,7 @@ import jakarta.faces.component.Doctype;
 import jakarta.faces.component.EditableValueHolder;
 import jakarta.faces.component.UIComponent;
 import jakarta.faces.component.UIForm;
+import jakarta.faces.component.ValueHolder;
 import jakarta.faces.component.UIInput;
 import jakarta.faces.component.UIOutcomeTarget;
 import jakarta.faces.component.UIOutput;
@@ -218,8 +219,9 @@ public final class HtmlRendererUtils
 
             for(SelectItemInfo itemInfo: selections){
                 if(itemInfo.getItem().isDisabled()){
-                    if(reqValues.contains(itemInfo.getItem().getValue())){
-                        reqValues.remove(itemInfo.getItem().getValue());
+                    String result = SharedRendererUtils.getConvertedStringValue(facesContext,component,((ValueHolder) component).getConverter(), itemInfo.getItem().getValue());
+                    if(reqValues.contains(result)){
+                        reqValues.remove(result);
                     }
                 }
             }
@@ -295,8 +297,12 @@ public final class HtmlRendererUtils
 
             // if disabled value is submitted, do not use it
             for(SelectItemInfo itemInfo: selections){
-                if(itemInfo.getItem().isDisabled() && itemInfo.getItem().getValue().equals(submittedValue)){
-                    submittedValue = "";
+                if(itemInfo.getItem().isDisabled()){
+                    Object selectItemValue = itemInfo.getItem().getValue();
+                    String convertedValue = SharedRendererUtils.getConvertedStringValue(facesContext,component,((ValueHolder) component).getConverter(), selectItemValue);
+                    if(convertedValue.equals(selectItemValue)){ // disabled value matches submitted value
+                        submittedValue = RendererUtils.EMPTY_STRING;
+                    }
                 }
             }
             //request parameter found, set submitted value
