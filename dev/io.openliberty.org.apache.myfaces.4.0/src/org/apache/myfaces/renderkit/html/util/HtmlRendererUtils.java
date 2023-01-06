@@ -223,8 +223,8 @@ public final class HtmlRendererUtils
                     }
                 }
             }
-            String[] str = new String[reqValues.size()];
-            ((EditableValueHolder) component).setSubmittedValue( (String[]) reqValues.toArray(str));
+            String[] submittedValue = (String[]) reqValues.toArray(new String[reqValues.size()]);
+            ((EditableValueHolder) component).setSubmittedValue(submittedValue);
         }
         else
         {
