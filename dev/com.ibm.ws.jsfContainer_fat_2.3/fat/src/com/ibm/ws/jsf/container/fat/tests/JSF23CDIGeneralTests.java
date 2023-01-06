@@ -184,6 +184,7 @@ public class JSF23CDIGeneralTests extends FATServletClient {
      *
      * @throws Exception
      */
+    @SkipForRepeat(SkipForRepeat.EE10_FEATURES) // HTMLUnit gargoylesoftware thinks there's a JavaScript error 
     @Test
     @WebArchiveInfo(name = "CDIManagedProperty", pkgs = { "com.ibm.ws.jsf23.fat.cdi.managedproperty" })
     public void testCDIManagedProperty() throws Exception {
