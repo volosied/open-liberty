@@ -749,16 +749,36 @@ public class FlashImpl extends Flash implements ReleasableFlash
     {
         ExternalContext externalContext = facesContext.getExternalContext();
         String tokenValue = (String) externalContext.getRequestMap().get(FLASH_RENDER_MAP_TOKEN);
-        HttpServletResponse httpResponse = ExternalContextUtils.getHttpServletResponse(externalContext);
-        if (httpResponse != null)
+        ClientWindow clientWindow = externalContext.getClientWindow();
+        if (clientWindow != null)
         {
-            Cookie cookie = _createFlashCookie(FLASH_RENDER_MAP_TOKEN, tokenValue, externalContext);
-            httpResponse.addCookie(cookie);
+            if (facesContext.getApplication().getStateManager().isSavingStateInClient(facesContext))
+            {
+                Map<String, Object> sessionMap = externalContext.getSessionMap();
+                sessionMap.put(FLASH_RENDER_MAP_TOKEN+SEPARATOR_CHAR+clientWindow.getId(), tokenValue);
+            }
+            else
+            {
+                FlashClientWindowTokenCollection lruMap = getFlashClientWindowTokenCollection(externalContext, true);
+                if (lruMap != null)
+                {
+                    lruMap.put(clientWindow.getId(), tokenValue);
+                }
+            }
         }
         else
         {
-            Map<String, Object> sessionMap = externalContext.getSessionMap();
-            sessionMap.put(FLASH_RENDER_MAP_TOKEN, tokenValue);
+            HttpServletResponse httpResponse = ExternalContextUtils.getHttpServletResponse(externalContext);
+            if (httpResponse != null)
+            {
+                Cookie cookie = _createFlashCookie(FLASH_RENDER_MAP_TOKEN, tokenValue, externalContext);
+                httpResponse.addCookie(cookie);
+            }
+            else
+            {
+                Map<String, Object> sessionMap = externalContext.getSessionMap();
+                sessionMap.put(FLASH_RENDER_MAP_TOKEN, tokenValue);
+            }
         }
     }
     
@@ -774,20 +794,41 @@ public class FlashImpl extends Flash implements ReleasableFlash
     {
         ExternalContext externalContext = facesContext.getExternalContext();
         String tokenValue = null;
-        HttpServletResponse httpResponse = ExternalContextUtils.getHttpServletResponse(externalContext);
-        if (httpResponse != null)
+        ClientWindow clientWindow = externalContext.getClientWindow();
+        if (clientWindow != null)
         {
-            //Use a cookie
-            Cookie cookie = (Cookie) externalContext.getRequestCookieMap().get(FLASH_RENDER_MAP_TOKEN);
-            if (cookie != null)
+            if (facesContext.getApplication().getStateManager().isSavingStateInClient(facesContext))
             {
-                tokenValue = cookie.getValue();
+                Map<String, Object> sessionMap = externalContext.getSessionMap();
+                tokenValue = (String) sessionMap.get(FLASH_RENDER_MAP_TOKEN+
+                        SEPARATOR_CHAR+clientWindow.getId());                
+            }
+            else
+            {
+                FlashClientWindowTokenCollection lruMap = getFlashClientWindowTokenCollection(externalContext, false);
+                if (lruMap != null)
+                {
+                    tokenValue = (String) lruMap.get(clientWindow.getId());
+                }
             }
         }
         else
         {
-            Map<String, Object> sessionMap = externalContext.getSessionMap();
-            tokenValue = (String) sessionMap.get(FLASH_RENDER_MAP_TOKEN);
+            HttpServletResponse httpResponse = ExternalContextUtils.getHttpServletResponse(externalContext);
+            if (httpResponse != null)
+            {
+                //Use a cookie
+                Cookie cookie = (Cookie) externalContext.getRequestCookieMap().get(FLASH_RENDER_MAP_TOKEN);
+                if (cookie != null)
+                {
+                    tokenValue = cookie.getValue();
+                }
+            }
+            else
+            {
+                Map<String, Object> sessionMap = externalContext.getSessionMap();
+                tokenValue = (String) sessionMap.get(FLASH_RENDER_MAP_TOKEN);
+            }
         }
         return tokenValue;
     }
