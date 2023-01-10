@@ -45,8 +45,9 @@ import jakarta.faces.event.PostPutFlashValueEvent;
 import jakarta.faces.event.PreClearFlashEvent;
 import jakarta.faces.event.PreRemoveFlashValueEvent;
 import jakarta.faces.lifecycle.ClientWindow;
-import org.apache.myfaces.util.ExternalSpecifications;
 
+import org.apache.myfaces.config.FacesConfigurator;
+import org.apache.myfaces.util.ExternalSpecifications;
 import org.apache.myfaces.util.lang.StringUtils;
 import org.apache.myfaces.util.token.TokenGenerator;
 
@@ -750,7 +751,7 @@ public class FlashImpl extends Flash implements ReleasableFlash
         ExternalContext externalContext = facesContext.getExternalContext();
         String tokenValue = (String) externalContext.getRequestMap().get(FLASH_RENDER_MAP_TOKEN);
         ClientWindow clientWindow = externalContext.getClientWindow();
-        if (clientWindow != null)
+        if (clientWindow != null && !FacesConfigurator.isEnableDefaultWindowMode(facesContext))
         {
             if (facesContext.getApplication().getStateManager().isSavingStateInClient(facesContext))
             {
@@ -795,7 +796,7 @@ public class FlashImpl extends Flash implements ReleasableFlash
         ExternalContext externalContext = facesContext.getExternalContext();
         String tokenValue = null;
         ClientWindow clientWindow = externalContext.getClientWindow();
-        if (clientWindow != null)
+        if (clientWindow != null && !FacesConfigurator.isEnableDefaultWindowMode(facesContext))
         {
             if (facesContext.getApplication().getStateManager().isSavingStateInClient(facesContext))
             {
