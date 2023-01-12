@@ -85,6 +85,7 @@ public class ValidateWholeBeanComponent extends UIInput
      *  As required by https://github.com/jakartaee/faces/issues/1
      *  Also ensures all inputs are available for f:wholeBeanValidate processing
      *  (otherwise they'd be empty during the validation)
+     *  Created based off Mojarra's UIValidateWholeBean#misplacedComponentCheck
      */
     public void validatePlacementOfWholeBeanValidate(UIComponent component, String clientId) throws IllegalStateException {
         List<UIComponent> children = component.getChildren();
