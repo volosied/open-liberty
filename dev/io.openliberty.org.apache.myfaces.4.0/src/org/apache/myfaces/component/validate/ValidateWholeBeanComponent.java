@@ -19,6 +19,8 @@
 package org.apache.myfaces.component.validate;
 
 import jakarta.faces.component.UIInput;
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.component.EditableValueHolder;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.convert.Converter;
 import jakarta.faces.validator.BeanValidator;
@@ -27,7 +29,9 @@ import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFCompone
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFProperty;
 import org.apache.myfaces.util.WebConfigParamUtils;
 
+import java.io.IOException;
 import java.lang.IllegalStateException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -60,15 +64,20 @@ public class ValidateWholeBeanComponent extends UIInput
     }
 
     @Override
-    public void encodeBegin(FacesContext context, UIComponent component) throws IOException
+    public void encodeBegin(FacesContext context) throws IOException
     {
-        UIComponent parent = component.getParent();
+        UIComponent parent = this.getParent();
+
+        while(parent != null & !(parent instanceof jakarta.faces.component.UIForm)){
+            parent = parent.getParent();
+        }
+
         if( !(parent instanceof jakarta.faces.component.UIForm) ){
             // Throw exception similarly to Mojarra 
             throw new IllegalStateException("f:validateWholeBean must be placed within a form");
         }
 
-        validatePlacementOfWholeBeanValidate(parent, component.getClientId(context));
+        validatePlacementOfWholeBeanValidate(parent, this.getClientId(context));
         
     }
 
@@ -78,22 +87,46 @@ public class ValidateWholeBeanComponent extends UIInput
      *  (otherwise they'd be empty during the validation)
      */
     public void validatePlacementOfWholeBeanValidate(UIComponent component, String clientId) throws IllegalStateException {
-        List<UIComponent> children = Collections.reverse(component.getChildren());
+        List<UIComponent> children = component.getChildren();
 
-        for(UIComponent c : children){
-            if(c instanceof jakarta.faces.component.EditableValueHolder && !(c instanceof ValidateWholeBeanComponent)){
-                throw new IllegalStateException("f:validateWholeBean must be placed after all validated inputs (end of the form)");
-            } else {
-                if(c.getClientId().equals(clientId)){
-                    return;
+        List<UIComponent> reversed = new ArrayList<UIComponent>();
+
+        for(int i = children.size()-1; i >=0 ; i--){
+            reversed.add(children.get(i));
+        }
+
+
+        // try{
+
+            for(UIComponent c : reversed){
+                if(c instanceof EditableValueHolder && !(c instanceof ValidateWholeBeanComponent)){
+                    Validator[] validators = ((EditableValueHolder) c).getValidators();
+                    for(Validator v : validators){
+                        if( v instanceof BeanValidator &&  !((BeanValidator)v).getValidationGroups().equals("jakarta.validation.groups.Default")){
+                            System.out.println(((BeanValidator)v).getValidationGroups());
+                            throw new IllegalStateException("f:validateWholeBean must be placed after all validated inputs (end of the form)");
+                        }
+                    }
                 } else {
-                    validatePlacementOfWholeBeanValidate(component, clientId);
+                    if(c.getClientId().equals(clientId)){
+                        return;
+                        // throw new BreakException(); // found f:validateWholeBean before any inputs - break out of here immediately 
+                    } else {
+                        validatePlacementOfWholeBeanValidate(c, clientId);
+                    }
                 }
             }
-        }
-        
+        // } catch(Exception e) {
+        //     // do nothing 
+        //     System.out.ro
+        // }
 
     }
+
+    public class BreakException extends Exception {
+
+    }
+    
 
     @Override
     public void validate(FacesContext context)
