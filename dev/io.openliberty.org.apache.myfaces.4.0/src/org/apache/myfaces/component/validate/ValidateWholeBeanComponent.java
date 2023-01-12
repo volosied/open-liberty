@@ -27,6 +27,10 @@ import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFCompone
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFProperty;
 import org.apache.myfaces.util.WebConfigParamUtils;
 
+import java.lang.IllegalStateException;
+import java.util.Collections;
+import java.util.List;
+
 /**
  *
  */
@@ -53,6 +57,42 @@ public class ValidateWholeBeanComponent extends UIInput
     public void addValidator(Validator validator)
     {
         // No-op. It does not make sense to allow additional validators to be installed.
+    }
+
+    @Override
+    public void encodeBegin(FacesContext context, UIComponent component) throws IOException
+    {
+        UIComponent parent = component.getParent();
+        if( !(parent instanceof jakarta.faces.component.UIForm) ){
+            // Throw exception similarly to Mojarra 
+            throw new IllegalStateException("f:validateWholeBean must be placed within a form");
+        }
+
+        validatePlacementOfWholeBeanValidate(parent, component.getClientId(context));
+        
+    }
+
+    /*
+     *  As required by https://github.com/jakartaee/faces/issues/1
+     *  Also ensures all inputs are available for f:wholeBeanValidate processing
+     *  (otherwise they'd be empty during the validation)
+     */
+    public void validatePlacementOfWholeBeanValidate(UIComponent component, String clientId) throws IllegalStateException {
+        List<UIComponent> children = Collections.reverse(component.getChildren());
+
+        for(UIComponent c : children){
+            if(c instanceof jakarta.faces.component.EditableValueHolder && !(c instanceof ValidateWholeBeanComponent)){
+                throw new IllegalStateException("f:validateWholeBean must be placed after all validated inputs (end of the form)");
+            } else {
+                if(c.getClientId().equals(clientId)){
+                    return;
+                } else {
+                    validatePlacementOfWholeBeanValidate(component, clientId);
+                }
+            }
+        }
+        
+
     }
 
     @Override
