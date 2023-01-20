@@ -82,7 +82,7 @@ public class UISelectOne extends UIInput
         String group = getGroup();
         ValueExpression ve = getValueExpression("value");
         String submittedValue = (String) getSubmittedValue();
-        if (group != null && !group.isEmpty() && ve != null && !isEmpty(submittedValue)) 
+        if (group != null && !group.isEmpty()) 
         {
             final UIComponent form = getRadioNestingForm(context, this);
 
@@ -97,23 +97,29 @@ public class UISelectOne extends UIInput
 
                         // if target is an instance of UISelectOne then get all the UISelectItem children
                         // and verify if the submitted value exists
-                        for (Iterator<UIComponent> iter = radio.getChildren().iterator(); iter.hasNext(); ) 
-                        {
-                            UIComponent component = iter.next();
-                            if (component instanceof UISelectItem) 
-                            {
-                                UISelectItem item = (UISelectItem) component;
-                                
-                                Object converted = SharedRendererUtils.getConvertedUISelectOneValue(FacesContext.getCurrentInstance(), (UISelectOne) target, submittedValue);
-                                if (item.getItemValue().equals(converted)) 
-                                {
+                        // for (Iterator<UIComponent> iter = radio.getChildren().iterator(); iter.hasNext(); ) 
+                        // {
+                            // UIComponent component = iter.next();
+                            // if (component instanceof UISelectItem) 
+                            // {
+                                // UISelectItem item = (UISelectItem) component;
+
+                                if(isEmpty(submittedValue) && (( (EditableValueHolder)target).isLocalValueSet() || !((EditableValueHolder)target).isValid() )){
                                     selectItemValueFound = true;
                                     return VisitResult.COMPLETE;
                                 }
-                            }
+                                
+                                // Object converted = SharedRendererUtils.getConvertedUISelectOneValue(FacesContext.getCurrentInstance(), (UISelectOne) target, submittedValue);
+                                
+                                // if (item.getItemValue().equals(converted)) 
+                                // {
+                                //     selectItemValueFound = true;
+                                //     return VisitResult.COMPLETE;
+                                // }
+                            // }
 
-                        }
-                        return VisitResult.REJECT;
+                        // }
+                        // return VisitResult.REJECT;
                     }
 
                     return VisitResult.ACCEPT;
