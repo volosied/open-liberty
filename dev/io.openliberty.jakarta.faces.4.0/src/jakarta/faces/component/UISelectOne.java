@@ -35,6 +35,7 @@ import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFJspProp
 import org.apache.myfaces.core.api.shared.MessageUtils;
 import org.apache.myfaces.core.api.shared.SelectItemsUtil;
 
+import org.apache.myfaces.core.api.shared.SharedRendererUtils;
 /**
  * Component for choosing one option out of a set of possibilities.
  * <p>
@@ -102,7 +103,9 @@ public class UISelectOne extends UIInput
                             if (component instanceof UISelectItem) 
                             {
                                 UISelectItem item = (UISelectItem) component;
-                                if (item.getItemValue().equals(submittedValue)) 
+                                
+                                Object converted = SharedRendererUtils.getConvertedUISelectOneValue(FacesContext.getCurrentInstance(), (UISelectOne) target, submittedValue);
+                                if (item.getItemValue().equals(converted)) 
                                 {
                                     selectItemValueFound = true;
                                     return VisitResult.COMPLETE;
@@ -116,6 +119,10 @@ public class UISelectOne extends UIInput
                     return VisitResult.ACCEPT;
                 }
             });
+        }
+
+        if(selectItemValueFound){
+            return;
         }
         
         super.processValidators(context);
