@@ -637,8 +637,6 @@ public class NavigationHandlerImpl extends ConfigurableNavigationHandler
                         // Since we start a new flow, the current flow is now the
                         // target flow.
                         navigationContext.pushFlow(facesContext, targetFlow);
-   
-                        // currentFlow = targetFlow; VS
 
                         //No outboundCallNode.
                         //Resolve start node.
@@ -648,6 +646,17 @@ public class NavigationHandlerImpl extends ConfigurableNavigationHandler
 
                         // FlowHandlerImpl.doAfterEnterFlow();
                         // FIX VS
+                        System.out.println("CURRENT FLOW -> " + currentFlow);
+                        System.out.println( "TARGET FLOW -> " + targetFlow);
+
+
+                        // if(currentFlow == null){
+                        //     outcomeToGo = resolveStartNodeOutcome(targetFlow);
+                        //     System.out.println("CREATING FLOW");
+                        //     flowHandler.transition(facesContext, currentFlow, targetFlow, null, outcomeToGo);
+                        //     facesContext.getAttributes().put(START_FLOW_TRANSITION, true);
+                        // }
+                        currentFlow = targetFlow;
                         
                     }
                     if (checkFlowNode)
@@ -656,7 +665,7 @@ public class NavigationHandlerImpl extends ConfigurableNavigationHandler
                         if (flowNode != null)
                         {
                             checkNavCase = true;
-                            if (!complete && flowNode instanceof SwitchNode && currentFlow != null)
+                            if (!complete && flowNode instanceof SwitchNode)
                             {
                                 outcomeToGo = calculateSwitchOutcome(facesContext, (SwitchNode) flowNode);
                                 // Start over again checking if the node exists.
@@ -665,7 +674,7 @@ public class NavigationHandlerImpl extends ConfigurableNavigationHandler
                                 flowNode = currentFlow.getNode(outcomeToGo);
                                 continue;
                             }
-                            if (!complete && flowNode instanceof FlowCallNode && currentFlow != null)
+                            if (!complete && flowNode instanceof FlowCallNode)
                             {
                                 // "... If the node is a FlowCallNode, save it aside as facesFlowCallNode. ..."
                                 FlowCallNode flowCallNode = (FlowCallNode) flowNode;
@@ -684,7 +693,7 @@ public class NavigationHandlerImpl extends ConfigurableNavigationHandler
                                     complete = true;
                                 }
                             }
-                            if (!complete && flowNode instanceof MethodCallNode && currentFlow != null)
+                            if (!complete && flowNode instanceof MethodCallNode)
                             {
                                 MethodCallNode methodCallNode = (MethodCallNode) flowNode;
                                 String vdlViewIdentifier = calculateVdlViewIdentifier(facesContext, methodCallNode);
@@ -700,7 +709,7 @@ public class NavigationHandlerImpl extends ConfigurableNavigationHandler
                                     complete = true;
                                 }
                             }
-                            if (!complete && flowNode instanceof ReturnNode && currentFlow != null)
+                            if (!complete && flowNode instanceof ReturnNode)
                             {
                                 ReturnNode returnNode = (ReturnNode) flowNode;
                                 String fromOutcome = returnNode.getFromOutcome(facesContext);
@@ -984,6 +993,7 @@ public class NavigationHandlerImpl extends ConfigurableNavigationHandler
                 }
             }
         }
+        System.out.println("RETURNING " + navigationCase);
         return navigationCase;
     }
     
@@ -1174,7 +1184,7 @@ public class NavigationHandlerImpl extends ConfigurableNavigationHandler
             result = new NavigationCase(viewId, fromAction, outcome, null, implicitViewId, params, isRedirect,
                     includeViewParams);
         }
-
+        System.out.println("from out res" + fromAction + " " + outcome + " " + result);
         return result;
     }
     
