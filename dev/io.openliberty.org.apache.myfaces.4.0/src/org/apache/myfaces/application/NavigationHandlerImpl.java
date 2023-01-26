@@ -76,8 +76,6 @@ import org.apache.myfaces.util.NavigationUtils;
 import org.apache.myfaces.view.facelets.ViewPoolProcessor;
 import org.apache.myfaces.view.facelets.tag.faces.PreDisposeViewEvent;
 
-import org.apache.myfaces.flow.cdi.FlowScopeContextualStorageHolder;
-
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
  * @author Anton Koinov
@@ -371,13 +369,13 @@ public class NavigationHandlerImpl extends ConfigurableNavigationHandler
     
     private void applyFlowTransition(FacesContext facesContext, NavigationContext navigationContext)
     {
-     
+
         if(facesContext.getAttributes().containsKey(START_FLOW_TRANSITION)){
             facesContext.getAttributes().remove(START_FLOW_TRANSITION);
             System.out.println("SKIPPING APPLY FLOW TRANSITION");
             return;
         }
-        // Apply Flow transition if any
+        //Apply Flow transition if any
         // Is any flow transition on the way?
         if (navigationContext != null
                 && navigationContext.getSourceFlows() != null
@@ -637,27 +635,22 @@ public class NavigationHandlerImpl extends ConfigurableNavigationHandler
                         // Since we start a new flow, the current flow is now the
                         // target flow.
                         navigationContext.pushFlow(facesContext, targetFlow);
-
+                        
                         //No outboundCallNode.
                         //Resolve start node.
-
+                        // outcomeToGo = resolveStartNodeOutcome(targetFlow);
                         checkFlowNode = true;
                         startFlow = false;
-
-                        // FlowHandlerImpl.doAfterEnterFlow();
-                        // FIX VS
-                        System.out.println("CURRENT FLOW -> " + currentFlow);
-                        System.out.println( "TARGET FLOW -> " + targetFlow);
-
-
-                        // if(currentFlow == null){
-                        //     outcomeToGo = resolveStartNodeOutcome(targetFlow);
-                        //     System.out.println("CREATING FLOW");
-                        //     flowHandler.transition(facesContext, currentFlow, targetFlow, null, outcomeToGo);
-                        //     facesContext.getAttributes().put(START_FLOW_TRANSITION, true);
-                        // }
+                        // vlad
+                        outcomeToGo = resolveStartNodeOutcome(targetFlow);
+                        if(currentFlow == null){
+                            // outcomeToGo = resolveStartNodeOutcome(targetFlow);
+                            System.out.println("CREATING FLOW");
+                            flowHandler.transition(facesContext, currentFlow, targetFlow, null, outcomeToGo);
+                            facesContext.getAttributes().put(START_FLOW_TRANSITION, true);
+                        }
                         currentFlow = targetFlow;
-                        
+                        // end 
                     }
                     if (checkFlowNode)
                     {
@@ -993,7 +986,6 @@ public class NavigationHandlerImpl extends ConfigurableNavigationHandler
                 }
             }
         }
-        System.out.println("RETURNING " + navigationCase);
         return navigationCase;
     }
     
@@ -1184,7 +1176,7 @@ public class NavigationHandlerImpl extends ConfigurableNavigationHandler
             result = new NavigationCase(viewId, fromAction, outcome, null, implicitViewId, params, isRedirect,
                     includeViewParams);
         }
-        System.out.println("from out res" + fromAction + " " + outcome + " " + result);
+
         return result;
     }
     
