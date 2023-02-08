@@ -291,6 +291,12 @@ public final class HtmlRendererUtils
                                 null, MyFacesVisitHints.SET_SKIP_UNRENDERED),
                                 callback);
                     }
+                    else 
+                    {
+                        // means input was not submitted. set to empty string so we can validate required fields
+                        // if not set, a null value will skip validation -- see beginning of UIInput#validate
+                        ((EditableValueHolder)component).setSubmittedValue(RendererUtils.EMPTY_STRING);
+                    } 
                 }
                 else 
                 {
