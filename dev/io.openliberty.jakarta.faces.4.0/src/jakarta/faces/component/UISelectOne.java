@@ -176,11 +176,13 @@ public class UISelectOne extends UIInput
         Converter converter = getConverter();
 
         // Since the iterator is used twice, it has sense to traverse it only once.
-        Collection<SelectItem> items = new ArrayList<>();
-        for (Iterator<SelectItem> iter = new SelectItemsIterator(this, context); iter.hasNext();)
-        {
-            items.add(iter.next());
-        }
+        // Collection<SelectItem> items = new ArrayList<>();
+        // for (Iterator<SelectItem> iter = new SelectItemsIterator(this, context); iter.hasNext();)
+        // {
+        //     items.add(iter.next());
+        // }
+
+        Collection<SelectItem> items = getSelectItemCollectionForGroup(context);
         
         if (SelectItemsUtil.matchValue(context, this, value, items.iterator(), converter))
         {
@@ -205,6 +207,33 @@ public class UISelectOne extends UIInput
                 new Object[] {MessageUtils.getLabel(context, this) });
         setValid(false);
     }
+
+    private Collection<SelectItem> getSelectItemCollectionForGroup(FacesContext context){
+        final UIComponent form = getRadioNestingForm(context, this);
+        String group = getGroup();
+        Collection<SelectItem> items = new ArrayList<>();
+        if (group != null && !group.isEmpty()) {
+            form.visitTree(VisitContext.createVisitContext(context), new VisitCallback() 
+            {
+                @Override
+                public VisitResult visit(VisitContext visitContext, UIComponent target) 
+                {
+                    if (target instanceof UISelectOne  && ((UISelectOne) target).getGroup().equals(group)) 
+                    {
+                        for (Iterator<SelectItem> iter = new SelectItemsIterator(target, context); iter.hasNext();)
+                        {
+                            items.add(iter.next());
+                        }
+
+                        return VisitResult.REJECT;
+                    }
+                    return VisitResult.ACCEPT;
+                }
+            });
+        }
+        return items;
+    }
+
 
     public String getGroup()
     {
