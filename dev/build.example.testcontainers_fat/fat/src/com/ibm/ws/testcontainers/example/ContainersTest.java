@@ -84,7 +84,7 @@ public class ContainersTest extends FATServletClient {
      */
     @ClassRule
     public static GenericContainer<?> container = new GenericContainer<>("selenium/standalone-chrome:110.0")
-                    .withExposedPorts(4444)
+                    .withExposedPorts(4444, 8010)
                     .withLogConsumer(new SimpleLogConsumer(ContainersTest.class, "selenium"));
                     // .waitingFor(new LogMessageWaitStrategy()
                     //                 .withRegEx(".*database system is ready to accept connections.*\\s")
@@ -93,7 +93,7 @@ public class ContainersTest extends FATServletClient {
 
     @BeforeClass
     public static void setUp() throws Exception {
-        ShrinkHelper.defaultApp(server, APP_NAME, "web.generic");
+        ShrinkHelper.defaultApp(server, APP_NAME, "simple");
 
 
         driver = chrome.getWebDriver();
@@ -113,7 +113,9 @@ public class ContainersTest extends FATServletClient {
         // RemoteWebDriver driver = new RemoteWebDriver(chrome.getSeleniumAddress(), new ChromeOptions());
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
 
-        driver.get("http://localhost:8010/Simple/SimpleTest.xhml");
+        String address = container.getHost() + ":" + container.getMappedPort(8010);
+
+        driver.get(address + "/Simple/SimpleTest.xhml");
         System.out.println(driver.getPageSource());
 
     }
