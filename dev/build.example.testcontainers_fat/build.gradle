@@ -11,6 +11,9 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
+// dependencies {
+//    files("./lib/*")
+// }
  // Copy bundle io.openliberty.org.testcontainers to AutoFVT/lib/
  // This bundle is required both at compiletime and runtime.
  addRequiredLibraries.dependsOn copyTestContainers
@@ -18,6 +21,14 @@
  // If you are preforming database testing use the copyJdbcDrivers
  // task to copy the common JDBC drivers into the
  // publish/shared/resources/jdbc directory 
- addRequiredLibraries.dependsOn copyJdbcDrivers
+//  addRequiredLibraries.dependsOn copyJdbcDrivers
+
+task addHTMLUnit(type: Copy) {
+    from('lib') {
+        include '*.jar'
+    }
+    into "${buildDir}/autoFVT/lib"
+}
 
  addRequiredLibraries.dependsOn addJakartaTransformer
+ addRequiredLibraries.dependsOn addHTMLUnit

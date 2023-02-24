@@ -17,6 +17,8 @@ import java.time.Duration;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
+import org.junit.Rule;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.LogMessageWaitStrategy;
@@ -31,22 +33,33 @@ import componenttest.topology.impl.LibertyServer;
 import componenttest.topology.utils.FATServletClient;
 import web.generic.ContainersTestServlet;
 
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.testcontainers.containers.BrowserWebDriverContainer;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.*;
 /**
  * Example test class showing how to setup a GenericContainer
  */
 @RunWith(FATRunner.class)
 public class ContainersTest extends FATServletClient {
 
-    public static final String APP_NAME = "app";
+    public static final String APP_NAME = "Simple";
+
+    public static ExtendedWebDriver driver;
 
     @Server("build.example.testcontainers")
     @TestServlet(servlet = ContainersTestServlet.class, contextRoot = APP_NAME)
     public static LibertyServer server;
 
-    public static final String POSTGRES_DB = "test";
-    public static final String POSTGRES_USER = "test";
-    public static final String POSTGRES_PASSWORD = "test";
-    public static final int POSTGRE_PORT = 5432;
+    @Rule
+    public static BrowserWebDriverContainer chrome = new BrowserWebDriverContainer()
+            .withCapabilities(new ChromeOptions()); 
+
+    // public static final String POSTGRES_DB = "test";
+    // public static final String POSTGRES_USER = "test";
+    // public static final String POSTGRES_PASSWORD = "test";
+    // public static final int POSTGRE_PORT = 5432;
 
     /**
      * When using a generic container you will need to provide all the information needed
@@ -70,41 +83,44 @@ public class ContainersTest extends FATServletClient {
      * have been used here. This is just an example of how to setup a GenericContainer.
      */
     @ClassRule
-    public static GenericContainer<?> container = new GenericContainer<>("postgres:14.1-alpine")
-                    .withExposedPorts(POSTGRE_PORT)
-                    .withEnv("POSTGRES_DB", POSTGRES_DB)
-                    .withEnv("POSTGRES_USER", POSTGRES_USER)
-                    .withEnv("POSTGRES_PASSWORD", POSTGRES_PASSWORD)
-                    .withLogConsumer(new SimpleLogConsumer(ContainersTest.class, "postgres"))
-                    .waitingFor(new LogMessageWaitStrategy()
-                                    .withRegEx(".*database system is ready to accept connections.*\\s")
-                                    .withTimes(2)
-                                    .withStartupTimeout(Duration.ofSeconds(60)));
+    public static GenericContainer<?> container = new GenericContainer<>("selenium/standalone-chrome:110.0")
+                    .withExposedPorts(4444)
+                    .withLogConsumer(new SimpleLogConsumer(ContainersTest.class, "selenium"));
+                    // .waitingFor(new LogMessageWaitStrategy()
+                    //                 .withRegEx(".*database system is ready to accept connections.*\\s")
+                    //                 .withTimes(2)
+                    //                 .withStartupTimeout(Duration.ofSeconds(60)));
 
     @BeforeClass
     public static void setUp() throws Exception {
         ShrinkHelper.defaultApp(server, APP_NAME, "web.generic");
 
-        /*
-         * Use server.addEnvVar() to pass any variables from the container that is needed
-         * within server.xml, or by the application.
-         *
-         * Main use:
-         * testcontainers always exposes ports onto RANDOM port numbers to avoid port conflicts.
-         */
-        server.addEnvVar("PS_URL", "jdbc:postgresql://" + container.getHost() //
-                                   + ":" + container.getMappedPort(POSTGRE_PORT)
-                                   + "/" + POSTGRES_DB);
-        server.addEnvVar("PS_USER", POSTGRES_USER);
-        server.addEnvVar("PS_PASSWORD", POSTGRES_PASSWORD);
+
+        driver = chrome.getWebDriver();
+
+        System.out.println("Running setUp");
 
         server.startServer();
 
-        runTest(server, APP_NAME, "setupDatabase");
+        // runTest(server, APP_NAME, "setupDatabase");
+    }
+
+    @Test
+    public void testSimpleFacelet() {
+        System.out.println("Running testSimpleFacelet");
+        System.out.println(getPage("http://localhost:8010/Simple/SimpleTest.xhml").getPageSource());
     }
 
     @AfterClass
     public static void tearDown() throws Exception {
         server.stopServer();
+    }
+
+    protected WebPage getPage(String url) {
+        driver.get(url);
+        WebPage webPage = new WebPage(driver);
+        // Sometimes it takes longer until the first page is loaded after container startup
+        webPage.waitForPageToLoad(Duration.ofSeconds(120));
+        return webPage;
     }
 }

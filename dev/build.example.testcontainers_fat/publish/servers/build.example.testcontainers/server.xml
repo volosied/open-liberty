@@ -13,27 +13,12 @@
 <server>
 
     <featureManager>
-        <feature>servlet-3.1</feature>
-        <feature>jdbc-4.1</feature>
+        <feature>faces-4.0</feature>
         <feature>componenttest-1.0</feature>
     </featureManager>
     
     <include location="../fatTestPorts.xml"/>
-    
-    <library id="postgresLib">
-    	<fileset dir="${shared.resource.dir}/jdbc" includes="postgresql.jar"/>
-  	</library>
-  	
-  	<!-- Used for ContainersTest.java and DockerfileTest -->
-	<dataSource jndiName="jdbc/postgres">
-	  <jdbcDriver libraryRef="postgresLib"/>
-	  <properties.postgresql URL="${env.PS_URL}" user="${env.PS_USER}" password="${env.PS_PASSWORD}"/>
-	</dataSource>
-    
-    <application location="app.war" />
-    
-    <!-- Depending on the container, you might need certain java permissions -->
-    <javaPermission codeBase="${shared.resource.dir}/jdbc/postgresql.jar" className="java.security.AllPermission"/>
-    <javaPermission codeBase="${server.config.dir}/apps/app.war" className="java.util.PropertyPermission" name="org.postgresql.forceBinary" actions="read"/>
+
+    <application location="Simple.war" />
 
 </server>

@@ -22,7 +22,7 @@ fat.project: true
 # Uncomment to use remote docker host to simulate continuous build behavior.
 # This will only work if you are on the IBM Network.
 # External contributors will need to have docker installed on their local machine.
-#fat.test.use.remote.docker: true
+fat.test.use.remote.docker: true
 
 # This property is used to tell the SOE build system that this FAT suite
 # should be run in the database rotation build.
@@ -41,9 +41,16 @@ fat.test.databases: true
 # Define additional tested features that are NOT present in any XML files in this bucket.
 # In this case, servlet-5.0 is added programmatically at runtime by the RepeatTests rule.
 tested.features: \
-	servlet-5.0
+	servlet-6.0,
+	expressionlanguage-5.0,
+	faces-4.0,
+	cdi-4.0,
+	expressionlanguage-4.0, 
+	servlet-5.0, 
+	pages-3.0, 
+	faces-3.0
 	
-fat.test.container.images: kyleaure/postgres-test-table:3.0
+fat.test.container.images: selenium/standalone-chrome:110.0
 
 # io.openliberty.org.testcontainers bundle should have all compile time
 # dependences you need for a testcontainer enabled fat project.
@@ -53,6 +60,14 @@ fat.test.container.images: kyleaure/postgres-test-table:3.0
 	com.ibm.websphere.javaee.annotation.1.1;version=latest,\
 	com.ibm.websphere.javaee.servlet.3.1;version=latest,\
 	io.openliberty.org.apache.commons.logging;version=latest,\
-	io.openliberty.org.testcontainers;version=latest
+	io.openliberty.org.testcontainers;version=latest, \
+	./lib/selenium-remote-driver-4.8.1.jar;version=file, \
+	./lib/selenium-chrome-driver-4.8.1.jar;version=file, \
+	./lib/selenium-api-4.8.1.jar;version=file,\
+	./lib/selenium-chromium-driver-4.8.1.jar;version=file, \
+	./lib/selenium-support-4.8.1.jar;version=file, \
+	./lib/guava-31.1-jre.jar;version=file
+
+
 	
     

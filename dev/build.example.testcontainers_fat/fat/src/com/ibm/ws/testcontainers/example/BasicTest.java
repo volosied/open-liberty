@@ -32,33 +32,34 @@ import web.generic.ContainersTestServlet;
 @RunWith(FATRunner.class)
 public class BasicTest extends FATServletClient {
 
-    public static final String APP_NAME = "app";
+    public static final String APP_NAME = "simple";
 
     @Server("build.example.testcontainers")
     @TestServlet(servlet = ContainersTestServlet.class, contextRoot = APP_NAME)
     public static LibertyServer server;
 
-    static PostgreSQLContainer<?> container = FATSuite.container;
+    // static PostgreSQLContainer<?> container = FATSuite.container;
 
     @BeforeClass
     public static void setUp() throws Exception {
         ShrinkHelper.defaultApp(server, APP_NAME, "web.generic");
 
         /*
-         * Use server.addEnvVar() to pass any variables from the container that is needed
-         * within server.xml, or by the application.
-         */
-        server.addEnvVar("PS_URL", container.getJdbcUrl());
-        server.addEnvVar("PS_USER", container.getUsername());
-        server.addEnvVar("PS_PASSWORD", container.getPassword());
+        //  * Use server.addEnvVar() to pass any variables from the container that is needed
+        //  * within server.xml, or by the application.
+        //  */
+        // server.addEnvVar("PS_URL", container.getJdbcUrl());
+        // server.addEnvVar("PS_USER", container.getUsername());
+        // server.addEnvVar("PS_PASSWORD", container.getPassword());
 
         server.startServer();
 
-        runTest(server, APP_NAME, "setupDatabase");
+        // runTest(server, APP_NAME, "setupDatabase");
     }
 
     @AfterClass
     public static void tearDown() throws Exception {
         server.stopServer();
     }
+
 }
