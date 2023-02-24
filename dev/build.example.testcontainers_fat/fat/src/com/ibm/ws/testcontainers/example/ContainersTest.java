@@ -46,7 +46,7 @@ public class ContainersTest extends FATServletClient {
 
     public static final String APP_NAME = "Simple";
 
-    public static ExtendedWebDriver driver;
+    public static RemoteWebDriver driver;
 
     @Server("build.example.testcontainers")
     @TestServlet(servlet = ContainersTestServlet.class, contextRoot = APP_NAME)
@@ -108,7 +108,14 @@ public class ContainersTest extends FATServletClient {
     @Test
     public void testSimpleFacelet() {
         System.out.println("Running testSimpleFacelet");
-        System.out.println(getPage("http://localhost:8010/Simple/SimpleTest.xhml").getPageSource());
+        // System.out.println(getPage("http://localhost:8010/Simple/SimpleTest.xhml").getPageSource());
+
+        // RemoteWebDriver driver = new RemoteWebDriver(chrome.getSeleniumAddress(), new ChromeOptions());
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
+
+        driver.get("http://localhost:8010/Simple/SimpleTest.xhml");
+        System.out.println(driver.getPageSource());
+
     }
 
     @AfterClass
@@ -116,11 +123,11 @@ public class ContainersTest extends FATServletClient {
         server.stopServer();
     }
 
-    protected WebPage getPage(String url) {
-        driver.get(url);
-        WebPage webPage = new WebPage(driver);
-        // Sometimes it takes longer until the first page is loaded after container startup
-        webPage.waitForPageToLoad(Duration.ofSeconds(120));
-        return webPage;
-    }
+    // protected WebPage getPage(String url) {
+    //     driver.get(url);
+    //     WebPage webPage = new WebPage(driver);
+    //     // Sometimes it takes longer until the first page is loaded after container startup
+    //     webPage.waitForPageToLoad(Duration.ofSeconds(120));
+    //     return webPage;
+    // }
 }
