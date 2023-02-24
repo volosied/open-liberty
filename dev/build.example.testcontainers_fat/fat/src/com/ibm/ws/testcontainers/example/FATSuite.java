@@ -25,7 +25,7 @@ import componenttest.rules.repeater.RepeatTests;
 @RunWith(Suite.class)
 @SuiteClasses({
                 // BasicTest.class, //LITE
-                ContainersTest.class, //LITE
+                FacesTest.class, //LITE
                 // DatabaseRotationTest.class, //LITE
                 // DockerfileTest.class, //FULL
                 // ProgrammaticImageTest.class, //FULL
