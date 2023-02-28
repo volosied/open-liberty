@@ -23,12 +23,16 @@ Export-Package: \
   jakarta.faces.*; version=${Implementation-Version}, \
   org.apache.myfaces.core.api.shared.*; version=${Implementation-Version}
 
-
 DynamicImport-Package: \
   io.openliberty.faces40.internal.spi, \
   com.ibm.ws.managedobject, \
   org.apache.myfaces.cdi.util, \
   org.apache.myfaces.spi
+
+# Use this format once we have an official release and not an RC4
+# @${repo;org.apache.myfaces.core:myfaces-impl;${Implementation-Version};EXACT}!/jakarta/faces, \
+Include-Resource: \
+  META-INF=@src/META-INF
 
 instrument.disabled: true
 
