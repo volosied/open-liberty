@@ -48,6 +48,9 @@ DynamicImport-Package: \
   io.openliberty.faces40.internal.spi.impl, \
   io.openliberty.faces40.internal.extprocessor
 
+Include-Resource: \
+  META-INF=@src/META-INF
+  
 # Don't export the org.apache.myfaces.buildtools package as that is only needed for compilation.  The jar that contains the
 # org.apache.myfaces.buildtools package is myfaces-builder-annotations-1.0.9.jar
 # Additionally, a subset of these org.apache.myfaces packages are exported by the thirdparty.faces-3.0 bundle - so we exclude them here.
