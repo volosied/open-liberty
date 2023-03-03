@@ -39,6 +39,9 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testcontainers.containers.BrowserWebDriverContainer;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.*;
+import org.testcontainers.containers.Network;
+import componenttest.containers.SimpleLogConsumer;
+import org.testcontainers.containers.wait.strategy.LogMessageWaitStrategy;
 /**
  * Example test class showing how to setup a GenericContainer
  */
@@ -52,9 +55,7 @@ public class FacesTest {
     @Server("build.example.testcontainers")
     public static LibertyServer server;
 
-    @ClassRule
-    public static BrowserWebDriverContainer<?> chrome = new BrowserWebDriverContainer<>(DockerImageName.parse("selenium/standalone-chrome:110.0"))
-    .withCapabilities(new ChromeOptions());
+    public static BrowserWebDriverContainer<?> chrome;
 
     private static final int SELENIUM_PORT = 4444;
 
@@ -64,18 +65,23 @@ public class FacesTest {
     public static void setUp() throws Exception {
         ShrinkHelper.defaultDropinApp(server, APP_NAME+ ".war");
 
+        server.startServer();
+        org.testcontainers.Testcontainers.exposeHostPorts(8010);
+
+        chrome = new BrowserWebDriverContainer<>(DockerImageName.parse("selenium/standalone-chrome:110.0"))
+        .withCapabilities(new ChromeOptions())
+        .withNetwork(Network.SHARED)
+        .withAccessToHost(true)
+        .withLogConsumer(new SimpleLogConsumer(FacesTest.class, "selenium"));
+
+        chrome.start()
+            .waitingFor(new LogMessageWaitStrategy() //
+            .withRegEx(".*Started Selenium Standalone.*\\s") //
+            .withTimes(2) //
+            .withStartupTimeout(Duration.ofSeconds(60)));;
 
         driver = chrome.getWebDriver();
 
-        System.out.println("server" + server.getHostname() );
-        System.out.println("host" + chrome.getHost() );
-        System.out.println("port" + chrome.getMappedPort(SELENIUM_PORT));
-
-        System.out.println("Running setUp");
-
-        System.out.println("origin " +  System.getProperty(BUILD_PROP_SERVER_ORIGIN));
-
-        server.startServer();
     }
 
     @Test
@@ -91,20 +97,26 @@ public class FacesTest {
 
     @AfterClass
     public static void tearDown() throws Exception {
+        chrome.stop();
         server.stopServer();
     }
 
     public static String createHttpUrlString(LibertyServer server, String contextRoot, String path) {
-
         StringBuilder sb = new StringBuilder();
-        sb.append("http://")
-          .append(Inet4Address.getLocalHost().getHostAddress())
-          .append(":")
-          .append("8010")
-          .append("/")
-          .append(contextRoot)
-          .append("/")
-          .append(path);
+        try{
+            sb.append("http://")
+            .append(Inet4Address.getLocalHost().getHostAddress())
+            .append(":")
+            .append("8010")
+            .append("/")
+            .append(contextRoot)
+            .append("/")
+            .append(path);
+        } catch (Exception e) {
+
+        }
+
+
 
         return sb.toString();
     }
