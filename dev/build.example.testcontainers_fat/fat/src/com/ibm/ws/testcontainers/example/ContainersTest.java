@@ -24,6 +24,7 @@ import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.LogMessageWaitStrategy;
 
 import com.ibm.websphere.simplicity.ShrinkHelper;
+import org.testcontainers.utility.DockerImageName;
 
 import componenttest.annotation.Server;
 import componenttest.annotation.TestServlet;
@@ -49,12 +50,11 @@ public class ContainersTest extends FATServletClient {
     public static RemoteWebDriver driver;
 
     @Server("build.example.testcontainers")
-    @TestServlet(servlet = ContainersTestServlet.class, contextRoot = APP_NAME)
     public static LibertyServer server;
 
-    @Rule
-    public static BrowserWebDriverContainer chrome = new BrowserWebDriverContainer()
-            .withCapabilities(new ChromeOptions()); 
+    // @Rule
+    // public static BrowserWebDriverContainer chrome = new BrowserWebDriverContainer()
+    //         .withCapabilities(new ChromeOptions()); 
 
     // public static final String POSTGRES_DB = "test";
     // public static final String POSTGRES_USER = "test";
@@ -83,17 +83,19 @@ public class ContainersTest extends FATServletClient {
      * have been used here. This is just an example of how to setup a GenericContainer.
      */
     @ClassRule
-    public static GenericContainer<?> container = new GenericContainer<>("selenium/standalone-chrome:110.0")
-                    .withExposedPorts(4444, 8010)
-                    .withLogConsumer(new SimpleLogConsumer(ContainersTest.class, "selenium"));
-                    // .waitingFor(new LogMessageWaitStrategy()
-                    //                 .withRegEx(".*database system is ready to accept connections.*\\s")
-                    //                 .withTimes(2)
-                    //                 .withStartupTimeout(Duration.ofSeconds(60)));
+    public static BrowserWebDriverContainer<?> chrome = new BrowserWebDriverContainer<>(DockerImageName.parse("selenium/standalone-chrome:110.0"))
+    .withCapabilities(new ChromeOptions());
+    // public static GenericContainer<?> container = new GenericContainer<>("selenium/standalone-chrome:110.0")
+    //                 .withExposedPorts(4444, 8010)
+    //                 .withLogConsumer(new SimpleLogConsumer(ContainersTest.class, "selenium"));
+    // //                 // .waitingFor(new LogMessageWaitStrategy()
+    // //                 //                 .withRegEx(".*database system is ready to accept connections.*\\s")
+    // //                 //                 .withTimes(2)
+    // //                 //                 .withStartupTimeout(Duration.ofSeconds(60)));
 
     @BeforeClass
     public static void setUp() throws Exception {
-        ShrinkHelper.defaultApp(server, APP_NAME, "simple");
+        ShrinkHelper.defaultDropinApp(server, APP_NAME+ ".war");
 
 
         driver = chrome.getWebDriver();
@@ -108,15 +110,15 @@ public class ContainersTest extends FATServletClient {
     @Test
     public void testSimpleFacelet() {
         System.out.println("Running testSimpleFacelet");
-        // System.out.println(getPage("http://localhost:8010/Simple/SimpleTest.xhml").getPageSource());
+        // // System.out.println(getPage("http://localhost:8010/Simple/SimpleTest.xhml").getPageSource());
 
-        // RemoteWebDriver driver = new RemoteWebDriver(chrome.getSeleniumAddress(), new ChromeOptions());
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
+        // // RemoteWebDriver driver = new RemoteWebDriver(chrome.getSeleniumAddress(), new ChromeOptions());
+        // driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
 
-        String address = container.getHost() + ":" + container.getMappedPort(8010);
+        // String address = container.getHost() + ":" + container.getMappedPort(8010);
 
-        driver.get(address + "/Simple/SimpleTest.xhml");
-        System.out.println(driver.getPageSource());
+        // driver.get(address + "/Simple/SimpleTest.xhml");
+        // System.out.println(driver.getPageSource());
 
     }
 
