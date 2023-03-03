@@ -24,12 +24,7 @@ import componenttest.rules.repeater.RepeatTests;
 
 @RunWith(Suite.class)
 @SuiteClasses({
-                // BasicTest.class, //LITE
                 FacesTest.class, //LITE
-                // DatabaseRotationTest.class, //LITE
-                // DockerfileTest.class, //FULL
-                // ProgrammaticImageTest.class, //FULL
-                // SyntheticImageTest.class //FULL
 })
 /**
  * Example FATSuite class to show how to setup suite level testcontainers and properties.
@@ -39,18 +34,5 @@ import componenttest.rules.repeater.RepeatTests;
  */
 public class FATSuite extends TestContainerSuite {
 
-    // @ClassRule
-    // public static RepeatTests r = RepeatTests.with(FeatureReplacementAction.NO_REPLACEMENT().fullFATOnly())
-    //                 .andWith(FeatureReplacementAction.EE9_FEATURES());
-
-    /*
-     * If you want to use the same container for the entire test suite you can
-     * declare it here. Using the @ClassRule annotation will start the container
-     * prior to any test classes running.
-     *
-     * In this example suite I am going to use a different container for each example.
-     */
-    // @ClassRule
-    // public static PostgreSQLContainer<?> container = new PostgreSQLContainer<>("postgres:14.1-alpine");
 
 }
