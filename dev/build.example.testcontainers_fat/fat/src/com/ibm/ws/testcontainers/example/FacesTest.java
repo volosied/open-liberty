@@ -12,6 +12,7 @@
  *******************************************************************************/
 package com.ibm.ws.testcontainers.example;
 
+import java.net.Inet4Address;
 import java.time.Duration;
 
 import org.junit.AfterClass;
@@ -57,6 +58,7 @@ public class FacesTest {
 
     private static final int SELENIUM_PORT = 4444;
 
+    private static final String BUILD_PROP_SERVER_ORIGIN = "fat.test.server.origin";
 
     @BeforeClass
     public static void setUp() throws Exception {
@@ -65,13 +67,13 @@ public class FacesTest {
 
         driver = chrome.getWebDriver();
 
-        // serverDef = new SeleniumServerDefinition(chrome.getHost());
-        // serverDef.setPort(FacesTest.chrome.getMappedPort(SELENIUM_PORT));
-
+        System.out.println("server" + server.getHostname() );
         System.out.println("host" + chrome.getHost() );
         System.out.println("port" + chrome.getMappedPort(SELENIUM_PORT));
 
         System.out.println("Running setUp");
+
+        System.out.println("origin " +  System.getProperty(BUILD_PROP_SERVER_ORIGIN));
 
         server.startServer();
     }
@@ -96,9 +98,9 @@ public class FacesTest {
 
         StringBuilder sb = new StringBuilder();
         sb.append("http://")
-          .append(chrome.getHost())
+          .append(Inet4Address.getLocalHost().getHostAddress())
           .append(":")
-          .append(chrome.getMappedPort(SELENIUM_PORT))
+          .append("8010")
           .append("/")
           .append(contextRoot)
           .append("/")

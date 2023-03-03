@@ -17,8 +17,13 @@
         <feature>componenttest-1.0</feature>
     </featureManager>
     
-    <include location="../fatTestPorts.xml"/>
-
-    <!-- <application location="Simple.war" /> -->
+    <include location="../fatTestCommon.xml"/>
+    <!--  <include location="../fatTestPorts.xml"/> -->
+    <httpEndpoint id="defaultHttpEndpoint"
+                  host="*"
+                  httpPort="${bvt.prop.HTTP_default}"
+                  httpsPort="${bvt.prop.HTTP_default.secure}">
+                  <httpOptions ThrowIOEForInboundConnections="false"/>
+    </httpEndpoint>
 
 </server>
