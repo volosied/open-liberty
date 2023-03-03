@@ -42,7 +42,7 @@ import org.openqa.selenium.*;
  * Example test class showing how to setup a GenericContainer
  */
 @RunWith(FATRunner.class)
-public class FacesTest extends FATServletClient {
+public class FacesTest {
 
     public static final String APP_NAME = "Simple";
 
@@ -55,6 +55,8 @@ public class FacesTest extends FATServletClient {
     public static BrowserWebDriverContainer<?> chrome = new BrowserWebDriverContainer<>(DockerImageName.parse("selenium/standalone-chrome:110.0"))
     .withCapabilities(new ChromeOptions());
 
+    private static final int SELENIUM_PORT = 4444;
+
 
     @BeforeClass
     public static void setUp() throws Exception {
@@ -63,8 +65,11 @@ public class FacesTest extends FATServletClient {
 
         driver = chrome.getWebDriver();
 
-        System.out.println(chrome.getSeleniumAddress() );
-        System.out.println(chrome.getPort() );
+        // serverDef = new SeleniumServerDefinition(chrome.getHost());
+        // serverDef.setPort(FacesTest.chrome.getMappedPort(SELENIUM_PORT));
+
+        System.out.println("host" + chrome.getHost() );
+        System.out.println("port" + chrome.getMappedPort(SELENIUM_PORT));
 
         System.out.println("Running setUp");
 
@@ -91,9 +96,9 @@ public class FacesTest extends FATServletClient {
 
         StringBuilder sb = new StringBuilder();
         sb.append("http://")
-          .append(server.getHostname())
+          .append(chrome.getHost())
           .append(":")
-          .append(server.getHttpDefaultPort())
+          .append(chrome.getMappedPort(SELENIUM_PORT))
           .append("/")
           .append(contextRoot)
           .append("/")
