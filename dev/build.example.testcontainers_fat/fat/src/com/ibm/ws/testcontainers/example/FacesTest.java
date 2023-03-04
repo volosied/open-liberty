@@ -23,6 +23,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.LogMessageWaitStrategy;
+import org.testcontainers.containers.wait.strategy.Wait;
 
 import com.ibm.websphere.simplicity.ShrinkHelper;
 import org.testcontainers.utility.DockerImageName;
@@ -63,23 +64,24 @@ public class FacesTest {
 
     @BeforeClass
     public static void setUp() throws Exception {
+        System.out.println("IN SETUP");
         ShrinkHelper.defaultDropinApp(server, APP_NAME+ ".war");
 
         server.startServer();
         org.testcontainers.Testcontainers.exposeHostPorts(8010);
 
         chrome = new BrowserWebDriverContainer<>(DockerImageName.parse("selenium/standalone-chrome:110.0"))
-        .withCapabilities(new ChromeOptions())
+        .withCapabilities((new ChromeOptions()).addArguments("--no-sandbox", "--headless", "--disable-dev-shm-usage"))
         .withNetwork(Network.SHARED)
+        // .withNetworkMode("host")
         .withAccessToHost(true)
         .withLogConsumer(new SimpleLogConsumer(FacesTest.class, "selenium"));
 
-        chrome.start()
-            .waitingFor(new LogMessageWaitStrategy() //
-            .withRegEx(".*Started Selenium Standalone.*\\s") //
-            .withTimes(2) //
-            .withStartupTimeout(Duration.ofSeconds(60)));;
+        // chrome.waitingFor(Wait.forLogMessage(".*Started Selenium Standalone.*\\n", 1)).start();
+        chrome.start();
 
+        org.testcontainers.Testcontainers.exposeHostPorts(8010);
+        
         driver = chrome.getWebDriver();
 
     }
