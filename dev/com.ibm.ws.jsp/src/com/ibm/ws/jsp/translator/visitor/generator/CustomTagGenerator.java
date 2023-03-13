@@ -505,7 +505,7 @@ public class CustomTagGenerator extends CodeGeneratorBase {
                 }
             }
             tagWriter.print("))");
-            tagWriter.print((methodReturnBoolean) ? " return true;" : " return;");
+            tagWriter.print((methodReturnBoolean) ? " return true;" : " return; //assembleTagfromwriters");
             tagWriter.println();
 
             //232818
@@ -571,8 +571,12 @@ public class CustomTagGenerator extends CodeGeneratorBase {
 
         if (genTagInMethod) {
             if (methodNesting > 0) {
-                methodWriter.println("return false;");
+                methodWriter.println("return false;//assemble...");
+                if (!(jspOptions.isUsePageTagPool() || jspOptions.isUseThreadTagPool()) && !jspOptions.isDisableResourceInjection()) {
+                    methodWriter.println("} finally { cleanupCDITagManagedObject(" + tagHandlerVar + ");}");
+                }
             }
+            
             if (tagGenerator.fragmentWriterUsed() == false) 
                 if (debugEnd) //232818
                 	writeDebugEndEnd(methodWriter); //232818

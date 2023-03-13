@@ -33,6 +33,7 @@ import com.ibm.wsspi.jsp.context.JspCoreContext;
 public class SimpleTagGenerator extends BaseTagGenerator {
     private FragmentHelperClassWriter.FragmentWriter fragmentBodyWriter = null;
     private JspVisitorInputMap inputMap=null; //jsp2.1work
+    private boolean genTagInMethod = false;
 
     public SimpleTagGenerator(
         int nestingLevel,
@@ -68,6 +69,9 @@ public class SimpleTagGenerator extends BaseTagGenerator {
               fragmentHelperClassWriter,
               jspOptions);
         this.inputMap=inputMap;
+        if (collectedTagData.isScriptless() && !collectedTagData.hasScriptingVars()) {
+            genTagInMethod = true;
+        }
     }
 
     public MethodWriter generateTagStart() throws JspCoreException {
@@ -90,13 +94,19 @@ public class SimpleTagGenerator extends BaseTagGenerator {
             tagStartWriter.print(" = ");           
             tagStartWriter.println("("+tagClassInfo.getTagClassName()+")"+tagHandlerVar+"_mo.getObject();"); 
 
+            if(genTagInMethod){
+                tagStartWriter.println("try { // generateTagStart");
+            }
+
             tagStartWriter.print ("_jspx_iaHelper.doPostConstruct(");
             tagStartWriter.print (tagHandlerVar);
-            tagStartWriter.println (");");
+            tagStartWriter.println ("); //generateTagStart3423523");
     	
             tagStartWriter.print ("_jspx_iaHelper.addTagHandlerToCdiMap(");
             tagStartWriter.print (tagHandlerVar + ", " + tagHandlerVar + "_mo");
             tagStartWriter.println (");");
+
+            // tagStartWriter.println ("_jspMangedObjectList.add("+ tagHandlerVar + ");");
 
         } else {
             // not using CDI
@@ -145,13 +155,9 @@ public class SimpleTagGenerator extends BaseTagGenerator {
         tagEndWriter.println(".doTag();");
         
         if (!jspOptions.isDisableResourceInjection()){		//PM06063
-        	tagEndWriter.print ("_jspx_iaHelper.doPreDestroy(");
-        	tagEndWriter.print (tagHandlerVar);
-        	tagEndWriter.println (");");
-        	
-        	tagEndWriter.print ("_jspx_iaHelper.cleanUpTagHandlerFromCdiMap(");
-        	tagEndWriter.print (tagHandlerVar);
-        	tagEndWriter.println (");");
+            // tagEndWriter.println("cleanupCDITagManagedObject("+ tagHandlerVar + ");"); 
+
+            // tagEndWriter.println ("_jspMangedObjectList.remove("+ tagHandlerVar + ");");
         }
 
         restoreScriptingVars(tagEndWriter, VariableInfo.AT_BEGIN);

@@ -105,7 +105,7 @@ public class FragmentHelperClassWriter extends MethodWriter {
     public void closeFragment(FragmentWriter fragment, int methodNesting) {
         // XXX - See comment in openFragment()
         if (methodNesting > 0) {
-            fragment.println("return false;");
+            fragment.println("return false; //closefragment");
         }
         else {
             fragment.println("return;");

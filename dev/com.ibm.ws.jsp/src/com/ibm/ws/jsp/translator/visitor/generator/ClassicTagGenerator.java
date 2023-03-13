@@ -124,6 +124,10 @@ public class ClassicTagGenerator extends BaseTagGenerator {
                 tagStartWriter.print(" = ");           
                 tagStartWriter.println("("+tagClassInfo.getTagClassName()+")"+tagHandlerVar+"_mo.getObject();"); 
 
+                if(genTagInMethod){
+                    tagStartWriter.println("try { // generateTagStart");
+                }
+
             	tagStartWriter.print ("_jspx_iaHelper.doPostConstruct(");
             	tagStartWriter.print (tagHandlerVar);
             	tagStartWriter.println (");");
@@ -131,6 +135,11 @@ public class ClassicTagGenerator extends BaseTagGenerator {
                 tagStartWriter.print ("_jspx_iaHelper.addTagHandlerToCdiMap(");
                 tagStartWriter.print (tagHandlerVar + ", " + tagHandlerVar + "_mo");
                 tagStartWriter.println (");");
+                if(!genTagInMethod) {
+                    tagStartWriter.println ("_jspMangedObjectList.add("+ tagHandlerVar + "); //generateTagStart1");
+                }
+
+
                 
             } else {
                 // not using CDI
@@ -328,13 +337,10 @@ public class ClassicTagGenerator extends BaseTagGenerator {
             // LIDB4147-24
              
         	if (!jspOptions.isDisableResourceInjection()){		//PM06063
-            	    tagEndWriter.print ("_jspx_iaHelper.doPreDestroy(");
-            	    tagEndWriter.print (tagHandlerVar);
-            	    tagEndWriter.println (");");
-            	
-                    tagEndWriter.print ("_jspx_iaHelper.cleanUpTagHandlerFromCdiMap(");
-                    tagEndWriter.print (tagHandlerVar);
-                    tagEndWriter.println (");");
+                if(!genTagInMethod){
+                    tagEndWriter.println("cleanupCDITagManagedObject("+ tagHandlerVar + ");");
+                    tagEndWriter.println ("_jspMangedObjectList.remove("+ tagHandlerVar + ");");
+                }
         	} 
              
             tagEndWriter.println();
@@ -389,13 +395,10 @@ public class ClassicTagGenerator extends BaseTagGenerator {
             //           LIDB4147-24
              
         	if (!jspOptions.isDisableResourceInjection()){		//PM06063
-            	    tagEndWriter.print ("_jspx_iaHelper.doPreDestroy(");
-            	    tagEndWriter.print (tagHandlerVar);
-            	    tagEndWriter.println (");");
-            	
-            	    tagEndWriter.print ("_jspx_iaHelper.cleanUpTagHandlerFromCdiMap(");
-            	    tagEndWriter.print (tagHandlerVar);
-            	    tagEndWriter.println (");");
+                    if(!genTagInMethod){
+                        tagEndWriter.println("cleanupCDITagManagedObject("+ tagHandlerVar + ");");
+                        tagEndWriter.println ("_jspMangedObjectList.remove("+ tagHandlerVar + ");");
+                    }
         	}
              
             tagEndWriter.println();

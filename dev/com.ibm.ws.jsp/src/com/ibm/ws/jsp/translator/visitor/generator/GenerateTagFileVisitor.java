@@ -363,9 +363,16 @@ public class GenerateTagFileVisitor extends GenerateVisitor {
             writer.println("}");
         }
 
+        if(!(jspOptions.isUsePageTagPool() || jspOptions.isUseThreadTagPool())) {
+            GeneratorUtils.generateCDITagCleanUp(writer, jspOptions.isDisableResourceInjection());
+        }
+
         if (ti.hasDynamicAttributes()) {
             writer.println("private java.util.HashMap _jspx_dynamic_attrs = new java.util.HashMap();");
         }
+
+        // writer.println("java.util.ArrayList<javax.servlet.jsp.tagext.Tag> _jspMangedObjectList = new java.util.ArrayList<javax.servlet.jsp.tagext.Tag>();");
+        // writer.println();
 
         TagAttributeInfo[] attrInfos = ti.getAttributes();
         for (int i = 0; i < attrInfos.length; i++) {
@@ -467,6 +474,10 @@ public class GenerateTagFileVisitor extends GenerateVisitor {
         writer.println("javax.servlet.ServletContext application = "+pageContextVar+".getServletContext();");
         writer.println("javax.servlet.ServletConfig config = "+pageContextVar+".getServletConfig();");
         writer.println("javax.servlet.jsp.JspWriter out = jspContext.getOut();");
+        if(!(jspOptions.isUsePageTagPool() || jspOptions.isUseThreadTagPool() )){
+            GeneratorUtils.generateLastManagedObjectVariable(writer);
+        }
+
         writer.println();
         
         // 247815 Start
