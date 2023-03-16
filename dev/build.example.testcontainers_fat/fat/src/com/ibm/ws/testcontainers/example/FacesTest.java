@@ -54,20 +54,20 @@ public class FacesTest {
     @Server("build.example.testcontainers")
     public static LibertyServer server;
 
-    static {
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--no-sandbox");
-        options.addArguments("--disable-web-security");
-        options.addArguments("--allow-insecure-localhost");
-        options.addArguments("--remote-allow-origins=*");
-        options.addArguments("--ignore-urlfetcher-cert-requests");
-        options.addArguments("--auto-open-devtools-for-tabs");
-        options.addArguments("--disable-gpu");
-    }
+    // static ChromeOptions options = new ChromeOptions();
+    // static {
+    //     options.addArguments("--no-sandbox");
+    //     options.addArguments("--disable-web-security");
+    //     options.addArguments("--allow-insecure-localhost");
+    //     options.addArguments("--remote-allow-origins=*");
+    //     options.addArguments("--ignore-urlfetcher-cert-requests");
+    //     options.addArguments("--auto-open-devtools-for-tabs");
+    //     options.addArguments("--disable-gpu");
+    // }
 
     @ClassRule
     public static BrowserWebDriverContainer<?> chrome = new BrowserWebDriverContainer<>(DockerImageName.parse("selenium/standalone-chrome:110.0"))
-    .withCapabilities(options)
+    .withCapabilities((new ChromeOptions()).addArguments("--no-sandbox", "--allow-insecure-localhost", "--disable-web-security", "--remote-allow-origins=*", "--disable-dev-shm-usage"))
     .waitingFor(Wait.forLogMessage(".*Started Selenium Standalone.*", 1))
     .withAccessToHost(true)
     .withLogConsumer(new SimpleLogConsumer(FacesTest.class, "selenium"));
