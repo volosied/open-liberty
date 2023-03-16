@@ -12,6 +12,7 @@
  *******************************************************************************/
 package com.ibm.ws.testcontainers.example;
 
+import java.net.Inet4Address;
 import java.time.Duration;
 
 import org.junit.AfterClass;
@@ -38,6 +39,8 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testcontainers.containers.BrowserWebDriverContainer;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.*;
+import org.testcontainers.containers.wait.strategy.Wait;
+
 /**
  * Example test class showing how to setup a GenericContainer
  */
@@ -51,25 +54,31 @@ public class FacesTest {
     @Server("build.example.testcontainers")
     public static LibertyServer server;
 
+    static {
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-web-security");
+        options.addArguments("--allow-insecure-localhost");
+        options.addArguments("--remote-allow-origins=*");
+        options.addArguments("--ignore-urlfetcher-cert-requests");
+        options.addArguments("--auto-open-devtools-for-tabs");
+        options.addArguments("--disable-gpu");
+    }
+
     @ClassRule
     public static BrowserWebDriverContainer<?> chrome = new BrowserWebDriverContainer<>(DockerImageName.parse("selenium/standalone-chrome:110.0"))
-    .withCapabilities(new ChromeOptions());
-
-    private static final int SELENIUM_PORT = 4444;
-
+    .withCapabilities(options)
+    .waitingFor(Wait.forLogMessage(".*Started Selenium Standalone.*", 1))
+    .withAccessToHost(true)
+    .withLogConsumer(new SimpleLogConsumer(FacesTest.class, "selenium"));
 
     @BeforeClass
     public static void setUp() throws Exception {
         ShrinkHelper.defaultDropinApp(server, APP_NAME+ ".war");
 
-
         driver = chrome.getWebDriver();
 
-        // serverDef = new SeleniumServerDefinition(chrome.getHost());
-        // serverDef.setPort(FacesTest.chrome.getMappedPort(SELENIUM_PORT));
-
-        System.out.println("host" + chrome.getHost() );
-        System.out.println("port" + chrome.getMappedPort(SELENIUM_PORT));
+        org.testcontainers.Testcontainers.exposeHostPorts(8010);
 
         System.out.println("Running setUp");
 
@@ -92,13 +101,13 @@ public class FacesTest {
         server.stopServer();
     }
 
-    public static String createHttpUrlString(LibertyServer server, String contextRoot, String path) {
+    public static String createHttpUrlString(LibertyServer server, String contextRoot, String path) throws Exception {
 
         StringBuilder sb = new StringBuilder();
         sb.append("http://")
-          .append(chrome.getHost())
+          .append(Inet4Address.getLocalHost().getHostAddress())
           .append(":")
-          .append(chrome.getMappedPort(SELENIUM_PORT))
+          .append(8010)
           .append("/")
           .append(contextRoot)
           .append("/")

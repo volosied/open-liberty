@@ -22,7 +22,7 @@ fat.project: true
 # Uncomment to use remote docker host to simulate continuous build behavior.
 # This will only work if you are on the IBM Network.
 # External contributors will need to have docker installed on their local machine.
-fat.test.use.remote.docker: true
+fat.test.use.remote.docker: false
 
 # This property is used to tell the SOE build system that this FAT suite
 # should be run in the database rotation build.
