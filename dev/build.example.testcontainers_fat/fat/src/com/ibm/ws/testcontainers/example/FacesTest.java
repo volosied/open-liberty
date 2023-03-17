@@ -42,6 +42,7 @@ import org.testcontainers.containers.BrowserWebDriverContainer;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.*;
 import org.testcontainers.containers.wait.strategy.Wait;
+import org.openqa.selenium.firefox.FirefoxOptions;
 
 /**
  * Example test class showing how to setup a GenericContainer
@@ -72,9 +73,10 @@ public class FacesTest {
 
 
     @Rule
-    public BrowserWebDriverContainer<?> chrome = new BrowserWebDriverContainer<>(DockerImageName.parse("selenium/standalone-chrome:110.0"))
-    .withCapabilities((new ChromeOptions()).addArguments("--whitelisted-ips", "--headless", "--no-sandbox", "--allow-insecure-localhost", "--disable-web-security", "--remote-allow-origins=*", "--disable-dev-shm-usage"))
-    .waitingFor(Wait.forLogMessage(".*Started Selenium Standalone.*", 1))
+    public BrowserWebDriverContainer<?> chrome = new BrowserWebDriverContainer<>(DockerImageName.parse("selenium/standalone-firefox:4.1.2-20220208"))
+    .withCapabilities(new FirefoxOptions().setAcceptInsecureCerts(true))
+    .withSharedMemorySize(2147483648L)
+    // .waitingFor(Wait.forLogMessage(".*Started Selenium Standalone.*", 1))
     .withAccessToHost(true)
     .withLogConsumer(new SimpleLogConsumer(FacesTest.class, "selenium"));  
     

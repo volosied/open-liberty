@@ -50,7 +50,7 @@ tested.features: \
 	pages-3.0, 
 	faces-3.0
 	
-fat.test.container.images: selenium/standalone-chrome:110.0, alpine:3.16
+fat.test.container.images: selenium/standalone-firefox:4.1.2-20220208, alpine:3.16
 
 # io.openliberty.org.testcontainers bundle should have all compile time
 # dependences you need for a testcontainer enabled fat project.
@@ -66,7 +66,8 @@ fat.test.container.images: selenium/standalone-chrome:110.0, alpine:3.16
 	./lib/selenium-api-4.8.1.jar;version=file,\
 	./lib/selenium-chromium-driver-4.8.1.jar;version=file, \
 	./lib/selenium-support-4.8.1.jar;version=file, \
-	./lib/guava-31.1-jre.jar;version=file
+	./lib/guava-31.1-jre.jar;version=file, \
+	./lib/selenium-firefox-driver-4.8.1.jar;version=file
 
 
 	
