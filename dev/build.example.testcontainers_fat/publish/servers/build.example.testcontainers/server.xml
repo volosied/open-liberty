@@ -19,6 +19,14 @@
     
     <include location="../fatTestPorts.xml"/>
 
+
+    <httpEndpoint id="defaultHttpEndpoint"
+    host="*"
+    httpPort="${bvt.prop.HTTP_default}"
+    httpsPort="${bvt.prop.HTTP_default.secure}">
+    <httpOptions ThrowIOEForInboundConnections="false"/>
+</httpEndpoint>
+
     <!-- <application location="Simple.war" /> -->
 
 </server>
