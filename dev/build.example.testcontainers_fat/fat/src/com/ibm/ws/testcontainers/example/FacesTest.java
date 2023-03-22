@@ -13,6 +13,7 @@
 package com.ibm.ws.testcontainers.example;
 
 import java.net.Inet4Address;
+import java.net.URL;
 import java.time.Duration;
 
 import org.junit.AfterClass;
@@ -51,31 +52,17 @@ public class FacesTest {
 
     public static final String APP_NAME = "Simple";
 
-    public RemoteWebDriver driver;
+    public static RemoteWebDriver driver;
 
     @Server("build.example.testcontainers")
     public static LibertyServer server;
 
-    // static ChromeOptions options = new ChromeOptions();
-    // static {
-    //     options.addArguments("--no-sandbox");
-    //     options.addArguments("--disable-web-security");
-    //     options.addArguments("--allow-insecure-localhost");
-    //     options.addArguments("--remote-allow-origins=*");
-    //     options.addArguments("--ignore-urlfetcher-cert-requests");
-    //     options.addArguments("--auto-open-devtools-for-tabs");
-    //     options.addArguments("--disable-gpu");
-    // }
-
-    // @Rule
-    // public static BrowserWebDriverContainer<?> chrome;
-
-
-    @Rule
-    public BrowserWebDriverContainer<?> chrome = new BrowserWebDriverContainer<>(DockerImageName.parse("selenium/standalone-chrome:110.0"))
+    @ClassRule
+    public static BrowserWebDriverContainer<?> chrome = new BrowserWebDriverContainer<>(DockerImageName.parse("selenium/standalone-chrome:110.0"))
     .withCapabilities((new ChromeOptions()).addArguments("--whitelisted-ips", "--headless", "--no-sandbox", "--allow-insecure-localhost", "--disable-web-security", "--remote-allow-origins=*", "--disable-dev-shm-usage"))
     .waitingFor(Wait.forLogMessage(".*Started Selenium Standalone.*", 1))
     .withAccessToHost(true)
+    .withExposedPorts(4444)
     .withLogConsumer(new SimpleLogConsumer(FacesTest.class, "selenium"));  
     
     
@@ -85,16 +72,10 @@ public class FacesTest {
 
         server.startServer();
 
-
-        // chrome = new BrowserWebDriverContainer<>(DockerImageName.parse("selenium/standalone-chrome:110.0"))
-        // .withCapabilities((new ChromeOptions()).addArguments("--whitelisted-ips", "--headless", "--no-sandbox", "--allow-insecure-localhost", "--disable-web-security", "--remote-allow-origins=*", "--disable-dev-shm-usage"))
-        // .waitingFor(Wait.forLogMessage(".*Started Selenium Standalone.*", 1))
-        // .withAccessToHost(true)
-        // .withLogConsumer(new SimpleLogConsumer(FacesTest.class, "selenium"));    
+        System.out.println("adress is " + chrome.getSeleniumAddress().toString());
 
         // driver = chrome.getWebDriver();
-
-        // chrome.start();
+        driver = new RemoteWebDriver(new URL("http://" + chrome.getHost() + ":" + chrome.getMappedPort(4444)  + "/wd/hub"), (new ChromeOptions()).addArguments("--whitelisted-ips", "--headless", "--no-sandbox", "--allow-insecure-localhost", "--disable-web-security", "--remote-allow-origins=*", "--disable-dev-shm-usage"));
 
         System.out.println("Running setUp");
 
@@ -103,24 +84,21 @@ public class FacesTest {
     @Test
     public void testSimpleFacelet() throws Exception {
 
-        driver = chrome.getWebDriver();
-        // // driver = new RemoteWebDriver(chrome.getSeleniumAddress(), (new ChromeOptions()).addArguments("--whitelisted-ips", "--headless", "--no-sandbox", "--allow-insecure-localhost", "--disable-web-security", "--remote-allow-origins=*", "--disable-dev-shm-usage"));
-        // org.testcontainers.Testcontainers.exposeHostPorts(8010);
+        org.testcontainers.Testcontainers.exposeHostPorts(8010);
 
-        // System.out.println("Running testSimpleFacelet");
+        System.out.println("Running testSimpleFacelet");
 
-        // String url = createHttpUrlString(server, "Simple", "SimpleTest.xhtml");
-        // System.out.println(url);
-        // driver.get(url);
+        String url = createHttpUrlString(server, "Simple", "SimpleTest.xhtml");
+        System.out.println(url);
+        driver.get(url);
 
-        // System.out.println(driver.getPageSource()); 
+        System.out.println(driver.getPageSource()); 
 
     }
 
     @AfterClass
     public static void tearDown() throws Exception {
         server.stopServer();
-        // chrome.stop(); 
     }
 
     public static String createHttpUrlString(LibertyServer server, String contextRoot, String path) throws Exception {
