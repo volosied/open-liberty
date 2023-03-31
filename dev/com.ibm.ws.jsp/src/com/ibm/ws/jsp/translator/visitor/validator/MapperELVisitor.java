@@ -30,6 +30,7 @@ class MapperELVisitor extends ELNode.Visitor {
 	MapperELVisitor(ValidateFunctionMapper fmapper, ClassLoader loader) {
 		this.fmapper = fmapper;
 		this.loader = loader;
+		System.out.println("DEBUG: MapperELVisitor " + this + " Constructor. fmapper: " + fmapper);
 	}
 
 	public void visit(ELNode.Function n) throws JspTranslationException {
@@ -74,6 +75,9 @@ class MapperELVisitor extends ELNode.Visitor {
 	                throw new JspTranslationException("jsp.error.el.function.cannot.parse", e);
 				}
 				fmapper.mapSignature(n.getPrefix() + ':' + n.getName(), fnSignature);
+
+				System.out.println("DEBUG: MapperELVisitor " + this + " visit. fnSignature: " + fnSignature);
+	}
 			}
 		}				
 	}

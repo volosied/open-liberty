@@ -35,6 +35,9 @@ public class GeneratorUtilsExtImpl implements GeneratorUtilsExt {
 
         writer.println("private static org.apache.jasper.runtime.ProtectedFunctionMapper _jspx_fnmap = null;");
 
+        System.out.println("DEBUG: GeneratorUtilsExtImpl " + this + " generateELFunctionCode. ValidateResult: " + validatorResult);
+        System.out.println("DEBUG: GeneratorUtilsExtImpl " + this + " generateELFunctionCode. ValidateResult.getValidateFunctionMapper(): " + validatorResult.getValidateFunctionMapper());
+
         if (validatorResult.getValidateFunctionMapper().getFnMap().size() > 0) { //LIDB4147-9
 
             writer.println();

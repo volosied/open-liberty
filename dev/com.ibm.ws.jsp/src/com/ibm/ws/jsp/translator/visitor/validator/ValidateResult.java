@@ -49,6 +49,7 @@ public class ValidateResult extends JspVisitorResult {
     
     protected ValidateResult(String jspVisitorId) {
         super(jspVisitorId);
+        System.out.println("DEBUG: ValidateResult " + this + " Constructor. validateFunctionMapper:" + validateFunctionMapper);
     }
     /**
      * Returns the beanRepository.
@@ -190,6 +191,7 @@ public class ValidateResult extends JspVisitorResult {
      * @return
      */
     public ValidateFunctionMapper getValidateFunctionMapper() {
+        System.out.println("DEBUG: ValidateResult " + this + " getValidateFunctionMapper. " + validateFunctionMapper);
         return validateFunctionMapper;
     }
 
@@ -197,6 +199,8 @@ public class ValidateResult extends JspVisitorResult {
      * @param mapper
      */
     public void setValidateFunctionMapper(ValidateFunctionMapper mapper) {
+        System.out.println("DEBUG: ValidateResult " + this + " setValidateFunctionMapper. " + mapper);
+        Thread.dumpStack();
         validateFunctionMapper = mapper;
     }
     
