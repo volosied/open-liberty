@@ -76,8 +76,9 @@ class MapperELVisitor extends ELNode.Visitor {
 				}
 				fmapper.mapSignature(n.getPrefix() + ':' + n.getName(), fnSignature);
 
-				System.out.println("DEBUG: MapperELVisitor " + this + " visit. fnSignature: " + fnSignature);
-	}
+				System.out.println("DEBUG: MapperELVisitor " + this + " visit. fInfo: " + fInfo);
+				System.out.println("DEBUG: MapperELVisitor " + this + " visit. fInfo.name: " + fInfo.getName());
+				System.out.println("DEBUG: MapperELVisitor " + this + " visit. fInfo.class: " + fInfo.getFunctionClass());
 			}
 		}				
 	}
