@@ -80,7 +80,7 @@ public class JspOptions {
     protected boolean    useJDKCompiler = false; // defect jdkcompiler
     protected boolean    useJikes = false;
     protected boolean    useOptimizedTags = false;
-    protected boolean    usePageTagPool = false;
+    protected boolean    usePageTagPool = true;
     protected boolean    useRepeatInt = false;      //PK26741
     protected boolean    useScriptVarDupInit = false;   //PK29373
     protected boolean    useStringCast = false;    //PK20187
@@ -113,7 +113,7 @@ public class JspOptions {
     protected boolean    allowMultipleAttributeValues = false; //PI30519
     protected boolean    allowPrecedenceInJspExpressionsWithConstantString = false; //PI37304
     
-    protected boolean    useSyntheticTagPool = false; //PI37304
+    protected boolean    useSyntheticTagPool = true; //PI37304
 
     //@BLB Pretouch End
     // defect 400645
