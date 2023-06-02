@@ -156,10 +156,9 @@ public class CustomTagGenerator extends CodeGeneratorBase {
         if (tagClassInfo.implementsSimpleTag() == false) {
             if (jspOptions.isUsePageTagPool()) {
                 reuseTag = true;
-            }
-            else if(jspOptions.isUseSytheticTagPool()){
-                reuseTag = true;
-                forceNewTags = true; 
+                if(jspOptions.isUseSytheticTagPool()){
+                    forceNewTags = true; 
+                }
             }
             else if (jspOptions.isUseThreadTagPool()) {
                 if (isTagFile == false) {
