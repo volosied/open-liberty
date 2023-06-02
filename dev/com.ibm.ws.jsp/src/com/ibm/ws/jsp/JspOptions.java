@@ -927,9 +927,8 @@ public class JspOptions {
         if (sytheticTagPoolValue != null)
         {
             if (sytheticTagPoolValue.equalsIgnoreCase("true")) {
-                this.usePageTagPool = true;
                 this.useSyntheticTagPool = true;
-                System.out.println("synthetic tag pool is true");
+                System.out.println("prop: synthetic tag pool is true");
                 if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.INFO)){
                     logger.logp(Level.INFO, CLASS_NAME, "populateOptions", "syntheticTagPool enabled; forcing usePageTagPool to true as well" );
                 }
@@ -940,6 +939,8 @@ public class JspOptions {
                     logger.logp(Level.INFO, CLASS_NAME, "populateOptions", "Invalid value for syntheticTagPool = "+ sytheticTagPoolValue);
                 }
             }
+        } else {
+            System.out.println("debug: synthetic tag pool is " + this.useSyntheticTagPool);
         }
 
     	/*---------------------*/
