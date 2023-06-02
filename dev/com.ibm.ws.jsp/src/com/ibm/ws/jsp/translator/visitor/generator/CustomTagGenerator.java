@@ -52,6 +52,7 @@ public class CustomTagGenerator extends CodeGeneratorBase {
     private boolean existingTag = false;
     private boolean genTagInMethod = false;
     private boolean reuseTag = false;
+    private boolean forceNewTags = false;
     
     private String prefix = null;
     private String shortName = null;
@@ -156,6 +157,10 @@ public class CustomTagGenerator extends CodeGeneratorBase {
             if (jspOptions.isUsePageTagPool()) {
                 reuseTag = true;
             }
+            else if(jspOptions.isUseSytheticTagPool()){
+                reuseTag = true;
+                forceNewTags = true; 
+            }
             else if (jspOptions.isUseThreadTagPool()) {
                 if (isTagFile == false) {
                     reuseTag = true;
@@ -169,7 +174,10 @@ public class CustomTagGenerator extends CodeGeneratorBase {
                 existTagMap = new HashMap();
                 persistentData.put("existTagMap", existTagMap);
             }
-            String existingVarName = (String)existTagMap.get(shortName+collectedTagData.getVarNameSuffix());
+            String existingVarName = null;
+            if(!forceNewTags){
+                existingVarName = (String)existTagMap.get(shortName+collectedTagData.getVarNameSuffix());
+            }
             if (existingVarName != null) {
                 if (isExistingTagInStack("_jspx_th_" + existingVarName) == false) {
                     baseVar = existingVarName;
@@ -181,7 +189,9 @@ public class CustomTagGenerator extends CodeGeneratorBase {
             }
             else {
                 baseVar = createTagVarName(ti.getTagName(), prefix, shortName);
+                if(!forceNewTags){
                 existTagMap.put(shortName+collectedTagData.getVarNameSuffix(), baseVar);
+                }
             }
             //247815 Start
             if (persistentData.get("InitTaglibLookupWriter") == null) {

@@ -113,6 +113,8 @@ public class JspOptions {
     protected boolean    allowMultipleAttributeValues = false; //PI30519
     protected boolean    allowPrecedenceInJspExpressionsWithConstantString = false; //PI37304
     
+    protected boolean    useSyntheticTagPool = false; //PI37304
+
     //@BLB Pretouch End
     // defect 400645
     String overriddenJspOptions = new String();
@@ -921,6 +923,25 @@ public class JspOptions {
         }
         //PI37304 end
 
+        String sytheticTagPoolValue = jspParams.getProperty("syntheticTagPool");
+        if (sytheticTagPoolValue != null)
+        {
+            if (sytheticTagPoolValue.equalsIgnoreCase("true")) {
+                this.usePageTagPool = true;
+                this.useSyntheticTagPool = true;
+                System.out.println("synthetic tag pool is true");
+                if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.INFO)){
+                    logger.logp(Level.INFO, CLASS_NAME, "populateOptions", "syntheticTagPool enabled; forcing usePageTagPool to true as well" );
+                }
+            } else if (sytheticTagPoolValue.equalsIgnoreCase("false"))
+                this.useSyntheticTagPool = false;
+            else {
+                if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.INFO)){
+                    logger.logp(Level.INFO, CLASS_NAME, "populateOptions", "Invalid value for syntheticTagPool = "+ sytheticTagPoolValue);
+                }
+            }
+        }
+
     	/*---------------------*/
     	/*      Fix-Ups        */
     	/*---------------------*/
@@ -962,7 +983,15 @@ public class JspOptions {
         return usePageTagPool;
     }
 
-    public void setUsePageTagPool(boolean usePageTagPool) {
+    public void setUsePageTagPool(boolean useSyntheticTagPool) {
+        this.useSyntheticTagPool = useSyntheticTagPool;
+    }
+
+    public boolean isUseSytheticTagPool() {
+        return useSyntheticTagPool;
+    }
+
+    public void setUseSytheticTagPool(boolean usePageTagPool) {
         this.usePageTagPool = usePageTagPool;
     }
     
@@ -1654,6 +1683,7 @@ public class JspOptions {
                 "useJDKCompiler =                      [" + useJDKCompiler +"]"+separatorString+
                 "useJikes =                            [" + useJikes +"]"+separatorString+
                 "usePageTagPool =                      [" + usePageTagPool +"]"+separatorString+
+                "syntheticTagPool =                      [" + useSyntheticTagPool +"]"+separatorString+
                 "useRepeatInt =                        [" + useRepeatInt +"]"+separatorString+
                 "useScriptVarDupInit =                 [" + useScriptVarDupInit +"]"+separatorString+
                 "useStringCast =                       [" + useStringCast +"]"+separatorString+
