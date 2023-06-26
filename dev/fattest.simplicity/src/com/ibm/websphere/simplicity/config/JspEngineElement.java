@@ -1,14 +1,11 @@
 /*******************************************************************************
- * Copyright (c) 2011 IBM Corporation and others.
+ * Copyright (c) 2011, 2023 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-2.0/
  * 
  * SPDX-License-Identifier: EPL-2.0
- *
- * Contributors:
- *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 package com.ibm.websphere.simplicity.config;
 
@@ -26,6 +23,7 @@ public class JspEngineElement extends ConfigElement {
     private Boolean disableTldSearch;
     private String scratchdir;
     private Boolean keepGenerated;
+    private Boolean useJDKCompiler;
 
     /**
      * @return the useStringCast
@@ -121,6 +119,18 @@ public class JspEngineElement extends ConfigElement {
         this.keepGenerated = b;
     }
 
+    /**
+     * @return the keepGenerated
+     */
+    public Boolean isUseJDKCompiler() {
+        return useJDKCompiler;
+    }
+
+    @XmlAttribute(name = "useJDKCompiler")
+    public void setUseJDKCompiler(Boolean b) {
+        this.useJDKCompiler = b;
+    }
+
     @Override
     public String toString() {
         StringBuffer buf = new StringBuffer("JspElement{");
@@ -140,6 +150,8 @@ public class JspEngineElement extends ConfigElement {
             buf.append("scratchdir=\"" + scratchdir + "\" ");
         if (keepGenerated != null)
             buf.append("keepGenerated=\"" + keepGenerated + "\" ");
+        if (useJDKCompiler != null)
+            buf.append("useJDKCompiler=\"" + useJDKCompiler + "\" ");
 
         buf.append("}");
         return buf.toString();

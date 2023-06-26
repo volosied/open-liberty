@@ -1272,3 +1272,7 @@ jsp.error.page.invalid.erroronelnotfound.useraction=
 jsp.isthreadsafe.warning=CWWJS0003W: The Pages 3.1 specification strongly advises Pages developers not to use the deprecated page directive isThreadSafe.
 jsp.isthreadsafe.warning.explanation=SingleThreadModel was removed from Servlet 6.0. Pages 3.1 deprecated isThreadSafe with plans to remove it in a future Pages update.
 jsp.isthreadsafe.warning.useraction=Remove the isThreadSafe directive from all pages.
+
+jsp.javasourcelevel.warning=CWWJS0004W: Requested javaSourceLevel={0} exceeds installed Java {1}, therefore forcing to {1}.
+jsp.javasourcelevel.warning.explanation=File cannot be compiled with a higher source than the available JDK level. 
+jsp.javasourcelevel.warning.useraction=Specify the javaSourceLevel at or below the available JDK level.

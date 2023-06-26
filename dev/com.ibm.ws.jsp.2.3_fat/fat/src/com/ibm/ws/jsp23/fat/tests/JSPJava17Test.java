@@ -6,9 +6,6 @@
  * http://www.eclipse.org/legal/epl-2.0/
  * 
  * SPDX-License-Identifier: EPL-2.0
- *
- * Contributors:
- *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 package com.ibm.ws.jsp23.fat.tests;
 
@@ -100,9 +97,8 @@ public class JSPJava17Test {
     public void testJava17viaUseJDKCompiler() throws Exception {
 
         ServerConfiguration configuration = server.getServerConfiguration();
-        LOG.info("Server configuration that was saved: " + configuration);
-
-        configuration.getJspEngine().setJavaSourceLevel("17");
+        configuration.getJspEngine().setUseJDKCompiler(true);
+        LOG.info("New server configuration used: " + configuration);
 
         server.setMarkToEndOfLog();
         server.updateServerConfiguration(configuration);

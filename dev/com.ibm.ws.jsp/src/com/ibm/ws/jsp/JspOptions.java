@@ -6,9 +6,6 @@
  * http://www.eclipse.org/legal/epl-2.0/
  * 
  * SPDX-License-Identifier: EPL-2.0
- *
- * Contributors:
- *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 package com.ibm.ws.jsp;
 
@@ -238,8 +235,8 @@ public class JspOptions {
             logger.logp(Level.INFO, CLASS_NAME, "populateOptions", JspMessages.getMessage("jsp.jdksourcelevel.value", new Object[] { useJdkSourceLevel })); //152472
             setJdkSourceLevel(useJdkSourceLevel);
         }
-        if (rawJavaSourceLevel != null && rawJavaSourceLevel.equals("1.8")) // only for Java 8 do we accept 1.8 
-            rawJavaSourceLevel = "8";
+        if (rawJavaSourceLevel != null && (rawJavaSourceLevel.equals("8") || rawJavaSourceLevel.equals("1.8"))) // only for Java 8 do we accept 1.8 and 8
+            rawJavaSourceLevel =  org.eclipse.jdt.internal.compiler.impl.CompilerOptions.VERSION_1_8; 
         try {
             if (rawJavaSourceLevel != null)
                 useJavaSourceLevel = Integer.parseInt(rawJavaSourceLevel);            
@@ -248,7 +245,7 @@ public class JspOptions {
                 logger.logp(Level.INFO, CLASS_NAME, "populateOptions", "Invalid value for javaSourceLevel = " + rawJavaSourceLevel + ".");
             }
         }
-        setJavaSourceLevel(useJavaSourceLevel);
+        setJavaSourceLevel(useJavaSourceLevel); //validation already done via metatype.xml options 
         
         // Normalize compileWithAssert and jdkSourceLevel; compileWithAssert with value true means compile with
         // jdk 1.4 source level.  Only jdkSourceLevel will be used elsewhere in the JSP container.
@@ -1090,9 +1087,8 @@ public class JspOptions {
         int jmv = JavaInfo.majorVersion();
         if (javaSourceLevel > jmv) {
             // can not specify higher than running Java
-            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.INFO)) {
-                logger.logp(Level.INFO, CLASS_NAME, "setJavaSourceLevel", "Requested javaSourceLevel=" + javaSourceLevel + 
-                            " exceeds installed Java " + jmv + ", therefore forcing to " + jmv);
+            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.WARNING)) {
+                logger.logp(Level.WARNING, CLASS_NAME, "setJavaSourceLevel", JspMessages.getMessage("jsp.javasourcelevel.warning", new Object[] { javaSourceLevel, jmv }));
             }
             javaSourceLevel = jmv;
         }

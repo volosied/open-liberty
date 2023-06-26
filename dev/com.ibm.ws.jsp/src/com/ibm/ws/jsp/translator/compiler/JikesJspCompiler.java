@@ -1,14 +1,11 @@
 /*******************************************************************************
- * Copyright (c) 1997, 2004 IBM Corporation and others.
+ * Copyright (c) 1997, 2023 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-2.0/
  * 
  * SPDX-License-Identifier: EPL-2.0
- *
- * Contributors:
- *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 package com.ibm.ws.jsp.translator.compiler;
 
@@ -201,32 +198,33 @@ public class JikesJspCompiler implements JspCompiler {
             argList.add("-deprecation");
         }
 
-        // Jikes must default to -source 1.3; override if jdkSourceLevel is set 
         argList.add("-source");
         if (javaSourceLevel != -1) { // 7183
             argList.add(javaSourceLevel.toString());
-        }
-        else if (jdkSourceLevel == 14) {
-            argList.add("1.4");
-        }
-        else if (jdkSourceLevel == 15) {
-            argList.add("1.5");
-        }
-        // PM04610 start
-        else if (jdkSourceLevel == 16) {
-            argList.add("1.6");
-        }
-        // PM04610 end
-        else if (jdkSourceLevel == 17) {
-            argList.add("1.7");
-        }
-        // 126902 start
-        else if (jdkSourceLevel == 18) {
-            argList.add("1.8");
-        }
-        // 126902 end
-        else {
-            argList.add("1.3");
+        } else {
+            // Jikes must default to -source 1.3; override if jdkSourceLevel is set 
+            if (jdkSourceLevel == 14) {
+                argList.add("1.4");
+            }
+            else if (jdkSourceLevel == 15) {
+                argList.add("1.5");
+            }
+            // PM04610 start
+            else if (jdkSourceLevel == 16) {
+                argList.add("1.6");
+            }
+            // PM04610 end
+            else if (jdkSourceLevel == 17) {
+                argList.add("1.7");
+            }
+            // 126902 start
+            else if (jdkSourceLevel == 18) {
+                argList.add("1.8");
+            }
+            // 126902 end
+            else {
+                argList.add("1.3");
+            }
         }
 
         argList.add("-sourcepath");

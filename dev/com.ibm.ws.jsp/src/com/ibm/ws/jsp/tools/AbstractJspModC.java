@@ -6,9 +6,6 @@
  * http://www.eclipse.org/legal/epl-2.0/
  * 
  * SPDX-License-Identifier: EPL-2.0
- *
- * Contributors:
- *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 package com.ibm.ws.jsp.tools;
 
@@ -284,7 +281,13 @@ public abstract class AbstractJspModC {
                     try {
                        javaLevel = Integer.parseInt(javaSourceLevel);       
                     } catch (NumberFormatException e) {
-                        
+                        if (logger!=null) {
+                            if(doTraceCheck&&logger.isLoggable(Level.WARNING)){
+                                logger.logp(Level.WARNING,CLASS_NAME,"_internalCompileApp", "failed to parse javaSourceLevel: " + javaSourceLevel, e);
+                                logger.logp(Level.WARNING,CLASS_NAME,"_internalCompileApp", "defaulting javaSourceLevel to java 8");
+                            }
+                        }
+                        javaSourceLevel="8";
                     }
                     options.setJavaSourceLevel(javaLevel);
                 }
@@ -296,6 +299,11 @@ public abstract class AbstractJspModC {
                 try {
                     jdkLevel = Integer.parseInt(rawJdkLevel);
                 } catch(NumberFormatException e) {
+                        if (logger!=null) {
+                            if(doTraceCheck&&logger.isLoggable(Level.WARNING)){
+                                logger.logp(Level.WARNING,CLASS_NAME,"_internalCompileApp", "failed to parse jdkSourceLevel: " + rawJdkLevel, e);
+                            }
+                        }
                 }
                 if (assertProperty!=null && assertProperty.booleanValue()==true) {
                     if (logger!=null) {

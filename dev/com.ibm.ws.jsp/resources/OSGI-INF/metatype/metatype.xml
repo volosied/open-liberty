@@ -36,7 +36,7 @@
             <Option label="20" value="20"/>
             <Option label="21" value="21"/>
         </AD> 
-        <AD description="%jdkSourceLevel" name="%jdkSourceLevel.name"
+        <AD name="internal" description="internal use only"
             id="jdkSourceLevel" required="false" type="String">
             <Option label="13" value="13"/>
             <Option label="14" value="14"/>
