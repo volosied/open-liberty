@@ -27,4 +27,6 @@ fat.test.container.images: selenium/standalone-chrome:4.8.3, alpine:3.16
 	org.seleniumhq.selenium:selenium-remote-driver;version=4.8.3,\
 	org.seleniumhq.selenium:selenium-support;version=4.8.3,\
 	com.ibm.websphere.javaee.jaxrs.2.1;version=latest,\
-	com.ibm.websphere.org.eclipse.microprofile.openapi.1.0
+	com.ibm.websphere.org.eclipse.microprofile.openapi.1.0,\
+	./lib/guava-31.1-jre.jar;version=file
+

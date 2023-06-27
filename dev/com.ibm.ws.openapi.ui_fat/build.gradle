@@ -18,4 +18,12 @@ dependencies {
     requiredLibs 'org.seleniumhq.selenium:selenium-java:4.8.3'
 }
 
+task addHTMLUnit(type: Copy) {
+    from('lib') {
+        include '*.jar'
+    }
+    into "${buildDir}/autoFVT/lib"
+}
+
 addRequiredLibraries.dependsOn copyTestContainers
+addRequiredLibraries.dependsOn addHTMLUnit

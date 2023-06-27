@@ -90,6 +90,9 @@ public class UIBasicTest {
     public void testPublicUI() {
         driver.get("http://host.testcontainers.internal:" + server.getHttpDefaultPort() + "/api/explorer");
         testUI();
+
+        // WebPage page = getPage("www.google.com");
+        // System.out.println(page.getTitle());
     }
 
     @Test
