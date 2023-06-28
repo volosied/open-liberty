@@ -31,41 +31,6 @@ import org.openqa.selenium.WebDriver;
 public interface ExtendedWebDriver extends WebDriver {
 
     /**
-     * gets the response status of the last response (of the last triggered request against get)
-     * @return
-     */
-    int getResponseStatus();
-
-    /**
-     * gets the last response as body
-     * @return
-     */
-    String getResponseBody();
-
-
-    /**
-     * @return the request post data as string
-     */
-    public String getRequestData();
-
-    /**
-     * postinit call for tests
-     */
-    void postInit();
-
-    /**
-     * gets the internal webdriver delegate
-     * @return
-     */
-    WebDriver getDelegate();
-
-    /**
-     * returns a reference to the Selenium JS Executor of this webdriver
-     * @return
-     */
-    JavascriptExecutor getJSExecutor();
-
-    /**
      * @return the innerText of the Page
      */
     String getPageText();
@@ -77,24 +42,5 @@ public interface ExtendedWebDriver extends WebDriver {
      */
     String getPageTextReduced();
 
-    /**
-     * debugging helper which allows to look into the processed response data
-     */
-    void printProcessedResponses();
 
-    /**
-     * quits the driver engine
-     */
-    void quit();
-
-    /**
-     * closes the current tab
-     */
-    void close();
-
-    /**
-     * resets the current page to its initial stage before the page load
-     * without dropping the engine or closing it
-     */
-    void reset();
 }

@@ -45,6 +45,8 @@ import componenttest.containers.SimpleLogConsumer;
 import componenttest.custom.junit.runner.FATRunner;
 import componenttest.topology.impl.LibertyServer;
 
+import  org.testcontainers.utility.DockerImageName;
+
 /**
  * A basic test that we can open the UI and that it appears to have loaded correctly
  */
@@ -60,11 +62,8 @@ public class UIBasicTest {
     public static LibertyServer server;
 
     @Rule
-    public BrowserWebDriverContainer<?> chrome = new BrowserWebDriverContainer<>().withCapabilities(new ChromeOptions())
+    public BrowserWebDriverContainer<?> chrome = new BrowserWebDriverContainer<>(getChromeImage()).withCapabilities(new ChromeOptions())
                                                                                   .withAccessToHost(true)
-                                                                                  .withRecordingMode(VncRecordingMode.RECORD_FAILING,
-                                                                                                     Props.getInstance().getFileProperty(Props.DIR_LOG),
-                                                                                                     VncRecordingFormat.MP4)
                                                                                   .withLogConsumer(new SimpleLogConsumer(UIBasicTest.class, "selenium-driver"));
 
     private RemoteWebDriver driver;
@@ -124,5 +123,13 @@ public class UIBasicTest {
         WebElement testGetDefaultResponse = waitForElement(testGetOpBlock, By.cssSelector("tr.response[data-code=\"default\"]"));
         assertNotNull("response line", testGetDefaultResponse);
     }
+
+    private static DockerImageName getChromeImage() {
+  if(FATRunner.ARM_ARCHITECTURE) {
+    return DockerImageName.parse("seleniarm/standalone-chromium:latest").asCompatibleSubstituteFor("selenium/standalone-chrome");
+  } else {
+    return DockerImageName.parse("selenium/standalone-chrome:lastest");
+  }
+} 
 
 }

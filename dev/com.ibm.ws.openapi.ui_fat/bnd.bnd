@@ -17,7 +17,7 @@ src: \
 	fat/src
 
 fat.project: true
-fat.test.container.images: selenium/standalone-chrome:4.8.3, alpine:3.16
+fat.test.container.images: seleniarm/standalone-chromium:latest, alpine:3.16
 
 -buildpath: \
 	io.openliberty.org.testcontainers;version=latest,\
