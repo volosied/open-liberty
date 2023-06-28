@@ -96,6 +96,10 @@ public class CustomDriver implements ExtendedWebDriver {
         this.driver = driver;
     }
 
+    public RemoteWebDriver getRemoteWebDriver(){
+        return this.driver;
+    }
+
     @Override
     public String getPageText() {
         String head = this.driver.findElement(By.tagName("head")).getAttribute("innerText").replaceAll("[\\s\\n ]", " ");

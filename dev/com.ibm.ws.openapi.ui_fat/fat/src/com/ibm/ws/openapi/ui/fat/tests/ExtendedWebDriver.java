@@ -19,6 +19,7 @@ package com.ibm.ws.openapi.ui.fat.tests;
 
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 /**
  * an extended web driver interface which takes the response into consideration
@@ -41,6 +42,8 @@ public interface ExtendedWebDriver extends WebDriver {
      * @return
      */
     String getPageTextReduced();
+
+    RemoteWebDriver getRemoteWebDriver();
 
 
 }

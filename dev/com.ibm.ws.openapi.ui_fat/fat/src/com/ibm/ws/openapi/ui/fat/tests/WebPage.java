@@ -116,7 +116,7 @@ public class WebPage {
      */
     public void waitForPageToLoad(Duration timeOut) {
         ExpectedCondition<Boolean> expectation =
-            driver -> ((JavascriptExecutor)webDriver).executeScript("return document.readyState")
+            driver -> webDriver.getRemoteWebDriver().executeScript("return document.readyState")
                                .equals("complete");
 
         synchronized (webDriver) {
