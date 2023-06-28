@@ -72,6 +72,7 @@ import org.openqa.selenium.WebElement;
 // import org.openqa.selenium.virtualauthenticator.VirtualAuthenticator;
 // import org.openqa.selenium.virtualauthenticator.VirtualAuthenticatorOptions;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 /**
  * Extended driver which we need for getting the http response code and the http response without having to revert to
@@ -89,9 +90,9 @@ import org.openqa.selenium.WebDriver;
 @SuppressWarnings("unused")
 public class CustomDriver implements ExtendedWebDriver {
 
-    WebDriver driver;
+    RemoteWebDriver driver;
 
-    public CustomDriver(WebDriver driver){
+    public CustomDriver(RemoteWebDriver driver){
         this.driver = driver;
     }
 

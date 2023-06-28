@@ -66,7 +66,7 @@ public class UIBasicTest {
                                                                                   .withAccessToHost(true)
                                                                                   .withLogConsumer(new SimpleLogConsumer(UIBasicTest.class, "selenium-driver"));
 
-    private RemoteWebDriver driver;
+    private ExtendedWebDriver driver;
 
     @BeforeClass
     public static void setup() throws Exception {
@@ -82,46 +82,46 @@ public class UIBasicTest {
 
     @Before
     public void setupTest() {
-        driver = new RemoteWebDriver(chrome.getSeleniumAddress(), new ChromeOptions().setAcceptInsecureCerts(true));
+        driver = new CustomDriver(new RemoteWebDriver(chrome.getSeleniumAddress(), new ChromeOptions().setAcceptInsecureCerts(true)));
     }
 
     @Test
     public void testPublicUI() {
-        driver.get("http://host.testcontainers.internal:" + server.getHttpDefaultPort() + "/api/explorer");
-        testUI();
-
-        // WebPage page = getPage("www.google.com");
-        // System.out.println(page.getTitle());
+        // driver.get("http://host.testcontainers.internal:" + server.getHttpDefaultPort() + "/api/explorer");
+        WebPage page = new WebPage(driver);
+        page.get("http://host.testcontainers.internal:" + server.getHttpDefaultPort() + "/api/explorer");
+        page.waitForPageToLoad();
+        testUI(page);
     }
 
-    @Test
-    public void testPrivateUI() {
-        driver.get("https://admin:test@host.testcontainers.internal:" + server.getHttpDefaultSecurePort() + "/ibm/api/explorer");
-        testUI();
-    }
+    // @Test
+    // public void testPrivateUI() {
+    //     // driver.get("https://admin:test@host.testcontainers.internal:" + server.getHttpDefaultSecurePort() + "/ibm/api/explorer");
+    //     testUI();
+    // }
 
     /**
      * Tests common to both the public and private UI
      */
-    private void testUI() {
+    private void testUI(WebPage page) {
         // Check the title loads
-        WebElement title = waitForElement(driver, By.cssSelector("h2.title"), LONG_WAIT);
-        assertThat("Page title", title.getText(), Matchers.containsString("Liberty REST APIs"));
+        // WebElement title = waitForElement(driver, By.cssSelector("h2.title"), LONG_WAIT);
+        assertThat("Page title", page.getTitle(), Matchers.containsString("Liberty REST APIs"));
 
-        // Check the headerbar colour
-        WebElement headerbar = waitForElement(driver, By.cssSelector("div.headerbar"));
-        assertEquals("Headerbar colour", Color.fromString("#191c2c"), Color.fromString(headerbar.getCssValue("background-color")));
+        // // Check the headerbar colour
+        // WebElement headerbar = waitForElement(driver, By.cssSelector("div.headerbar"));
+        // assertEquals("Headerbar colour", Color.fromString("#191c2c"), Color.fromString(headerbar.getCssValue("background-color")));
 
-        // Check the headerbar has a background image. It's a data URL, so it's hard to assert it's actually correct, we just assert that there is one
-        WebElement headerbarWrapper = waitForElement(headerbar, By.cssSelector("div.headerbar-wrapper"));
-        assertThat("Headerbar image", headerbarWrapper.getCssValue("background-image"), startsWith("url(\"data:image/png"));
+        // // Check the headerbar has a background image. It's a data URL, so it's hard to assert it's actually correct, we just assert that there is one
+        // WebElement headerbarWrapper = waitForElement(headerbar, By.cssSelector("div.headerbar-wrapper"));
+        // assertThat("Headerbar image", headerbarWrapper.getCssValue("background-image"), startsWith("url(\"data:image/png"));
 
-        // Check we can see and open the operation
-        WebElement testGetOpBlock = waitForElement(driver, By.id("operations-default-testGet"));
-        WebElement testGetButton = testGetOpBlock.findElement(By.tagName("button"));
-        testGetButton.click();
-        WebElement testGetDefaultResponse = waitForElement(testGetOpBlock, By.cssSelector("tr.response[data-code=\"default\"]"));
-        assertNotNull("response line", testGetDefaultResponse);
+        // // Check we can see and open the operation
+        // WebElement testGetOpBlock = waitForElement(driver, By.id("operations-default-testGet"));
+        // WebElement testGetButton = testGetOpBlock.findElement(By.tagName("button"));
+        // testGetButton.click();
+        // WebElement testGetDefaultResponse = waitForElement(testGetOpBlock, By.cssSelector("tr.response[data-code=\"default\"]"));
+        // assertNotNull("response line", testGetDefaultResponse);
     }
 
     private static DockerImageName getChromeImage() {

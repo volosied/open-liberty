@@ -27,7 +27,6 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Set;
 import org.openqa.selenium.TimeoutException;
-
 import java.util.function.Function;
 /**
  * Mimics the html unit webpage
@@ -49,6 +48,15 @@ public class WebPage {
 
     public void setWebDriver(ExtendedWebDriver webDriver) {
         this.webDriver = webDriver;
+    }
+
+    public void get(String url) {
+        webDriver.get(url);
+    }
+
+
+    public String getTitle() {
+        return webDriver.getTitle();
     }
 
     /**
