@@ -94,23 +94,28 @@ public class UIBasicTest {
         testUI(page);
     }
 
-    // @Test
-    // public void testPrivateUI() {
-    //     // driver.get("https://admin:test@host.testcontainers.internal:" + server.getHttpDefaultSecurePort() + "/ibm/api/explorer");
-    //     testUI();
-    // }
+    @Test
+    public void testPrivateUI() {
+        // driver.get("https://admin:test@host.testcontainers.internal:" + server.getHttpDefaultSecurePort() + "/ibm/api/explorer");
+         WebPage page = new WebPage(driver);
+                 page.get("https://admin:test@host.testcontainers.internal:" + server.getHttpDefaultSecurePort() + "/ibm/api/explorer");
+        page.waitForPageToLoad();
+        testUI(page);
+    }
 
     /**
      * Tests common to both the public and private UI
      */
     private void testUI(WebPage page) {
         // Check the title loads
+        System.out.println(page.getPageSource());
         // WebElement title = waitForElement(driver, By.cssSelector("h2.title"), LONG_WAIT);
-        assertThat("Page title", page.getTitle(), Matchers.containsString("Liberty REST APIs"));
+        assertThat("Page title", page.findElement(By.cssSelector("h2.title")).getText(), Matchers.containsString("Liberty REST APIs"));
 
         // // Check the headerbar colour
         // WebElement headerbar = waitForElement(driver, By.cssSelector("div.headerbar"));
         // assertEquals("Headerbar colour", Color.fromString("#191c2c"), Color.fromString(headerbar.getCssValue("background-color")));
+            // assertThat("Page title", page.findElement(By.cssSelector("div.headerbar")), Matchers.containsString("Liberty REST APIs"));
 
         // // Check the headerbar has a background image. It's a data URL, so it's hard to assert it's actually correct, we just assert that there is one
         // WebElement headerbarWrapper = waitForElement(headerbar, By.cssSelector("div.headerbar-wrapper"));
