@@ -11,9 +11,11 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
+apply from: '../wlp-gradle/subprojects/maven-central-mirror.gradle'
 
 dependencies {
-    requiredLibs 'net.sourceforge.htmlunit:htmlunit-cssparser:1.6.0',
+    requiredLibs 'org.seleniumhq.selenium:selenium-java:4.8.3',
+      'net.sourceforge.htmlunit:htmlunit-cssparser:1.6.0',
       'net.sourceforge.htmlunit:htmlunit:2.44.0',
       'net.sourceforge.htmlunit:htmlunit-core-js:2.44.0',
       'net.sourceforge.htmlunit:neko-htmlunit:2.44.0',
@@ -42,5 +44,14 @@ dependencies {
       'xml-apis:xml-apis:1.4.01'
     }
 
-addRequiredLibraries.dependsOn addJakartaTransformer
 
+    task addHTMLUnit(type: Copy) {
+    from('lib') {
+        include '*.jar'
+    }
+    into "${buildDir}/autoFVT/lib"
+}
+
+addRequiredLibraries.dependsOn addJakartaTransformer
+addRequiredLibraries.dependsOn copyTestContainers
+addRequiredLibraries.dependsOn addHTMLUnit
