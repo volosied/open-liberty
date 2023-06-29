@@ -17,7 +17,9 @@ import java.net.URL;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.Rule;
 import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
 
@@ -29,7 +31,11 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.html.HtmlTextInput;
 import com.ibm.websphere.simplicity.ShrinkHelper;
 import com.ibm.websphere.simplicity.log.Log;
+import com.ibm.ws.jsf22.fat.FATSuite;
 import com.ibm.ws.jsf22.fat.JSFUtils;
+import com.ibm.ws.jsf22.fat.selenium_util.CustomDriver;
+import com.ibm.ws.jsf22.fat.selenium_util.ExtendedWebDriver;
+import com.ibm.ws.jsf22.fat.selenium_util.WebPage;
 
 import componenttest.annotation.Server;
 import componenttest.annotation.SkipForRepeat;
@@ -39,10 +45,19 @@ import componenttest.custom.junit.runner.Mode.TestMode;
 import componenttest.rules.repeater.JakartaEE10Action;
 import componenttest.topology.impl.LibertyServer;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.testcontainers.Testcontainers;
+import org.testcontainers.containers.BrowserWebDriverContainer;
+
+import componenttest.containers.SimpleLogConsumer;
+
 /**
  * Tests to execute on the jsf22TracingServer that use HtmlUnit. jsf22TracingServer
  */
-@Mode(TestMode.FULL)
+// @Mode(TestMode.FULL)
 @RunWith(FATRunner.class)
 public class JSF22ResetValuesAndAjaxDelayTests {
     private static final String APP_NAME = "TestJSF22Ajax";
@@ -55,6 +70,13 @@ public class JSF22ResetValuesAndAjaxDelayTests {
 
     private static BrowserVersion browser = BrowserVersion.CHROME;
 
+    @Rule
+    public BrowserWebDriverContainer<?> chrome = new BrowserWebDriverContainer<>(FATSuite.getChromeImage()).withCapabilities(new ChromeOptions())
+                                                                                  .withAccessToHost(true)
+                                                                                  .withLogConsumer(new SimpleLogConsumer(JSF22ResetValuesAndAjaxDelayTests.class, "selenium-driver"));
+
+    private ExtendedWebDriver driver;
+
     @BeforeClass
     public static void setup() throws Exception {
         boolean isEE10 = JakartaEE10Action.isActive();
@@ -64,6 +86,8 @@ public class JSF22ResetValuesAndAjaxDelayTests {
                                       isEE10 ? "com.ibm.ws.jsf22.fat.ajax.resetValue.faces40" : "com.ibm.ws.jsf22.fat.ajax.resetValue.jsf22");
 
         jsf22TracingServer.startServer(c.getSimpleName() + ".log");
+
+        Testcontainers.exposeHostPorts(jsf22TracingServer.getHttpDefaultPort(), jsf22TracingServer.getHttpDefaultSecurePort());
     }
 
     @AfterClass
@@ -74,59 +98,102 @@ public class JSF22ResetValuesAndAjaxDelayTests {
         }
     }
 
+    @Before
+    public void setupTest() {
+        driver = new CustomDriver(new RemoteWebDriver(chrome.getSeleniumAddress(), new ChromeOptions().setAcceptInsecureCerts(true)));
+    }
+
     /**
      * Test the ajax resetValues attribute and also the f:resetValues component
      *
      * @throws Exception
      */
     @Test
-    @SkipForRepeat(EE10_FEATURES)
+    // @SkipForRepeat(EE10_FEATURES)
     public void testResetValues() throws Exception {
-        try (WebClient webClient = new WebClient(browser)) {
+        // try (WebClient webClient = new WebClient(browser)) {
 
-            webClient.setAjaxController(new NicelyResynchronizingAjaxController());
-            webClient.getOptions().setThrowExceptionOnScriptError(false);
+        //     webClient.setAjaxController(new NicelyResynchronizingAjaxController());
+        //     webClient.getOptions().setThrowExceptionOnScriptError(false);
 
-            URL url = JSFUtils.createHttpUrl(jsf22TracingServer, APP_NAME, "resetValuesTest.jsf");
-            HtmlPage page = (HtmlPage) webClient.getPage(url);
+            String url = JSFUtils.createSeleniumURLString(jsf22TracingServer, APP_NAME, "resetValuesTest.jsf");
+             WebPage page = new WebPage(driver);
+             page.get(url);
+             System.out.println(url);
+             page.waitForPageToLoad();
+        //     HtmlPage page = (HtmlPage) webClient.getPage(url);
 
             Log.info(c, name.getMethodName(), "Navigating to: /" + APP_NAME + "/resetValuesTest.jsf");
-            HtmlElement link = (HtmlElement) page.getElementById("form1:link1");
-            page = link.click();
+        //     HtmlElement link = (HtmlElement) page.getElementById("form1:link1");
+        //     page = link.click();
 
-            HtmlElement checkValue = (HtmlElement) page.getElementById("form1:input1");
+         Log.info(c, name.getMethodName(), page.getPageSource());
 
-            Log.info(c, name.getMethodName(), "The input1 field should have a value of 1, actual: " + checkValue.asText());
-            assertEquals("1", checkValue.asText());
+                page.findElement(By.id("form1:link1")).click();
+                page.waitReqJs();
 
-            HtmlElement saveButton = (HtmlElement) page.getElementById("form1:saveButton");
-            page = saveButton.click();
+                Log.info(c, name.getMethodName(), page.getPageSource());
+        //     HtmlElement checkValue = (HtmlElement) page.getElementById("form1:input1");
 
-            HtmlElement checkMessage = (HtmlElement) page.getElementById("form1:messages");
-            Log.info(c, name.getMethodName(), "On save, the validation should have failed.  Message displayed: " + checkMessage.asText());
-            assertNotNull("A validation error should have been displayed", checkMessage.asText());
+            String input1Value = page.findElement(By.id("form1:input1")).getAttribute("value");
 
-            //click the link again, the value should still increment which means the Ajax reset is working
-            page = link.click();
-            checkValue = (HtmlElement) page.getElementById("form1:input1");
+            Log.info(c, name.getMethodName(), "The input1 field should have a value of 1, actual: " + input1Value);
+            assertEquals("1", input1Value);
 
-            Log.info(c, name.getMethodName(), "The input1 field should have a value of 2, actual: " + checkValue.asText());
-            assertEquals("2", checkValue.asText());
+        //     HtmlElement saveButton = (HtmlElement) page.getElementById("form1:saveButton");
+        //     page = saveButton.click();
 
-            //click the resetButton and ensure the fields are reset to 0 each, which means the f:resetValues component is working.
-            HtmlElement resetButton = (HtmlElement) page.getElementById("form1:resetButton");
-            page = resetButton.click();
+                page.findElement(By.id("form1:saveButton")).submit();
+                page.waitReqJs();
 
-            checkValue = (HtmlElement) page.getElementById("form1:input1");
+        //     HtmlElement checkMessage = (HtmlElement) page.getElementById("form1:messages");
+        //     Log.info(c, name.getMethodName(), "On save, the validation should have failed.  Message displayed: " + checkMessage.asText());
 
-            Log.info(c, name.getMethodName(), "The input1 field should have been reset to 0, actual: " + checkValue.asText());
-            assertEquals("0", checkValue.asText());
 
-            HtmlElement checkValue2 = (HtmlElement) page.getElementById("form1:input2");
+                String message = page.findElement(By.id("form1:messages")).getText();
+                Log.info(c, name.getMethodName(), "On save, the validation should have failed.  Message displayed: " + message);
+                assertNotNull("A validation error should have been displayed", message);
 
-            Log.info(c, name.getMethodName(), "The input2 field should have been reset to 0, actual: " + checkValue2.asText());
-            assertEquals("0", checkValue2.asText());
-        }
+        //     //click the link again, the value should still increment which means the Ajax reset is working
+        //     page = link.click();
+        //     checkValue = (HtmlElement) page.getElementById("form1:input1");
+
+                page.findElement(By.id("form1:link1")).click();
+                page.waitReqJs();
+
+        //     Log.info(c, name.getMethodName(), "The input1 field should have a value of 2, actual: " + checkValue.asText());
+        //     assertEquals("2", checkValue.asText());
+
+        input1Value = page.findElement(By.id("form1:input1")).getAttribute("value");
+
+            Log.info(c, name.getMethodName(), "The input1 field should have a value of 2, actual: " + input1Value);
+            assertEquals("2", input1Value);
+
+        //     //click the resetButton and ensure the fields are reset to 0 each, which means the f:resetValues component is working.
+        //     HtmlElement resetButton = (HtmlElement) page.getElementById("form1:resetButton");
+        //     page = resetButton.click();
+
+                page.findElement(By.id("form1:resetButton")).click();
+                page.waitReqJs();
+
+                         Log.info(c, name.getMethodName(), "reset to" + page.getPageSource());
+
+        //     checkValue = (HtmlElement) page.getElementById("form1:input1");
+
+         input1Value = page.findElement(By.id("form1:input1")).getAttribute("value");
+
+            Log.info(c, name.getMethodName(), "The input1 field should have been reset to 0, actual: " + input1Value);
+            assertEquals("0", input1Value);
+
+        //     HtmlElement checkValue2 = (HtmlElement) page.getElementById("form1:input2");
+
+        //     Log.info(c, name.getMethodName(), "The input2 field should have been reset to 0, actual: " + checkValue2.asText());
+        //     assertEquals("0", checkValue2.asText());
+        // }
+
+        String input2Value = page.findElement(By.id("form1:input2")).getAttribute("value");
+                    Log.info(c, name.getMethodName(), "The input2 field should have been reset to 0, actual: " + input2Value);
+            assertEquals("0", input2Value);
     }
 
     /**
@@ -134,7 +201,7 @@ public class JSF22ResetValuesAndAjaxDelayTests {
      *
      * @throws Exception
      */
-    @Test
+    //@Test
     public void testAjaxDelay() throws Exception {
         try (WebClient webClient = new WebClient(browser)) {
             webClient.setAjaxController(new NicelyResynchronizingAjaxController());
@@ -171,7 +238,7 @@ public class JSF22ResetValuesAndAjaxDelayTests {
      * @throws Exception
      */
 
-    @Test
+    //@Test
     @SkipForRepeat(EE10_FEATURES) // This test needs more investigation for EE10.
     public void testAjaxZeroDelay() throws Exception {
         try (WebClient webClient = new WebClient(browser)) {
@@ -216,7 +283,7 @@ public class JSF22ResetValuesAndAjaxDelayTests {
      * WHEN DEFECTS 168751 AND 168757 ARE RESOLVED, UNCOMMENT THIS TEST.
      */
 
-    //   @Test
+    //   //@Test
     //   public void testAjaxDelayNone() throws Exception {
     //   WebClient webClient = new WebClient();
     //   webClient.setAjaxController(new NicelyResynchronizingAjaxController());

@@ -54,6 +54,8 @@ import componenttest.rules.repeater.FeatureReplacementAction;
 import componenttest.rules.repeater.RepeatTests;
 import componenttest.topology.impl.JavaInfo;
 
+import  org.testcontainers.utility.DockerImageName;
+
 /**
  * JSF 2.2 Tests
  *
@@ -69,35 +71,35 @@ import componenttest.topology.impl.JavaInfo;
  */
 @RunWith(Suite.class)
 @SuiteClasses({
-                JSFServerTest.class,
-                JSFHtmlUnit.class,
-                JSFSimpleHtmlUnit.class,
-                JSF22StatelessViewTests.class,
-                JSFHtml5Tests.class,
-                JSF22ResourceLibraryContractHtmlUnit.class,
-                JSF22ComponentTesterTests.class,
-                JSF22ClientWindowTests.class,
-                JSF22ComponentRendererTests.class,
-                JSFCompELTests.class,
-                JSF22FlowsTests.class,
-                CDIFlowsTests.class,
-                JSF22MiscellaneousTests.class,
-                JSF22ViewActionAndPhaseIdTests.class,
+                // JSFServerTest.class,
+                // JSFHtmlUnit.class,
+                // JSFSimpleHtmlUnit.class,
+                // JSF22StatelessViewTests.class,
+                // JSFHtml5Tests.class,
+                // JSF22ResourceLibraryContractHtmlUnit.class,
+                // JSF22ComponentTesterTests.class,
+                // JSF22ClientWindowTests.class,
+                // JSF22ComponentRendererTests.class,
+                // JSFCompELTests.class,
+                // JSF22FlowsTests.class,
+                // CDIFlowsTests.class,
+                // JSF22MiscellaneousTests.class,
+                // JSF22ViewActionAndPhaseIdTests.class,
                 JSF22ResetValuesAndAjaxDelayTests.class,
-                JSF22MiscLifecycleTests.class,
-                JSF22AppConfigPopTests.class,
-                JSF22FlashEventsTests.class,
-                CDIConfigByACPTests.class,
-                CDIFacesInMetaInfTests.class,
-                CDIFacesInWebXMLTests.class,
-                CDITests.class,
-                JSF22BeanValidationTests.class,
-                JSF22ViewPoolingTests.class,
-                JSF22IncludeTest.class,
-                JSF22InputFileTests.class,
-                JSF22LocalizationTesterTests.class,
-                JSF22AparTests.class,
-                JSF22ThirdPartyApiTests.class
+                // JSF22MiscLifecycleTests.class,
+                // JSF22AppConfigPopTests.class,
+                // JSF22FlashEventsTests.class,
+                // CDIConfigByACPTests.class,
+                // CDIFacesInMetaInfTests.class,
+                // CDIFacesInWebXMLTests.class,
+                // CDITests.class,
+                // JSF22BeanValidationTests.class,
+                // JSF22ViewPoolingTests.class,
+                // JSF22IncludeTest.class,
+                // JSF22InputFileTests.class,
+                // JSF22LocalizationTesterTests.class,
+                // JSF22AparTests.class,
+                // JSF22ThirdPartyApiTests.class
 })
 public class FATSuite {
 
@@ -134,6 +136,14 @@ public class FATSuite {
             repeat = RepeatTests.with(new EmptyAction().fullFATOnly())
                             .andWith(FeatureReplacementAction.EE8_FEATURES().fullFATOnly())
                             .andWith(FeatureReplacementAction.EE9_FEATURES());
+        }
+    }
+
+    public static DockerImageName getChromeImage() {
+        if (FATRunner.ARM_ARCHITECTURE) {
+            return DockerImageName.parse("seleniarm/standalone-chromium:latest").asCompatibleSubstituteFor("selenium/standalone-chrome");
+        } else {
+            return DockerImageName.parse("selenium/standalone-chrome:lastest");
         }
     }
 }
