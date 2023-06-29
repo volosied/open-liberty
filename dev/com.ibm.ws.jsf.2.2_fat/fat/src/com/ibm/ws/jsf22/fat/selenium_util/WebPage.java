@@ -133,7 +133,7 @@ public class WebPage {
         waitForPageToLoad(STD_TIMEOUT);
     }
 
-        /**
+    /**
      * conditional waiter and checker which checks whether the page text is present we add our own waiter internally,
      * because pageSource always delivers
      *

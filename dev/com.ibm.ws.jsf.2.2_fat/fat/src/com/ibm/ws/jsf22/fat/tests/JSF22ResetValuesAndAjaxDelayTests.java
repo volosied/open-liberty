@@ -108,7 +108,7 @@ public class JSF22ResetValuesAndAjaxDelayTests {
      *
      * @throws Exception
      */
-    @Test
+    // @Test
     // @SkipForRepeat(EE10_FEATURES)
     public void testResetValues() throws Exception {
         // try (WebClient webClient = new WebClient(browser)) {
@@ -144,7 +144,8 @@ public class JSF22ResetValuesAndAjaxDelayTests {
         //     page = saveButton.click();
 
                 page.findElement(By.id("form1:saveButton")).submit();
-                page.waitReqJs();
+                // page.waitReqJs();
+                page.waitForCondition(driver -> page.isInPage("Validation Error: Value is less than allowable minimum"));
 
         //     HtmlElement checkMessage = (HtmlElement) page.getElementById("form1:messages");
         //     Log.info(c, name.getMethodName(), "On save, the validation should have failed.  Message displayed: " + checkMessage.asText());
@@ -201,7 +202,7 @@ public class JSF22ResetValuesAndAjaxDelayTests {
      *
      * @throws Exception
      */
-    //@Test
+    @Test
     public void testAjaxDelay() throws Exception {
         try (WebClient webClient = new WebClient(browser)) {
             webClient.setAjaxController(new NicelyResynchronizingAjaxController());
@@ -238,38 +239,35 @@ public class JSF22ResetValuesAndAjaxDelayTests {
      * @throws Exception
      */
 
-    //@Test
-    @SkipForRepeat(EE10_FEATURES) // This test needs more investigation for EE10.
+    @Test
+    // @SkipForRepeat(EE10_FEATURES) // This test needs more investigation for EE10.
     public void testAjaxZeroDelay() throws Exception {
-        try (WebClient webClient = new WebClient(browser)) {
-            webClient.setAjaxController(new NicelyResynchronizingAjaxController());
-            webClient.getOptions().setThrowExceptionOnScriptError(false);
+            String url = JSFUtils.createSeleniumURLString(jsf22TracingServer, APP_NAME, "ajaxZeroDelayTest.jsf");
+            WebPage page = new WebPage(driver);
 
-            jsf22TracingServer.setMarkToEndOfLog();
+                        jsf22TracingServer.setMarkToEndOfLog();
 
-            Log.info(c, name.getMethodName(), "Navigating to: /" + APP_NAME + "/ajaxZeroDelayTest.jsf");
-            URL url = JSFUtils.createHttpUrl(jsf22TracingServer, APP_NAME, "ajaxZeroDelayTest.jsf");
-            HtmlPage page = (HtmlPage) webClient.getPage(url);
+            page.get(url);
+            page.waitForPageToLoad();
 
-            Log.info(c, name.getMethodName(), "Returned from navigating to: /" + APP_NAME + "/ajaxDelayTest.jsf and setting mark in logs.");
-
-            Log.info(c, name.getMethodName(), "Sleeping for 1 second");
-            Thread.sleep(1000);
+            Log.info(c, name.getMethodName(), "Returned from navigating to: /" + APP_NAME + "/ajaxZeroDelayTest.jsf and setting mark in logs.");
 
             Log.info(c, name.getMethodName(), "Getting input field");
-            HtmlTextInput input = (HtmlTextInput) page.getElementById("form1:name");
+            WebElement input = page.findElement(By.id("form1:name"));
 
             Log.info(c, name.getMethodName(), "Typing value 'joh'");
-            input.type("joh");
+            // typing each character at a time to trigger the keyup event each time
+            input.sendKeys("j");
+            input.sendKeys("o");
+            input.sendKeys("h");
+            // page.waitReqJs();
+            page.waitForCondition(driver -> page.isInPage("john doe"));
 
             Log.info(c, name.getMethodName(), "Checking logs for bean call entry");
-
-            // Four messages should be found, one for the initial page load and then 3 for typing "joh".
             int numOfMethodCalls = jsf22TracingServer.waitForMultipleStringsInLogUsingMark(4, "AjaxDelayTest getMatchingEmployees");
 
             Log.info(c, name.getMethodName(), "The bean method should have been called four times, actual amount is: " + numOfMethodCalls);
             assertEquals(4, numOfMethodCalls);
-        }
     }
 
     /**
