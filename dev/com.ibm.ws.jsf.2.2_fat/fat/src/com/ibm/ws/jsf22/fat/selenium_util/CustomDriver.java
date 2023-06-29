@@ -34,60 +34,20 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
-// import org.apache.commons.io.output.NullOutputStream;
 import org.openqa.selenium.By;
-// import org.openqa.selenium.Capabilities;
-// import org.openqa.selenium.Credentials;
-// import org.openqa.selenium.JavascriptExecutor;
-// import org.openqa.selenium.OutputType;
-// import org.openqa.selenium.Pdf;
-// import org.openqa.selenium.ScriptKey;
-// import org.openqa.selenium.SearchContext;
-// import org.openqa.selenium.TimeoutException;
-// import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
-// import org.openqa.selenium.chrome.ChromeDriver;
-// import org.openqa.selenium.chrome.ChromeDriverLogLevel;
-// import org.openqa.selenium.chrome.ChromeDriverService;
-// import org.openqa.selenium.chrome.ChromeOptions;
-// import org.openqa.selenium.chromium.ChromiumNetworkConditions;
-// import org.openqa.selenium.devtools.DevTools;
-// import org.openqa.selenium.devtools.v108.network.Network;
-// import org.openqa.selenium.devtools.v108.network.model.Request;
-// import org.openqa.selenium.devtools.v108.network.model.RequestId;
-// import org.openqa.selenium.devtools.v108.network.model.ResponseReceived;
-// import org.openqa.selenium.devtools.v108.network.model.TimeSinceEpoch;
-// import org.openqa.selenium.html5.LocalStorage;
-// import org.openqa.selenium.html5.Location;
-// import org.openqa.selenium.html5.SessionStorage;
-// import org.openqa.selenium.interactions.Sequence;
-// import org.openqa.selenium.logging.EventType;
-// import org.openqa.selenium.mobile.NetworkConnection;
-// import org.openqa.selenium.print.PrintOptions;
-// import org.openqa.selenium.remote.CommandExecutor;
-// import org.openqa.selenium.remote.CommandPayload;
-// import org.openqa.selenium.remote.ErrorHandler;
-// import org.openqa.selenium.remote.FileDetector;
-// import org.openqa.selenium.remote.SessionId;
-// import org.openqa.selenium.virtualauthenticator.VirtualAuthenticator;
-// import org.openqa.selenium.virtualauthenticator.VirtualAuthenticatorOptions;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 /**
- * Extended driver which we need for getting the http response code and the http response without having to revert to
- * proxy solutions
- *
- * <p>
- * We need access top the response body and response code from always the last access
- *
- * <p>
- * We use the chrome dev tools to access the data but we isolate the new functionality in an interface, so other drivers
- * must apply something different to get the results
- *
- * @see also https://medium.com/codex/selenium4-a-peek-into-chrome-devtools-92bca6de55e0
- */
-@SuppressWarnings("unused")
+*  Used in conjunction with WebPage to behave similarly as HTMLUnit's HtmlPage
+* 
+* Copied over from ChromeDevtoolsDriver 
+* - https://github.com/jakartaee/faces/blob/1d71aae51f7d5ae684a3f43db0521b7e7e6aa4f6/tck/util/src/main/java/ee/jakarta/tck/faces/test/util/selenium/ChromeDevtoolsDriver.java
+* Modified because chrome dev tools is unavailable via Test Containers 
+* - Created https://github.com/testcontainers/testcontainers-java/issues/7242 requesting chrome dev tool support 
+* 
+*/
 public class CustomDriver implements ExtendedWebDriver {
 
     RemoteWebDriver driver;
@@ -136,7 +96,6 @@ public class CustomDriver implements ExtendedWebDriver {
     public WebDriver.TargetLocator switchTo() {
         return driver.switchTo();
     }
-
 
     public void close() {
         driver.close();

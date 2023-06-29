@@ -29,8 +29,10 @@ import java.util.List;
 import java.util.Set;
 import org.openqa.selenium.TimeoutException;
 import java.util.function.Function;
+
 /**
  * Mimics the html unit webpage
+ * Modified as Chrome Dev Tools are not accessible when used with TestContainers
  */
 public class WebPage {
 
