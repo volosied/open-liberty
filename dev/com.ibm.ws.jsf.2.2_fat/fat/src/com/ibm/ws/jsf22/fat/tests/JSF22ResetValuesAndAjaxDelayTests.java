@@ -108,93 +108,46 @@ public class JSF22ResetValuesAndAjaxDelayTests {
      *
      * @throws Exception
      */
-    // @Test
-    // @SkipForRepeat(EE10_FEATURES)
+    @Test
     public void testResetValues() throws Exception {
-        // try (WebClient webClient = new WebClient(browser)) {
 
-        //     webClient.setAjaxController(new NicelyResynchronizingAjaxController());
-        //     webClient.getOptions().setThrowExceptionOnScriptError(false);
+        String url = JSFUtils.createSeleniumURLString(jsf22TracingServer, APP_NAME, "resetValuesTest.jsf");
+        WebPage page = new WebPage(driver);
+        Log.info(c, name.getMethodName(), "Navigating to: /" + APP_NAME + "/resetValuesTest.jsf");
+        page.get(url);
+        page.waitForPageToLoad();
 
-            String url = JSFUtils.createSeleniumURLString(jsf22TracingServer, APP_NAME, "resetValuesTest.jsf");
-             WebPage page = new WebPage(driver);
-             page.get(url);
-             System.out.println(url);
-             page.waitForPageToLoad();
-        //     HtmlPage page = (HtmlPage) webClient.getPage(url);
+        page.findElement(By.id("form1:link1")).click();
+        page.waitReqJs();
 
-            Log.info(c, name.getMethodName(), "Navigating to: /" + APP_NAME + "/resetValuesTest.jsf");
-        //     HtmlElement link = (HtmlElement) page.getElementById("form1:link1");
-        //     page = link.click();
+        String input1Value = page.findElement(By.id("form1:input1")).getAttribute("value");
+        Log.info(c, name.getMethodName(), "The input1 field should have a value of 1, actual: " + input1Value);
+        assertEquals("1", input1Value);
 
-         Log.info(c, name.getMethodName(), page.getPageSource());
+        page.findElement(By.id("form1:saveButton")).submit();
+        page.waitForCondition(driver -> page.isInPage("Validation Error: Value is less than allowable minimum"));
 
-                page.findElement(By.id("form1:link1")).click();
-                page.waitReqJs();
+        String message = page.findElement(By.id("form1:messages")).getText();
+        Log.info(c, name.getMethodName(), "On save, the validation should have failed.  Message displayed: " + message);
+        assertNotNull("A validation error should have been displayed", message);
 
-                Log.info(c, name.getMethodName(), page.getPageSource());
-        //     HtmlElement checkValue = (HtmlElement) page.getElementById("form1:input1");
-
-            String input1Value = page.findElement(By.id("form1:input1")).getAttribute("value");
-
-            Log.info(c, name.getMethodName(), "The input1 field should have a value of 1, actual: " + input1Value);
-            assertEquals("1", input1Value);
-
-        //     HtmlElement saveButton = (HtmlElement) page.getElementById("form1:saveButton");
-        //     page = saveButton.click();
-
-                page.findElement(By.id("form1:saveButton")).submit();
-                // page.waitReqJs();
-                page.waitForCondition(driver -> page.isInPage("Validation Error: Value is less than allowable minimum"));
-
-        //     HtmlElement checkMessage = (HtmlElement) page.getElementById("form1:messages");
-        //     Log.info(c, name.getMethodName(), "On save, the validation should have failed.  Message displayed: " + checkMessage.asText());
-
-
-                String message = page.findElement(By.id("form1:messages")).getText();
-                Log.info(c, name.getMethodName(), "On save, the validation should have failed.  Message displayed: " + message);
-                assertNotNull("A validation error should have been displayed", message);
-
-        //     //click the link again, the value should still increment which means the Ajax reset is working
-        //     page = link.click();
-        //     checkValue = (HtmlElement) page.getElementById("form1:input1");
-
-                page.findElement(By.id("form1:link1")).click();
-                page.waitReqJs();
-
-        //     Log.info(c, name.getMethodName(), "The input1 field should have a value of 2, actual: " + checkValue.asText());
-        //     assertEquals("2", checkValue.asText());
+        page.findElement(By.id("form1:link1")).click();
+        page.waitReqJs();
 
         input1Value = page.findElement(By.id("form1:input1")).getAttribute("value");
+        Log.info(c, name.getMethodName(), "The input1 field should have a value of 2, actual: " + input1Value);
+        assertEquals("2", input1Value);
 
-            Log.info(c, name.getMethodName(), "The input1 field should have a value of 2, actual: " + input1Value);
-            assertEquals("2", input1Value);
+        page.findElement(By.id("form1:resetButton")).click();
+        page.waitReqJs();
 
-        //     //click the resetButton and ensure the fields are reset to 0 each, which means the f:resetValues component is working.
-        //     HtmlElement resetButton = (HtmlElement) page.getElementById("form1:resetButton");
-        //     page = resetButton.click();
-
-                page.findElement(By.id("form1:resetButton")).click();
-                page.waitReqJs();
-
-                         Log.info(c, name.getMethodName(), "reset to" + page.getPageSource());
-
-        //     checkValue = (HtmlElement) page.getElementById("form1:input1");
-
-         input1Value = page.findElement(By.id("form1:input1")).getAttribute("value");
-
-            Log.info(c, name.getMethodName(), "The input1 field should have been reset to 0, actual: " + input1Value);
-            assertEquals("0", input1Value);
-
-        //     HtmlElement checkValue2 = (HtmlElement) page.getElementById("form1:input2");
-
-        //     Log.info(c, name.getMethodName(), "The input2 field should have been reset to 0, actual: " + checkValue2.asText());
-        //     assertEquals("0", checkValue2.asText());
-        // }
+        input1Value = page.findElement(By.id("form1:input1")).getAttribute("value");
+        Log.info(c, name.getMethodName(), "The input1 field should have been reset to 0, actual: " + input1Value);
+        assertEquals("0", input1Value);
 
         String input2Value = page.findElement(By.id("form1:input2")).getAttribute("value");
-                    Log.info(c, name.getMethodName(), "The input2 field should have been reset to 0, actual: " + input2Value);
-            assertEquals("0", input2Value);
+        Log.info(c, name.getMethodName(), "The input2 field should have been reset to 0, actual: " + input2Value);
+        assertEquals("0", input2Value);
     }
 
     /**
@@ -237,15 +190,15 @@ public class JSF22ResetValuesAndAjaxDelayTests {
      * Test an Ajax request with a delay of zero (0) and make sure the method is called on each keyup (3 times).
      *
      * @throws Exception
+     * 
+     * Updated to use Selenium
      */
-
     @Test
-    // @SkipForRepeat(EE10_FEATURES) // This test needs more investigation for EE10.
     public void testAjaxZeroDelay() throws Exception {
             String url = JSFUtils.createSeleniumURLString(jsf22TracingServer, APP_NAME, "ajaxZeroDelayTest.jsf");
             WebPage page = new WebPage(driver);
 
-                        jsf22TracingServer.setMarkToEndOfLog();
+            jsf22TracingServer.setMarkToEndOfLog();
 
             page.get(url);
             page.waitForPageToLoad();
@@ -260,8 +213,8 @@ public class JSF22ResetValuesAndAjaxDelayTests {
             input.sendKeys("j");
             input.sendKeys("o");
             input.sendKeys("h");
-            // page.waitReqJs();
-            page.waitForCondition(driver -> page.isInPage("john doe"));
+
+            page.waitForCondition(driver -> page.isInPage("john doe"));  // Wait for text to appear rather than some default time 
 
             Log.info(c, name.getMethodName(), "Checking logs for bean call entry");
             int numOfMethodCalls = jsf22TracingServer.waitForMultipleStringsInLogUsingMark(4, "AjaxDelayTest getMatchingEmployees");
