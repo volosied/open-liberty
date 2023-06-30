@@ -28,6 +28,8 @@ import org.openqa.selenium.remote.RemoteWebDriver;
  *
  * Another possibility would have been a proxy, but I could not find any properly
  * working proxy for selenium
+ * 
+ * Copied and Modified from https://github.com/jakartaee/faces/blob/1d71aae51f7d5ae684a3f43db0521b7e7e6aa4f6/tck/util/src/main/java/ee/jakarta/tck/faces/test/util/selenium/ExtendedWebDriver.java
  */
 public interface ExtendedWebDriver extends WebDriver {
 

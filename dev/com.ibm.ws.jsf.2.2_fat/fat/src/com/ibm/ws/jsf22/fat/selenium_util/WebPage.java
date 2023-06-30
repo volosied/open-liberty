@@ -284,7 +284,7 @@ public class WebPage {
         return webDriver.getPageSource();
     }
 
-        /**
+    /**
      * Convenience method to get all anchor elmements
      *
      * @return a list of a hrefs as WebElements
