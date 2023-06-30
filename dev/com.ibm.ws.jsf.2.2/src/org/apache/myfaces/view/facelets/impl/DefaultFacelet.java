@@ -172,6 +172,8 @@ final class DefaultFacelet extends AbstractFacelet
         
         //Set FACELET_CONTEXT_KEY on FacesContext attribute map, to 
         //reflect the current facelet context instance
+        System.out.println("Setting FACELET_CONTEXT_KEY to " + ctx);
+
         FaceletContext oldCtx = (FaceletContext) 
                 facesContext.getAttributes().put(FaceletContext.FACELET_CONTEXT_KEY, ctx);
         
@@ -240,6 +242,7 @@ final class DefaultFacelet extends AbstractFacelet
             
             if (oldCtx != null)
             {
+                                System.out.println("Setting FACELET_CONTEXT_KEY to " + oldCtx);
                 facesContext.getAttributes().put(FaceletContext.FACELET_CONTEXT_KEY, oldCtx);
             }
         }
@@ -279,6 +282,8 @@ final class DefaultFacelet extends AbstractFacelet
         
         //Set FACELET_CONTEXT_KEY on FacesContext attribute map, to 
         //reflect the current facelet context instance
+                        System.out.println("Setting FACELET_CONTEXT_KEY to " + ctx);
+
         facesContext.getAttributes().put(FaceletContext.FACELET_CONTEXT_KEY, ctx);
         
         ctx.pushPageContext(new PageContextImpl());
@@ -310,6 +315,7 @@ final class DefaultFacelet extends AbstractFacelet
         finally
         {
             ctx.popPageContext();
+            System.out.println("Setting FACELET_CONTEXT_KEY to " + ctx);
             facesContext.getAttributes().put(FaceletContext.FACELET_CONTEXT_KEY, oldCtx);
             
             if (pushDynCompSection)
@@ -522,8 +528,10 @@ final class DefaultFacelet extends AbstractFacelet
         {
             this.refresh(parent);
             DefaultFaceletContext ctxWrapper = new DefaultFaceletContext((DefaultFaceletContext)ctx, this, false);
+            System.out.println("Setting FACELET_CONTEXT_KEY to " + ctxWrapper);
             ctx.getFacesContext().getAttributes().put(FaceletContext.FACELET_CONTEXT_KEY, ctxWrapper);
             _root.apply(ctxWrapper, parent);
+            System.out.println("Setting FACELET_CONTEXT_KEY to " + ctx);
             ctx.getFacesContext().getAttributes().put(FaceletContext.FACELET_CONTEXT_KEY, ctx);
             this.markApplied(parent);
         }
@@ -610,8 +618,12 @@ final class DefaultFacelet extends AbstractFacelet
             DefaultFaceletContext ctxWrapper = new DefaultFaceletContext( (DefaultFaceletContext)ctx, f, true);
             //Update FACELET_CONTEXT_KEY on FacesContext attribute map, to 
             //reflect the current facelet context instance
+            System.out.println("Setting FACELET_CONTEXT_KEY to " + ctxWrapper);
+
             ctx.getFacesContext().getAttributes().put(FaceletContext.FACELET_CONTEXT_KEY, ctxWrapper);
             f._root.apply(ctxWrapper, parent);
+            System.out.println("Setting FACELET_CONTEXT_KEY to " + ctx);
+
             ctx.getFacesContext().getAttributes().put(FaceletContext.FACELET_CONTEXT_KEY, ctx);
             mctx.finalizeForDeletion(parent);
             f.markApplied(parent);

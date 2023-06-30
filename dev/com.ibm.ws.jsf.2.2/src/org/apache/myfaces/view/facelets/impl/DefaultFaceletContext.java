@@ -104,6 +104,7 @@ final class DefaultFaceletContext extends AbstractFaceletContext
     public DefaultFaceletContext(DefaultFaceletContext ctx,
             AbstractFacelet facelet, boolean ccWrap)
     {
+        System.out.println("Creating DefaultFaceletContext via C1 " + this);
         _ctx = ctx._ctx;
         //_ids = ctx._ids;
         //_prefixes = ctx._prefixes;
@@ -155,6 +156,7 @@ final class DefaultFaceletContext extends AbstractFaceletContext
 
     public DefaultFaceletContext(FacesContext faces, AbstractFacelet facelet, FaceletCompositionContext mctx)
     {
+        System.out.println("Creating DefaultFaceletContext via C2 " + this);
         _ctx = faces.getELContext();
         //_ids = new HashMap<String, Integer>();
         //_prefixes = new HashMap<Integer, Integer>();
@@ -382,6 +384,7 @@ final class DefaultFaceletContext extends AbstractFaceletContext
     @Override
     public void setAttribute(String name, Object value)
     {
+         System.out.println("setAttribute " + name + " on " + this);
         if (_varMapper != null)
         {
             if (value == null)
@@ -700,6 +703,7 @@ final class DefaultFaceletContext extends AbstractFaceletContext
                 boolean found = false;
                 AbstractFaceletContext actx = new DefaultFaceletContext(
                         (DefaultFaceletContext) ctx, this._owner, false);
+                System.out.println("Setting FACELET_CONTEXT_KEY to " + actx);
                 ctx.getFacesContext().getAttributes().put(FaceletContext.FACELET_CONTEXT_KEY, actx);
                 try
                 {
@@ -712,6 +716,7 @@ final class DefaultFaceletContext extends AbstractFaceletContext
                 {
                     actx.popPageContext();
                 }
+                System.out.println("Setting FACELET_CONTEXT_KEY to " + actx);
                 ctx.getFacesContext().getAttributes().put(FaceletContext.FACELET_CONTEXT_KEY, ctx);
                 this._names.remove(testName);
                 return found;
