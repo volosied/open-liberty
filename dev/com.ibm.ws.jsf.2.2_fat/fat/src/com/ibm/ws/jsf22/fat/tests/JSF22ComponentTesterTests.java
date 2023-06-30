@@ -74,7 +74,7 @@ public class JSF22ComponentTesterTests {
     @Rule
     public BrowserWebDriverContainer<?> chrome = new BrowserWebDriverContainer<>(FATSuite.getChromeImage()).withCapabilities(new ChromeOptions())
                     .withAccessToHost(true)
-                    .withLogConsumer(new SimpleLogConsumer(JSFCompELTests.class, "selenium-driver"));
+                    .withLogConsumer(new SimpleLogConsumer(JSF22ComponentTesterTests.class, "selenium-driver"));
 
     @BeforeClass
     public static void setup() throws Exception {
