@@ -11,6 +11,7 @@ package com.ibm.ws.jsf22.fat.tests;
 
 import static componenttest.annotation.SkipForRepeat.EE10_FEATURES;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.net.URL;
 import java.util.List;
@@ -27,7 +28,11 @@ import com.gargoylesoftware.htmlunit.html.HtmlForm;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.html.HtmlSubmitInput;
 import com.ibm.websphere.simplicity.ShrinkHelper;
+import com.ibm.ws.jsf22.fat.FATSuite;
 import com.ibm.ws.jsf22.fat.JSFUtils;
+import com.ibm.ws.jsf22.fat.selenium_util.CustomDriver;
+import com.ibm.ws.jsf22.fat.selenium_util.ExtendedWebDriver;
+import com.ibm.ws.jsf22.fat.selenium_util.WebPage;
 
 import componenttest.annotation.ExpectedFFDC;
 import componenttest.annotation.Server;
@@ -39,6 +44,15 @@ import componenttest.rules.repeater.JakartaEE10Action;
 import componenttest.rules.repeater.JakartaEE9Action;
 import componenttest.topology.impl.LibertyServer;
 import junit.framework.Assert;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.testcontainers.Testcontainers;
+import org.testcontainers.containers.BrowserWebDriverContainer;
+
+import componenttest.containers.SimpleLogConsumer;
 
 /**
  * Component System Event and EL tests for story 153719.
@@ -56,6 +70,14 @@ public class JSFCompELTests {
     @Server("jsfTestServer2")
     public static LibertyServer jsfTestServer2;
 
+
+    @Rule
+    public BrowserWebDriverContainer<?> chrome = new BrowserWebDriverContainer<>(FATSuite.getChromeImage()).withCapabilities(new ChromeOptions())
+                                                                                  .withAccessToHost(true)
+                                                                                  .withLogConsumer(new SimpleLogConsumer(JSFCompELTests.class, "selenium-driver"));
+
+    private ExtendedWebDriver driver;
+
     @BeforeClass
     public static void setup() throws Exception {
         boolean isEE10 = JakartaEE10Action.isActive();
@@ -65,6 +87,8 @@ public class JSFCompELTests {
                                       "com.ibm.ws.jsf22.el.components");
 
         jsfTestServer2.startServer(c.getSimpleName() + ".log");
+
+        Testcontainers.exposeHostPorts(jsfTestServer2.getHttpDefaultPort(), jsfTestServer2.getHttpDefaultSecurePort());
     }
 
     @AfterClass
@@ -242,13 +266,18 @@ public class JSFCompELTests {
 
     //tests ValueExpression support in f:ajax event=#{bean.method} - https://issues.apache.org/jira/browse/MYFACES-3233
     @Test
-    @SkipForRepeat(EE10_FEATURES) // Skipped due to HTMLUnit / JavaScript Incompatabilty (New JS in RC5)
     public void testAjaxEvent() throws Exception {
         // Fix the response once RTC is fixed
-        String[] expectedInResponse = {
-                                        "true"
-        };
-        this.verifyXmlResponse(contextRoot, "AjaxEvent.xhtml", "true");
+
+        driver = new CustomDriver(new RemoteWebDriver(chrome.getSeleniumAddress(), new ChromeOptions().setAcceptInsecureCerts(true)));
+
+        String url = JSFUtils.createSeleniumURLString(jsfTestServer2, contextRoot, "AjaxEvent.xhtml");
+        WebPage page = new WebPage(driver);
+        page.get(url);
+        page.waitForPageToLoad();
+
+        assertTrue("true not found in page", page.isInPage("true"));
+
     }
 
 }
