@@ -154,7 +154,11 @@ public class ClassicTagGenerator extends BaseTagGenerator {
             //PM26777 end
             //247815 Start
             tagStartWriter.print(tagHandlerVar);
+            if(jspOptions.isUseSytheticTagPool()) {
+            tagStartWriter.println(" = (" + tagClassInfo.getTagClassName() + ")_jspx_TagLookup.get(id);");
+            } else {
             tagStartWriter.println(" = (" + tagClassInfo.getTagClassName() + ")_jspx_TagLookup.get(\"" + tagHandlerVar + "\");");
+            }
             //247815 End
         }
         generateSetParent(tagStartWriter);

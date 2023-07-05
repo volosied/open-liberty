@@ -13,8 +13,10 @@
 package com.ibm.ws.jsp.translator.visitor.generator;
 
 import java.util.List;
+import java.util.Set;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Stack;
 
@@ -478,9 +480,25 @@ public class CustomTagGenerator extends CodeGeneratorBase {
         if (genTagInMethod) {
             methodWriter = new MethodWriter();
             String tagMethod = null;
+            Boolean returnEarly = false;
             
             if (reuseTag) {
-                tagMethod = createMethodName(ti.getTagName(), prefix, shortName);
+                if(forceNewTags){
+                    tagMethod = createGenericMethodName(ti.getTagName(), prefix, shortName);
+                    Set<String> nameSet = (Set<String>) persistentData.get("existingMethodNames");
+                    System.out.println(nameSet);
+                    if( nameSet == null ) {
+                        nameSet = new HashSet<String>();
+                        nameSet.add(tagMethod);
+                        persistentData.put("existingMethodNames", nameSet);
+                    } else if (nameSet.contains(tagMethod)) {
+                        System.out.println("RETURNGIN DUE TO EXISITNG NAME");
+                        returnEarly = true;
+                    }
+
+                } else {
+                    tagMethod = createMethodName(ti.getTagName(), prefix, shortName);
+                }
             }
             else {
                 tagMethod = "_jspx_meth_" + baseVar;
@@ -495,6 +513,10 @@ public class CustomTagGenerator extends CodeGeneratorBase {
             
             if (jspOptions.isUsePageTagPool() || jspOptions.isUseThreadTagPool()) {
                 tagWriter.print("_jspx_TagLookup, ");
+            }
+
+            if(forceNewTags){
+                 tagWriter.print("\"" + tagHandlerVar + "\", ");
             }
             
             if (parentTagName != null) {
@@ -519,6 +541,10 @@ public class CustomTagGenerator extends CodeGeneratorBase {
 
             //232818
             tagWriter.println("/* ElementId[" + element.hashCode() + "] ctme */");
+
+            if(returnEarly){
+                return; 
+            }
             
             methodWriter.println();
             methodWriter.print("private boolean ");
@@ -527,6 +553,10 @@ public class CustomTagGenerator extends CodeGeneratorBase {
             
             if (jspOptions.isUsePageTagPool() || jspOptions.isUseThreadTagPool()) {
                 methodWriter.print("java.util.HashMap _jspx_TagLookup, ");
+            }
+
+            if(forceNewTags){
+                 methodWriter.print("String id, ");
             }
             
             if (parentTagName != null) {
@@ -690,6 +720,23 @@ public class CustomTagGenerator extends CodeGeneratorBase {
             tagVarNumbers.put(fullName, new Integer(1));
             return varName + "0";
         }
+    }
+
+     private String createGenericMethodName(String fullName, String prefix, String shortName) {
+        if (prefix.indexOf('-') >= 0)
+            prefix = GeneratorUtils.replace(prefix, '-', "$1");
+        if (prefix.indexOf('.') >= 0)
+            prefix = GeneratorUtils.replace(prefix, '.', "$2");
+
+        if (shortName.indexOf('-') >= 0)
+            shortName = GeneratorUtils.replace(shortName, '-', "$1");
+        if (shortName.indexOf('.') >= 0)
+            shortName = GeneratorUtils.replace(shortName, '.', "$2");
+        if (shortName.indexOf(':') >= 0)
+            shortName = GeneratorUtils.replace(shortName, ':', "$3");
+
+        String methodName = "_jspx_meth_" + prefix + "_" + shortName;
+        return methodName;
     }
     
     private String createMethodName(String fullName, String prefix, String shortName) {
