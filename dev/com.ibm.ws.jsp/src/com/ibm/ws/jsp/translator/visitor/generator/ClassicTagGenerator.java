@@ -154,7 +154,7 @@ public class ClassicTagGenerator extends BaseTagGenerator {
             //PM26777 end
             //247815 Start
             tagStartWriter.print(tagHandlerVar);
-            if(jspOptions.isUseSytheticTagPool()) {
+            if(jspOptions.isUseSytheticTagPool() && genTagInMethod == true) {
             tagStartWriter.println(" = (" + tagClassInfo.getTagClassName() + ")_jspx_TagLookup.get(id);");
             } else {
             tagStartWriter.println(" = (" + tagClassInfo.getTagClassName() + ")_jspx_TagLookup.get(\"" + tagHandlerVar + "\");");
@@ -353,7 +353,11 @@ public class ClassicTagGenerator extends BaseTagGenerator {
         	// end 242714: enhance error reporting for SkipPageException.
         }
         else {
-            tagEndWriter.println((methodNesting > 0) ? "return true;" : "return;");
+              if(jspOptions.isUseSytheticTagPool() && genTagInMethod == false) {
+                  tagEndWriter.println("return;");
+            } else {
+                  tagEndWriter.println((methodNesting > 0) ? "return true;" : "return;");
+            }
         }
         tagEndWriter.println("}");
 
