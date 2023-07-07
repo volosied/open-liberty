@@ -141,9 +141,9 @@ public class FATSuite {
 
     public static DockerImageName getChromeImage() {
         if (FATRunner.ARM_ARCHITECTURE) {
-            return DockerImageName.parse("seleniarm/standalone-chromium:latest").asCompatibleSubstituteFor("selenium/standalone-chrome");
+            return DockerImageName.parse("seleniarm/standalone-chromium:4.8.3").asCompatibleSubstituteFor("selenium/standalone-chrome");
         } else {
-            return DockerImageName.parse("selenium/standalone-chrome:lastest");
+            return DockerImageName.parse("selenium/standalone-chrome:4.8.3");
         }
     }
 }
