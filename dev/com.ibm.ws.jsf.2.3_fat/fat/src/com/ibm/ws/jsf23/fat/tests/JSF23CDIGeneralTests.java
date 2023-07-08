@@ -37,7 +37,9 @@ import com.gargoylesoftware.htmlunit.html.HtmlTextInput;
 import com.ibm.websphere.simplicity.ShrinkHelper;
 import com.ibm.websphere.simplicity.ShrinkHelper.DeployOptions;
 import com.ibm.websphere.simplicity.log.Log;
+import com.ibm.ws.jsf23.fat.FATSuite;
 import com.ibm.ws.jsf23.fat.JSFUtils;
+import com.ibm.ws.jsf23.fat.selenium_util.ExtendedWebDriver;
 
 import componenttest.annotation.ExpectedFFDC;
 import componenttest.annotation.Server;
@@ -50,6 +52,20 @@ import componenttest.rules.repeater.JakartaEE9Action;
 import componenttest.topology.impl.LibertyServer;
 import junit.framework.Assert;
 
+
+import com.ibm.ws.jsf23.fat.selenium_util.CustomDriver;
+import com.ibm.ws.jsf23.fat.selenium_util.ExtendedWebDriver;
+import com.ibm.ws.jsf23.fat.selenium_util.WebPage;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.testcontainers.Testcontainers;
+import org.testcontainers.containers.BrowserWebDriverContainer;
+import componenttest.containers.SimpleLogConsumer;
+
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 /**
  * General JSF 2.3 test cases the also require CDI.
  */
@@ -65,6 +81,14 @@ public class JSF23CDIGeneralTests {
 
     @Server("jsf23CDIGeneralServer")
     public static LibertyServer server;
+
+
+    @Rule
+    public BrowserWebDriverContainer<?> chrome = new BrowserWebDriverContainer<>(FATSuite.getChromeImage()).withCapabilities(new ChromeOptions())
+                    .withAccessToHost(true)
+                    .withLogConsumer(new SimpleLogConsumer(c, "selenium-driver"));
+
+    private ExtendedWebDriver driver;
 
     @BeforeClass
     public static void setup() throws Exception {
@@ -89,6 +113,8 @@ public class JSF23CDIGeneralTests {
         // Start the server and use the class name so we can find logs easily.
         // Many tests use the same server
         server.startServer(c.getSimpleName() + ".log");
+
+        Testcontainers.exposeHostPorts(server.getHttpDefaultPort(), server.getHttpDefaultSecurePort());
     }
 
     @Before
@@ -477,39 +503,28 @@ public class JSF23CDIGeneralTests {
      * @throws Exception
      */
     @Test
-    @SkipForRepeat(EE10_FEATURES) // Skipped due to HTMLUnit / JavaScript Incompatabilty (New JS in RC5)
+    // @SkipForRepeat(EE10_FEATURES) // Skipped due to HTMLUnit / JavaScript Incompatabilty (New JS in RC5)
     public void testFacesConverterBeanInjection() throws Exception {
-        try (WebClient webClient = new WebClient()) {
-
-            // Construct the URL for the test
-            String contextRoot = "ConverterValidatorBehaviorInjectionTarget";
-            URL url = JSFUtils.createHttpUrl(server, contextRoot, "index.xhtml");
-
-            HtmlPage page = (HtmlPage) webClient.getPage(url);
-
-            // Verify that the page contains the expected messages.
-            assertTrue(page.asText().contains("JSF 2.3 support for injection into JSF Managed Objects"));
-
-            // Get the form that we are dealing with
-            HtmlForm form = page.getFormByName("form1");
-
-            // Get the input text and submit button
-            HtmlTextInput inputText = (HtmlTextInput) form.getInputByName("form1:textId");
-            HtmlSubmitInput submitButton = form.getInputByName("form1:submitButton");
-
-            // Fill the input text
-            inputText.setValueAttribute("Hello World");
-
-            // Now click the button and get the resulting page.
-            HtmlPage resultPage = submitButton.click();
-
-            // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), resultPage.asText());
-            Log.info(c, name.getMethodName(), resultPage.asXml());
+        driver = new CustomDriver(new RemoteWebDriver(chrome.getSeleniumAddress(), new ChromeOptions().setAcceptInsecureCerts(true)));
+                String contextRoot = "ConverterValidatorBehaviorInjectionTarget";
+        String url = JSFUtils.createSeleniumURLString(server, contextRoot, "index.xhtml");
+        WebPage page = new WebPage(driver);
+        page.get(url);
+        page.waitForPageToLoad();
 
             // Verify that the page contains the expected messages.
-            assertTrue(resultPage.asText().contains("Hello Earth"));
-        }
+            assertTrue(page.isInPage("JSF 2.3 support for injection into JSF Managed Objects"));
+
+                WebElement input = page.findElement(By.id("form1:textId"));
+                input.sendKeys("Hello World");
+
+                page.findElement(By.id("form1:submitButton")).click();
+
+                driver.switchTo().alert().dismiss();
+
+                page.waitForCondition(driver -> page.isInPage("Hello Earth"));
+
+                assertTrue(page.isInPage("Hello Earth"));
     }
 
     /**
@@ -518,39 +533,41 @@ public class JSF23CDIGeneralTests {
      * @throws Exception
      */
     @Test
-    @SkipForRepeat(EE10_FEATURES) // Skipped due to HTMLUnit / JavaScript Incompatabilty (New JS in RC5)
+    // @SkipForRepeat(EE10_FEATURES) // Skipped due to HTMLUnit / JavaScript Incompatabilty (New JS in RC5)
     public void testFacesValidatorBeanInjection() throws Exception {
-        try (WebClient webClient = new WebClient()) {
-
+        // try (WebClient webClient = new WebClient()) {
+            driver = new CustomDriver(new RemoteWebDriver(chrome.getSeleniumAddress(), new ChromeOptions().setAcceptInsecureCerts(true)));
             // Construct the URL for the test
             String contextRoot = "ConverterValidatorBehaviorInjectionTarget";
-            URL url = JSFUtils.createHttpUrl(server, contextRoot, "index.xhtml");
-
-            HtmlPage page = (HtmlPage) webClient.getPage(url);
+            String url = JSFUtils.createSeleniumURLString(server, contextRoot, "index.xhtml");
+            WebPage page = new WebPage(driver);
+            page.get(url);
+            page.waitForPageToLoad();
 
             // Verify that the page contains the expected messages.
-            assertTrue(page.asText().contains("JSF 2.3 support for injection into JSF Managed Objects"));
+            assertTrue(page.isInPage("JSF 2.3 support for injection into JSF Managed Objects"));
+            // Log the page for debugging if necessary in the future.
+            Log.info(c, name.getMethodName(), page.getPageSource());
 
-            // Get the form that we are dealing with
-            HtmlForm form = page.getFormByName("form1");
+           WebElement input = page.findElement(By.id("form1:textId"));
+           input.clear();
+            input.sendKeys("1234");
 
-            // Get the input text and submit button
-            HtmlTextInput inputText = (HtmlTextInput) form.getInputByName("form1:textId");
-            HtmlSubmitInput submitButton = form.getInputByName("form1:submitButton");
+            page.findElement(By.id("form1:submitButton")).click();
 
-            // Fill the input text
-            inputText.setValueAttribute("1234");
-
-            // Now click the button and get the resulting page.
-            HtmlPage resultPage = submitButton.click();
+            driver.switchTo().alert().dismiss();
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), resultPage.asText());
-            Log.info(c, name.getMethodName(), resultPage.asXml());
+            Log.info(c, name.getMethodName(), page.getPageSource());
+
+            page.waitForCondition(driver -> page.isInPage("Text validation failed."));
+
+            // Log the page for debugging if necessary in the future.
+            Log.info(c, name.getMethodName(), page.getPageSource());
 
             // Verify that the page contains the expected messages.
-            assertTrue(resultPage.asText().contains("Text validation failed. Text does not contain 'World' or 'Earth'."));
-        }
+            assertTrue(page.isInPage("Text validation failed. Text does not contain 'World' or 'Earth'."));
+        // }
     }
 
     /**
@@ -559,41 +576,29 @@ public class JSF23CDIGeneralTests {
      * @throws Exception
      */
     @Test
-    @SkipForRepeat(EE10_FEATURES) // Skipped due to HTMLUnit / JavaScript Incompatabilty (New JS in RC5)
+    // @SkipForRepeat(EE10_FEATURES) // Skipped due to HTMLUnit / JavaScript Incompatabilty (New JS in RC5)
     public void testFacesBehaviorBeanInjection() throws Exception {
-        try (WebClient webClient = new WebClient()) {
-            CollectingAlertHandler alertHandler = new CollectingAlertHandler();
-            webClient.setAlertHandler(alertHandler);
-
+         driver = new CustomDriver(new RemoteWebDriver(chrome.getSeleniumAddress(), new ChromeOptions().setAcceptInsecureCerts(true)));
             // Construct the URL for the test
             String contextRoot = "ConverterValidatorBehaviorInjectionTarget";
-            URL url = JSFUtils.createHttpUrl(server, contextRoot, "index.xhtml");
+            String url = JSFUtils.createSeleniumURLString(server, contextRoot, "index.xhtml");
+            WebPage page = new WebPage(driver);
+            page.get(url);
+            page.waitForPageToLoad();
 
-            HtmlPage page = (HtmlPage) webClient.getPage(url);
+                // Verify that the page contains the expected messages.
+                assertTrue(page.isInPage("JSF 2.3 support for injection into JSF Managed Objects"));
 
-            // Verify that the page contains the expected messages.
-            assertTrue(page.asText().contains("JSF 2.3 support for injection into JSF Managed Objects"));
 
             // Get the form that we are dealing with
-            HtmlForm form = page.getFormByName("form1");
+            // HtmlForm form = page.getFormByName("form1");
 
-            // Get the submit button
-            HtmlSubmitInput submitButton = form.getInputByName("form1:submitButton");
 
-            // Now click the button and get the resulting page.
-            HtmlPage resultPage = submitButton.click();
+            page.findElement(By.id("form1:submitButton")).click();
+            page.waitReqJs();
 
-            // Get the alert message
-            List<String> alertmsgs = new ArrayList<String>();
-            alertmsgs = alertHandler.getCollectedAlerts();
-
-            // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), resultPage.asText());
-            Log.info(c, name.getMethodName(), resultPage.asXml());
-
-            // Verify that the alert contains the expected message
-            assertTrue(alertmsgs.contains("Hello World"));
-        }
+           assertTrue(driver.switchTo().alert().getText().contains("Hello World"));
+        // }
     }
 
     /**
