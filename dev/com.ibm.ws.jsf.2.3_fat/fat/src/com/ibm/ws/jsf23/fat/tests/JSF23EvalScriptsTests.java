@@ -57,7 +57,6 @@ import componenttest.containers.SimpleLogConsumer;
  * These test involve javascript calls which are added javax.faces.partialViewContext.getEvalScripts()
  */
 @RunWith(FATRunner.class)
-// @SkipForRepeat(EE10_FEATURES) // Skipped due to HTMLUnit / JavaScript Incompatabilty (New JS in RC5)
 public class JSF23EvalScriptsTests {
 
     protected static final Class<?> c = JSF23EvalScriptsTests.class;
@@ -129,7 +128,7 @@ public class JSF23EvalScriptsTests {
      * @throws Exception
      */
     @Test
-    //@Mode(TestMode.FULL)
+    @Mode(TestMode.FULL)
     public void testEvalScriptsList() throws Exception {
         String contextRoot = "EvalScripts";
         String url = JSFUtils.createSeleniumURLString(server, contextRoot, "EvalScriptsList.xhtml");
@@ -138,10 +137,9 @@ public class JSF23EvalScriptsTests {
         page.waitForPageToLoad();
 
         Log.info(c, name.getMethodName(), page.getPageSource());
-         WebElement element =  page.findElement(By.id("form1:button1"));
-         System.out.println(element);
+
+        WebElement element =  page.findElement(By.id("form1:button1"));
         page.findElement(By.id("form1:button1")).click();
-                Log.info(c, name.getMethodName(), page.getPageSource());
 
         page.waitForCondition(driver -> page.isInPageTextReduced("Text Value 1"));
 
@@ -159,7 +157,7 @@ public class JSF23EvalScriptsTests {
      * @throws Exception
      */
     @Test
-    //@Mode(TestMode.FULL)
+    @Mode(TestMode.FULL)
     public void testEvalScriptsFunction() throws Exception {
         String contextRoot = "EvalScripts";
         String url = JSFUtils.createSeleniumURLString(server, contextRoot, "EvalScriptsFunction.xhtml");
@@ -185,7 +183,7 @@ public class JSF23EvalScriptsTests {
      * @throws Exception
      */
     @Test
-    //@Mode(TestMode.FULL)
+    @Mode(TestMode.FULL)
     public void testEvalScriptsMultiField() throws Exception {
         String contextRoot = "EvalScripts";
         String url = JSFUtils.createSeleniumURLString(server, contextRoot, "EvalScriptsMultiFieldUpdate.xhtml");

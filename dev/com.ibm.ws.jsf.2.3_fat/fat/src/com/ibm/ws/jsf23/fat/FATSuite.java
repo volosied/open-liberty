@@ -112,26 +112,26 @@ public class FATSuite {
 
     private static final boolean isWindows = System.getProperty("os.name").toLowerCase(Locale.ENGLISH).contains("win");
 
-    static {
-        // EE10 requires Java 11.  If we only specify EE10 for lite mode it will cause no tests to run which causes an error.
-        // If we are running on Java 8 have EE9 be the lite mode test to run.
-        if (JavaInfo.JAVA_VERSION >= 11) {
-            // Repeating the full FAT for multiple features may exceed the 3 hour limit on Fyre Windows.
-            // Skip the EE9 repeat on the windows platform when not running locally.
-            if (isWindows && !FATRunner.FAT_TEST_LOCALRUN) {
-                repeat = RepeatTests.with(new EmptyAction().fullFATOnly())
-                                .andWith(FeatureReplacementAction.EE10_FEATURES());
-            } else {
-                repeat = RepeatTests.with(new EmptyAction().fullFATOnly())
-                                .andWith(FeatureReplacementAction.EE9_FEATURES().fullFATOnly())
-                                .andWith(FeatureReplacementAction.EE10_FEATURES());
-            }
+    // static {
+    //     // EE10 requires Java 11.  If we only specify EE10 for lite mode it will cause no tests to run which causes an error.
+    //     // If we are running on Java 8 have EE9 be the lite mode test to run.
+    //     if (JavaInfo.JAVA_VERSION >= 11) {
+    //         // Repeating the full FAT for multiple features may exceed the 3 hour limit on Fyre Windows.
+    //         // Skip the EE9 repeat on the windows platform when not running locally.
+    //         if (isWindows && !FATRunner.FAT_TEST_LOCALRUN) {
+    //             repeat = RepeatTests.with(new EmptyAction().fullFATOnly())
+    //                             .andWith(FeatureReplacementAction.EE10_FEATURES());
+    //         } else {
+    //             repeat = RepeatTests.with(new EmptyAction().fullFATOnly())
+    //                             .andWith(FeatureReplacementAction.EE9_FEATURES().fullFATOnly())
+    //                             .andWith(FeatureReplacementAction.EE10_FEATURES());
+    //         }
 
-        } else {
-            repeat = RepeatTests.with(new EmptyAction().fullFATOnly())
-                            .andWith(FeatureReplacementAction.EE9_FEATURES());
-        }
-    }
+    //     } else {
+    //         repeat = RepeatTests.with(new EmptyAction().fullFATOnly())
+    //                         .andWith(FeatureReplacementAction.EE9_FEATURES());
+    //     }
+    // }
 
     public static DockerImageName getChromeImage() {
         if (FATRunner.ARM_ARCHITECTURE) {

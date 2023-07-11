@@ -88,8 +88,6 @@ public class JSF23CDIGeneralTests {
                     .withAccessToHost(true)
                     .withLogConsumer(new SimpleLogConsumer(c, "selenium-driver"));
 
-    private ExtendedWebDriver driver;
-
     @BeforeClass
     public static void setup() throws Exception {
         isEE10 = JakartaEE10Action.isActive();
@@ -115,13 +113,6 @@ public class JSF23CDIGeneralTests {
         server.startServer(c.getSimpleName() + ".log");
 
         Testcontainers.exposeHostPorts(server.getHttpDefaultPort(), server.getHttpDefaultSecurePort());
-    }
-
-    @Before
-    public void startServer() throws Exception {
-        if (server != null && !server.isStarted()) {
-            server.startServer(c.getSimpleName() + ".log");
-        }
     }
 
     @AfterClass
@@ -280,74 +271,66 @@ public class JSF23CDIGeneralTests {
      * @throws Exception
      */
     @Test
-    @SkipForRepeat(EE10_FEATURES) // Skipped due to HTMLUnit / JavaScript Incompatabilty (New JS in RC5)
     public void testInjectableELImplicitObjects() throws Exception {
-        try (WebClient webClient = new WebClient()) {
-            checkInjectableELImplicitObjects(webClient);
+            ExtendedWebDriver driver = new CustomDriver(new RemoteWebDriver(chrome.getSeleniumAddress(), new ChromeOptions().setAcceptInsecureCerts(true)));
+
+            checkInjectableELImplicitObjects(driver);
             // restart the app and test again
             Assert.assertTrue("The ELImplicitObjectsViaCDI.war application was not restarted.", server.restartDropinsApplication("ELImplicitObjectsViaCDI.war"));
-            checkInjectableELImplicitObjects(webClient);
-        }
+            checkInjectableELImplicitObjects(driver);
     }
 
-    private void checkInjectableELImplicitObjects(WebClient webClient) throws Exception {
+    private void checkInjectableELImplicitObjects(ExtendedWebDriver driver) throws Exception {
 
+        // Selenium cannot modify headers, so the test was updated to look at the User-Agent instead
         // Add a message to the header map
-        webClient.addRequestHeader("headerMessage", "This is a test");
+        // webClient.addRequestHeader("headerMessage", "This is a test");
 
         // Construct the URL for the test
         String contextRoot = "ELImplicitObjectsViaCDI";
-        URL url = JSFUtils.createHttpUrl(server, contextRoot, "index.xhtml");
 
-        HtmlPage testInjectableImplicitObjectsPage = (HtmlPage) webClient.getPage(url);
+        String url = JSFUtils.createSeleniumURLString(server, contextRoot, "index.xhtml");
+        WebPage page = new WebPage(driver);
+        page.get(url);
+        page.waitForPageToLoad();
 
-        // Verify that the page contains the expected messages.
-        assertTrue(testInjectableImplicitObjectsPage.asText().contains("JSF 2.3 EL implicit objects using CDI"));
+        page.findElement(By.id("form1:submitButton")).click();
+        page.waitForCondition(webDriver -> page.isInPage("FacesContext"));
 
-        // Get the form that we are dealing with
-        HtmlForm form = testInjectableImplicitObjectsPage.getFormByName("form1");
-
-        // Get the button to click
-        HtmlSubmitInput submitButton = form.getInputByName("form1:submitButton");
-
-        // Now click the button and get the resulting page.
-        HtmlPage resultPage = submitButton.click();
-
-        // Log the page for debugging if necessary in the future.
-        Log.info(c, name.getMethodName(), resultPage.asText());
-        Log.info(c, name.getMethodName(), resultPage.asXml());
+        Log.info(c, name.getMethodName(), driver.getPageTextReduced());
 
         // Verify that the page contains the expected messages.
-        assertTrue(resultPage.asText().contains("FacesContext project stage: Production"));
-        assertTrue(resultPage.asText().contains("ServletContext context path: /ELImplicitObjectsViaCDI"));
-        assertTrue(resultPage.asText().contains("ExternalContext app context path: /ELImplicitObjectsViaCDI"));
-        assertTrue(resultPage.asText().contains("UIViewRoot viewId: /index.xhtml"));
-        assertTrue(resultPage.asText().contains("Flash isRedirect: false"));
-        assertTrue(resultPage.asText().contains("HttpSession isNew: false"));
-        assertTrue(resultPage.asText().contains("Application name from ApplicationMap: ELImplicitObjectsViaCDI"));
-        assertTrue(resultPage.asText().contains("Char set from SessionMap: UTF-8"));
-        assertTrue(resultPage.asText().contains("ViewMap isEmpty: true"));
-        assertTrue(resultPage.asText().contains("URI from RequestMap: /ELImplicitObjectsViaCDI/index.xhtml"));
-        assertTrue(resultPage.asText().contains("Message from HeaderMap: This is a test"));
-        assertTrue(resultPage.asText().contains("WELD_CONTEXT_ID_KEY from InitParameterMap: ELImplicitObjectsViaCDI"));
-        assertTrue(resultPage.asText().contains("Message from RequestParameterMap: Hello World"));
-        assertTrue(resultPage.asText().contains("Message from RequestParameterValuesMap: [Hello World]"));
-        assertTrue(resultPage.asText().contains("Message from HeaderValuesMap: [This is a test]"));
-        assertTrue(resultPage.asText().contains("Request contextPath: /ELImplicitObjectsViaCDI"));
+        assertTrue(page.isInPage("JSF 2.3 EL implicit objects using CDI"));
+
+        // Verify that the page contains the expected messages.
+        assertTrue(page.isInPage("FacesContext project stage: Production"));
+        assertTrue(page.isInPage("ServletContext context path: /ELImplicitObjectsViaCDI"));
+        assertTrue(page.isInPage("ExternalContext app context path: /ELImplicitObjectsViaCDI"));
+        assertTrue(page.isInPage("UIViewRoot viewId: /index.xhtml"));
+        assertTrue(page.isInPage("Flash isRedirect: false"));
+        assertTrue(page.isInPage("HttpSession isNew: false"));
+        assertTrue(page.isInPage("Application name from ApplicationMap: ELImplicitObjectsViaCDI"));
+        assertTrue(page.isInPage("Char set from SessionMap: UTF-8"));
+        assertTrue(page.isInPage("ViewMap isEmpty: true"));
+        assertTrue(page.isInPage("URI from RequestMap: /ELImplicitObjectsViaCDI/index.xhtml"));
+        assertTrue(page.isInPage("Message from HeaderMap: Mozilla"));
+        assertTrue(page.isInPage("WELD_CONTEXT_ID_KEY from InitParameterMap: ELImplicitObjectsViaCDI"));
+        assertTrue(page.isInPage("Message from RequestParameterMap: Hello World"));
+        assertTrue(page.isInPage("Message from RequestParameterValuesMap: [Hello World]"));
+        assertTrue(page.isInPage("Message from HeaderValuesMap: [Mozilla"));
+        assertTrue(page.isInPage("Request contextPath: /ELImplicitObjectsViaCDI"));
 
         if (JakartaEE10Action.isActive() || JakartaEE9Action.isActive()) {
-            assertTrue(resultPage.asText().contains("Resource handler JSF_SCRIPT_LIBRARY_NAME constant: jakarta.faces"));
-            assertTrue(resultPage.asText()
-                            .contains("Flow map object is null: Exception: WELD-001303: No active contexts "
+            assertTrue(page.isInPage("Resource handler JSF_SCRIPT_LIBRARY_NAME constant: jakarta.faces"));
+            assertTrue(page.isInPage("Flow map object is null: Exception: WELD-001303: No active contexts "
                                       + "for scope type jakarta.faces.flow.FlowScoped")); // Expected exception
-            assertTrue(resultPage.asText().contains("Cookie object from CookieMap: jakarta.servlet.http.Cookie"));
+            assertTrue(page.isInPage("Cookie object from CookieMap: jakarta.servlet.http.Cookie"));
 
         } else {
-            assertTrue(resultPage.asText().contains("Resource handler JSF_SCRIPT_LIBRARY_NAME constant: javax.faces"));
-            assertTrue(resultPage.asText()
-                            .contains("Flow map object is null: Exception: WELD-001303: No active contexts "
+            assertTrue(page.isInPage("Resource handler JSF_SCRIPT_LIBRARY_NAME constant: javax.faces"));
+            assertTrue(page.isInPage("Flow map object is null: Exception: WELD-001303: No active contexts "
                                       + "for scope type javax.faces.flow.FlowScoped")); // Expected exception
-            assertTrue(resultPage.asText().contains("Cookie object from CookieMap: javax.servlet.http.Cookie"));
+            assertTrue(page.isInPage("Cookie object from CookieMap: javax.servlet.http.Cookie"));
         }
 
     }
@@ -362,8 +345,9 @@ public class JSF23CDIGeneralTests {
     public void testELResolutionImplicitObjects() throws Exception {
         try (WebClient webClient = new WebClient()) {
 
-            // Add a message to the header map
-            webClient.addRequestHeader("headerMessage", "This is a test");
+            // Add a message to the header map. 
+            // Tested was changed to check for User-Agent in order to be consistent with Selenium Test above
+            // webClient.addRequestHeader("headerMessage", "This is a test");
 
             // Construct the URL for the test
             String contextRoot = "ELImplicitObjectsViaCDI";
@@ -391,8 +375,10 @@ public class JSF23CDIGeneralTests {
             assertTrue(testELResolutionImplicitObjectsPage.asText().contains("CompositeComponent label: Hello World"));
             assertTrue(testELResolutionImplicitObjectsPage.asText().contains("FacesContext project stage: Production"));
             assertTrue(testELResolutionImplicitObjectsPage.asText().contains("Flash isRedirect: false"));
-            assertTrue(testELResolutionImplicitObjectsPage.asText().contains("Header: This is a test"));
-            assertTrue(testELResolutionImplicitObjectsPage.asText().contains("HeaderValues: This is a test"));
+            //Updated to check for User Agent
+            assertTrue(testELResolutionImplicitObjectsPage.asText().contains("Header: Mozilla"));
+            assertTrue(testELResolutionImplicitObjectsPage.asText().contains("HeaderValues: Mozilla"));
+
             assertTrue(testELResolutionImplicitObjectsPage.asText().contains("InitParam: ELImplicitObjectsViaCDI"));
             assertTrue(testELResolutionImplicitObjectsPage.asText().contains("Param: Hello World"));
             assertTrue(testELResolutionImplicitObjectsPage.asText().contains("ParamValues: Hello World"));
@@ -503,9 +489,8 @@ public class JSF23CDIGeneralTests {
      * @throws Exception
      */
     @Test
-    // @SkipForRepeat(EE10_FEATURES) // Skipped due to HTMLUnit / JavaScript Incompatabilty (New JS in RC5)
     public void testFacesConverterBeanInjection() throws Exception {
-        driver = new CustomDriver(new RemoteWebDriver(chrome.getSeleniumAddress(), new ChromeOptions().setAcceptInsecureCerts(true)));
+        ExtendedWebDriver driver = new CustomDriver(new RemoteWebDriver(chrome.getSeleniumAddress(), new ChromeOptions().setAcceptInsecureCerts(true)));
                 String contextRoot = "ConverterValidatorBehaviorInjectionTarget";
         String url = JSFUtils.createSeleniumURLString(server, contextRoot, "index.xhtml");
         WebPage page = new WebPage(driver);
@@ -522,7 +507,7 @@ public class JSF23CDIGeneralTests {
 
                 driver.switchTo().alert().dismiss();
 
-                page.waitForCondition(driver -> page.isInPage("Hello Earth"));
+                page.waitForCondition(webDriver -> page.isInPage("Hello Earth"));
 
                 assertTrue(page.isInPage("Hello Earth"));
     }
@@ -533,10 +518,9 @@ public class JSF23CDIGeneralTests {
      * @throws Exception
      */
     @Test
-    // @SkipForRepeat(EE10_FEATURES) // Skipped due to HTMLUnit / JavaScript Incompatabilty (New JS in RC5)
     public void testFacesValidatorBeanInjection() throws Exception {
         // try (WebClient webClient = new WebClient()) {
-            driver = new CustomDriver(new RemoteWebDriver(chrome.getSeleniumAddress(), new ChromeOptions().setAcceptInsecureCerts(true)));
+            ExtendedWebDriver driver = new CustomDriver(new RemoteWebDriver(chrome.getSeleniumAddress(), new ChromeOptions().setAcceptInsecureCerts(true)));
             // Construct the URL for the test
             String contextRoot = "ConverterValidatorBehaviorInjectionTarget";
             String url = JSFUtils.createSeleniumURLString(server, contextRoot, "index.xhtml");
@@ -560,7 +544,7 @@ public class JSF23CDIGeneralTests {
             // Log the page for debugging if necessary in the future.
             Log.info(c, name.getMethodName(), page.getPageSource());
 
-            page.waitForCondition(driver -> page.isInPage("Text validation failed."));
+            page.waitForCondition(webDriver -> page.isInPage("Text validation failed."));
 
             // Log the page for debugging if necessary in the future.
             Log.info(c, name.getMethodName(), page.getPageSource());
@@ -576,9 +560,8 @@ public class JSF23CDIGeneralTests {
      * @throws Exception
      */
     @Test
-    // @SkipForRepeat(EE10_FEATURES) // Skipped due to HTMLUnit / JavaScript Incompatabilty (New JS in RC5)
     public void testFacesBehaviorBeanInjection() throws Exception {
-         driver = new CustomDriver(new RemoteWebDriver(chrome.getSeleniumAddress(), new ChromeOptions().setAcceptInsecureCerts(true)));
+         ExtendedWebDriver driver = new CustomDriver(new RemoteWebDriver(chrome.getSeleniumAddress(), new ChromeOptions().setAcceptInsecureCerts(true)));
             // Construct the URL for the test
             String contextRoot = "ConverterValidatorBehaviorInjectionTarget";
             String url = JSFUtils.createSeleniumURLString(server, contextRoot, "index.xhtml");

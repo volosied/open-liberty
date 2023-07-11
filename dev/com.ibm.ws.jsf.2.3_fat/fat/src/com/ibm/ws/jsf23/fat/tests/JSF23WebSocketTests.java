@@ -47,7 +47,6 @@ import componenttest.topology.impl.LibertyServer;
  * in JSF 2.3 specification under the Section 10.4.1.7 “<f:websocket>”.
  */
 @RunWith(FATRunner.class)
-// @SkipForRepeat(EE10_FEATURES)
 public class JSF23WebSocketTests {
 
     protected static final Class<?> c = JSF23WebSocketTests.class;
@@ -58,13 +57,14 @@ public class JSF23WebSocketTests {
     @Server("jsf23WebSocketServer")
     public static LibertyServer server;
 
+    private String contextRoot = "WebSocket";
+    
     @Rule
     public BrowserWebDriverContainer<?> chrome = new BrowserWebDriverContainer<>(FATSuite.getChromeImage()).withCapabilities(new ChromeOptions())
                     .withAccessToHost(true)
                     .withLogConsumer(new SimpleLogConsumer(JSF23WebSocketTests.class, "selenium-driver"));
 
     private ExtendedWebDriver driver;
-
 
     @BeforeClass
     public static void setup() throws Exception {
@@ -100,51 +100,45 @@ public class JSF23WebSocketTests {
      */
     @Test
     public void testPushWebsocket() throws Exception {
-
-        String contextRoot = "WebSocket";
         String url;
 
-            if (JakartaEE10Action.isActive()) {
-                url = JSFUtils.createSeleniumURLString(server, contextRoot, "faces40/PushWebSocketTest.jsf");
-            } else {
-                url = JSFUtils.createSeleniumURLString(server, contextRoot, "PushWebSocketTest.jsf");
-            }
+        if (JakartaEE10Action.isActive()) {
+            url = JSFUtils.createSeleniumURLString(server, contextRoot, "faces40/PushWebSocketTest.jsf");
+        } else {
+            url = JSFUtils.createSeleniumURLString(server, contextRoot, "PushWebSocketTest.jsf");
+        }
 
         WebPage page = new WebPage(driver);
         page.get(url);
         page.waitForPageToLoad();
 
-            // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.getPageSource());
+        // Log the page for debugging if necessary in the future.
+        Log.info(c, name.getMethodName(), page.getPageSource());
 
-            // Verify that the page contains the expected messages.
-                assertTrue(page.isInPage("JSF 2.3 WebSocket - Test message pushed from server to client"));
-                assertTrue(page.isInPage("Called onopen listener"));
+        // Verify that the page contains the expected messages.
+        assertTrue(page.isInPage("JSF 2.3 WebSocket - Test message pushed from server to client"));
+        assertTrue(page.isInPage("Called onopen listener"));
 
-            String result1 = server.waitForStringInLogUsingMark("Channel myChannel was opened successfully!");
+        // Verify that the correct message is found in the logs
+        String result1 = server.waitForStringInLogUsingMark("Channel myChannel was opened successfully!");
+        assertNotNull("Message not found. Channel was not opened succesfully.", result1);
 
-        //     // Verify that the correct message is found in the logs
-            assertNotNull("Message not found. Channel was not opened succesfully.", result1);
+        // Now click the button and get the resulted page.
+        page.findElement(By.id("form1:sendButton")).click();
+        page.waitForCondition(driver -> page.isInPage("Message from the server via push!")); // Wait for text to appear rather than some default time 
+        page.waitForCondition(driver -> page.isInPage("Called onclose listener"));
 
-        //     // Now click the button and get the resulted page.
-                page.findElement(By.id("form1:sendButton")).click();
-                page.waitForCondition(driver -> page.isInPage("Message from the server via push!"));  // Wait for text to appear rather than some default time 
-                page.waitForCondition(driver -> page.isInPage("Called onclose listener"));
+        // Log the page for debugging if necessary in the future.
+        Log.info(c, name.getMethodName(), page.getPageSource());
 
+        // Verify that the page contains the expected messages.
+        assertTrue(page.isInPage("JSF 2.3 WebSocket - Test message pushed from server to client"));
+        assertTrue(page.isInPage("Message from the server via push!"));
+        assertTrue(page.isInPage("Called onclose listener"));
 
-            // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.getPageSource());
-
-            // Verify that the page contains the expected messages.
-                assertTrue(page.isInPage("JSF 2.3 WebSocket - Test message pushed from server to client"));
-                assertTrue(page.isInPage("Message from the server via push!"));
-                assertTrue(page.isInPage("Called onclose listener"));
-
-            String result2 = server.waitForStringInLogUsingMark("Channel myChannel was closed successfully!");
-
-        //     // Verify that the correct message is found in the logs
-            assertNotNull("Message not found. Channel was not closed succesfully.", result2);
-        // }
+        // Verify that the correct message is found in the logs
+        String result2 = server.waitForStringInLogUsingMark("Channel myChannel was closed successfully!");
+        assertNotNull("Message not found. Channel was not closed succesfully.", result2);
     }
 
     /**
@@ -156,73 +150,39 @@ public class JSF23WebSocketTests {
      */
     @Test
     public void testOpenAndCloseWebsocket() throws Exception {
-
-
-        String contextRoot = "WebSocket";
         String url;
 
-            if (JakartaEE10Action.isActive()) {
-                url = JSFUtils.createSeleniumURLString(server, contextRoot, "faces40/OpenCloseWebSocketTest.jsf");
-            } else {
-                url = JSFUtils.createSeleniumURLString(server, contextRoot, "OpenCloseWebSocketTest.jsf");
-            }
+        if (JakartaEE10Action.isActive()) {
+            url = JSFUtils.createSeleniumURLString(server, contextRoot, "faces40/OpenCloseWebSocketTest.jsf");
+        } else {
+            url = JSFUtils.createSeleniumURLString(server, contextRoot, "OpenCloseWebSocketTest.jsf");
+        }
 
         WebPage page = new WebPage(driver);
         page.get(url);
         page.waitForPageToLoad();
 
-            // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.getPageSource());
+        // Log the page for debugging if necessary in the future.
+        Log.info(c, name.getMethodName(), page.getPageSource());
 
-            // Verify that the page contains the expected messages.
-                assertTrue(page.isInPage("JSF 2.3 WebSocket - Test that onopen and onclose listener can be triggered manually, that is, when connected attribute is set to false"));
+        // Verify that the page contains the expected messages.
+        assertTrue(page.isInPage("JSF 2.3 WebSocket - Test that onopen and onclose listener can be triggered manually, that is, when connected attribute is set to false"));
 
-        //     // Get the form that we are dealing with
-        //     HtmlForm form = testOpenCloseWebSocketPage.getFormByName("form1");
-
-        //     // Get the buttons that open and close the push connection
-        //     HtmlSubmitInput openButton = form.getInputByName("form1:openButton");
-          page.findElement(By.id("form1:openButton")).click();
-        //     HtmlSubmitInput closeButton = form.getInputByName("form1:closeButton");
+        page.findElement(By.id("form1:openButton")).click();
         page.waitForCondition(driver -> page.isInPage("Called onopen listener"));
         assertTrue(page.isInPage("Called onopen listener"));
 
-                    String result1 = server.waitForStringInLogUsingMark("Channel myChannel was opened successfully!");
-
-            // Verify that the correct message is found in the logs
-            assertNotNull("Message not found. Channel was not opened succesfully.", result1);
+        String result1 = server.waitForStringInLogUsingMark("Channel myChannel was opened successfully!");
+        // Verify that the correct message is found in the logs
+        assertNotNull("Message not found. Channel was not opened succesfully.", result1);
 
         page.findElement(By.id("form1:closeButton")).click();
-         page.waitForCondition(driver -> page.isInPage("Called onclose listener"));
+        page.waitForCondition(driver -> page.isInPage("Called onclose listener"));
         assertTrue(page.isInPage("Called onclose listener"));
 
+        String result2 = server.waitForStringInLogUsingMark("Channel myChannel was closed successfully!");
+        assertNotNull("Message not found. Channel was not closed succesfully.", result2);
 
-
-            String result2 = server.waitForStringInLogUsingMark("Channel myChannel was closed successfully!");
-            assertNotNull("Message not found. Channel was not closed succesfully.", result2);
-
-        //     // Now click the open button and get the resulted page.
-        //     HtmlPage openPage = openButton.click();
-
-        //     // Use JSFUtils as this fails intermittently waiting for background JavaScript.
-        //     assertTrue(JSFUtils.waitForPageResponse(openPage, "Called onopen listener"));
-
-        //     String result1 = server.waitForStringInLogUsingMark("Channel myChannel was opened successfully!");
-
-        //     // Verify that the correct message is found in the logs
-        //     assertNotNull("Message not found. Channel was not opened succesfully.", result1);
-
-        //     // Now click the close button and get the resulted page.
-        //     HtmlPage closePage = closeButton.click();
-
-        //     // Use JSFUtils as this fails intermittently waiting for background JavaScript.
-        //     assertTrue(JSFUtils.waitForPageResponse(closePage, "Called onclose listener"));
-
-        //     String result2 = server.waitForStringInLogUsingMark("Channel myChannel was closed successfully!");
-
-        //     // Verify that the correct message is found in the logs
-        //     assertNotNull("Message not found. Channel was not closed succesfully.", result2);
-        // }
     }
 
     private void assertContains(String str, String lookFor) {

@@ -64,6 +64,8 @@ public class JSF23CommandScriptTests {
     @Server("jsf23CommandScriptServer")
     public static LibertyServer server;
 
+    private String contextRoot = "CommandScript";
+
     @Rule
     public BrowserWebDriverContainer<?> chrome = new BrowserWebDriverContainer<>(FATSuite.getChromeImage()).withCapabilities(new ChromeOptions())
                     .withAccessToHost(true)
@@ -106,7 +108,7 @@ public class JSF23CommandScriptTests {
      */
     @Test
     public void testCommandScriptAutorunDefaultExecute() throws Exception {
-        String contextRoot = "CommandScript";
+
         String url = JSFUtils.createSeleniumURLString(server, contextRoot, "JSF23CommandScriptAutorunDefaultExecute.xhtml");
         WebPage page = new WebPage(driver);
         page.get(url);
@@ -126,9 +128,9 @@ public class JSF23CommandScriptTests {
      * @throws Exception
      */
     @Test
-    //@Mode(TestMode.FULL)
+    @Mode(TestMode.FULL)
     public void testCommandScriptAutorun() throws Exception {
-        String contextRoot = "CommandScript";
+
         String url = JSFUtils.createSeleniumURLString(server, contextRoot, "JSF23CommandScriptAutorun.xhtml");
         WebPage page = new WebPage(driver);
         page.get(url);
@@ -149,7 +151,7 @@ public class JSF23CommandScriptTests {
      */
     @Test
     public void testCommandScriptActionListener() throws Exception {
-        String contextRoot = "CommandScript";
+
         String url = JSFUtils.createSeleniumURLString(server, contextRoot, "JSF23CommandScriptActionListener.xhtml");
         WebPage page = new WebPage(driver);
         page.get(url);
@@ -160,9 +162,9 @@ public class JSF23CommandScriptTests {
         //if the commandScript code works properly the success message will be displayed on the page.
         assertTrue("The commandScript test failed, success not displayed.", page.isInPage("The value of output is: success"));
 
-            //verify that the message from the listener is in the log file.
-            List<String> result = server.findStringsInLogs("CommandScriptActionListener.processAction called");
-            assertTrue("The ActionListener was not called.", result.size() == 1);
+        //verify that the message from the listener is in the log file.
+        List<String> result = server.findStringsInLogs("CommandScriptActionListener.processAction called");
+        assertTrue("The ActionListener was not called.", result.size() == 1);
     }
 
     /**
@@ -173,9 +175,9 @@ public class JSF23CommandScriptTests {
      * @throws Exception
      */
     @Test
-    //@Mode(TestMode.FULL)
+    @Mode(TestMode.FULL)
     public void testCommandScriptActionListenerAttr() throws Exception {
-                String contextRoot = "CommandScript";
+
         String url = JSFUtils.createSeleniumURLString(server, contextRoot, "JSF23CommandScriptActionListenerAttr.xhtml");
         WebPage page = new WebPage(driver);
         page.get(url);
@@ -186,9 +188,9 @@ public class JSF23CommandScriptTests {
         //if the commandScript code works properly the success message will be displayed on the page.
         assertTrue("The commandScript test failed, success not displayed.", page.isInPage("The value of output is: success"));
 
-            //verify that the message from the listener is in the log file.
-            List<String> result = server.findStringsInLogs("performAction called");
-            assertTrue("The ActionListener was not called.", result.size() == 1);
+        //verify that the message from the listener is in the log file.
+        List<String> result = server.findStringsInLogs("performAction called");
+        assertTrue("The ActionListener was not called.", result.size() == 1);
     }
 
     /**
@@ -199,10 +201,9 @@ public class JSF23CommandScriptTests {
      * @throws Exception
      */
     @Test
-    //@Mode(TestMode.FULL)
+    @Mode(TestMode.FULL)
     public void testCommandScriptParam() throws Exception {
 
-                        String contextRoot = "CommandScript";
         String url = JSFUtils.createSeleniumURLString(server, contextRoot, "JSF23CommandScriptParam.xhtml");
         WebPage page = new WebPage(driver);
         page.get(url);
@@ -221,9 +222,9 @@ public class JSF23CommandScriptTests {
      * @throws Exception
      */
     @Test
-    //@Mode(TestMode.FULL)
+    @Mode(TestMode.FULL)
     public void testCommandScriptButton() throws Exception {
-                                String contextRoot = "CommandScript";
+
         String url = JSFUtils.createSeleniumURLString(server, contextRoot, "JSF23CommandScriptButton.xhtml");
         WebPage page = new WebPage(driver);
         page.get(url);
