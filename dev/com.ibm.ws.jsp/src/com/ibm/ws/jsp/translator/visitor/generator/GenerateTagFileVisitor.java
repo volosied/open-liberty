@@ -370,10 +370,7 @@ public class GenerateTagFileVisitor extends GenerateVisitor {
         if (ti.hasDynamicAttributes()) {
             writer.println("private java.util.HashMap _jspx_dynamic_attrs = new java.util.HashMap();");
         }
-
-        // writer.println("java.util.ArrayList<javax.servlet.jsp.tagext.Tag> _jspMangedObjectList = new java.util.ArrayList<javax.servlet.jsp.tagext.Tag>();");
-        // writer.println();
-
+        
         TagAttributeInfo[] attrInfos = ti.getAttributes();
         for (int i = 0; i < attrInfos.length; i++) {
             writer.print("private ");

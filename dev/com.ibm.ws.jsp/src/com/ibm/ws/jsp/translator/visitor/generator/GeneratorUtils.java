@@ -612,6 +612,9 @@ public class GeneratorUtils {
         writer.println("}");
     }
 
+    /*
+     * Following three methods were added for PH49514
+     */
     public static void generateLastManagedObjectVariable(JavaCodeWriter writer){
         writer.println("java.util.ArrayList<Object> _jspMangedObjectList = new java.util.ArrayList<Object>();");
         writer.println();
@@ -620,7 +623,6 @@ public class GeneratorUtils {
     public static void generate_process_jspMangedObjectList(JavaCodeWriter writer, boolean isDisableResourceInjection){
         writer.println("public void _process_jspMangedObjectList(java.util.ArrayList<Object> jspMangedObjectList) {");
         writer.println("if(!jspMangedObjectList.isEmpty()) {");
-        writer.println("System.out.println(\"size of list \" + jspMangedObjectList.size());");
         writer.println("for(int i = 0; i < jspMangedObjectList.size(); i++ ) {");
         if(!isDisableResourceInjection) {
             writer.println("cleanupCDITagManagedObject(jspMangedObjectList.get(i));");
@@ -631,13 +633,12 @@ public class GeneratorUtils {
         writer.println("}");
         writer.println("}");
 		writer.println("}");
-        writer.println();
+		writer.println();
     }
 
     public static void generateCDITagCleanUp(JavaCodeWriter writer, boolean isDisableResourceInjection){
         if(!isDisableResourceInjection) {
             writer.println("public void cleanupCDITagManagedObject(Object obj) {");
-            writer.println("System.out.println(\"Cleaning up \" + obj);");
             writer.println("_jspx_iaHelper.doPreDestroy(obj);");
             writer.println("_jspx_iaHelper.cleanUpTagHandlerFromCdiMap(obj);");
             writer.println("}");
@@ -675,7 +676,7 @@ public class GeneratorUtils {
 		writer.println("public boolean isDebugClassFile() {");
 		writer.println("return _jspx_isDebugClassFile;");
 		writer.println("}");
-        writer.println();
+		writer.println();
 		//		 end 228118: JSP container should recompile if debug enabled and jsp was not compiled in debug.	
 
 		
