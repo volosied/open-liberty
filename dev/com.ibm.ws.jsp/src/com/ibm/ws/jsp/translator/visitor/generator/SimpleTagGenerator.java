@@ -152,7 +152,8 @@ public class SimpleTagGenerator extends BaseTagGenerator {
         tagEndWriter.print(tagHandlerVar);
         tagEndWriter.println(".doTag();");
         
-        // Note: With PH49514, doPreDestroy & cleanUpTagHandlerFromCdiMap occur in the finally block.
+        // Note: With PH49514, doPreDestroy & cleanUpTagHandlerFromCdiMap were removed and now occur in the finally block.
+        // See the cleanupCDITagManagedObject generated code in the CustomTagGenerator.java
         // See change history
 
         restoreScriptingVars(tagEndWriter, VariableInfo.AT_BEGIN);

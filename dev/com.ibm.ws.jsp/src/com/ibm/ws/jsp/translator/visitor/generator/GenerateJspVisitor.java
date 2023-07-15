@@ -294,8 +294,8 @@ public class GenerateJspVisitor extends GenerateVisitor {
 		GeneratorUtils.generateVersionInformation(writer, jspOptions.isDebugEnabled());
 		// end 228118: JSP container should recompile if debug enabled and jsp was not compiled in debug.
 
-        if(!(jspOptions.isUsePageTagPool() || jspOptions.isUseThreadTagPool())) {
-            GeneratorUtils.generateCDITagCleanUp(writer, jspOptions.isDisableResourceInjection());
+        if(!(jspOptions.isUsePageTagPool() || jspOptions.isUseThreadTagPool()) || !jspOptions.isDisableResourceInjection()) {
+            GeneratorUtils.generateCDITagCleanUp(writer);
         }
 
         // PK81147 start

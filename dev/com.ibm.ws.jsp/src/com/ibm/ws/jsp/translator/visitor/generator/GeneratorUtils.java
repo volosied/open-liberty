@@ -636,14 +636,12 @@ public class GeneratorUtils {
 		writer.println();
     }
 
-    public static void generateCDITagCleanUp(JavaCodeWriter writer, boolean isDisableResourceInjection){
-        if(!isDisableResourceInjection) {
-            writer.println("public void cleanupCDITagManagedObject(Object obj) {");
-            writer.println("_jspx_iaHelper.doPreDestroy(obj);");
-            writer.println("_jspx_iaHelper.cleanUpTagHandlerFromCdiMap(obj);");
-            writer.println("}");
-            writer.println();
-        }
+    public static void generateCDITagCleanUp(JavaCodeWriter writer){
+        writer.println("public void cleanupCDITagManagedObject(Object obj) {");
+        writer.println("_jspx_iaHelper.doPreDestroy(obj);");
+        writer.println("_jspx_iaHelper.cleanUpTagHandlerFromCdiMap(obj);");
+        writer.println("}");
+        writer.println();
     }
 
 	public static void generateVersionInformation(JavaCodeWriter writer, boolean isDebugClassFile) {
