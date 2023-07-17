@@ -48,9 +48,10 @@ public class OptimizedTagGenerator extends BaseTagGenerator implements TagGenera
     private boolean genTagInMethod = false;
     
     public OptimizedTagGenerator(OptimizedTag optimizedTag,
-                                 String tagPushBodyCountVar, 
+                                 String tagPushBodyCountVar,
                                  int nestingLevel,
                                  boolean isTagFile,
+                                 boolean genTagInMethod,
                                  boolean hasBody,
                                  boolean hasJspBody,
                                  String tagHandlerVar,
@@ -83,10 +84,7 @@ public class OptimizedTagGenerator extends BaseTagGenerator implements TagGenera
         this.jspOptions = jspOptions; //PK65013
         this.optimizedTag = optimizedTag;
         this.tagPushBodyCountVar = tagPushBodyCountVar;
-
-        if (collectedTagData.isScriptless() && !collectedTagData.hasScriptingVars()) {
-            genTagInMethod = true;
-        }
+        this.genTagInMethod = genTagInMethod;
         
         NamedNodeMap nodeAttrs = element.getAttributes();
         for (int i = 0; i < nodeAttrs.getLength(); i++) {

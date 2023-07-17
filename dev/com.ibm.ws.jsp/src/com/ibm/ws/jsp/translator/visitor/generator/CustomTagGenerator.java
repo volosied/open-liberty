@@ -211,9 +211,10 @@ public class CustomTagGenerator extends CodeGeneratorBase {
             optTag = tagLibraryCache.getOptimizedTag(namespaceURI, ((TagLibraryInfoImpl)tli).getTlibversion(), shortName);
             if (optTag != null) {
                 tagGenerator = new OptimizedTagGenerator(optTag,
-                                                         tagPushBodyCountVar,      
+                                                         tagPushBodyCountVar,    
                                                          nestingLevel,
                                                          isTagFile,
+                                                         genTagInMethod,  
                                                          hasBody,
                                                          hasJspBody,
                                                          tagHandlerVar,
@@ -260,6 +261,7 @@ public class CustomTagGenerator extends CodeGeneratorBase {
                     new SimpleTagGenerator(
                         nestingLevel,
                         isTagFile,
+                        genTagInMethod,
                         hasBody,
                         hasJspBody,
                         tagHandlerVar,

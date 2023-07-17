@@ -38,6 +38,7 @@ public class SimpleTagGenerator extends BaseTagGenerator {
     public SimpleTagGenerator(
         int nestingLevel,
         boolean isTagFile,
+        boolean genTagInMethod,
         boolean hasBody,
         boolean hasJspBody,
         String tagHandlerVar,
@@ -69,9 +70,7 @@ public class SimpleTagGenerator extends BaseTagGenerator {
               fragmentHelperClassWriter,
               jspOptions);
         this.inputMap=inputMap;
-        if (collectedTagData.isScriptless() && !collectedTagData.hasScriptingVars()) {
-            genTagInMethod = true;
-        }
+        this.genTagInMethod=genTagInMethod;
     }
 
     public MethodWriter generateTagStart() throws JspCoreException {
