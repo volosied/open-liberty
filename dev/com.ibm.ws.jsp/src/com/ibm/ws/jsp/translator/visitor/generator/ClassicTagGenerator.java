@@ -337,7 +337,7 @@ public class ClassicTagGenerator extends BaseTagGenerator {
             //     tagEndWriter.println("cleanupCDITagManagedObject("+ tagHandlerVar + ");");
             //     tagEndWriter.println ("_jspMangedObjectList.remove("+ tagHandlerVar + ");");
         	// } 
-            if(genTagInMethod){
+            if(genTagInMethod || jspOptions.isDisableResourceInjection()){
                 tagEndWriter.println();
                 tagEndWriter.println(tagHandlerVar + ".release();");
             }

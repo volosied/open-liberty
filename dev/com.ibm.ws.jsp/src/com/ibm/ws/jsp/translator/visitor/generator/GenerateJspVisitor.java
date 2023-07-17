@@ -379,7 +379,9 @@ public class GenerateJspVisitor extends GenerateVisitor {
         //writer.println("JspFactory _jspxFactory = null;");
         writer.println("PageContext pageContext = null;");
 
-        GeneratorUtils.generateLastManagedObjectVariable(writer);
+        if(!jspOptions.isDisableResourceInjection()){
+            GeneratorUtils.generateLastManagedObjectVariable(writer);
+        }
 
         if (genSessionVariable)
             writer.println("HttpSession session = null;");
@@ -570,9 +572,9 @@ public class GenerateJspVisitor extends GenerateVisitor {
 
         writer.println("} finally {");
 
-        if(!(jspOptions.isUsePageTagPool() || jspOptions.isUseThreadTagPool())) {
+        if(!(jspOptions.isUsePageTagPool() || jspOptions.isUseThreadTagPool()) && !jspOptions.isDisableResourceInjection()) {
             writer.println("System.out.println(\"total left \" + _jspMangedObjectList.size());");
-             writer.println("_process_jspMangedObjectList(_jspMangedObjectList);");
+            writer.println("_process_jspMangedObjectList(_jspMangedObjectList);");
         }
 
         //writer.println("if (_jspxFactory != null) _jspxFactory.releasePageContext(pageContext);");

@@ -471,7 +471,8 @@ public class GenerateTagFileVisitor extends GenerateVisitor {
         writer.println("javax.servlet.ServletContext application = "+pageContextVar+".getServletContext();");
         writer.println("javax.servlet.ServletConfig config = "+pageContextVar+".getServletConfig();");
         writer.println("javax.servlet.jsp.JspWriter out = jspContext.getOut();");
-        if(!(jspOptions.isUsePageTagPool() || jspOptions.isUseThreadTagPool() )){
+
+        if(!(jspOptions.isUsePageTagPool() || jspOptions.isUseThreadTagPool()) && !jspOptions.isDisableResourceInjection()){
             GeneratorUtils.generateLastManagedObjectVariable(writer);
         }
 
