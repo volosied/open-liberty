@@ -47,7 +47,7 @@ public class InMemoryGenerateTagFileVisitor extends GenerateTagFileVisitor {
 		} catch (IOException e) {
             throw new JspCoreException(e);
 		}
-        fragmentHelperClassWriter = new FragmentHelperClassWriter(className);
+        fragmentHelperClassWriter = new FragmentHelperClassWriter(className, jspOptions);
         boolean reuseTags = false;
         if (jspOptions.isUsePageTagPool() ||
             jspOptions.isUseThreadTagPool()) {
