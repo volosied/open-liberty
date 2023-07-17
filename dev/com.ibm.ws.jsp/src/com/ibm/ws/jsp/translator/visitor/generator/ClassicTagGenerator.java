@@ -332,13 +332,7 @@ public class ClassicTagGenerator extends BaseTagGenerator {
         
         if (reuseTag == false || tagClassInfo.implementsJspIdConsumer()) {//jsp2.1work
             // LIDB4147-24
-             
-        	// if (!jspOptions.isDisableResourceInjection() && !genTagInMethod){		//PM06063 & PH49514
-            //     tagEndWriter.println("cleanupCDITagManagedObject("+ tagHandlerVar + ");");
-            //     tagEndWriter.println ("_jspMangedObjectList.remove("+ tagHandlerVar + ");");
-        	// } 
             if(genTagInMethod || jspOptions.isDisableResourceInjection()){
-                tagEndWriter.println();
                 tagEndWriter.println(tagHandlerVar + ".release();");
             }
         }

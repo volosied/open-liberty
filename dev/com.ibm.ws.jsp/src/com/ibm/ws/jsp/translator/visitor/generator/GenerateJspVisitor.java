@@ -573,7 +573,6 @@ public class GenerateJspVisitor extends GenerateVisitor {
         writer.println("} finally {");
 
         if(!(jspOptions.isUsePageTagPool() || jspOptions.isUseThreadTagPool()) && !jspOptions.isDisableResourceInjection()) {
-            writer.println("System.out.println(\"total left \" + _jspMangedObjectList.size());");
             writer.println("_process_jspMangedObjectList(_jspMangedObjectList);");
         }
 

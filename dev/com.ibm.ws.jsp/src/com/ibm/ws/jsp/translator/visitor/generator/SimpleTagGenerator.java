@@ -94,7 +94,7 @@ public class SimpleTagGenerator extends BaseTagGenerator {
             tagStartWriter.println("("+tagClassInfo.getTagClassName()+")"+tagHandlerVar+"_mo.getObject();"); 
 
             if(genTagInMethod){
-                tagStartWriter.println("try { // generateTagStart");
+                tagStartWriter.println("try {");
             }
 
             tagStartWriter.print ("_jspx_iaHelper.doPostConstruct(");
