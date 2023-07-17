@@ -294,7 +294,7 @@ public class GenerateJspVisitor extends GenerateVisitor {
 		GeneratorUtils.generateVersionInformation(writer, jspOptions.isDebugEnabled());
 		// end 228118: JSP container should recompile if debug enabled and jsp was not compiled in debug.
 
-        if(!(jspOptions.isUsePageTagPool() || jspOptions.isUseThreadTagPool()) || !jspOptions.isDisableResourceInjection()) {
+        if(!(jspOptions.isUsePageTagPool() || jspOptions.isUseThreadTagPool()) && !jspOptions.isDisableResourceInjection()) {
             GeneratorUtils.generateCDITagCleanUp(writer);
         }
 
@@ -571,6 +571,7 @@ public class GenerateJspVisitor extends GenerateVisitor {
         writer.println("} finally {");
 
         if(!(jspOptions.isUsePageTagPool() || jspOptions.isUseThreadTagPool())) {
+            writer.println("System.out.println(\"total left \" + _jspMangedObjectList.size());");
              writer.println("_process_jspMangedObjectList(_jspMangedObjectList);");
         }
 

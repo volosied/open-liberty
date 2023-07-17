@@ -363,7 +363,7 @@ public class GenerateTagFileVisitor extends GenerateVisitor {
             writer.println("}");
         }
 
-        if(!(jspOptions.isUsePageTagPool() || jspOptions.isUseThreadTagPool()) || !jspOptions.isDisableResourceInjection()) {
+        if(!(jspOptions.isUsePageTagPool() || jspOptions.isUseThreadTagPool()) && !jspOptions.isDisableResourceInjection()) {
             GeneratorUtils.generateCDITagCleanUp(writer);
         }
 
