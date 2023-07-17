@@ -45,6 +45,7 @@ public class OptimizedTagGenerator extends BaseTagGenerator implements TagGenera
     protected Map attrMap = new HashMap();
     protected List declaredIdList = null;
     protected String tagPushBodyCountVar = null;
+    private boolean genTagInMethod = false;
     
     public OptimizedTagGenerator(OptimizedTag optimizedTag,
                                  String tagPushBodyCountVar, 
@@ -82,6 +83,10 @@ public class OptimizedTagGenerator extends BaseTagGenerator implements TagGenera
         this.jspOptions = jspOptions; //PK65013
         this.optimizedTag = optimizedTag;
         this.tagPushBodyCountVar = tagPushBodyCountVar;
+
+        if (collectedTagData.isScriptless() && !collectedTagData.hasScriptingVars()) {
+            genTagInMethod = true;
+        }
         
         NamedNodeMap nodeAttrs = element.getAttributes();
         for (int i = 0; i < nodeAttrs.getLength(); i++) {
@@ -137,6 +142,10 @@ public class OptimizedTagGenerator extends BaseTagGenerator implements TagGenera
                 tagStartWriter.print(tagHandlerVar);   
                 tagStartWriter.print(" = ");           
                 tagStartWriter.println("("+tagClassInfo.getTagClassName()+")"+tagHandlerVar+"_mo.getObject();"); 
+
+                if(genTagInMethod){
+                    tagStartWriter.println("try {");
+                }
 
             	tagStartWriter.print ("_jspx_iaHelper.doPostConstruct(");
             	tagStartWriter.print (tagHandlerVar);
