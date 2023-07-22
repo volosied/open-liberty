@@ -99,16 +99,29 @@ public class FragmentHelperClassWriter extends MethodWriter {
         fragment.print(" = parentTag;");
         fragment.println();
 
+        if (!(methodNesting > 0)) {
+            GeneratorUtils.generateLastManagedObjectVariable(fragment, 13);
+             fragment.print("try {");
+
+        }
+
         return fragment;
     }
 
     public void closeFragment(FragmentWriter fragment, int methodNesting) {
         // XXX - See comment in openFragment()
         if (methodNesting > 0) {
-            fragment.println("return false;");
+
+            fragment.println("return false; //closeFragment");
         }
         else {
-            fragment.println("return;");
+            fragment.println("return; //closeFragment ");
+            fragment.println("} finally {");
+            // fragment.println("_process_jspMangedObjectList(_jspMangedObjectList); } ");
+            if (!(jspOptions.isUsePageTagPool() || jspOptions.isUseThreadTagPool()) && !jspOptions.isDisableResourceInjection()) {
+                writer.println("_process_jspMangedObjectList(_jspMangedObjectList);");
+            }
+             fragment.println("}");
         }
         fragment.println("}");
     }
