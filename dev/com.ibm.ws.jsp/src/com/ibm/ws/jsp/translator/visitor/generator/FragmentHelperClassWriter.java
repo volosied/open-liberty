@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import org.w3c.dom.Element;
 
 import com.ibm.ws.jsp.JspCoreException;
+import com.ibm.ws.jsp.JspOptions;
 
 public class FragmentHelperClassWriter extends MethodWriter {
 
@@ -36,9 +37,12 @@ public class FragmentHelperClassWriter extends MethodWriter {
     private boolean used = false;
     private ArrayList fragments = new ArrayList();
     private String className;
+    private JspOptions jspOptions;
 
-    public FragmentHelperClassWriter(String className) {
+    public FragmentHelperClassWriter(String className, JspOptions jspOptions) {
         this.className = className + "Helper";
+        this.jspOptions = jspOptions;
+
     }
 
     public String getClassName() {
@@ -119,7 +123,7 @@ public class FragmentHelperClassWriter extends MethodWriter {
             fragment.println("} finally {");
             // fragment.println("_process_jspMangedObjectList(_jspMangedObjectList); } ");
             if (!(jspOptions.isUsePageTagPool() || jspOptions.isUseThreadTagPool()) && !jspOptions.isDisableResourceInjection()) {
-                writer.println("_process_jspMangedObjectList(_jspMangedObjectList);");
+                fragment.println("_process_jspMangedObjectList(_jspMangedObjectList); //123");
             }
              fragment.println("}");
         }

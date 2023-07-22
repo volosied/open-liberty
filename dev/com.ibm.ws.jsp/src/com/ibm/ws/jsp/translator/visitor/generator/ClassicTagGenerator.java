@@ -308,12 +308,12 @@ public class ClassicTagGenerator extends BaseTagGenerator {
         tagEndWriter.print(tagHandlerVar);
         tagEndWriter.println(".doEndTag() == javax.servlet.jsp.tagext.Tag.SKIP_PAGE) {");
 
-        if (reuseTag == false || tagClassInfo.implementsJspIdConsumer()) {//jsp2.1work
-            // LIDB4147-24
-            if (genTagInMethod || jspOptions.isDisableResourceInjection()) {
-                tagEndWriter.println(tagHandlerVar + ".release();");
-            }
-        }
+        // if (reuseTag == false || tagClassInfo.implementsJspIdConsumer()) {//jsp2.1work
+        //     // LIDB4147-24
+        //     if (genTagInMethod || jspOptions.isDisableResourceInjection()) {
+        //         tagEndWriter.println(tagHandlerVar + ".release(); // 234324");
+        //     }
+        // }
 
         if (isTagFile || isFragment) {
             // begin 242714: enhance error reporting for SkipPageException.
@@ -324,6 +324,20 @@ public class ClassicTagGenerator extends BaseTagGenerator {
             tagEndWriter.println((methodNesting > 0) ? "return true;" : "return;");
         }
         tagEndWriter.println("}");
+
+
+        // if (reuseTag == false || tagClassInfo.implementsJspIdConsumer()) {//jsp2.1work
+        //     //           LIDB4147-24
+
+        //     if(!genTagInMethod){
+        //         if (!jspOptions.isDisableResourceInjection()) { //PM06063 & PH49514
+        //             tagEndWriter.println("_jsp_destroyRemoveReleaseTag(_jspMangedObjectList, "+ tagHandlerVar +"); // " + isTagFile + " " + isFragment);
+        //         } else {
+        //             tagEndWriter.println();
+        //             tagEndWriter.println(tagHandlerVar + ".release();");
+        //         }
+        //     }
+        // }
 
         // PM48052 start
         // If doEndTag does a popBody() then we need to make sure we get the
@@ -360,9 +374,10 @@ public class ClassicTagGenerator extends BaseTagGenerator {
         if (reuseTag == false || tagClassInfo.implementsJspIdConsumer()) {//jsp2.1work
             //           LIDB4147-24
 
+            // duplicate for whatever reason???
             if(!genTagInMethod){
                 if (!jspOptions.isDisableResourceInjection()) { //PM06063 & PH49514
-                    tagEndWriter.println("_jsp_destroyRemoveReleaseTag(_jspMangedObjectList, "+ tagHandlerVar +");");
+                    tagEndWriter.println("_jsp_destroyRemoveReleaseTag(_jspMangedObjectList, "+ tagHandlerVar +"); // 5546" + isTagFile + " " + isFragment);
                 } else {
                     tagEndWriter.println();
                     tagEndWriter.println(tagHandlerVar + ".release();");

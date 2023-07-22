@@ -580,8 +580,12 @@ public class CustomTagGenerator extends CodeGeneratorBase {
                 if ((tagPoolNotUsed || tryBlockStart) && !jspOptions.isDisableResourceInjection()) {
                     methodWriter.println("} finally {");
                     if(tryBlockStart){
-                        methodWriter.println("_jspx_iaHelper.doPreDestroy("+ tagHandlerVar +");");
+                        methodWriter.println("_jspx_iaHelper.doPreDestroy("+ tagHandlerVar +"); // in Finally afadf");
                         methodWriter.println("_jspx_iaHelper.cleanUpTagHandlerFromCdiMap("+ tagHandlerVar +");");
+                        // methodWriter.println("cleanupCDITagManagedObject("+ tagHandlerVar +")");
+                        methodWriter.println("if ( "+ tagHandlerVar + " instanceof javax.servlet.jsp.tagext.Tag) {");
+                        methodWriter.println("( (javax.servlet.jsp.tagext.Tag) "+ tagHandlerVar + ").release();");
+                        methodWriter.println("}");
                     } else {
                         methodWriter.println("cleanupCDITagManagedObject(" + tagHandlerVar + ");");
                     }
