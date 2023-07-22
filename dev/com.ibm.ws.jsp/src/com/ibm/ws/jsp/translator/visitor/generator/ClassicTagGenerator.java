@@ -106,7 +106,7 @@ public class ClassicTagGenerator extends BaseTagGenerator {
                 tagStartWriter.print(" = ");
                 tagStartWriter.println("(" + tagClassInfo.getTagClassName() + ")" + tagHandlerVar + "_mo.getObject();");
 
-                if (genTagInMethod) {
+                if (genTagInMethod || isFragment) {
                     tagStartWriter.println("try {");
                     persistentData.put("tryBlockStarted" , Boolean.TRUE);
                 }
@@ -351,11 +351,7 @@ public class ClassicTagGenerator extends BaseTagGenerator {
             tagEndWriter.println("} finally {");
             tagEndWriter.print(tagHandlerVar);
             tagEndWriter.println(".doFinally();");
-             if (!jspOptions.isDisableResourceInjection()) {
-                tagEndWriter.println("_jspx_iaHelper.doPreDestroy("+tagHandlerVar+");");
-                tagEndWriter.println("_jspx_iaHelper.cleanUpTagHandlerFromCdiMap(\"+tagHandlerVar+\");");
-             }
-                             tagEndWriter.println(tagHandlerVar + ".release();");
+
         }
 
         if (tagClassInfo.implementsTryCatchFinally()) {
@@ -365,13 +361,21 @@ public class ClassicTagGenerator extends BaseTagGenerator {
         if (reuseTag == false || tagClassInfo.implementsJspIdConsumer()) {//jsp2.1work
             //           LIDB4147-24
 
-            if(!genTagInMethod  && !isFragment){
+            if(!genTagInMethod && !isFragment){
                 if (!jspOptions.isDisableResourceInjection()) { //PM06063 & PH49514
                     tagEndWriter.println("_jsp_destroyRemoveReleaseTag(_jspMangedObjectList, "+ tagHandlerVar +");");
                 } else {
                     tagEndWriter.println();
                     tagEndWriter.println(tagHandlerVar + ".release();");
                 }
+            } else if(!genTagInMethod && isFragment){
+                 tagEndWriter.println("} finally {");
+                if (!jspOptions.isDisableResourceInjection()) {
+                    tagEndWriter.println("_jspx_iaHelper.doPreDestroy("+tagHandlerVar+");");
+                    tagEndWriter.println("_jspx_iaHelper.cleanUpTagHandlerFromCdiMap(\"+tagHandlerVar+\");");
+                }
+                tagEndWriter.println(tagHandlerVar + ".release();");
+                tagEndWriter.println("}");
             }
         }
 
