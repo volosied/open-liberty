@@ -88,8 +88,7 @@ public class FragmentHelperClassWriter extends MethodWriter {
         // See comment in closeFragment()
         if (methodNesting > 0) {
             fragment.print("public boolean invoke");
-        }
-        else {
+        } else {
             fragment.print("public void invoke");
         }
         fragment.print(fragment.getId() + "(java.io.Writer out) throws Throwable {");
@@ -103,9 +102,10 @@ public class FragmentHelperClassWriter extends MethodWriter {
         fragment.print(" = parentTag;");
         fragment.println();
 
-
-            GeneratorUtils.generateLastManagedObjectVariable(fragment, 13);
-             fragment.print("try {");
+        if (jspOptions.generateCDITagCleanUp()) {
+            GeneratorUtils.generateLastManagedObjectVariable(fragment);
+            fragment.println("try {");
+        }
 
         return fragment;
     }
@@ -114,17 +114,17 @@ public class FragmentHelperClassWriter extends MethodWriter {
         // XXX - See comment in openFragment()
         if (methodNesting > 0) {
 
-            fragment.println("return false; //closeFragment");
+            fragment.println("return false;");
+        } else {
+            fragment.println("return;");
         }
-        else {
-            fragment.println("return; //closeFragment ");
+
+        if (jspOptions.generateCDITagCleanUp()) {
+            fragment.println("} finally {");
+            fragment.println("_process_jspMangedObjectList(_jspMangedObjectList);");
+            fragment.println("}");
         }
-                    fragment.println("} finally {");
-            // fragment.println("_process_jspMangedObjectList(_jspMangedObjectList); } ");
-            if (!(jspOptions.isUsePageTagPool() || jspOptions.isUseThreadTagPool()) && !jspOptions.isDisableResourceInjection()) {
-                fragment.println("_process_jspMangedObjectList(_jspMangedObjectList); //123");
-            }
-             fragment.println("}");
+
         fragment.println("}");
     }
 
@@ -137,7 +137,7 @@ public class FragmentHelperClassWriter extends MethodWriter {
         }
 
         // Generate postamble:
-        
+
         println("public void invoke(java.io.Writer writer) throws javax.servlet.jsp.JspException {");
         println("java.io.Writer out = null;");
         println("if( writer != null ) {");
@@ -146,7 +146,7 @@ public class FragmentHelperClassWriter extends MethodWriter {
         println("out = this.jspContext.getOut();");
         println("}");
         println("try {");
-        println("this.jspContext.getELContext().putContext(JspContext.class,this.jspContext);");  // defect 393110
+        println("this.jspContext.getELContext().putContext(JspContext.class,this.jspContext);"); // defect 393110
         println("switch( this.discriminator ) {");
         for (int i = 0; i < fragments.size(); i++) {
             println("case " + i + ": {");

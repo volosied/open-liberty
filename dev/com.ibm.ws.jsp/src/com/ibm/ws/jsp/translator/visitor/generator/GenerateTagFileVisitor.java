@@ -338,14 +338,6 @@ public class GenerateTagFileVisitor extends GenerateVisitor {
         writer.println("return this.jspContext;");
         writer.println("}");
 
-                // PH49514 start
-                if (!(jspOptions.isUsePageTagPool() || jspOptions.isUseThreadTagPool())) {
-                    if (!jspOptions.isDisableResourceInjection()) {
-                        GeneratorUtils.generate_jsp_destroyRemoveReleaseTag(writer, jspOptions.getJdkSourceLevel());
-                    }
-                }
-                // PH49514 end
-
         if (PagesVersionHandler.isPages31OrHigherLoaded()) {
             writer.println(" public boolean isErrorOnELNotFound() {");
             writer.println("return " + validatorResult.isErrorOnELNotFound() + ";");
@@ -364,9 +356,9 @@ public class GenerateTagFileVisitor extends GenerateVisitor {
             writer.println("}");
         }
 
-        if (!(jspOptions.isUsePageTagPool() || jspOptions.isUseThreadTagPool()) && !jspOptions.isDisableResourceInjection()) {
-            GeneratorUtils.generateCDITagCleanUp(writer);
-            GeneratorUtils.generate_process_jspMangedObjectList(writer, jspOptions.isDisableResourceInjection(), jspOptions.getJdkSourceLevel());
+
+        if (jspOptions.generateCDITagCleanUp()) { 
+            GeneratorUtils.generate_jsp_destroyCleanUpReleaseTag(writer, !jspOptions.isDisableResourceInjection()); // PH49514
         }
 
         if (ti.hasDynamicAttributes()) {
@@ -471,8 +463,8 @@ public class GenerateTagFileVisitor extends GenerateVisitor {
         writer.println("javax.servlet.ServletConfig config = " + pageContextVar + ".getServletConfig();");
         writer.println("javax.servlet.jsp.JspWriter out = jspContext.getOut();");
 
-        if (!(jspOptions.isUsePageTagPool() || jspOptions.isUseThreadTagPool()) && !jspOptions.isDisableResourceInjection()) {
-            GeneratorUtils.generateLastManagedObjectVariable(writer, jspOptions.getJdkSourceLevel());
+        if (jspOptions.generateCDITagCleanUp()) {
+            GeneratorUtils.generateLastManagedObjectVariable(writer);
         }
 
         writer.println();
@@ -607,7 +599,7 @@ public class GenerateTagFileVisitor extends GenerateVisitor {
             writer.println("cleanupTaglibLookup(_jspx_TagLookup);");
         }
 
-        if (!(jspOptions.isUsePageTagPool() || jspOptions.isUseThreadTagPool()) && !jspOptions.isDisableResourceInjection()) {
+        if (jspOptions.generateCDITagCleanUp()) {
             writer.println("_process_jspMangedObjectList(_jspMangedObjectList);");
         }
         //247815 End

@@ -590,59 +590,33 @@ public class GeneratorUtils {
     /*
      * Following three methods were added for PH49514
      */
-    public static void generateLastManagedObjectVariable(JavaCodeWriter writer, int sourceLevel) {
-        if(sourceLevel < 15){
-            writer.println("java.util.ArrayList _jspMangedObjectList = new java.util.ArrayList();");
-        } else {
-            writer.println("java.util.ArrayList<Object> _jspMangedObjectList = new java.util.ArrayList<Object>();");
-        }
+    public static void generateLastManagedObjectVariable(JavaCodeWriter writer) {
+        writer.println("java.util.ArrayList _jspMangedObjectList = new java.util.ArrayList();");
         writer.println();
     }
 
-    public static void generate_process_jspMangedObjectList(JavaCodeWriter writer, boolean isDisableResourceInjection, int sourceLevel) {
-        if(sourceLevel < 15){
-                writer.println("public void _process_jspMangedObjectList(java.util.ArrayList jspMangedObjectList) {");
-        } else {
-            writer.println("public void _process_jspMangedObjectList(java.util.ArrayList<Object> jspMangedObjectList) {");
+    public static void generate_jsp_destroyCleanUpReleaseTag(JavaCodeWriter writer, boolean resourceInjectionEnabled) {
+        writer.println("public void _jsp_destroyCleanUpReleaseTag(Object tag, java.util.ArrayList managedTagList) {");
+        if(resourceInjectionEnabled) { // if not disabled, then the _jspx_iaHelper is not available
+            writer.println("  _jspx_iaHelper.doPreDestroy(tag);");
+            writer.println("  _jspx_iaHelper.cleanUpTagHandlerFromCdiMap(tag);");
         }
-        writer.println("if(!jspMangedObjectList.isEmpty()) {");
-        writer.println("for(int i = 0; i < jspMangedObjectList.size(); i++ ) {");
-        if (!isDisableResourceInjection) {
-            writer.println("cleanupCDITagManagedObject(jspMangedObjectList.get(i));");
-        }
-        writer.println("if (jspMangedObjectList.get(i) instanceof javax.servlet.jsp.tagext.Tag) {");
-        writer.println("( (javax.servlet.jsp.tagext.Tag) jspMangedObjectList.get(i)).release();");
-        writer.println("}");
-        writer.println("}");
-        writer.println("}");
+        writer.println("  if (tag instanceof javax.servlet.jsp.tagext.Tag) {");
+        writer.println("    ((javax.servlet.jsp.tagext.Tag) tag).release();");
+        writer.println("  }");
+        writer.println("  if(managedTagList != null){");
+        writer.println("    managedTagList.remove(tag);");
+        writer.println("  }");
         writer.println("}");
         writer.println();
-    }
-
-    public static void generateCDITagCleanUp(JavaCodeWriter writer) {
-        writer.println("public void cleanupCDITagManagedObject(Object obj) {");
-        writer.println("_jspx_iaHelper.doPreDestroy(obj);");
-        writer.println("_jspx_iaHelper.cleanUpTagHandlerFromCdiMap(obj);");
+        writer.println("public void _process_jspMangedObjectList(java.util.ArrayList<Object> jspMangedObjectList) {");
+        writer.println("  if(!jspMangedObjectList.isEmpty()) {");
+        writer.println("    for(int i = 0; i < jspMangedObjectList.size(); i++ ) {");
+        writer.println("      _jsp_destroyCleanUpReleaseTag(jspMangedObjectList.get(i), null);");
+        writer.println("    }");
+        writer.println("  }");
         writer.println("}");
-        writer.println();
     }
-
-        //  _jspMangedObjectList + ", "+ tagHandlerVar
-        public static void generate_jsp_destroyRemoveReleaseTag(JavaCodeWriter writer, int sourceLevel) {
-            if (sourceLevel < 15) {
-                writer.println(
-                        "public void _jsp_destroyRemoveReleaseTag(java.util.ArrayList jspMangedObjectList, Object tag) {");
-            } else {
-                writer.println(
-                        "public void _jsp_destroyRemoveReleaseTag(java.util.ArrayList<Object> jspMangedObjectList, Object tag) {");
-            }
-            writer.println("cleanupCDITagManagedObject(tag);");
-            writer.println("jspMangedObjectList.remove(tag);");
-            writer.println("if ( tag instanceof javax.servlet.jsp.tagext.Tag) {");
-            writer.println("( (javax.servlet.jsp.tagext.Tag) tag).release();");
-            writer.println("}");
-            writer.println("}");
-        }
 
     public static void generateVersionInformation(JavaCodeWriter writer, boolean isDebugClassFile) {
         writer.println("private static String _jspx_classVersion;");

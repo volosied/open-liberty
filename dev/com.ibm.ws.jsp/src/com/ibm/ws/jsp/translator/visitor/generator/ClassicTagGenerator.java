@@ -325,20 +325,6 @@ public class ClassicTagGenerator extends BaseTagGenerator {
         }
         tagEndWriter.println("}");
 
-
-        // if (reuseTag == false || tagClassInfo.implementsJspIdConsumer()) {//jsp2.1work
-        //     //           LIDB4147-24
-
-        //     if(!genTagInMethod){
-        //         if (!jspOptions.isDisableResourceInjection()) { //PM06063 & PH49514
-        //             tagEndWriter.println("_jsp_destroyRemoveReleaseTag(_jspMangedObjectList, "+ tagHandlerVar +"); // " + isTagFile + " " + isFragment);
-        //         } else {
-        //             tagEndWriter.println();
-        //             tagEndWriter.println(tagHandlerVar + ".release();");
-        //         }
-        //     }
-        // }
-
         // PM48052 start
         // If doEndTag does a popBody() then we need to make sure we get the
         // correct writer, if we are generated in a method then no need to reset
@@ -377,9 +363,8 @@ public class ClassicTagGenerator extends BaseTagGenerator {
             // duplicate for whatever reason???
             if(!genTagInMethod){
                 if (!jspOptions.isDisableResourceInjection()) { //PM06063 & PH49514
-                    tagEndWriter.println("_jsp_destroyRemoveReleaseTag(_jspMangedObjectList, "+ tagHandlerVar +"); // 5546" + isTagFile + " " + isFragment);
+                    tagEndWriter.println("_jsp_destroyCleanUpReleaseTag("+ tagHandlerVar +", _jspMangedObjectList);");
                 } else {
-                    tagEndWriter.println();
                     tagEndWriter.println(tagHandlerVar + ".release();");
                 }
             }

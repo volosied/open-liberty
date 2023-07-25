@@ -575,24 +575,20 @@ public class CustomTagGenerator extends CodeGeneratorBase {
             if (methodNesting > 0) {
                 methodWriter.println("return false;");
                 Boolean tryBlockStart =  ((Boolean) persistentData.get("tryBlockStarted")) == Boolean.TRUE;
-                System.out.println(tryBlockStart);
-                Boolean tagPoolNotUsed = !(jspOptions.isUsePageTagPool() || jspOptions.isUseThreadTagPool());
-                if ((tagPoolNotUsed || tryBlockStart) && !jspOptions.isDisableResourceInjection()) {
+                if ((!reuseTag || tryBlockStart) && !jspOptions.isDisableResourceInjection()) {
                     methodWriter.println("} finally {");
                     if(tryBlockStart){
-                        methodWriter.println("_jspx_iaHelper.doPreDestroy("+ tagHandlerVar +"); // in Finally afadf");
-                        methodWriter.println("_jspx_iaHelper.cleanUpTagHandlerFromCdiMap("+ tagHandlerVar +");");
-                        // methodWriter.println("cleanupCDITagManagedObject("+ tagHandlerVar +")");
-                        methodWriter.println("if ( "+ tagHandlerVar + " instanceof javax.servlet.jsp.tagext.Tag) {");
-                        methodWriter.println("( (javax.servlet.jsp.tagext.Tag) "+ tagHandlerVar + ").release();");
-                        methodWriter.println("}");
+                        // methodWriter.println("_jspx_iaHelper.doPreDestroy("+ tagHandlerVar +");");
+                        // methodWriter.println("_jspx_iaHelper.cleanUpTagHandlerFromCdiMap("+ tagHandlerVar +");");
+                        // methodWriter.println("if ( "+ tagHandlerVar + " instanceof javax.servlet.jsp.tagext.Tag) {");
+                        // methodWriter.println("( (javax.servlet.jsp.tagext.Tag) "+ tagHandlerVar + ").release();");
+                        // methodWriter.println("}");
+                        methodWriter.println("_jsp_destroyCleanUpReleaseTag(" + tagHandlerVar + ", null);");
                     } else {
-                        methodWriter.println("cleanupCDITagManagedObject(" + tagHandlerVar + ");");
+                        methodWriter.println("// cleanupCDITagManagedObject(" + tagHandlerVar + "); //DEBUGVSCU");
                     }
                     methodWriter.println("}");
                 }
-            } else {
-                 methodWriter.println("// methodsize 0");
             }
             
             if (tagGenerator.fragmentWriterUsed() == false) 

@@ -291,8 +291,8 @@ public class GenerateJspVisitor extends GenerateVisitor {
         GeneratorUtils.generateVersionInformation(writer, jspOptions.isDebugEnabled());
         // end 228118: JSP container should recompile if debug enabled and jsp was not compiled in debug.
 
-        if (!(jspOptions.isUsePageTagPool() || jspOptions.isUseThreadTagPool()) && !jspOptions.isDisableResourceInjection()) {
-            GeneratorUtils.generateCDITagCleanUp(writer);
+        if (jspOptions.generateCDITagCleanUp()) {
+            GeneratorUtils.generate_jsp_destroyCleanUpReleaseTag(writer, !jspOptions.isDisableResourceInjection());
         }
 
         // PK81147 start
@@ -316,14 +316,6 @@ public class GenerateJspVisitor extends GenerateVisitor {
             writer.println("importPackageList.add(\"jakarta.servlet.jsp\");");
             writer.println("importPackageList.add(\"jakarta.servlet.http\");");
             writer.println("}");
-        }
-
-        if (!(jspOptions.isUsePageTagPool() || jspOptions.isUseThreadTagPool())) {
-            GeneratorUtils.generate_process_jspMangedObjectList(writer, jspOptions.isDisableResourceInjection(), jspOptions.getJdkSourceLevel());
-            writer.println();
-            if(!jspOptions.isDisableResourceInjection()){
-                GeneratorUtils.generate_jsp_destroyRemoveReleaseTag(writer, jspOptions.getJdkSourceLevel());
-            }
         }
 
         // PK81147 end
@@ -380,7 +372,7 @@ public class GenerateJspVisitor extends GenerateVisitor {
         writer.println("PageContext pageContext = null;");
 
         if (!jspOptions.isDisableResourceInjection()) {
-            GeneratorUtils.generateLastManagedObjectVariable(writer, jspOptions.getJdkSourceLevel());
+            GeneratorUtils.generateLastManagedObjectVariable(writer);
         }
 
         if (genSessionVariable)
@@ -567,7 +559,7 @@ public class GenerateJspVisitor extends GenerateVisitor {
 
         writer.println("} finally {");
 
-        if (!(jspOptions.isUsePageTagPool() || jspOptions.isUseThreadTagPool()) && !jspOptions.isDisableResourceInjection()) {
+        if (jspOptions.generateCDITagCleanUp()) {
             writer.println("_process_jspMangedObjectList(_jspMangedObjectList);");
         }
 

@@ -1682,4 +1682,11 @@ public class JspOptions {
         this.recompileJspOnRestart = recompileJspOnRestart;
     }
 
+    public boolean generateCDITagCleanUp(){
+        if (!(this.isUsePageTagPool() || this.isUseThreadTagPool()) && !this.isDisableResourceInjection()) {
+            return true;
+        }
+        return false;
+    }
+
 }
