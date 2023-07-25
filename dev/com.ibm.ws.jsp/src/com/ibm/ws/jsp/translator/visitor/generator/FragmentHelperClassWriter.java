@@ -103,11 +103,9 @@ public class FragmentHelperClassWriter extends MethodWriter {
         fragment.print(" = parentTag;");
         fragment.println();
 
-        if (!(methodNesting > 0)) {
+
             GeneratorUtils.generateLastManagedObjectVariable(fragment, 13);
              fragment.print("try {");
-
-        }
 
         return fragment;
     }
@@ -120,13 +118,13 @@ public class FragmentHelperClassWriter extends MethodWriter {
         }
         else {
             fragment.println("return; //closeFragment ");
-            fragment.println("} finally {");
+        }
+                    fragment.println("} finally {");
             // fragment.println("_process_jspMangedObjectList(_jspMangedObjectList); } ");
             if (!(jspOptions.isUsePageTagPool() || jspOptions.isUseThreadTagPool()) && !jspOptions.isDisableResourceInjection()) {
                 fragment.println("_process_jspMangedObjectList(_jspMangedObjectList); //123");
             }
              fragment.println("}");
-        }
         fragment.println("}");
     }
 

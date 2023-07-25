@@ -591,6 +591,8 @@ public class CustomTagGenerator extends CodeGeneratorBase {
                     }
                     methodWriter.println("}");
                 }
+            } else {
+                 methodWriter.println("// methodsize 0");
             }
             
             if (tagGenerator.fragmentWriterUsed() == false) 

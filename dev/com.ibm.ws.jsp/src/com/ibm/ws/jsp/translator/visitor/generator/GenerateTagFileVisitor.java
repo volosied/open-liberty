@@ -366,6 +366,7 @@ public class GenerateTagFileVisitor extends GenerateVisitor {
 
         if (!(jspOptions.isUsePageTagPool() || jspOptions.isUseThreadTagPool()) && !jspOptions.isDisableResourceInjection()) {
             GeneratorUtils.generateCDITagCleanUp(writer);
+            GeneratorUtils.generate_process_jspMangedObjectList(writer, jspOptions.isDisableResourceInjection(), jspOptions.getJdkSourceLevel());
         }
 
         if (ti.hasDynamicAttributes()) {
@@ -604,6 +605,10 @@ public class GenerateTagFileVisitor extends GenerateVisitor {
         //247815 Start
         if (jspOptions.isUsePageTagPool()) {
             writer.println("cleanupTaglibLookup(_jspx_TagLookup);");
+        }
+
+        if (!(jspOptions.isUsePageTagPool() || jspOptions.isUseThreadTagPool()) && !jspOptions.isDisableResourceInjection()) {
+            writer.println("_process_jspMangedObjectList(_jspMangedObjectList);");
         }
         //247815 End
     }
