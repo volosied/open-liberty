@@ -605,6 +605,10 @@ public class GenerateTagFileVisitor extends GenerateVisitor {
         if (jspOptions.isUsePageTagPool()) {
             writer.println("cleanupTaglibLookup(_jspx_TagLookup);");
         }
+
+        if (!(jspOptions.isUsePageTagPool() || jspOptions.isUseThreadTagPool()) && !jspOptions.isDisableResourceInjection()) {
+            writer.println("_process_jspMangedObjectList(_jspMangedObjectList);");
+        }
         //247815 End
     }
 }
