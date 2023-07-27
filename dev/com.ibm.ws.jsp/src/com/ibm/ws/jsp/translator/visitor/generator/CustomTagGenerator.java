@@ -576,7 +576,7 @@ public class CustomTagGenerator extends CodeGeneratorBase {
                 methodWriter.println("return false;");
                 // Boolean tryBlockStart =  ((Boolean) persistentData.get("tryBlockStarted")) == Boolean.TRUE;
                 methodWriter.println("//Debug info: " + (tagGenerator instanceof SimpleTagGenerator) + " " + (reuseTag == false));
-                if ((reuseTag == false) && !jspOptions.isDisableResourceInjection() && !(tagGenerator instanceof SimpleTagGenerator)) {
+                if ((reuseTag == false) && !(tagGenerator instanceof SimpleTagGenerator)) {
                     methodWriter.println("} finally {");
                     methodWriter.println("_jsp_destroyCleanUpReleaseTag(" + tagHandlerVar + ", null); // DEBUG1");
                     methodWriter.println("}");

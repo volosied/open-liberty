@@ -102,7 +102,7 @@ public class FragmentHelperClassWriter extends MethodWriter {
         fragment.print(" = parentTag;");
         fragment.println();
 
-        if (jspOptions.generateCDITagCleanUp()) {
+        if (!(jspOptions.isUsePageTagPool() || jspOptions.isUseThreadTagPool())) {
             GeneratorUtils.generateLastManagedObjectVariable(fragment);
             fragment.println("try {");
         }
@@ -119,7 +119,7 @@ public class FragmentHelperClassWriter extends MethodWriter {
             fragment.println("return;");
         }
 
-        if (jspOptions.generateCDITagCleanUp()) {
+        if (!(jspOptions.isUsePageTagPool() || jspOptions.isUseThreadTagPool())) {
             fragment.println("} finally {");
             fragment.println("_process_jspMangedObjectList(_jspMangedObjectList);");
             fragment.println("}");

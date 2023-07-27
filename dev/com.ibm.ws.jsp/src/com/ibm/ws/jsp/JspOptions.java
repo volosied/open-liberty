@@ -1683,7 +1683,7 @@ public class JspOptions {
     }
 
     public boolean generateCDITagCleanUp(){
-        if (!(this.isUsePageTagPool() || this.isUseThreadTagPool()) && !this.isDisableResourceInjection()) {
+        if (!(this.isUsePageTagPool() || this.isUseThreadTagPool())) {
             return true;
         }
         return false;

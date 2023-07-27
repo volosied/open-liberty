@@ -357,7 +357,7 @@ public class GenerateTagFileVisitor extends GenerateVisitor {
         }
 
 
-        if (jspOptions.generateCDITagCleanUp()) { 
+        if (!(jspOptions.isUsePageTagPool() || jspOptions.isUseThreadTagPool())) {
             GeneratorUtils.generate_jsp_destroyCleanUpReleaseTag(writer, !jspOptions.isDisableResourceInjection()); // PH49514
         }
 

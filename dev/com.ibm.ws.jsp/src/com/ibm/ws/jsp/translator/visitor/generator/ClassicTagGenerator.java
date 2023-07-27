@@ -108,7 +108,6 @@ public class ClassicTagGenerator extends BaseTagGenerator {
 
                 if (genTagInMethod) {
                     tagStartWriter.println("try {");
-                    persistentData.put("tryBlockStarted" , Boolean.TRUE);
                 }
 
                 tagStartWriter.print("_jspx_iaHelper.doPostConstruct(");
@@ -130,6 +129,10 @@ public class ClassicTagGenerator extends BaseTagGenerator {
                 tagStartWriter.print("new ");
                 tagStartWriter.print(tagClassInfo.getTagClassName());
                 tagStartWriter.println("();");
+
+                if (genTagInMethod) {
+                    tagStartWriter.println("try {");
+                }
             }
 
             tagStartWriter.println();
@@ -362,12 +365,17 @@ public class ClassicTagGenerator extends BaseTagGenerator {
 
             // duplicate for whatever reason???
             if(!genTagInMethod){
-                if (!jspOptions.isDisableResourceInjection()) { //PM06063 & PH49514
+                // if (!jspOptions.isDisableResourceInjection()) { //PM06063 & PH49514
                     tagEndWriter.println("_jsp_destroyCleanUpReleaseTag("+ tagHandlerVar +", _jspMangedObjectList);");
-                } else {
-                    tagEndWriter.println(tagHandlerVar + ".release();");
-                }
+                // } else {
+                //     tagEndWriter.println(tagHandlerVar + ".release();");
+                // }
             }
+            // else {
+            //         tagEndWriter.print("} finally { // DEBUG2");
+            //      tagEndWriter.println("_jsp_destroyCleanUpReleaseTag("+ tagHandlerVar +", null);");
+            //       tagEndWriter.print("}");
+            // }
         }
 
         //PK60565 putting back the orig value for pushBodyCountVarDeclaration

@@ -291,8 +291,8 @@ public class GenerateJspVisitor extends GenerateVisitor {
         GeneratorUtils.generateVersionInformation(writer, jspOptions.isDebugEnabled());
         // end 228118: JSP container should recompile if debug enabled and jsp was not compiled in debug.
 
-        if (jspOptions.generateCDITagCleanUp()) {
-            GeneratorUtils.generate_jsp_destroyCleanUpReleaseTag(writer, !jspOptions.isDisableResourceInjection());
+        if (!(jspOptions.isUsePageTagPool() || jspOptions.isUseThreadTagPool())) {
+            GeneratorUtils.generate_jsp_destroyCleanUpReleaseTag(writer, !jspOptions.isDisableResourceInjection()); // PH49514
         }
 
         // PK81147 start
@@ -371,9 +371,9 @@ public class GenerateJspVisitor extends GenerateVisitor {
         //writer.println("JspFactory _jspxFactory = null;");
         writer.println("PageContext pageContext = null;");
 
-        if (!jspOptions.isDisableResourceInjection()) {
+        // if (!jspOptions.isDisableResourceInjection()) {
             GeneratorUtils.generateLastManagedObjectVariable(writer);
-        }
+        // }
 
         if (genSessionVariable)
             writer.println("HttpSession session = null;");
