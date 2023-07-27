@@ -78,7 +78,8 @@ public class SimpleTagGenerator extends BaseTagGenerator {
 
             if (genTagInMethod) {
                 tagStartWriter.println("try {");
-                persistentData.put("tryBlockStarted" , Boolean.TRUE);
+            } else {
+                 tagStartWriter.println ("_jspMangedObjectList.add("+ tagHandlerVar + ");");
             }
 
             tagStartWriter.print("_jspx_iaHelper.doPostConstruct(");
@@ -88,10 +89,6 @@ public class SimpleTagGenerator extends BaseTagGenerator {
             tagStartWriter.print("_jspx_iaHelper.addTagHandlerToCdiMap(");
             tagStartWriter.print(tagHandlerVar + ", " + tagHandlerVar + "_mo");
             tagStartWriter.println(");");
-
-            if(!genTagInMethod) {
-                tagStartWriter.println ("_jspMangedObjectList.add("+ tagHandlerVar + ");");
-            }
 
         } else {
             // not using CDI
@@ -138,9 +135,17 @@ public class SimpleTagGenerator extends BaseTagGenerator {
         tagEndWriter.print(tagHandlerVar);
         tagEndWriter.println(".doTag();");
 
-        // Note: With PH49514, doPreDestroy & cleanUpTagHandlerFromCdiMap were removed and now occur in the finally block.
-        // See the cleanupCDITagManagedObject generated code in the CustomTagGenerator.java
-        // See change history
+        if (!jspOptions.isDisableResourceInjection() && genTagInMethod){		//PM06063
+            tagEndWriter.println ("} finally { ");
+        	tagEndWriter.print ("_jspx_iaHelper.doPreDestroy(");
+        	tagEndWriter.print (tagHandlerVar);
+        	tagEndWriter.println (");");
+        	
+        	tagEndWriter.print ("_jspx_iaHelper.cleanUpTagHandlerFromCdiMap(");
+        	tagEndWriter.print (tagHandlerVar);
+        	tagEndWriter.println (");");
+            tagEndWriter.println ("}");
+        }
 
         restoreScriptingVars(tagEndWriter, VariableInfo.AT_BEGIN);
         syncScriptingVars(tagEndWriter, VariableInfo.AT_BEGIN);

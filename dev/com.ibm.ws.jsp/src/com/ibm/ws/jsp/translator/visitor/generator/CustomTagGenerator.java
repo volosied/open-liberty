@@ -574,20 +574,13 @@ public class CustomTagGenerator extends CodeGeneratorBase {
         if (genTagInMethod) {
             if (methodNesting > 0) {
                 methodWriter.println("return false;");
-                Boolean tryBlockStart =  ((Boolean) persistentData.get("tryBlockStarted")) == Boolean.TRUE;
-                if ((!reuseTag || tryBlockStart) && !jspOptions.isDisableResourceInjection()) {
+                // Boolean tryBlockStart =  ((Boolean) persistentData.get("tryBlockStarted")) == Boolean.TRUE;
+                methodWriter.println("//Debug info: " + (tagGenerator instanceof SimpleTagGenerator) + " " + (reuseTag == false));
+                if ((reuseTag == false) && !jspOptions.isDisableResourceInjection() && !(tagGenerator instanceof SimpleTagGenerator)) {
                     methodWriter.println("} finally {");
-                    if(tryBlockStart){
-                        // methodWriter.println("_jspx_iaHelper.doPreDestroy("+ tagHandlerVar +");");
-                        // methodWriter.println("_jspx_iaHelper.cleanUpTagHandlerFromCdiMap("+ tagHandlerVar +");");
-                        // methodWriter.println("if ( "+ tagHandlerVar + " instanceof javax.servlet.jsp.tagext.Tag) {");
-                        // methodWriter.println("( (javax.servlet.jsp.tagext.Tag) "+ tagHandlerVar + ").release();");
-                        // methodWriter.println("}");
-                        methodWriter.println("_jsp_destroyCleanUpReleaseTag(" + tagHandlerVar + ", null);");
-                    } else {
-                        methodWriter.println("// cleanupCDITagManagedObject(" + tagHandlerVar + "); //DEBUGVSCU");
-                    }
+                    methodWriter.println("_jsp_destroyCleanUpReleaseTag(" + tagHandlerVar + ", null); // DEBUG1");
                     methodWriter.println("}");
+
                 }
             }
             
