@@ -99,6 +99,9 @@ public class SimpleTagGenerator extends BaseTagGenerator {
             tagStartWriter.print("new ");
             tagStartWriter.print(tagClassInfo.getTagClassName());
             tagStartWriter.println("();");
+            if (!genTagInMethod) {
+                tagStartWriter.println ("_jspMangedObjectList.add("+ tagHandlerVar + ");");
+            }
         }
 
         generateSetParent(tagStartWriter);

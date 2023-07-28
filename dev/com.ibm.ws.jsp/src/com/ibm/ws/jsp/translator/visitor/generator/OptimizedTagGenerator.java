@@ -149,6 +149,10 @@ public class OptimizedTagGenerator extends BaseTagGenerator implements TagGenera
                 tagStartWriter.print(tagClassInfo.getTagClassName());
                 tagStartWriter.print("();");
                 tagStartWriter.println();
+
+                if (!genTagInMethod) {
+                    tagStartWriter.println ("_jspMangedObjectList.add("+ tagHandlerVar + ");");
+                }
             }
 
             tagStartWriter.println();

@@ -108,6 +108,8 @@ public class ClassicTagGenerator extends BaseTagGenerator {
 
                 if (genTagInMethod) {
                     tagStartWriter.println("try {");
+                } else {
+                    tagStartWriter.println("_jspMangedObjectList.add(" + tagHandlerVar + ");");
                 }
 
                 tagStartWriter.print("_jspx_iaHelper.doPostConstruct(");
@@ -117,9 +119,7 @@ public class ClassicTagGenerator extends BaseTagGenerator {
                 tagStartWriter.print("_jspx_iaHelper.addTagHandlerToCdiMap(");
                 tagStartWriter.print(tagHandlerVar + ", " + tagHandlerVar + "_mo");
                 tagStartWriter.println(");");
-                if (!genTagInMethod) {
-                    tagStartWriter.println("_jspMangedObjectList.add(" + tagHandlerVar + ");");
-                }
+
             } else {
                 // not using CDI
                 tagStartWriter.print(tagClassInfo.getTagClassName());
@@ -132,6 +132,8 @@ public class ClassicTagGenerator extends BaseTagGenerator {
 
                 if (genTagInMethod) {
                     tagStartWriter.println("try {");
+                } else {
+                    tagStartWriter.println("_jspMangedObjectList.add(" + tagHandlerVar + ");");
                 }
             }
 
