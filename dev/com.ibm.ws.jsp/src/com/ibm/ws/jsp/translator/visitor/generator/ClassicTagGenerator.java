@@ -109,7 +109,7 @@ public class ClassicTagGenerator extends BaseTagGenerator {
                 if (genTagInMethod) {
                     tagStartWriter.println("try {");
                 } else {
-                    tagStartWriter.println("_jspMangedObjectList.add(" + tagHandlerVar + ");");
+                    tagStartWriter.println("_jspTagList.add(" + tagHandlerVar + ");");
                 }
 
                 tagStartWriter.print("_jspx_iaHelper.doPostConstruct(");
@@ -133,7 +133,7 @@ public class ClassicTagGenerator extends BaseTagGenerator {
                 if (genTagInMethod) {
                     tagStartWriter.println("try {");
                 } else {
-                    tagStartWriter.println("_jspMangedObjectList.add(" + tagHandlerVar + ");");
+                    tagStartWriter.println("_jspTagList.add(" + tagHandlerVar + ");");
                 }
             }
 
@@ -368,7 +368,7 @@ public class ClassicTagGenerator extends BaseTagGenerator {
             // duplicate for whatever reason???
             if(!genTagInMethod){
                 // if (!jspOptions.isDisableResourceInjection()) { //PM06063 & PH49514
-                    tagEndWriter.println("_jsp_destroyCleanUpReleaseTag("+ tagHandlerVar +", _jspMangedObjectList);");
+                    tagEndWriter.println("_jsp_destroyCleanUpReleaseTag("+ tagHandlerVar +", _jspTagList);");
                 // } else {
                 //     tagEndWriter.println(tagHandlerVar + ".release();");
                 // }

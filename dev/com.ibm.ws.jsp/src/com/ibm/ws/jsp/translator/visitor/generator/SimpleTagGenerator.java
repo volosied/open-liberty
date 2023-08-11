@@ -79,7 +79,7 @@ public class SimpleTagGenerator extends BaseTagGenerator {
             if (genTagInMethod) {
                 tagStartWriter.println("try {");
             } else {
-                 tagStartWriter.println ("_jspMangedObjectList.add("+ tagHandlerVar + ");");
+                 tagStartWriter.println ("_jspTagList.add("+ tagHandlerVar + ");");
             }
 
             tagStartWriter.print("_jspx_iaHelper.doPostConstruct(");
@@ -100,7 +100,7 @@ public class SimpleTagGenerator extends BaseTagGenerator {
             tagStartWriter.print(tagClassInfo.getTagClassName());
             tagStartWriter.println("();");
             if (!genTagInMethod) {
-                tagStartWriter.println ("_jspMangedObjectList.add("+ tagHandlerVar + ");");
+                tagStartWriter.println ("_jspTagList.add("+ tagHandlerVar + ");");
             }
         }
 

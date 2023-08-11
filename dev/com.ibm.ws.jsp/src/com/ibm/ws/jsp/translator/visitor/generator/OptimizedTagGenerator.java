@@ -127,7 +127,7 @@ public class OptimizedTagGenerator extends BaseTagGenerator implements TagGenera
                 if (genTagInMethod) {
                     tagStartWriter.println("try {");
                 } else {
-                     tagStartWriter.println ("_jspMangedObjectList.add("+ tagHandlerVar + ");");
+                     tagStartWriter.println ("_jspTagList.add("+ tagHandlerVar + ");");
                 }
 
                 tagStartWriter.print("_jspx_iaHelper.doPostConstruct(");
@@ -151,7 +151,7 @@ public class OptimizedTagGenerator extends BaseTagGenerator implements TagGenera
                 tagStartWriter.println();
 
                 if (!genTagInMethod) {
-                    tagStartWriter.println ("_jspMangedObjectList.add("+ tagHandlerVar + ");");
+                    tagStartWriter.println ("_jspTagList.add("+ tagHandlerVar + ");");
                 }
             }
 

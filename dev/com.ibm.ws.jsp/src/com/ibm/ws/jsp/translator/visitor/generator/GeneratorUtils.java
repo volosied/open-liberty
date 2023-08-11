@@ -590,13 +590,13 @@ public class GeneratorUtils {
     /*
      * Following three methods were added for PH49514
      */
-    public static void generateLastManagedObjectVariable(JavaCodeWriter writer) {
-        writer.println("java.util.ArrayList _jspMangedObjectList = new java.util.ArrayList();");
+    public static void generate__jspTagList_variable(JavaCodeWriter writer) {
+        writer.println("java.util.ArrayList _jspTagList = new java.util.ArrayList();");
         writer.println();
     }
 
-    public static void generate_jsp_destroyCleanUpReleaseTag(JavaCodeWriter writer, boolean resourceInjectionEnabled) {
-        writer.println("public void _jsp_destroyCleanUpReleaseTag(Object tag, java.util.ArrayList managedTagList) {");
+    public static void generate_tagCleanUp_methods(JavaCodeWriter writer, boolean resourceInjectionEnabled) {
+        writer.println("public void _jsp_cleanUpTag(Object tag, java.util.ArrayList tagList) {");
         if(resourceInjectionEnabled) { // if not disabled, then the _jspx_iaHelper is not available
             writer.println("  _jspx_iaHelper.doPreDestroy(tag);");
             writer.println("  _jspx_iaHelper.cleanUpTagHandlerFromCdiMap(tag);");
@@ -604,15 +604,15 @@ public class GeneratorUtils {
         writer.println("  if (tag instanceof javax.servlet.jsp.tagext.Tag) {");
         writer.println("    ((javax.servlet.jsp.tagext.Tag) tag).release();");
         writer.println("  }");
-        writer.println("  if(managedTagList != null){");
-        writer.println("    managedTagList.remove(tag);");
+        writer.println("  if(tagList != null){");
+        writer.println("    tagList.remove(tag);");
         writer.println("  }");
         writer.println("}");
         writer.println();
-        writer.println("public void _process_jspMangedObjectList(java.util.ArrayList<Object> jspMangedObjectList) {");
-        writer.println("  if(!jspMangedObjectList.isEmpty()) {");
-        writer.println("    for(int i = 0; i < jspMangedObjectList.size(); i++ ) {");
-        writer.println("      _jsp_destroyCleanUpReleaseTag(jspMangedObjectList.get(i), null);");
+        writer.println("public void _jsp_cleanUpTagArrayList(java.util.ArrayList tagList) {");
+        writer.println("  if(!tagList.isEmpty()) {");
+        writer.println("    for(int i = 0; i < tagList.size(); i++ ) {");
+        writer.println("      _jsp_destroyCleanUpReleaseTag(tagList.get(i), null);");
         writer.println("    }");
         writer.println("  }");
         writer.println("}");

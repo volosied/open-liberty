@@ -292,7 +292,7 @@ public class GenerateJspVisitor extends GenerateVisitor {
         // end 228118: JSP container should recompile if debug enabled and jsp was not compiled in debug.
 
         if (!(jspOptions.isUsePageTagPool() || jspOptions.isUseThreadTagPool())) {
-            GeneratorUtils.generate_jsp_destroyCleanUpReleaseTag(writer, !jspOptions.isDisableResourceInjection()); // PH49514
+            GeneratorUtils.generate_tagCleanUp_methods(writer, !jspOptions.isDisableResourceInjection()); // PH49514
         }
 
         // PK81147 start
@@ -372,7 +372,7 @@ public class GenerateJspVisitor extends GenerateVisitor {
         writer.println("PageContext pageContext = null;");
 
         // if (!jspOptions.isDisableResourceInjection()) {
-            GeneratorUtils.generateLastManagedObjectVariable(writer);
+            GeneratorUtils.generate__jspTagList_variable(writer);
         // }
 
         if (genSessionVariable)
@@ -560,7 +560,7 @@ public class GenerateJspVisitor extends GenerateVisitor {
         writer.println("} finally {");
 
         if (jspOptions.generateCDITagCleanUp()) {
-            writer.println("_process_jspMangedObjectList(_jspMangedObjectList);");
+            writer.println("_jsp_cleanUpTagArrayList(_jspTagList);");
         }
 
         //writer.println("if (_jspxFactory != null) _jspxFactory.releasePageContext(pageContext);");
