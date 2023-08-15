@@ -116,11 +116,13 @@ public class JspOptions {
     String overriddenJspOptions = new String();
     
     public JspOptions() {
-        setJdkSourceLevel(16);
+        // setJdkSourceLevel(16);
+        setJavaSourceLevel(8);
     }   
     
     public JspOptions(Properties jspParams) {
-        setJdkSourceLevel(16);
+        // setJdkSourceLevel(16);
+        setJavaSourceLevel(8);
         populateOptions(jspParams);
     }
     
