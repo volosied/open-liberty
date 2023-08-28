@@ -277,8 +277,16 @@ public abstract class ParseSupport extends BodyTagSupport {
 		systemId = systemId.substring(5);
 
 	    // we're only concerned with relative URLs
-	    if (ImportSupport.isAbsoluteUrl(systemId))
-		return null;
+            //PI56811 start
+            if (ImportSupport.isAbsoluteUrl(publicId)) {
+                XmlSecurityUtil.checkProtocol(publicId);
+                return null;
+            }
+            if (systemId != null && ImportSupport.isAbsoluteUrl(systemId)) {
+                XmlSecurityUtil.checkProtocol(systemId);
+                return null;
+            }
+            //PI56811 end
 
 	    // for relative URLs, load and wrap the resource.
 	    // don't bother checking for 'null' since we specifically want
