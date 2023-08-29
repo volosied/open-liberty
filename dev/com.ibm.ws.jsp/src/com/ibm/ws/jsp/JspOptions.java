@@ -116,13 +116,11 @@ public class JspOptions {
     String overriddenJspOptions = new String();
     
     public JspOptions() {
-        // setJdkSourceLevel(16);
-        setJavaSourceLevel(8);
+        setJavaSourceLevel(8); // Changed in PR 25494
     }   
     
     public JspOptions(Properties jspParams) {
-        // setJdkSourceLevel(16);
-        setJavaSourceLevel(8);
+        setJavaSourceLevel(8); // Changed in PR 25494
         populateOptions(jspParams);
     }
     
@@ -233,6 +231,7 @@ public class JspOptions {
                 logger.logp(Level.INFO, CLASS_NAME, "populateOptions", "Invalid value for jdkSourceLevel = " + rawJdkSourceLevel + ".");
             }
         }
+
         if (useJdkSourceLevel >= 13) {
             logger.logp(Level.INFO, CLASS_NAME, "populateOptions", JspMessages.getMessage("jsp.jdksourcelevel.value", new Object[] { useJdkSourceLevel })); //152472
             setJdkSourceLevel(useJdkSourceLevel);
@@ -247,7 +246,10 @@ public class JspOptions {
                 logger.logp(Level.INFO, CLASS_NAME, "populateOptions", "Invalid value for javaSourceLevel = " + rawJavaSourceLevel + ".");
             }
         }
-        setJavaSourceLevel(useJavaSourceLevel); //validation already done via metatype.xml options 
+
+        if(useJavaSourceLevel != -1){
+            setJavaSourceLevel(useJavaSourceLevel); //validation already done via metatype.xml options 
+        }
         
         // Normalize compileWithAssert and jdkSourceLevel; compileWithAssert with value true means compile with
         // jdk 1.4 source level.  Only jdkSourceLevel will be used elsewhere in the JSP container.
