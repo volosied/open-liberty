@@ -124,7 +124,6 @@ public class JSPJava17Test {
     /*
      * Verifies that javaSourceLevel overrides jdkSourceLevel if both are set.
      */
-    @MaximumJavaLevel(javaLevel = 17)
     @Test
     public void testBothjdkSourceLevelAndjavaSourceLevel() throws Exception {
 

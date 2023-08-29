@@ -37,12 +37,13 @@ import com.ibm.websphere.simplicity.config.ServerConfiguration;
 /**
  * JSP 2.3 tests which use Java 11 specific features.
  *
- * Tests must only run when Java 11 is in use.
+ * Tests must only run when Java 11 is in use. Runs only in FULL as Java 8 and 17 test also cover these options.
  *
  * Tests that just need to drive a simple request using our WebBrowser object can be placed in this class.
  *
  */
 // No need to run against cdi-2.0 since these tests don't use CDI at all.
+@Mode(TestMode.FULL)
 @MinimumJavaLevel(javaLevel = 11)
 @SkipForRepeat("CDI-2.0")
 @RunWith(FATRunner.class)
