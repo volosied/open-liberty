@@ -232,10 +232,6 @@ public class JspOptions {
             }
         }
 
-        if (useJdkSourceLevel >= 13) {
-            logger.logp(Level.INFO, CLASS_NAME, "populateOptions", JspMessages.getMessage("jsp.jdksourcelevel.value", new Object[] { useJdkSourceLevel })); //152472
-            setJdkSourceLevel(useJdkSourceLevel);
-        }
         if (rawJavaSourceLevel != null && (rawJavaSourceLevel.equals("8") || rawJavaSourceLevel.equals("1.8"))) // only for Java 8 do we accept 1.8 and 8
             rawJavaSourceLevel =  org.eclipse.jdt.internal.compiler.impl.CompilerOptions.VERSION_1_8; 
         try {
@@ -247,8 +243,17 @@ public class JspOptions {
             }
         }
 
-        if(useJavaSourceLevel != -1){
+        if(useJavaSourceLevel != -1 && useJdkSourceLevel != -1) {
+            logger.logp(Level.WARNING, CLASS_NAME, "populateOptions", JspMessages.getMessage("jsp.bothsourcelevelset.warning", new Object[] { useJavaSourceLevel, useJdkSourceLevel }));
+            useJdkSourceLevel = -1;
+        }
+
+        if(useJavaSourceLevel != -1) {
             setJavaSourceLevel(useJavaSourceLevel); //validation already done via metatype.xml options 
+            logger.logp(Level.INFO, CLASS_NAME, "populateOptions", JspMessages.getMessage("jsp.javasourcelevel.value", new Object[] { javaSourceLevel }));
+        } else if (useJdkSourceLevel >= 13) {
+            setJdkSourceLevel(useJdkSourceLevel);
+            logger.logp(Level.INFO, CLASS_NAME, "populateOptions", JspMessages.getMessage("jsp.jdksourcelevel.value", new Object[] { useJdkSourceLevel })); //152472
         }
         
         // Normalize compileWithAssert and jdkSourceLevel; compileWithAssert with value true means compile with
@@ -1091,9 +1096,7 @@ public class JspOptions {
         int jmv = JavaInfo.majorVersion();
         if (javaSourceLevel > jmv) {
             // can not specify higher than running Java
-            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.WARNING)) {
-                logger.logp(Level.WARNING, CLASS_NAME, "setJavaSourceLevel", JspMessages.getMessage("jsp.javasourcelevel.warning", new Object[] { javaSourceLevel, jmv }));
-            }
+            logger.logp(Level.WARNING, CLASS_NAME, "setJavaSourceLevel", JspMessages.getMessage("jsp.javasourcelevel.warning", new Object[] { javaSourceLevel, jmv }));
             javaSourceLevel = jmv;
         }
         this.javaSourceLevel = javaSourceLevel;
