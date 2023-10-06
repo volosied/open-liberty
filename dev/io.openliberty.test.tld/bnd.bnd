@@ -1,0 +1,26 @@
+-include= ~../cnf/resources/bnd/bundle.props
+bVersion=1.0
+bSymbolicName=io.openliberty.test.tld
+
+Bundle-Name: TEST TLD
+Bundle-SymbolicName: io.openliberty.test.tld
+Bundle-Description:  TEST TLD
+
+Private-Package: \
+  io.openliberty.test.tld
+
+Export-Package: \
+  io.openliberty.test.tag;version=1.0;thread-context=true
+
+Service-Component: \
+  com.ibm.ws.jsf_2_2.taglib; \
+    implementation:=io.openliberty.test.tld.TestGlobalConfig; \
+    provide:='com.ibm.wsspi.jsp.taglib.config.GlobalTagLibConfig'; \
+    properties:="service.vendor=IBM"
+
+Include-Resource: \
+    WEB-INF=resources/WEB-INF
+
+-buildpath: \
+  com.ibm.ws.jsp;version=latest,\
+  com.ibm.websphere.javaee.jsp.2.2;version=latest
