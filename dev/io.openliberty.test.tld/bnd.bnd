@@ -10,16 +10,26 @@ Private-Package: \
   io.openliberty.test.tld
 
 Export-Package: \
-  io.openliberty.test.tag;version=1.0;thread-context=true
+  io.openliberty.test.tag;version=1.0;thread-context=true, \
+  com.example.URLWrapper;version=1.0;thread-context=true
+
+ Bundle-ClassPath:\
+  .,\
+  META-INF/tld2-sample.jar
 
 Service-Component: \
   com.ibm.ws.jsf_2_2.taglib; \
     implementation:=io.openliberty.test.tld.TestGlobalConfig; \
     provide:='com.ibm.wsspi.jsp.taglib.config.GlobalTagLibConfig'; \
+    properties:="service.vendor=IBM", \
+  com.ibm.ws.jsf_2_2.taglib2; \
+    implementation:=io.openliberty.test.tld.TestJarGlobalConfig; \
+    provide:='com.ibm.wsspi.jsp.taglib.config.GlobalTagLibConfig'; \
     properties:="service.vendor=IBM"
 
 Include-Resource: \
-    WEB-INF=resources/WEB-INF
+    WEB-INF=resources/WEB-INF,\
+    META-INF=resources/META-INF
 
 -buildpath: \
   com.ibm.ws.jsp;version=latest,\
