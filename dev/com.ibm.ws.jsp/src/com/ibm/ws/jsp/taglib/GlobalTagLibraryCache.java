@@ -586,9 +586,17 @@ public class GlobalTagLibraryCache extends Hashtable implements JspCoreContext,
                         if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
                             logger.logp(Level.FINE, CLASS_NAME, "loadTldFromClassloader", "Global jar tld loaded for {0}", tli.getReliableURN());
                         }
-                        tli.setURI(tli.getReliableURN());
-                        put(tli.getReliableURN(), tli);
-                        tldPathConfig.setUri(tli.getReliableURN());
+                        /* if condition is true, we ignore whatever the URI is in the TLD 
+                         * and instead, we use the URI specified via the TldPathConfig constructor
+                         */
+                        if(!tldPathConfig.getForceArgumentURI()){
+                            tldPathConfig.setUri(tli.getReliableURN());
+                            put(tli.getReliableURN(), tli);
+                        } else {
+                            tli.setURI(tli.getReliableURN());
+                            put(tldPathConfig.getUri(), tli);
+                        }
+
                         eventListenerList.addAll(tldParser.getEventListenerList());
                     }
                 } else {
