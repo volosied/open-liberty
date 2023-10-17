@@ -24,10 +24,21 @@ public class TldPathConfig {
     private String uri = null;
     private boolean containsListenerDefs = false;
     private List availabilityConditionList = null;    
+    private boolean forceArgumentURI = false;
     
     public TldPathConfig(String tldPath, String uri, String strContainsListenerDefs) {
         this.tldPath = tldPath;
         this.uri = uri;
+        if (strContainsListenerDefs != null && strContainsListenerDefs.equalsIgnoreCase("true")) {
+            containsListenerDefs = true;    
+        }
+        availabilityConditionList = new ArrayList();
+    }
+
+    public TldPathConfig(String tldPath, String uri, boolean forceArgumentURI, String strContainsListenerDefs) {
+        this.tldPath = tldPath;
+        this.uri = uri;
+        this.forceArgumentURI = forceArgumentURI;
         if (strContainsListenerDefs != null && strContainsListenerDefs.equalsIgnoreCase("true")) {
             containsListenerDefs = true;    
         }
@@ -73,5 +84,13 @@ public class TldPathConfig {
      */
     public boolean containsListenerDefs() {
         return containsListenerDefs;
+    }
+
+    /*
+     * Ignore the URI set in the TLD attribute and used the URI 
+     * specified via the TldPathConfig constructor
+     */
+    public boolean getForceArgumentURI(){
+        return this.forceArgumentURI;
     }
 }
