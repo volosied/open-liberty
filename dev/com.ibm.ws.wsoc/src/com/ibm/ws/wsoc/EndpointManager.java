@@ -142,7 +142,7 @@ public class EndpointManager {
         endpointSessionMap.put(cl, sa);
 
         if (tc.isDebugEnabled()) {
-            Tr.debug(tc, "removed session of: " + sess.getId() + "  from endpoint class of: " + cl.getName() + " in endpointmanager of: " + this.hashCode());
+            Tr.debug(tc, "removed session of: " + sess.getId() + "  from endpoint class of: " + cl.getName() + " in endpointmanager of: " + this);
         }
     }
 
@@ -180,6 +180,29 @@ public class EndpointManager {
                 if (session.isSecure() && (session.getUserPrincipal() != null)) {
                     CloseReason cr = new CloseReason(CloseReason.CloseCodes.VIOLATED_POLICY, "Secure HTTP Session Closed");
                     session.getSessionImpl().close(cr, true);
+                }
+            }
+
+            Set<Entry<Class<?>, ArrayList<Session>>> s = endpointSessionMap.entrySet();
+            Iterator<Entry<Class<?>, ArrayList<Session>>> i = s.iterator();
+            Class<?> endPointKey = null;
+
+            // find the key that contains our expired session
+            while (i.hasNext()) {
+                Entry<Class<?>, ArrayList<Session>> e = i.next();
+                endPointKey = e.getKey();
+                if(e.getValue().contains(session)){
+                    break;
+                }
+            }
+
+            //remove that expired session from the endpointSessionMap
+            if(endPointKey != null){
+                ArrayList<Session> sa = endpointSessionMap.get(endPointKey);
+                sa.remove(session);
+                endpointSessionMap.put(endPointKey,sa);
+                if (tc.isDebugEnabled()) {
+                    Tr.debug(tc, "removed expired session of: " + session.getId() + "  from endpoint class of: " + endPointKey.getName() + " in endpointmanager of: " + this);
                 }
             }
         }
