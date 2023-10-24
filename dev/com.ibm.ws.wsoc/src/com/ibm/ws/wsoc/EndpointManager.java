@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 IBM Corporation and others.
+ * Copyright (c) 2017, 2023 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -44,7 +44,7 @@ public class EndpointManager {
     private final ConcurrentHashMap<Class<?>, ArrayList<Session>> endpointSessionMap = new ConcurrentHashMap<Class<?>, ArrayList<Session>>();
 
     // Map of  sessions with corresponding active HttpSession
-    private final ConcurrentHashMap<String, SessionExt> httpSessionMap = new ConcurrentHashMap<String, SessionExt>();
+    private final ConcurrentHashMap<String, ArrayList<Session>> httpSessionMap = new ConcurrentHashMap<String, ArrayList<Session>>();
 
     public EndpointManager() {
         serverEndpointConfigMap.clear();
@@ -55,11 +55,11 @@ public class EndpointManager {
         annotatedEndpointMap.clear();
     }
 
-    public synchronized void addSession(Endpoint ep, SessionExt sess) {
+    public synchronized void addSession(final Endpoint ep, final SessionExt sess) {
 
         Class<?> cl = ep.getClass();
         if (cl.equals(AnnotatedEndpoint.class)) {
-            AnnotatedEndpoint ae = (AnnotatedEndpoint) ep;
+            final AnnotatedEndpoint ae = (AnnotatedEndpoint) ep;
             cl = ae.getServerEndpointClass();
         }
 
@@ -81,27 +81,32 @@ public class EndpointManager {
             Tr.debug(tc, "added session of: " + sess + "  to endpoint class of: " + cl + " using list of: " + sa + " in endpointmanager of: " + this);
         }
 
-        String id = sess.getSessionImpl().getHttpSessionID();
+        final String id = sess.getSessionImpl().getHttpSessionID();
         if (id != null) {
-            httpSessionMap.put(id, sess);
+            ArrayList<Session> http_sa = httpSessionMap.get(id);
+            if (http_sa == null) {
+                http_sa = new ArrayList<Session>();
+            }
+            http_sa.add(sess);
+            httpSessionMap.put(id, http_sa);
         }
     }
 
     public synchronized void closeAllOpenSessions() {
-        CloseReason cr = new CloseReason(CloseReason.CloseCodes.GOING_AWAY, "Application shutting down.");
+        final CloseReason cr = new CloseReason(CloseReason.CloseCodes.GOING_AWAY, "Application shutting down.");
 
-        Set<Entry<Class<?>, ArrayList<Session>>> s = endpointSessionMap.entrySet();
-        Iterator<Entry<Class<?>, ArrayList<Session>>> i = s.iterator();
+        final Set<Entry<Class<?>, ArrayList<Session>>> s = endpointSessionMap.entrySet();
+        final Iterator<Entry<Class<?>, ArrayList<Session>>> i = s.iterator();
         while (i.hasNext()) {
-            Entry<Class<?>, ArrayList<Session>> e = i.next();
-            ArrayList<Session> sessions = e.getValue();
+            final Entry<Class<?>, ArrayList<Session>> e = i.next();
+            final ArrayList<Session> sessions = e.getValue();
 
             // I don't think we can iterate over the list and call a session close (concurrent modification exception when close tries to remove on same thread..
             //  Iterator.remove() might work here as well...
             //  We have the synch, so this logic should work as well
             while (!sessions.isEmpty()) {
-                Session sess = sessions.remove(0);
-                SessionExt ext = (SessionExt) sess;
+                final Session sess = sessions.remove(0);
+                final SessionExt ext = (SessionExt) sess;
 
                 ext.getSessionImpl().closeBecauseAppStopping(cr);
 
@@ -113,22 +118,22 @@ public class EndpointManager {
     /*
      * closeAllSessions will call this with the session already removed...
      */
-    public synchronized void removeSession(Endpoint ep, SessionExt sess) {
+    public synchronized void removeSession(final Endpoint ep, final SessionExt sess) {
         Class<?> cl = ep.getClass();
 
         if (cl.equals(AnnotatedEndpoint.class)) {
-            AnnotatedEndpoint ae = (AnnotatedEndpoint) ep;
+            final AnnotatedEndpoint ae = (AnnotatedEndpoint) ep;
             cl = ae.getServerEndpointClass();
         }
 
         // Always try to remove http session if we can.
-        String id = sess.getSessionImpl().getHttpSessionID();
+        final String id = sess.getSessionImpl().getHttpSessionID();
         if (id != null) {
             httpSessionMap.remove(id);
         }
 
         // find the session array for the given endpoint
-        ArrayList<Session> sa = endpointSessionMap.get(cl);
+        final ArrayList<Session> sa = endpointSessionMap.get(cl);
 
         // nothing to remove if we don't have a session
         if (sa == null) {
@@ -142,18 +147,18 @@ public class EndpointManager {
         endpointSessionMap.put(cl, sa);
 
         if (tc.isDebugEnabled()) {
-            Tr.debug(tc, "removed session of: " + sess.getId() + "  from endpoint class of: " + cl.getName() + " in endpointmanager of: " + this.hashCode());
+            Tr.debug(tc, "removed session of: " + sess.getId() + "  from endpoint class of: " + cl.getName() + " in endpointmanager of: " + this);
         }
     }
 
-    public synchronized Set<Session> getOpenSessions(Endpoint ep) {
+    public synchronized Set<Session> getOpenSessions(final Endpoint ep) {
         Class<?> cl = ep.getClass();
         if (cl.equals(AnnotatedEndpoint.class)) {
-            AnnotatedEndpoint ae = (AnnotatedEndpoint) ep;
+            final AnnotatedEndpoint ae = (AnnotatedEndpoint) ep;
             cl = ae.getServerEndpointClass();
         }
 
-        ArrayList<Session> sa = endpointSessionMap.get(cl);
+        final ArrayList<Session> sa = endpointSessionMap.get(cl);
         if (sa == null) {
             return null;
         }
@@ -162,37 +167,67 @@ public class EndpointManager {
             Tr.debug(tc, "getOpenSessions is using set of: " + sa.hashCode());
         }
 
-        HashSet<Session> set = new HashSet<Session>();
+        final HashSet<Session> set = new HashSet<Session>();
         set.addAll(sa);
 
         return set;
 
     }
 
-    public void httpSessionExpired(String httpSessionID) {
+    public void httpSessionExpired(final String httpSessionID) {
         if (httpSessionID != null) {
-            SessionExt session = httpSessionMap.remove(httpSessionID);
-            if (session != null) {
+            final ArrayList<Session> sessionList = httpSessionMap.remove(httpSessionID);
+            if (sessionList != null) {
                 // can't use HttpSession object on another thread during this processing (which we do if CDI 1.0 is enabled on the complete or error
                 // callbacks) or else the Session API may deadlock.   Don't really need to do anything anyway with this session object since
                 // it is invalidating.
-                session.getSessionImpl().markHttpSessionInvalid();
-                if (session.isSecure() && (session.getUserPrincipal() != null)) {
-                    CloseReason cr = new CloseReason(CloseReason.CloseCodes.VIOLATED_POLICY, "Secure HTTP Session Closed");
-                    session.getSessionImpl().close(cr, true);
+                for (final Session session : sessionList) {
+                    ((SessionExt) session).getSessionImpl().markHttpSessionInvalid();
+                    if (session.isSecure() && (session.getUserPrincipal() != null)) {
+                        final CloseReason cr = new CloseReason(CloseReason.CloseCodes.VIOLATED_POLICY, "Secure HTTP Session Closed");
+                        ((SessionExt) session).getSessionImpl().close(cr, true);
+                    }
+                }
+            }
+
+            final Set<Entry<Class<?>, ArrayList<Session>>> s = endpointSessionMap.entrySet();
+            final Iterator<Entry<Class<?>, ArrayList<Session>>> i = s.iterator();
+            Class<?> endPointKey = null;
+
+            // find the key that contains our expired session
+            while (i.hasNext()) {
+                final Entry<Class<?>, ArrayList<Session>> e = i.next();
+                endPointKey = e.getKey();
+                for (final Session session : sessionList) {
+                    if (e.getValue().contains(session)) {
+                        break;
+                    }
+                }
+            }
+
+            //remove that expired session from the endpointSessionMap
+            if (endPointKey != null) {
+                final ArrayList<Session> http_sa = endpointSessionMap.get(endPointKey);
+                for (final Session session : sessionList) {
+                    http_sa.remove(session);
+                }
+                endpointSessionMap.put(endPointKey, http_sa);
+                if (tc.isDebugEnabled()) {
+                    Tr.debug(tc, "removed expired session of: " + httpSessionID + "  from endpoint class of: " + endPointKey.getName() + " with list " + http_sa
+                                 + " in endpointmanager of: " + this);
                 }
             }
         }
     }
 
-    public void addAnnotatedEndpoint(AnnotatedEndpoint annotatedEP) {
+    public void addAnnotatedEndpoint(final AnnotatedEndpoint annotatedEP) {
         // If this happens to get called twice ( two different requests) during IBM API upgrade call, it will not matter..
         if (annotatedEP != null) {
             annotatedEndpointMap.put(annotatedEP.getServerEndpointClass(), annotatedEP);
         }
     }
 
-    public AnnotatedEndpoint getAnnotatedEndpoint(Class<? extends Object> aep) {
+    public AnnotatedEndpoint getAnnotatedEndpoint(final Class<? extends Object> aep) {
         if (aep != null) {
             return annotatedEndpointMap.get(aep);
         } else {
@@ -200,15 +235,15 @@ public class EndpointManager {
         }
     }
 
-    public void addServerEndpointConfig(ServerEndpointConfig serverEndpointConfig) {
-        String path = serverEndpointConfig.getPath();
+    public void addServerEndpointConfig(final ServerEndpointConfig serverEndpointConfig) {
+        final String path = serverEndpointConfig.getPath();
         if (path != null) {
             Tr.info(tc, "adding.endpoint", path);
             serverEndpointConfigMap.put(path, serverEndpointConfig);
         }
     }
 
-    public boolean isURIExists(String path) {
+    public boolean isURIExists(final String path) {
         if (serverEndpointConfigMap.keySet().contains(path)) { //found exact match
             return true;
         } else {
@@ -216,7 +251,7 @@ public class EndpointManager {
         }
     }
 
-    public ServerEndpointConfig getServerEndpointConfig(String path) {
+    public ServerEndpointConfig getServerEndpointConfig(final String path) {
         String matchedURI = null;
         ServerEndpointConfig config = null;
         if (serverEndpointConfigMap.keySet().contains(path)) { //found exact match
@@ -237,11 +272,11 @@ public class EndpointManager {
     /*
      * JSR 356, section 3.1.1 URI Mapping
      */
-    private synchronized String getMatchingURI(String incomingURI) {
-        String[] incomingURIParts = incomingURI.split("/");
+    private synchronized String getMatchingURI(final String incomingURI) {
+        final String[] incomingURIParts = incomingURI.split("/");
 
-        ArrayList<String[]> tockenizedEndpoints = new ArrayList<String[]>();
-        for (String endpointURI : serverEndpointConfigMap.keySet()) {
+        final ArrayList<String[]> tockenizedEndpoints = new ArrayList<String[]>();
+        for (final String endpointURI : serverEndpointConfigMap.keySet()) {
             // Since the endpoint paths are either relative URIs or URI templates level 1, the paths do not match if they 
             // do not have the same number of segments, using ’/’ as the separator.
             if (incomingURIParts.length == endpointURI.split("/").length) {
@@ -257,10 +292,10 @@ public class EndpointManager {
          * possible matchedURIs are /{var}/b/d, {var}/b/{var}, /a/{var}/{var}, /{var}/{var}/{var}
          */
         for (int i = 1; i < incomingURIParts.length; i++) { // start with i=1 skipping the first part because first part of split("/") for /../../.. is always an empty string 
-            ArrayList<String[]> matchedURIs = new ArrayList<String[]>();
+            final ArrayList<String[]> matchedURIs = new ArrayList<String[]>();
             // for a each segment in incomingURI, check the corresponding segment of every endpoint.
             for (int j = 0; j < tockenizedEndpoints.size(); j++) {
-                String[] tockens = tockenizedEndpoints.get(j);
+                final String[] tockens = tockenizedEndpoints.get(j);
                 if (incomingURIParts[i].equals(tockens[i])) {
                     matchedURIs.add(tockenizedEndpoints.get(j));
                 }
@@ -289,10 +324,10 @@ public class EndpointManager {
         }
     }
 
-    private String unTockenizeEp(String[] tockenizedEp) {
-        String delimiter = "/";
-        StringBuffer buffer = new StringBuffer();
-        for (String part : tockenizedEp) {
+    private String unTockenizeEp(final String[] tockenizedEp) {
+        final String delimiter = "/";
+        final StringBuffer buffer = new StringBuffer();
+        for (final String part : tockenizedEp) {
             if (!part.isEmpty()) {
                 buffer.append(delimiter + part);
             }
@@ -308,15 +343,15 @@ public class EndpointManager {
      */
     private static final Comparator<String[]> COMPARATOR = new Comparator<String[]>() {
         @Override
-        public int compare(String[] endpoint1Parts, String[] endpoint2Parts) {
+        public int compare(final String[] endpoint1Parts, final String[] endpoint2Parts) {
             for (int i = 1; i < endpoint1Parts.length; i++) { // start with i=1 skipping the first part because first part of split("/") for /../../.. is always an empty string
-                boolean var1 = endpoint1Parts[i].startsWith("{") && endpoint1Parts[i].endsWith("}");
-                boolean var2 = endpoint2Parts[i].startsWith("{") && endpoint2Parts[i].endsWith("}");
+                final boolean var1 = endpoint1Parts[i].startsWith("{") && endpoint1Parts[i].endsWith("}");
+                final boolean var2 = endpoint2Parts[i].startsWith("{") && endpoint2Parts[i].endsWith("}");
                 if (var1 != var2) {
                     return var1 ? 1 : -1;
                 }
 
-                int compare = endpoint1Parts[i].compareTo(endpoint2Parts[i]);
+                final int compare = endpoint1Parts[i].compareTo(endpoint2Parts[i]);
                 if (compare != 0) {
                     return compare;
                 }
