@@ -44,7 +44,7 @@ public class EndpointManager {
     private final ConcurrentHashMap<Class<?>, ArrayList<Session>> endpointSessionMap = new ConcurrentHashMap<Class<?>, ArrayList<Session>>();
 
     // Map of  sessions with corresponding active HttpSession
-    private final ConcurrentHashMap<String, SessionExt> httpSessionMap = new ConcurrentHashMap<String, SessionExt>();
+    private final ConcurrentHashMap<String, ArrayList<SessionExt>> httpSessionMap = new ConcurrentHashMap<String, ArrayList<SessionExt>>();
 
     public EndpointManager() {
         serverEndpointConfigMap.clear();
@@ -83,7 +83,13 @@ public class EndpointManager {
 
         String id = sess.getSessionImpl().getHttpSessionID();
         if (id != null) {
-            httpSessionMap.put(id, sess);
+           ArrayList<SessionExt> sa2 =  httpSessionMap.get(id);
+                   if (sa2 == null) {
+            sa2 = new ArrayList<SessionExt>();
+        }
+        sa2.add(sess);
+            httpSessionMap.put(id, sa2);
+                System.out.println("PUT " + id + " ( " + sess.getSessionImpl().getHttpSessionID() + " )"  + " : " + sa);
         }
     }
 
@@ -170,16 +176,19 @@ public class EndpointManager {
     }
 
     public void httpSessionExpired(String httpSessionID) {
+        System.out.println("httpSessionExpired" + httpSessionID);
         if (httpSessionID != null) {
-            SessionExt session = httpSessionMap.remove(httpSessionID);
-            if (session != null) {
+            ArrayList<SessionExt> sessionList = httpSessionMap.remove(httpSessionID);
+            if (sessionList != null) {
                 // can't use HttpSession object on another thread during this processing (which we do if CDI 1.0 is enabled on the complete or error
                 // callbacks) or else the Session API may deadlock.   Don't really need to do anything anyway with this session object since
                 // it is invalidating.
-                session.getSessionImpl().markHttpSessionInvalid();
-                if (session.isSecure() && (session.getUserPrincipal() != null)) {
-                    CloseReason cr = new CloseReason(CloseReason.CloseCodes.VIOLATED_POLICY, "Secure HTTP Session Closed");
-                    session.getSessionImpl().close(cr, true);
+                for(SessionExt session : sessionList){
+                    session.getSessionImpl().markHttpSessionInvalid();
+                    if (session.isSecure() && (session.getUserPrincipal() != null)) {
+                        CloseReason cr = new CloseReason(CloseReason.CloseCodes.VIOLATED_POLICY, "Secure HTTP Session Closed");
+                        session.getSessionImpl().close(cr, true);
+                    }
                 }
             }
 
@@ -191,18 +200,22 @@ public class EndpointManager {
             while (i.hasNext()) {
                 Entry<Class<?>, ArrayList<Session>> e = i.next();
                 endPointKey = e.getKey();
-                if(e.getValue().contains(session)){
-                    break;
+                for(SessionExt session : sessionList){
+                    if(e.getValue().contains(session)){
+                        break;
+                    }
                 }
             }
 
             //remove that expired session from the endpointSessionMap
             if(endPointKey != null){
                 ArrayList<Session> sa = endpointSessionMap.get(endPointKey);
-                sa.remove(session);
+                for(SessionExt session : sessionList){
+                    sa.remove(session);
+                }
                 endpointSessionMap.put(endPointKey,sa);
                 if (tc.isDebugEnabled()) {
-                    Tr.debug(tc, "removed expired session of: " + session.getId() + "  from endpoint class of: " + endPointKey.getName() + " in endpointmanager of: " + this);
+                    Tr.debug(tc, "removed expired session of: " + httpSessionID + "  from endpoint class of: " + endPointKey.getName() + " with list " + sa + " in endpointmanager of: " + this);
                 }
             }
         }
