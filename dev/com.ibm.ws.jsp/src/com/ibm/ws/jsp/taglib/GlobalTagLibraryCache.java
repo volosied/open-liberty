@@ -607,13 +607,21 @@ public class GlobalTagLibraryCache extends Hashtable implements JspCoreContext,
 
                         eventListenerList.addAll(tldParser.getEventListenerList());
                 } else {
+                    Object location = tldInputSource.getAbsoluteURL();
+                    if(location == null){
+                        location =  tldPathConfig.getTldPath();
+                    }
                     if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.WARNING)) {
-                        logger.logp(Level.WARNING, CLASS_NAME, "loadTldFromClassloader", "jsp warning failed to find a uri tag in [" + tldInputSource.getAbsoluteURL() + "]");
+                        logger.logp(Level.WARNING, CLASS_NAME, "loadTldFromClassloader", "jsp warning failed to find a uri tag in [" + location + "] (loaded from " + globalTagLibConfig + ")");
                     }
                 }
             } catch (JspCoreException e) {
+                    Object location = tldInputSource.getAbsoluteURL();
+                    if(location == null){
+                        location = tldPathConfig.getTldPath();
+                    }
                 if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.WARNING)) {
-                    logger.logp(Level.WARNING, CLASS_NAME, "loadTldFromClassloader", "jsp warning failed to load tld in jar. uri = [" + tldInputSource.getAbsoluteURL() + "]", e);
+                    logger.logp(Level.WARNING, CLASS_NAME, "loadTldFromClassloader", "jsp warning failed to load tld in " + globalTagLibConfig + ". uri = [" + location + "]", e);
                 }
             }
         }

@@ -84,7 +84,6 @@ public class TldPathConfig {
         return this.forceCustomURI;
     }
 
-
     public TldPathConfig forceCustomURI() {
         this.forceCustomURI = true;
         return this;
