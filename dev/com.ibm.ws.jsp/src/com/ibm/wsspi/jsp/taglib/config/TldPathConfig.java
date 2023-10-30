@@ -24,7 +24,7 @@ public class TldPathConfig {
     private String uri = null;
     private boolean containsListenerDefs = false;
     private List availabilityConditionList = null;    
-    private boolean forceArgumentURI = false;
+    private boolean forceCustomURI = false;
     
     public TldPathConfig(String tldPath, String uri, String strContainsListenerDefs) {
         this.tldPath = tldPath;
@@ -35,16 +35,6 @@ public class TldPathConfig {
         availabilityConditionList = new ArrayList();
     }
 
-    public TldPathConfig(String tldPath, String uri, boolean forceArgumentURI, String strContainsListenerDefs) {
-        this.tldPath = tldPath;
-        this.uri = uri;
-        this.forceArgumentURI = forceArgumentURI;
-        if (strContainsListenerDefs != null && strContainsListenerDefs.equalsIgnoreCase("true")) {
-            containsListenerDefs = true;    
-        }
-        availabilityConditionList = new ArrayList();
-    }
-    
     /**
      * Gets the conditions as to when this tld is made available.
      * The condition can be the existence of a file within the web-inf directory or the existence of a servlet class.
@@ -90,7 +80,26 @@ public class TldPathConfig {
      * Ignore the URI set in the TLD attribute and used the URI 
      * specified via the TldPathConfig constructor
      */
-    public boolean getForceArgumentURI(){
-        return this.forceArgumentURI;
+    public boolean isCustomURIUsed() {
+        return this.forceCustomURI;
     }
+
+
+    public TldPathConfig forceCustomURI() {
+        this.forceCustomURI = true;
+        return this;
+    }
+
+    public TldPathConfig[] configureWithBothURIs() {
+        TldPathConfig[] tldList = new TldPathConfig[2];
+        tldList[0] = this;
+        tldList[1] = this.duplicate().forceCustomURI();
+        return tldList;
+    }
+
+    private TldPathConfig duplicate() {
+        TldPathConfig newTLD = new TldPathConfig(this.tldPath, this.uri, String.valueOf(this.containsListenerDefs));
+        return newTLD;
+    }
+
 }

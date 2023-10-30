@@ -43,15 +43,15 @@ import com.ibm.ws.jsp.configuration.JspXmlExtConfig;
 import com.ibm.ws.jsp.inputsource.JspInputSourceFactoryImpl;
 import com.ibm.ws.jsp.taglib.config.AvailabilityCondition;
 import com.ibm.ws.jsp.taglib.config.AvailabilityConditionType;
-import com.ibm.wsspi.adaptable.module.Container;
-import com.ibm.wsspi.jsp.taglib.config.GlobalTagLibConfig;
 import com.ibm.ws.jsp.taglib.config.ImplicitTagLibConfig;
 import com.ibm.ws.jsp.taglib.config.TagLibCacheConfigParser;
-import com.ibm.wsspi.jsp.taglib.config.TldPathConfig;
+import com.ibm.wsspi.adaptable.module.Container;
 import com.ibm.wsspi.jsp.context.JspClassloaderContext;
 import com.ibm.wsspi.jsp.context.JspCoreContext;
 import com.ibm.wsspi.jsp.resource.JspInputSource;
 import com.ibm.wsspi.jsp.resource.JspInputSourceFactory;
+import com.ibm.wsspi.jsp.taglib.config.GlobalTagLibConfig;
+import com.ibm.wsspi.jsp.taglib.config.TldPathConfig;
 import com.ibm.wsspi.webcontainer.servlet.IServletContext;
 
 public class GlobalTagLibraryCache extends Hashtable implements JspCoreContext, 
@@ -582,23 +582,30 @@ public class GlobalTagLibraryCache extends Hashtable implements JspCoreContext,
             try {
                 TagLibraryInfoImpl tli = tldParser.parseTLD(tldInputSource, is, globalTagLibConfig.getJarURL().toExternalForm());
                 if (tli.getReliableURN() != null) {
-                    if (containsKey(tli.getReliableURN()) == false) {
+                    
                         if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
                             logger.logp(Level.FINE, CLASS_NAME, "loadTldFromClassloader", "Global jar tld loaded for {0}", tli.getReliableURN());
                         }
                         /* if condition is true, we ignore whatever the URI is in the TLD 
                          * and instead, we use the URI specified via the TldPathConfig constructor
                          */
-                        if(!tldPathConfig.getForceArgumentURI()){
-                            tldPathConfig.setUri(tli.getReliableURN());
-                            put(tli.getReliableURN(), tli);
+                        if(!tldPathConfig.isCustomURIUsed()){
+                            if (containsKey(tli.getReliableURN()) == false) {
+                                tldPathConfig.setUri(tli.getReliableURN());
+                                put(tli.getReliableURN(), tli);
+                            } else {
+                                System.out.println("NOT ADDED1: " + tli.getReliableURN());
+                            }
                         } else {
-                            tli.setURI(tli.getReliableURN());
-                            put(tldPathConfig.getUri(), tli);
+                            if (containsKey(tldPathConfig.getUri()) == false) {
+                                tli.setURI(tli.getReliableURN());
+                                put(tldPathConfig.getUri(), tli);
+                            } else {
+                                System.out.println("NOT ADDED2: " + tldPathConfig.getUri());
+                            }
                         }
 
                         eventListenerList.addAll(tldParser.getEventListenerList());
-                    }
                 } else {
                     if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.WARNING)) {
                         logger.logp(Level.WARNING, CLASS_NAME, "loadTldFromClassloader", "jsp warning failed to find a uri tag in [" + tldInputSource.getAbsoluteURL() + "]");
