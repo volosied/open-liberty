@@ -10,6 +10,7 @@
 package com.ibm.ws.jsf22.fat.tests;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -60,7 +61,7 @@ public class JSF22APARSeleniumTests {
     @BeforeClass
     public static void setup() throws Exception {
 
-        ShrinkHelper.defaultDropinApp(jsf22APARSeleniumServer, "PH55398.war", "");
+        ShrinkHelper.defaultDropinApp(jsf22APARSeleniumServer, "PH55398.war", "com.ibm.ws.jsf22.fat.PH55398.bean");
 
         jsf22APARSeleniumServer.startServer(c.getSimpleName() + ".log");
 
@@ -86,7 +87,6 @@ public class JSF22APARSeleniumTests {
      */
     @Test
     public void testPH55398() throws Exception {
-
             ExtendedWebDriver driver = new CustomDriver(new RemoteWebDriver(chrome.getSeleniumAddress(), new ChromeOptions().setAcceptInsecureCerts(true)));
 
             String url = JSFUtils.createSeleniumURLString(jsf22APARSeleniumServer, "PH55398", "index.xhtml");
@@ -112,7 +112,37 @@ public class JSF22APARSeleniumTests {
             
             // check for form1:nonajaxbtn : Non Ajax Submit
             assertTrue(paramValues.contains("form1:nonajaxbtn : Non Ajax Submit"));
+    }
 
+    /*
+    * Follow up to MYFACES-4606 and also tested via TCK's Issue2255IT (unintentionally)
+    * Mozilla Checkbox Documentation: 
+    * "If a checkbox is unchecked when its form is submitted, neither the name nor the value is submitted to the server."
+    */
+    @Test
+    public void testPH55398_checkbox() throws Exception {
+            ExtendedWebDriver driver = new CustomDriver(new RemoteWebDriver(chrome.getSeleniumAddress(), new ChromeOptions().setAcceptInsecureCerts(true)));
+
+            String url = JSFUtils.createSeleniumURLString(jsf22APARSeleniumServer, "PH55398", "checkbox.xhtml");
+            WebPage page = new WebPage(driver);
+         
+            page.get(url);
+            page.waitForPageToLoad();
+
+            WebElement ajaxButton = page.findElement(By.id("form1:checkbox"));
+            ajaxButton.click();
+            page.waitReqJs();
+
+            String output = page.findElement(By.id("form1:output")).getText();
+
+            assertEquals("true", page.findElement(By.id("form1:output")).getText());
+
+            ajaxButton = page.findElement(By.id("form1:checkbox"));
+            ajaxButton.click();
+            page.waitReqJs();
+
+            output = page.findElement(By.id("form1:output")).getText();
+            assertEquals("false", page.findElement(By.id("form1:output")).getText());
 
     }
     
