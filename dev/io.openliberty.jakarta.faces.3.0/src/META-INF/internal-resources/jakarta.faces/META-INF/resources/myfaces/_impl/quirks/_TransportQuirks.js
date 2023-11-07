@@ -1,0 +1,1 @@
+_MF_SINGLTN(_PFX_XHR+"_TransportsQuirks",myfaces._impl.xhrCore._Transports,{constructor_:function(){this._callSuper("constructor_");myfaces._impl.xhrCore._Transports=this;},_getMultipartReqClass:function(A){if(this._RT.getXHRLvl()>=2){return myfaces._impl.xhrCore._FormDataRequest;}else{return myfaces._impl.xhrCore._IFrameRequest;}}});
