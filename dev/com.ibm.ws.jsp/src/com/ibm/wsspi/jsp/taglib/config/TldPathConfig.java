@@ -1,14 +1,11 @@
 /*******************************************************************************
- * Copyright (c) 1997, 2004 IBM Corporation and others.
+ * Copyright (c) 1997, 2023 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-2.0/
  * 
  * SPDX-License-Identifier: EPL-2.0
- *
- * Contributors:
- *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 package com.ibm.wsspi.jsp.taglib.config;
 
@@ -24,7 +21,9 @@ public class TldPathConfig {
     private String uri = null;
     private boolean containsListenerDefs = false;
     private List availabilityConditionList = null;    
+    private boolean forceCustomURI = false;
     
+
     public TldPathConfig(String tldPath, String uri, String strContainsListenerDefs) {
         this.tldPath = tldPath;
         this.uri = uri;
@@ -33,7 +32,7 @@ public class TldPathConfig {
         }
         availabilityConditionList = new ArrayList();
     }
-    
+
     /**
      * Gets the conditions as to when this tld is made available.
      * The condition can be the existence of a file within the web-inf directory or the existence of a servlet class.
@@ -62,6 +61,7 @@ public class TldPathConfig {
     /**
      * Sets the uri for the tld
      * param string String - the uri for the tld
+     * If the TLD has a URI attribute, then this URI is ignored unless forceCustomURI() or configureWithBothURIs() is called.
      */
     public void setUri(String string) {
         uri = string;
@@ -74,4 +74,46 @@ public class TldPathConfig {
     public boolean containsListenerDefs() {
         return containsListenerDefs;
     }
+
+    public boolean isCustomURIUsed() {
+        return this.forceCustomURI;
+    }
+
+    /*
+     * Ignore the URI set in the TLD attribute and used the URI 
+     * specified via the TldPathConfig constructor
+     * @return - currrent TldPathConfig instance
+     */
+    public TldPathConfig forceCustomURI() {
+        this.forceCustomURI = true;
+        return this;
+    }
+
+    /*
+     * Ignore the URI set in the TLD attribute and used the URI 
+     * specified via the TldPathConfig constructor
+     * 
+     * The class extending GlobalTagLibConfig should contain a method like: 
+     * <pre>
+     * private void addtoTldPathList(TldPathConfig[] tldPathConfigList) {
+     *  for (TldPathConfig tld : tldPathConfigList) {
+     *      getTldPathList().add(tld); 
+     *  }
+     * }
+     * </pre>
+     * 
+     * @return TldPathConfig array containing two TldPathConfig instances with taglib URI and the custom URI
+     */
+    public TldPathConfig[] configureWithBothURIs() {
+        TldPathConfig[] tldList = new TldPathConfig[2];
+        tldList[0] = this;
+        tldList[1] = this.duplicate().forceCustomURI();
+        return tldList;
+    }
+
+    private TldPathConfig duplicate() {
+        TldPathConfig newTLD = new TldPathConfig(this.tldPath, this.uri, String.valueOf(this.containsListenerDefs));
+        return newTLD;
+    }
+
 }
