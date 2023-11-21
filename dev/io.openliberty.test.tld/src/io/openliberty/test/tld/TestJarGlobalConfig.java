@@ -13,7 +13,7 @@ public class TestJarGlobalConfig extends GlobalTagLibConfig {
 
         setJarName("tld2-sample.jar");
 
-        addtoTldPathList(new TldPathConfig("META-INF/f.tld", "META-INF/f.tld", true, null));
+        addtoTldPathList(new TldPathConfig("META-INF/f.tld", "META-INF/f.tld",null));
 
         setClassloader(AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
             public ClassLoader run() {
