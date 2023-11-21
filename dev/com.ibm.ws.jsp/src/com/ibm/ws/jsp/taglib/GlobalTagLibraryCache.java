@@ -591,15 +591,18 @@ public class GlobalTagLibraryCache extends Hashtable implements JspCoreContext,
                          */
                         if(!tldPathConfig.isCustomURIUsed()){
                             if (containsKey(tli.getReliableURN()) == false) {
-                                tldPathConfig.setUri(tli.getReliableURN());
+                                tli.setURI(tli.getReliableURN());
                                 put(tli.getReliableURN(), tli);
+                                tldPathConfig.setUri(tli.getReliableURN());
                             } else {
                                 System.out.println("NOT ADDED1: " + tli.getReliableURN());
                             }
                         } else {
                             if (containsKey(tldPathConfig.getUri()) == false) {
-                                tli.setURI(tli.getReliableURN());
+                                tli.setURI(tldPathConfig.getUri());
+                                tli.setReliableURN(tldPathConfig.getUri());
                                 put(tldPathConfig.getUri(), tli);
+                                System.out.println(" 2SET: " + tli.getReliableURN());
                             } else {
                                 System.out.println("NOT ADDED2: " + tldPathConfig.getUri());
                             }
