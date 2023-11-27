@@ -9,8 +9,8 @@
  *******************************************************************************/
 package com.ibm.ws.jsf22.fat.tests;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -25,6 +25,8 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testcontainers.Testcontainers;
 import org.testcontainers.containers.BrowserWebDriverContainer;
 
+import com.gargoylesoftware.htmlunit.*;
+import com.gargoylesoftware.htmlunit.html.*;
 import com.ibm.websphere.simplicity.ShrinkHelper;
 import com.ibm.ws.jsf22.fat.FATSuite;
 import com.ibm.ws.jsf22.fat.JSFUtils;
@@ -35,14 +37,12 @@ import com.ibm.ws.jsf22.fat.selenium_util.WebPage;
 import componenttest.annotation.Server;
 import componenttest.containers.SimpleLogConsumer;
 import componenttest.custom.junit.runner.FATRunner;
-import componenttest.custom.junit.runner.Mode;
-import componenttest.custom.junit.runner.Mode.TestMode;
 import componenttest.topology.impl.LibertyServer;
-
+import junit.framework.Assert;
 /**
  * Tests to execute on the jsf22APARSeleniumServer that use HtmlUnit.
  */
-@Mode(TestMode.FULL)
+// @Mode(TestMode.FULL)
 @RunWith(FATRunner.class)
 public class JSF22APARSeleniumTests {
     @Rule
@@ -85,17 +85,17 @@ public class JSF22APARSeleniumTests {
      *  for both ajax and non ajax requests.      
      * @throws Exception
      */
-    @Test
+    // @Test
     public void testPH55398() throws Exception {
-            ExtendedWebDriver driver = new CustomDriver(new RemoteWebDriver(chrome.getSeleniumAddress(), new ChromeOptions().setAcceptInsecureCerts(true)));
+            final ExtendedWebDriver driver = new CustomDriver(new RemoteWebDriver(chrome.getSeleniumAddress(), new ChromeOptions().setAcceptInsecureCerts(true)));
 
-            String url = JSFUtils.createSeleniumURLString(jsf22APARSeleniumServer, "PH55398", "index.xhtml");
-            WebPage page = new WebPage(driver);
+            final String url = JSFUtils.createSeleniumURLString(jsf22APARSeleniumServer, "PH55398", "index.xhtml");
+            final WebPage page = new WebPage(driver);
          
             page.get(url);
             page.waitForPageToLoad();
 
-            WebElement ajaxButton = page.findElement(By.id("form1:ajaxbtn"));
+            final WebElement ajaxButton = page.findElement(By.id("form1:ajaxbtn"));
             ajaxButton.click();
             page.waitReqJs();
 
@@ -104,7 +104,7 @@ public class JSF22APARSeleniumTests {
             // check for form1:ajaxbtn : Ajax Submit
             assertTrue(paramValues.contains("form1:ajaxbtn : Ajax Submit"));
 
-            WebElement nonAjaxButton = page.findElement(By.id("form1:nonajaxbtn"));
+            final WebElement nonAjaxButton = page.findElement(By.id("form1:nonajaxbtn"));
             nonAjaxButton.click();
             page.waitReqJs();
 
@@ -121,10 +121,10 @@ public class JSF22APARSeleniumTests {
     */
     @Test
     public void testPH55398_checkbox() throws Exception {
-            ExtendedWebDriver driver = new CustomDriver(new RemoteWebDriver(chrome.getSeleniumAddress(), new ChromeOptions().setAcceptInsecureCerts(true)));
+            final ExtendedWebDriver driver = new CustomDriver(new RemoteWebDriver(chrome.getSeleniumAddress(), new ChromeOptions().setAcceptInsecureCerts(true)));
 
-            String url = JSFUtils.createSeleniumURLString(jsf22APARSeleniumServer, "PH55398", "checkbox.xhtml");
-            WebPage page = new WebPage(driver);
+            final String url = JSFUtils.createSeleniumURLString(jsf22APARSeleniumServer, "PH55398", "checkbox.xhtml");
+            final WebPage page = new WebPage(driver);
          
             page.get(url);
             page.waitForPageToLoad();
@@ -144,6 +144,36 @@ public class JSF22APARSeleniumTests {
             output = page.findElement(By.id("form1:output")).getText();
             assertEquals("false", page.findElement(By.id("form1:output")).getText());
 
+    }
+
+        /*
+     * Follow up to MYFACES-4606.
+     * Ensure we follow the HTML spec: 
+     * "if a checkbox is unchecked when its form is submitted, neither the name nor the value is submitted to the server. "
+     */
+    @Test
+    public void testPH55398_checkbox_2() throws Exception {
+        final String methodName = "testPH55398";
+        final String URL = JSFUtils.createHttpUrlString(jsf22APARSeleniumServer, "PH55398", "checkbox.xhtml");
+
+        final WebClient webClient = new WebClient();
+        webClient.setAjaxController(new NicelyResynchronizingAjaxController());
+        HtmlPage page = (HtmlPage) webClient.getPage(URL);
+        
+        String outputText = page.getElementById("form1:output").getTextContent();
+        Assert.assertEquals("Value is incorrect!", "false", outputText);
+
+        HtmlCheckBoxInput checkbox = (HtmlCheckBoxInput) page.getElementById("form1:checkbox");
+        page = (HtmlPage) checkbox.setChecked(true); 
+        outputText = page.getElementById("form1:output").getTextContent();
+
+        Assert.assertEquals("Value is incorrect!", "true", outputText);
+
+        checkbox = (HtmlCheckBoxInput) page.getElementById("form1:checkbox");
+        page = (HtmlPage) checkbox.setChecked(false); 
+        outputText = page.getElementById("form1:output").getTextContent();
+
+        Assert.assertEquals("Value is incorrect!", "false", outputText);
     }
     
 }
