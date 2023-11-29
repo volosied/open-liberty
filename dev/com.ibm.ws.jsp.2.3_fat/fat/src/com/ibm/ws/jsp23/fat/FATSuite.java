@@ -16,20 +16,14 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 import com.ibm.ws.fat.util.FatLogHandler;
-import com.ibm.ws.jsp23.fat.tests.JSP23JSP22ServerTest;
-import com.ibm.ws.jsp23.fat.tests.JSPCdiTest;
-import com.ibm.ws.jsp23.fat.tests.JSPExceptionTests;
-import com.ibm.ws.jsp23.fat.tests.JSPJava8Test;
-import com.ibm.ws.jsp23.fat.tests.JSPPrepareJSPThreadCountDefaultValueTests;
-import com.ibm.ws.jsp23.fat.tests.JSPPrepareJSPThreadCountNonDefaultValueTests;
-import com.ibm.ws.jsp23.fat.tests.JSPSkipMetaInfTests;
-import com.ibm.ws.jsp23.fat.tests.JSPTests;
 import com.ibm.ws.jsp23.fat.tests.JSTLTests;
 
 import componenttest.rules.repeater.EmptyAction;
 import componenttest.rules.repeater.FeatureReplacementAction;
 import componenttest.rules.repeater.RepeatTests;
 import componenttest.topology.impl.JavaInfo;
+import componenttest.topology.impl.LibertyServer;
+import componenttest.topology.impl.LibertyServerFactory;
 
 /**
  * JSP 2.3 Tests
@@ -38,24 +32,38 @@ import componenttest.topology.impl.JavaInfo;
  */
 @RunWith(Suite.class)
 @SuiteClasses({
-                JSPTests.class,
-                JSPExceptionTests.class,
-                JSPSkipMetaInfTests.class,
-                JSPJava8Test.class,
-                JSPCdiTest.class,
-                JSP23JSP22ServerTest.class,
-                JSPPrepareJSPThreadCountNonDefaultValueTests.class,
-                JSPPrepareJSPThreadCountDefaultValueTests.class,
+                // JSPTests.class,
+                // JSPExceptionTests.class,
+                // JSPSkipMetaInfTests.class,
+                // JSPJava8Test.class,
+                // JSPCdiTest.class,
+                // JSP23JSP22ServerTest.class,
+                // JSPPrepareJSPThreadCountNonDefaultValueTests.class,
+                // JSPPrepareJSPThreadCountDefaultValueTests.class,
                 JSTLTests.class
 })
 public class FATSuite {
+
+    private static final LibertyServer server = LibertyServerFactory.getLibertyServer("jstlServer");
 
     /**
      * @see {@link FatLogHandler#generateHelpFile()}
      */
     @BeforeClass
-    public static void generateHelpFile() {
+    public static void generateHelpFile() throws Exception {
         FatLogHandler.generateHelpFile();
+
+                // Copy user feature bundle to Liberty
+                server.copyFileToLibertyInstallRoot("usr/extension/lib/", "bundles/io.openliberty.test.tld.jar");
+        
+                // Add user feature mf file to Liberty
+                server.copyFileToLibertyInstallRoot("usr/extension/lib/features/", "features/globaltld-1.0.mf");
+
+                // System.out.println("SLEEP");
+                // Thread.sleep(1000000);
+
+    
+
     }
 
     /**

@@ -16,6 +16,7 @@
 
     <featureManager>
         <feature>jsp-2.3</feature>
+        <feature>usr:globaltld-1.0</feature>
     </featureManager>
 
     <javaPermission className="java.util.PropertyPermission" name="dtm.debug" actions="read"/>
