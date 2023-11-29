@@ -19,6 +19,7 @@ import com.ibm.ws.fat.util.FatLogHandler;
 import com.ibm.ws.jsp23.fat.tests.JSP23JSP22ServerTest;
 import com.ibm.ws.jsp23.fat.tests.JSPCdiTest;
 import com.ibm.ws.jsp23.fat.tests.JSPExceptionTests;
+import com.ibm.ws.jsp23.fat.tests.JSPGlobalTLDTest;
 import com.ibm.ws.jsp23.fat.tests.JSPJava8Test;
 import com.ibm.ws.jsp23.fat.tests.JSPPrepareJSPThreadCountDefaultValueTests;
 import com.ibm.ws.jsp23.fat.tests.JSPPrepareJSPThreadCountNonDefaultValueTests;
@@ -46,7 +47,8 @@ import componenttest.topology.impl.JavaInfo;
                 JSP23JSP22ServerTest.class,
                 JSPPrepareJSPThreadCountNonDefaultValueTests.class,
                 JSPPrepareJSPThreadCountDefaultValueTests.class,
-                JSTLTests.class
+                JSTLTests.class,
+                JSPGlobalTLDTest.class
 })
 public class FATSuite {
 
