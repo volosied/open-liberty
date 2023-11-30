@@ -16,6 +16,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.beans.Transient;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -66,6 +67,7 @@ public class JSPTests {
     private static final String TestJDT_APP_NAME = "TestJDT";
     private static final String OLGH20509_APP_NAME1 = "OLGH20509jar";
     private static final String OLGH20509_APP_NAME2 = "OLGH20509TDfalse";
+    private static final String OLGH26891_APP_NAME = "OLGH26891.war";
 
     @Server("jspServer")
     public static LibertyServer server;
@@ -97,6 +99,8 @@ public class JSPTests {
         ShrinkHelper.exportDropinAppToServer(server, war);
 
         ShrinkHelper.defaultDropinApp(server, OLGH20509_APP_NAME2 + ".war");
+
+        ShrinkHelper.defaultDropinApp(server, OLGH26891_APP_NAME + ".war");
 
         server.startServer(JSPTests.class.getSimpleName() + ".log");
     }
@@ -942,6 +946,19 @@ public class JSPTests {
         assertTrue("Log should contain " + e77 + ".",
                    null != server.waitForStringInLogUsingMark(e77));
     }
+
+    @Test
+    public void testGlobalTLDs() throws Exception {
+        String url = JSPUtils.createHttpUrlString(server, OLGH26891_APP_NAME, "testGlobalTLDs.jsp");
+        LOG.info("url: " + url);
+
+        WebRequest request = new GetMethodWebRequest(url);
+        WebResponse response = wc.getResponse(request);
+        LOG.info("Response: " + response.getText()); 
+    }
+
+
+    // HELPER METHODS
 
     private void runEDR(String url, boolean makeConcurrentRequests) throws Exception {
         String expect1 = "initial EDR header";

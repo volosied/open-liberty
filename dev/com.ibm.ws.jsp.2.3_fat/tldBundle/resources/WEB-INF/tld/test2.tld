@@ -1,0 +1,11 @@
+<taglib>
+    <tlib-version>1.2</tlib-version>
+    <jsp-version>2.3</jsp-version>
+    <short-name>TEST TLD</short-name>
+    <uri>io.test.two.tld</uri>
+    <tag>
+       <name>Sample</name>
+       <tag-class>io.openliberty.test.tag.SampleTag</tag-class>
+       <body-content>scriptless</body-content>
+    </tag>
+ </taglib>

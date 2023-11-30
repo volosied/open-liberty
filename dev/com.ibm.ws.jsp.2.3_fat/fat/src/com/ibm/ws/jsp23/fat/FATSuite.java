@@ -32,7 +32,7 @@ import componenttest.topology.impl.LibertyServerFactory;
  */
 @RunWith(Suite.class)
 @SuiteClasses({
-                // JSPTests.class,
+                JSPTests.class,
                 // JSPExceptionTests.class,
                 // JSPSkipMetaInfTests.class,
                 // JSPJava8Test.class,
@@ -40,7 +40,7 @@ import componenttest.topology.impl.LibertyServerFactory;
                 // JSP23JSP22ServerTest.class,
                 // JSPPrepareJSPThreadCountNonDefaultValueTests.class,
                 // JSPPrepareJSPThreadCountDefaultValueTests.class,
-                JSTLTests.class
+                // JSTLTests.class
 })
 public class FATSuite {
 

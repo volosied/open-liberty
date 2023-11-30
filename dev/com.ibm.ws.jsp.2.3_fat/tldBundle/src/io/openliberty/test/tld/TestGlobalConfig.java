@@ -13,10 +13,9 @@ public class TestGlobalConfig extends GlobalTagLibConfig {
 
         setJarName("test-tld.jar");
 
+        addtoTldPathList(new TldPathConfig("WEB-INF/tld/test1.tld", "/WEB-INF/tld/test1.tld", null).configureWithBothURIs());
 
-        addtoTldPathList(new TldPathConfig("WEB-INF/tld/test-1.tld", "io.tld", null));
-
-        
+        addtoTldPathList(new TldPathConfig("WEB-INF/tld/test2.tld", "/WEB-INF/tld/test2.tld", null).forceCustomURI());
 
         setClassloader(AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
             public ClassLoader run() {
@@ -26,9 +25,15 @@ public class TestGlobalConfig extends GlobalTagLibConfig {
 
         setJarURL(AccessController.doPrivileged(new PrivilegedAction<URL>() {
             public URL run() {
-                return getClassloader().getResource("WEB-INF/tld/test-1.tld");
+                return getClassloader().getResource("WEB-INF/tld/test1.tld");
             }
         }));
+    }
+
+    private void addtoTldPathList(TldPathConfig[] tldPathConfigList) {
+        for (TldPathConfig tld : tldPathConfigList){
+          getTldPathList().add(tld); 
+        }
     }
 
     @SuppressWarnings("unchecked")
