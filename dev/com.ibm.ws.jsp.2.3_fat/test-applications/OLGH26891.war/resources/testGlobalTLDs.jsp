@@ -23,7 +23,7 @@
 </head>
 <body>
 
-<original:Sample>Orignal Works!</original:Sample>
+<original:Sample>Original Works!</original:Sample>
 <original:Sample>configureWithBothURIs works!</original:Sample>
 <original:Sample>forceCustomURI works!</original:Sample>
 

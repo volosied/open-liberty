@@ -958,6 +958,15 @@ public class JSPTests {
         WebRequest request = new GetMethodWebRequest(url);
         WebResponse response = wc.getResponse(request);
         LOG.info("Response: " + response.getText()); 
+
+
+        String expected1 = "Original Works!";
+        String expected2 = "configureWithBothURIs works!";
+        String expected3 = "forceCustomURI works!";
+
+        assertTrue("The response did not contain: " + expected1, response.getText().contains(expected1));
+        assertTrue("The response did not contain: " + expected2, response.getText().contains(expected2));
+        assertTrue("The response did not contain: " + expected3, response.getText().contains(expected3));
     }
 
 
