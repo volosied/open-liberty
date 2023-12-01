@@ -51,10 +51,10 @@ Import-Package: \
    jakarta.servlet;version="[6.0,7)", \
    jakarta.servlet.http;version="[6.0,7)", \
    jakarta.servlet.resources;version="[6.0,7)", \
-   jakarta.servlet.jsp;version="[3.1,4)" \
-   jakarta.servlet.jsp.el;version="[3.1,4)", \
-   jakarta.servlet.jsp.resources;version="[3.1,4)", \
-   jakarta.servlet.jsp.tagext;version="[3.1,4)", \
+   jakarta.servlet.jsp;version="[3.1,5)", \
+   jakarta.servlet.jsp.el;version="[3.1,5)", \
+   jakarta.servlet.jsp.resources;version="[3.1,5)", \
+   jakarta.servlet.jsp.tagext;version="[3.1,5)", \
    com.ibm.websphere.servlet.*;version=!, \
    com.ibm.wsspi.webcontainer.osgi.*;version=1.0, \
    com.ibm.wsspi.webcontainer, \
@@ -94,5 +94,5 @@ instrument.classesExcludes: org/apache/**/*.class
 -buildpath: \
    io.openliberty.pages.3.1.internal.factories;version=latest,\
    io.openliberty.jakarta.expressionLanguage.5.0;version=latest,\
-   io.openliberty.jakarta.pages.3.1;version=latest,\
+   io.openliberty.jakarta.pages.4.0;version=latest,\
    com.ibm.ws.org.osgi.annotation.versioning;version=latest
