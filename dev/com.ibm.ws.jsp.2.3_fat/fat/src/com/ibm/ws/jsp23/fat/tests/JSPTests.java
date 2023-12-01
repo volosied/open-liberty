@@ -67,7 +67,7 @@ public class JSPTests {
     private static final String TestJDT_APP_NAME = "TestJDT";
     private static final String OLGH20509_APP_NAME1 = "OLGH20509jar";
     private static final String OLGH20509_APP_NAME2 = "OLGH20509TDfalse";
-    private static final String OLGH26891_APP_NAME = "OLGH26891.war";
+    private static final String OLGH26891_APP_NAME = "OLGH26891";
 
     @Server("jspServer")
     public static LibertyServer server;
@@ -951,6 +951,9 @@ public class JSPTests {
     public void testGlobalTLDs() throws Exception {
         String url = JSPUtils.createHttpUrlString(server, OLGH26891_APP_NAME, "testGlobalTLDs.jsp");
         LOG.info("url: " + url);
+
+                WebConversation wc = new WebConversation();
+        wc.setExceptionsThrownOnErrorStatus(false);
 
         WebRequest request = new GetMethodWebRequest(url);
         WebResponse response = wc.getResponse(request);

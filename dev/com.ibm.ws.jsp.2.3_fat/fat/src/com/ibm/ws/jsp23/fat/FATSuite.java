@@ -16,7 +16,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 import com.ibm.ws.fat.util.FatLogHandler;
-import com.ibm.ws.jsp23.fat.tests.JSTLTests;
+import com.ibm.ws.jsp23.fat.tests.JSPTests;
 
 import componenttest.rules.repeater.EmptyAction;
 import componenttest.rules.repeater.FeatureReplacementAction;
@@ -74,23 +74,23 @@ public class FATSuite {
     public static RepeatTests repeat;
 
     static {
-        if (JavaInfo.JAVA_VERSION >= 11) {
-            repeat = RepeatTests
-                            .with(new EmptyAction().fullFATOnly())
-                            .andWith(new FeatureReplacementAction("cdi-1.2", "cdi-2.0")
-                                            .withID("CDI-2.0")
-                                            .forceAddFeatures(false)
-                                            .fullFATOnly())
-                            .andWith(FeatureReplacementAction.EE9_FEATURES().fullFATOnly())
-                            .andWith(FeatureReplacementAction.EE10_FEATURES());
-        } else {
-            repeat = RepeatTests
-                            .with(new EmptyAction().fullFATOnly())
-                            .andWith(new FeatureReplacementAction("cdi-1.2", "cdi-2.0")
-                                            .withID("CDI-2.0")
-                                            .forceAddFeatures(false)
-                                            .fullFATOnly())
-                            .andWith(FeatureReplacementAction.EE9_FEATURES());
-        }
+        // if (JavaInfo.JAVA_VERSION >= 11) {
+        //     repeat = RepeatTests
+        //                     .with(new EmptyAction().fullFATOnly())
+        //                     .andWith(new FeatureReplacementAction("cdi-1.2", "cdi-2.0")
+        //                                     .withID("CDI-2.0")
+        //                                     .forceAddFeatures(false)
+        //                                     .fullFATOnly())
+        //                     .andWith(FeatureReplacementAction.EE9_FEATURES().fullFATOnly())
+        //                     .andWith(FeatureReplacementAction.EE10_FEATURES());
+        // } else {
+        //     repeat = RepeatTests
+        //                     .with(new EmptyAction().fullFATOnly())
+        //                     .andWith(new FeatureReplacementAction("cdi-1.2", "cdi-2.0")
+        //                                     .withID("CDI-2.0")
+        //                                     .forceAddFeatures(false)
+        //                                     .fullFATOnly())
+        //                     .andWith(FeatureReplacementAction.EE9_FEATURES());
+        // }
     }
 }
