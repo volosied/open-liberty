@@ -93,9 +93,9 @@ instrument.classesExcludes: org/apache/**/*.class
 # TODO - Update build path to latest APIs once released
 -buildpath: \
    io.openliberty.pages.3.1.internal.factories;version=latest,\
-   io.openliberty.jakarta.expressionLanguage.5.0;version=latest,\
+   io.openliberty.jakarta.expressionLanguage.6.0;version=latest,\
    io.openliberty.jakarta.pages.4.0;version=latest,\
-    io.openliberty.jakarta.servlet.6.0;version=latest,\
+   io.openliberty.jakarta.servlet.6.0;version=latest,\
    com.ibm.ws.org.osgi.annotation.versioning;version=latest,\
    com.ibm.ws.webcontainer.servlet.3.1;version=latest,\
 	com.ibm.ws.container.service;version=latest,\
@@ -106,4 +106,4 @@ instrument.classesExcludes: org/apache/**/*.class
 	io.openliberty.el.internal.cdi;version=latest,\
    com.ibm.ws.webcontainer;version=latest,\
    com.ibm.ws.webcontainer.servlet.3.1;version=latest,\
-   com.ibm.ws.jsp;version=latest
+   com.ibm.ws.jsp.jakarta;version=latest
