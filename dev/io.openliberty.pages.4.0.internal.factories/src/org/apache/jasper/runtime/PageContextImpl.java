@@ -770,7 +770,7 @@ public class PageContextImpl extends PageContext {
     @SuppressWarnings("unchecked")
     public static Object proprietaryEvaluate(final String expression,
                                              final Class expectedType, final PageContext pageContext,
-                                             final ProtectedFunctionMapper functionMap, final boolean escape) throws ELException {
+                                             final ProtectedFunctionMapper functionMap, final boolean escape) throws jakarta.el.ELException {
         Object retValue;
         ExpressionFactory exprFactorySetInPageContext = (ExpressionFactory) pageContext.getAttribute(Constants.JSP_EXPRESSION_FACTORY_OBJECT);
         if (exprFactorySetInPageContext == null) {
