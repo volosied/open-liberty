@@ -95,4 +95,15 @@ instrument.classesExcludes: org/apache/**/*.class
    io.openliberty.pages.3.1.internal.factories;version=latest,\
    io.openliberty.jakarta.expressionLanguage.5.0;version=latest,\
    io.openliberty.jakarta.pages.4.0;version=latest,\
-   com.ibm.ws.org.osgi.annotation.versioning;version=latest
+    io.openliberty.jakarta.servlet.6.0;version=latest,\
+   com.ibm.ws.org.osgi.annotation.versioning;version=latest,\
+   com.ibm.ws.webcontainer.servlet.3.1;version=latest,\
+	com.ibm.ws.container.service;version=latest,\
+	com.ibm.ws.logging.core,\
+	com.ibm.wsspi.org.osgi.service.component.annotations, \
+	com.ibm.ws.org.osgi.annotation.versioning;version=latest, \
+	com.ibm.ws.javaee.version;version=latest, \
+	io.openliberty.el.internal.cdi;version=latest,\
+   com.ibm.ws.webcontainer;version=latest,\
+   com.ibm.ws.webcontainer.servlet.3.1;version=latest,\
+   com.ibm.ws.jsp;version=latest
