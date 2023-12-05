@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2022 IBM Corporation and others.
+ * Copyright (c) 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -10,7 +10,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package com.ibm.ws.pages31.translator.visitor.validator;
+package com.ibm.ws.jsp23.translator.visitor.validator;
 
 import jakarta.el.ELException;
 import jakarta.el.ExpressionFactory;
@@ -35,7 +35,7 @@ public class ELValidatorExtImpl implements ElValidatorExt {
                                    ValidateResult result, ClassLoader loader, JspConfiguration jspConfiguration) throws JspCoreException {
 
         try {
-            // Need the thread context classloader (TCCL) to be on an application class loader
+            // Need the thread context classloader (TCCL) to be on an application class loader 
             // for jsp processing to find such things as the ExpressionFactory.
             // Therefore, set to passed in class loader if we are not using it already
             ClassLoader origCl = ThreadContextHelper.getContextClassLoader();

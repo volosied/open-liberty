@@ -10,7 +10,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package com.ibm.ws.pages31.webcontainerext.ws;
+package com.ibm.ws.jsp23.webcontainerext.ws;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -95,15 +95,25 @@ class PrepareJspServletResponse23Impl extends HttpServletResponseWrapper impleme
         return false;
     }
 
-    @Override
-    public String encodeURL(String url) {
-        return url;
-    }
+    // @Override
+    // public String encodeUrl(String url) {
+    //     return url;
+    // }
 
-    @Override
-    public String encodeRedirectURL(String url) {
-        return url;
-    }
+    // @Override
+    // public String encodeURL(String url) {
+    //     return encodeUrl(url);
+    // }
+
+    // @Override
+    // public String encodeRedirectUrl(String url) {
+    //     return url;
+    // }
+
+    // @Override
+    // public String encodeRedirectURL(String url) {
+    //     return encodeRedirectUrl(url);
+    // }
 
     @Override
     public void sendError(int code) {}
@@ -125,6 +135,9 @@ class PrepareJspServletResponse23Impl extends HttpServletResponseWrapper impleme
 
     @Override
     public void setStatus(int sc) {}
+
+    // @Override
+    // public void setStatus(int sc, String sm) {}
 
     @Override
     public void flushBuffer() {}
@@ -298,6 +311,11 @@ class PrepareJspServletRequest23Impl extends HttpServletRequestWrapper implement
         return false;
     }
 
+    // @Override
+    // public boolean isRequestedSessionIdFromUrl() {
+    //     return false;
+    // }
+
     @Override
     public boolean isRequestedSessionIdFromURL() {
         return false;
@@ -456,6 +474,11 @@ class PrepareJspServletRequest23Impl extends HttpServletRequestWrapper implement
     public RequestDispatcher getRequestDispatcher(String arg0) {
         return null;
     }
+
+    // @Override
+    // public String getRealPath(String arg0) {
+    //     return null;
+    // }
 
     @Override
     public int getRemotePort() {
