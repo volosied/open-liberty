@@ -583,24 +583,12 @@ public class GlobalTagLibraryCache extends Hashtable implements JspCoreContext,
                         if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
                             logger.logp(Level.FINE, CLASS_NAME, "loadTldFromClassloader", "Global jar tld loaded for {0}", tli.getReliableURN());
                         }
-                        /* If customURIUsed is true, we ignore whatever the URI is in the TLD 
-                         * and, instead, we use the URI specified via the TldPathConfig constructor
-                         * See OLGH 26891
-                         */
-                        if(!tldPathConfig.isCustomURIUsed()){ 
-                            // Custom URI Is NOT Used -- Continue as Normal (As Before)
-                            if (containsKey(tli.getReliableURN()) == false) {
-                                tli.setURI(tli.getReliableURN());
-                                put(tli.getReliableURN(), tli);
-                                tldPathConfig.setUri(tli.getReliableURN());
-                            }
-                        } else { // Custom URI is used, so override the one set in the TagLibraryInfoImpl
+                            // Using the URI specified via the tldPathConfig (overriding the reliable URN (parsed from uri attirbute in the file))
                             if (containsKey(tldPathConfig.getUri()) == false) {
                                 tli.setURI(tldPathConfig.getUri());
                                 tli.setReliableURN(tldPathConfig.getUri());
                                 put(tldPathConfig.getUri(), tli);
                             }
-                        }
                         eventListenerList.addAll(tldParser.getEventListenerList());
                 } else {
                     Object location = tldInputSource.getAbsoluteURL();

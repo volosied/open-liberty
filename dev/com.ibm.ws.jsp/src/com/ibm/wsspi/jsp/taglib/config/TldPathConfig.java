@@ -23,6 +23,14 @@ public class TldPathConfig {
     private List availabilityConditionList = null;    
     private boolean forceCustomURI = false;
     
+    public TldPathConfig(String tldPath, String strContainsListenerDefs) {
+        this.tldPath = tldPath;
+        this.uri = null;
+        if (strContainsListenerDefs != null && strContainsListenerDefs.equalsIgnoreCase("true")) {
+            containsListenerDefs = true;    
+        }
+        availabilityConditionList = new ArrayList();
+    }
 
     public TldPathConfig(String tldPath, String uri, String strContainsListenerDefs) {
         this.tldPath = tldPath;
@@ -74,49 +82,4 @@ public class TldPathConfig {
     public boolean containsListenerDefs() {
         return containsListenerDefs;
     }
-
-    /**
-     * @return the value of forceCustomURI 
-     */
-    public boolean isCustomURIUsed() {
-        return this.forceCustomURI;
-    }
-
-    /**
-     * Ignore the URI set in the TLD attribute and used the URI 
-     * specified via the TldPathConfig constructor
-     * @return - currrent TldPathConfig instance
-     */
-    public TldPathConfig forceCustomURI() {
-        this.forceCustomURI = true;
-        return this;
-    }
-
-    /**
-     * Ignore the URI set in the TLD attribute and used the URI 
-     * specified via the TldPathConfig constructor
-     * 
-     * The class extending GlobalTagLibConfig should contain a method like: 
-     * <pre>
-     * private void addtoTldPathList(TldPathConfig[] tldPathConfigList) {
-     *  for (TldPathConfig tld : tldPathConfigList) {
-     *      getTldPathList().add(tld); 
-     *  }
-     * }
-     * </pre>
-     * 
-     * @return TldPathConfig array containing two TldPathConfig instances with taglib URI and the custom URI
-     */
-    public TldPathConfig[] configureWithBothURIs() {
-        TldPathConfig[] tldList = new TldPathConfig[2];
-        tldList[0] = this;
-        tldList[1] = this.duplicate().forceCustomURI();
-        return tldList;
-    }
-
-    private TldPathConfig duplicate() {
-        TldPathConfig newTLD = new TldPathConfig(this.tldPath, this.uri, String.valueOf(this.containsListenerDefs));
-        return newTLD;
-    }
-
 }
