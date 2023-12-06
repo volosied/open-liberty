@@ -718,13 +718,11 @@ public class PageContextImpl extends PageContext {
                 rootCause = t.getCause();
             }
 
-            //VS Double check about ServletErrorReport here 
             if (rootCause != null) {
-                throw new ServletException(
-                        t.getClass().getName() + ": " + t.getMessage(), rootCause);
+                throw new ServletErrorReport(t.getMessage(), rootCause);
             }
-
-            throw new ServletException(t);
+            
+            throw new ServletErrorReport(t);
         }
     }
 
