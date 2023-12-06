@@ -85,12 +85,9 @@ public class JSPGlobalTLDTest {
         WebResponse response = wc.getResponse(request);
         LOG.info("Response: " + response.getText()); 
 
+        String expected2 = "***WEB-INF/tld/test1.tld works!***";
+        String expected3 = "***WEB-INF/tld/test2.tld works!***";
 
-        String expected1 = "***Original Works!***";
-        String expected2 = "***configureWithBothURIs works!***";
-        String expected3 = "***forceCustomURI works!***";
-
-        assertTrue("The response did not contain: " + expected1, response.getText().contains(expected1));
         assertTrue("The response did not contain: " + expected2, response.getText().contains(expected2));
         assertTrue("The response did not contain: " + expected3, response.getText().contains(expected3));
     }

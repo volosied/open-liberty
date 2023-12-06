@@ -9,7 +9,6 @@
  -->
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-<%@ taglib prefix="original" uri="io.test.one.tld"%>
 <%@ taglib prefix="test1" uri="/WEB-INF/tld/test1.tld"%>
 <%@ taglib prefix="test2" uri="/WEB-INF/tld/test2.tld"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -20,9 +19,8 @@
 </head>
 <body>
 
-<original:Sample>Original Works!</original:Sample>
-<test1:Sample>configureWithBothURIs works!</test1:Sample>
-<test2:Sample>forceCustomURI works!</test2:Sample>
+<test1:Sample>WEB-INF/tld/test1.tld works!</test1:Sample>
+<test2:Sample>WEB-INF/tld/test2.tld works!</test2:Sample>
 
 </body>
 </html>
