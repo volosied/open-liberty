@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2022 IBM Corporation and others.
+ * Copyright (c) 2017, 2022 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -13,7 +13,7 @@
 //  Revisions:
 //  Defect PI59436 03/22/2015   hmpadill    EL expressions returning null in EL 3.0 could produce NPE
 
-package com.ibm.ws.pages31.translator.visitor.generator;
+package com.ibm.ws.jsp23.translator.visitor.generator;
 
 import java.util.Iterator;
 
