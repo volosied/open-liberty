@@ -114,9 +114,6 @@ public class JasperELResolver extends CompositeELResolver {
             // skip stream, static and collection-based resolvers (map,
             // resource, list, array) and bean
             start = index + 7;
-            if (JspRuntimeLibrary.GRAAL) {
-                start++;
-            }
         } else {
             // skip implicit resolver only
             start = 1;
