@@ -23,7 +23,7 @@ Export-Package: \
   com.example;version=1.0;thread-context=true
 
 Service-Component: \
-  com.ibm.ws.jsf_2_2.taglib; \
+  io.openliberty.test.global.taglib; \
     implementation:=io.openliberty.test.tld.TestGlobalConfig; \
     provide:='com.ibm.wsspi.jsp.taglib.config.GlobalTagLibConfig'; \
     properties:="service.vendor=IBM"
