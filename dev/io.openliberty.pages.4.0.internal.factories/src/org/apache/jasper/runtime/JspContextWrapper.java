@@ -484,170 +484,169 @@ public class JspContextWrapper extends PageContext{
 
     @Override
     public ELContext getELContext() {
-        // if (elContext == null) {
-        //     elContext = new ELContextWrapper(rootJspCtxt.getELContext(), jspTag, this);
-        //     JspFactory factory = JspFactory.getDefaultFactory();
-        //     JspApplicationContext jspAppCtxt = factory.getJspApplicationContext(servletContext);
-        //     if (jspAppCtxt instanceof JspApplicationContextImpl) {
-        //         ((JspApplicationContextImpl) jspAppCtxt).fireListeners(elContext);
-        //     }
-        // }
-        // return elContext;
-        return this.invokingJspCtxt.getELContext();
+        if (elContext == null) {
+            elContext = new ELContextWrapper(rootJspCtxt.getELContext(), jspTag, this);
+            JspFactory factory = JspFactory.getDefaultFactory();
+            JspApplicationContext jspAppCtxt = factory.getJspApplicationContext(servletContext);
+            if (jspAppCtxt instanceof JspApplicationContextImpl) {
+                ((JspApplicationContextImpl) jspAppCtxt).fireListeners(elContext);
+            }
+        }
+        return elContext;
     }
 
 
-    // static class ELContextWrapper extends ELContext {
+    static class ELContextWrapper extends ELContext {
 
-    //     private final ELContext wrapped;
-    //     private final JspTag jspTag;
-    //     private final PageContext pageContext;
-    //     private ImportHandler importHandler;
+        private final ELContext wrapped;
+        private final JspTag jspTag;
+        private final PageContext pageContext;
+        private ImportHandler importHandler;
 
-    //     private ELContextWrapper(ELContext wrapped, JspTag jspTag, PageContext pageContext) {
-    //         this.wrapped = wrapped;
-    //         this.jspTag = jspTag;
-    //         this.pageContext = pageContext;
-    //     }
+        private ELContextWrapper(ELContext wrapped, JspTag jspTag, PageContext pageContext) {
+            this.wrapped = wrapped;
+            this.jspTag = jspTag;
+            this.pageContext = pageContext;
+        }
 
-    //     ELContext getWrappedELContext() {
-    //         return wrapped;
-    //     }
+        ELContext getWrappedELContext() {
+            return wrapped;
+        }
 
-    //     @Override
-    //     public void setPropertyResolved(boolean resolved) {
-    //         wrapped.setPropertyResolved(resolved);
-    //     }
+        @Override
+        public void setPropertyResolved(boolean resolved) {
+            wrapped.setPropertyResolved(resolved);
+        }
 
-    //     @Override
-    //     public void setPropertyResolved(Object base, Object property) {
-    //         wrapped.setPropertyResolved(base, property);
-    //     }
+        @Override
+        public void setPropertyResolved(Object base, Object property) {
+            wrapped.setPropertyResolved(base, property);
+        }
 
-    //     @Override
-    //     public boolean isPropertyResolved() {
-    //         return wrapped.isPropertyResolved();
-    //     }
+        @Override
+        public boolean isPropertyResolved() {
+            return wrapped.isPropertyResolved();
+        }
 
-    //     @Override
-    //     public void putContext(Class<?> key, Object contextObject) {
-    //         if (key != JspContext.class) {
-    //             wrapped.putContext(key, contextObject);
-    //         }
-    //     }
+        @Override
+        public void putContext(Class<?> key, Object contextObject) {
+            if (key != JspContext.class) {
+                wrapped.putContext(key, contextObject);
+            }
+        }
 
-    //     @Override
-    //     public Object getContext(Class<?> key) {
-    //         if (key == JspContext.class) {
-    //             return pageContext;
-    //         }
-    //         if (key == NotFoundELResolver.class) {
-    //             if (jspTag instanceof JspSourceDirectives) {
-    //                 return Boolean.valueOf(((JspSourceDirectives) jspTag).getErrorOnELNotFound());
-    //             } else {
-    //                 // returning Boolean.FALSE would have the same effect
-    //                 return null;
-    //             }
-    //         }
-    //         return wrapped.getContext(key);
-    //     }
+        @Override
+        public Object getContext(Class<?> key) {
+            if (key == JspContext.class) {
+                return pageContext;
+            }
+            if (key == NotFoundELResolver.class) {
+                if (jspTag instanceof com.ibm.ws.jsp.runtime.DirectiveInfo) {
+                    return Boolean.valueOf(((com.ibm.ws.jsp.runtime.DirectiveInfo) jspTag).isErrorOnELNotFound());
+                } else {
+                    // returning Boolean.FALSE would have the same effect
+                    return null;
+                }
+            }
+            return wrapped.getContext(key);
+        }
 
-    //     @Override
-    //     public ImportHandler getImportHandler() {
-    //         if (importHandler == null) {
-    //             importHandler = new ImportHandler();
-    //             if (jspTag instanceof JspSourceImports) {
-    //                 Set<String> packageImports = ((JspSourceImports) jspTag).getPackageImports();
-    //                 if (packageImports != null) {
-    //                     for (String packageImport : packageImports) {
-    //                         importHandler.importPackage(packageImport);
-    //                     }
-    //                 }
-    //                 Set<String> classImports = ((JspSourceImports) jspTag).getClassImports();
-    //                 if (classImports != null) {
-    //                     for (String classImport : classImports) {
-    //                         importHandler.importClass(classImport);
-    //                     }
-    //                 }
-    //             }
+        @Override
+        public ImportHandler getImportHandler() {
+            if (importHandler == null) {
+                importHandler = new ImportHandler();
+                if (jspTag instanceof com.ibm.ws.jsp.runtime.DirectiveInfo) {
+                    List<String> packageImports = ((com.ibm.ws.jsp.runtime.DirectiveInfo) jspTag).getImportPackageList();
+                    if (packageImports != null) {
+                        for (String packageImport : packageImports) {
+                            importHandler.importPackage(packageImport);
+                        }
+                    }
+                    List<String> classImports = ((com.ibm.ws.jsp.runtime.DirectiveInfo) jspTag).getImportClassList();
+                    if (classImports != null) {
+                        for (String classImport : classImports) {
+                            importHandler.importClass(classImport);
+                        }
+                    }
+                }
 
-    //         }
-    //         return importHandler;
-    //     }
+            }
+            return importHandler;
+        }
 
-    //     @Override
-    //     public Locale getLocale() {
-    //         return wrapped.getLocale();
-    //     }
+        @Override
+        public Locale getLocale() {
+            return wrapped.getLocale();
+        }
 
-    //     @Override
-    //     public void setLocale(Locale locale) {
-    //         wrapped.setLocale(locale);
-    //     }
+        @Override
+        public void setLocale(Locale locale) {
+            wrapped.setLocale(locale);
+        }
 
-    //     @Override
-    //     public void addEvaluationListener(EvaluationListener listener) {
-    //         wrapped.addEvaluationListener(listener);
-    //     }
+        @Override
+        public void addEvaluationListener(EvaluationListener listener) {
+            wrapped.addEvaluationListener(listener);
+        }
 
-    //     @Override
-    //     public List<EvaluationListener> getEvaluationListeners() {
-    //         return wrapped.getEvaluationListeners();
-    //     }
+        @Override
+        public List<EvaluationListener> getEvaluationListeners() {
+            return wrapped.getEvaluationListeners();
+        }
 
-    //     @Override
-    //     public void notifyBeforeEvaluation(String expression) {
-    //         wrapped.notifyBeforeEvaluation(expression);
-    //     }
+        @Override
+        public void notifyBeforeEvaluation(String expression) {
+            wrapped.notifyBeforeEvaluation(expression);
+        }
 
-    //     @Override
-    //     public void notifyAfterEvaluation(String expression) {
-    //         wrapped.notifyAfterEvaluation(expression);
-    //     }
+        @Override
+        public void notifyAfterEvaluation(String expression) {
+            wrapped.notifyAfterEvaluation(expression);
+        }
 
-    //     @Override
-    //     public void notifyPropertyResolved(Object base, Object property) {
-    //         wrapped.notifyPropertyResolved(base, property);
-    //     }
+        @Override
+        public void notifyPropertyResolved(Object base, Object property) {
+            wrapped.notifyPropertyResolved(base, property);
+        }
 
-    //     @Override
-    //     public boolean isLambdaArgument(String name) {
-    //         return wrapped.isLambdaArgument(name);
-    //     }
+        @Override
+        public boolean isLambdaArgument(String name) {
+            return wrapped.isLambdaArgument(name);
+        }
 
-    //     @Override
-    //     public Object getLambdaArgument(String name) {
-    //         return wrapped.getLambdaArgument(name);
-    //     }
+        @Override
+        public Object getLambdaArgument(String name) {
+            return wrapped.getLambdaArgument(name);
+        }
 
-    //     @Override
-    //     public void enterLambdaScope(Map<String, Object> arguments) {
-    //         wrapped.enterLambdaScope(arguments);
-    //     }
+        @Override
+        public void enterLambdaScope(Map<String, Object> arguments) {
+            wrapped.enterLambdaScope(arguments);
+        }
 
-    //     @Override
-    //     public void exitLambdaScope() {
-    //         wrapped.exitLambdaScope();
-    //     }
+        @Override
+        public void exitLambdaScope() {
+            wrapped.exitLambdaScope();
+        }
 
-    //     @Override
-    //     public <T> T convertToType(Object obj, Class<T> type) {
-    //         return wrapped.convertToType(obj, type);
-    //     }
+        @Override
+        public <T> T convertToType(Object obj, Class<T> type) {
+            return wrapped.convertToType(obj, type);
+        }
 
-    //     @Override
-    //     public ELResolver getELResolver() {
-    //         return wrapped.getELResolver();
-    //     }
+        @Override
+        public ELResolver getELResolver() {
+            return wrapped.getELResolver();
+        }
 
-    //     @Override
-    //     public FunctionMapper getFunctionMapper() {
-    //         return wrapped.getFunctionMapper();
-    //     }
+        @Override
+        public FunctionMapper getFunctionMapper() {
+            return wrapped.getFunctionMapper();
+        }
 
-    //     @Override
-    //     public VariableMapper getVariableMapper() {
-    //         return wrapped.getVariableMapper();
-    //     }
-    // }
+        @Override
+        public VariableMapper getVariableMapper() {
+            return wrapped.getVariableMapper();
+        }
+    }
 }
