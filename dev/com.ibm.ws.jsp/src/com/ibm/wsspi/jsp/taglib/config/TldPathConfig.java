@@ -69,17 +69,20 @@ public class TldPathConfig {
     
     /**
      * Gets whether the tld contains any listener elements
-     * return boolean - if the tld file contains any listener elements
+     * @return boolean - if the tld file contains any listener elements
      */
     public boolean containsListenerDefs() {
         return containsListenerDefs;
     }
 
+    /**
+     * @return the value of forceCustomURI 
+     */
     public boolean isCustomURIUsed() {
         return this.forceCustomURI;
     }
 
-    /*
+    /**
      * Ignore the URI set in the TLD attribute and used the URI 
      * specified via the TldPathConfig constructor
      * @return - currrent TldPathConfig instance
@@ -89,7 +92,7 @@ public class TldPathConfig {
         return this;
     }
 
-    /*
+    /**
      * Ignore the URI set in the TLD attribute and used the URI 
      * specified via the TldPathConfig constructor
      * 
