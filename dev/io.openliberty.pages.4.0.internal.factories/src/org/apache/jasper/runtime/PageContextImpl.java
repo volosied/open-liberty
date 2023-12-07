@@ -74,6 +74,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.jasper.el.ELContextImpl;
+import org.apache.jasper.runtime.JspContextWrapper.ELContextWrapper;
 
 import com.ibm.websphere.servlet.error.ServletErrorReport;
 import com.ibm.ws.jsp.Constants;
@@ -775,9 +776,14 @@ public class PageContextImpl extends PageContext {
             exprFactorySetInPageContext = JspFactory.getDefaultFactory().getJspApplicationContext(pageContext.getServletContext()).getExpressionFactory();
         }
         final ExpressionFactory exprFactory = exprFactorySetInPageContext;
-        //if (SecurityUtil.isPackageProtectionEnabled()) {
-        ELContextImpl ctx = (ELContextImpl) pageContext.getELContext();
-        ctx.setFunctionMapper(functionMap);
+        ELContext ctx = pageContext.getELContext();
+        ELContextImpl ctxImpl;
+        if (ctx instanceof ELContextWrapper) {
+            ctxImpl = (ELContextImpl) ((ELContextWrapper) ctx).getWrappedELContext();
+        } else {
+            ctxImpl = (ELContextImpl) ctx;
+        }
+        ctxImpl.setFunctionMapper(functionMap);
         ValueExpression ve = exprFactory.createValueExpression(ctx, expression, expectedType);
         retValue = ve.getValue(ctx);
         if (escape && retValue != null) {
