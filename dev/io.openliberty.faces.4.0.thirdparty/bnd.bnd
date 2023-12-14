@@ -20,7 +20,7 @@ Require-Capability: osgi.ee; filter:="(&(osgi.ee=JavaSE)(version=11))"
 
 Fragment-Host: io.openliberty.org.apache.myfaces.4.0;bundle-version=1.0
 
-Bundle-Name: Open Liberty Jakarta MyFaces Third Party API
+Bundle-Name: Open Liberty Jakarta MyFaces Third Party API SNAPSHOT
 Bundle-SymbolicName: io.openliberty.faces.4.0.thirdparty
 Implementation-Version: 4.0.2
 
