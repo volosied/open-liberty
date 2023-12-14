@@ -2215,14 +2215,15 @@ exports.encodeFormData = encodeFormData;
  */
 function decodeEncodedValues(encoded) {
     const filterBlanks = item => !!(item || '').replace(/\s+/g, '');
-    const splitKeyValuePair = line => {
+    const splitKeyValuePair = _line => {
+        let line = decodeURIComponent(_line);
         let index = line.indexOf("=");
         if (index == -1) {
             return [line];
         }
         return [line.substring(0, index), line.substring(index + 1)];
     };
-    let requestParamEntries = decodeURIComponent(encoded).split(/&/gi);
+    let requestParamEntries = encoded.split(/&/gi);
     return requestParamEntries.filter(filterBlanks).map(splitKeyValuePair);
 }
 exports.decodeEncodedValues = decodeEncodedValues;
@@ -4387,13 +4388,13 @@ class XhrRequest extends AsyncRunnable_1.AsyncRunnable {
             const type = issuingItem.type.orElse("").value.toLowerCase();
             //Checkbox and radio only value pass if checked is set, otherwise they should not show
             //up at all, and if checked is set, they either can have a value or simply being boolean
-            if ((type == "checkbox" || type == "radio") && issuingItem.attr("checked").isAbsent()) {
+            if ((type == "checkbox" || type == "radio") && !issuingItem.checked) {
                 return;
             }
             else if ((type == "checkbox" || type == "radio")) {
                 arr.assign(issuingItemId).value = itemValue.orElse(true).value;
             }
-            else {
+            else if (itemValue.isPresent()) {
                 arr.assign(issuingItemId).value = itemValue.value;
             }
             formData.shallowMerge(arr, true, true);
@@ -4566,7 +4567,7 @@ var oam;
  * limitations under the License.
  */
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.shallowMerge = exports.simpleShallowMerge = exports.deepCopy = exports.buildPath = exports.resolve = exports.appendIf = exports.assignIf = exports.append = exports.assign = void 0;
+exports.deepEqual = exports.shallowMerge = exports.simpleShallowMerge = exports.deepCopy = exports.buildPath = exports.resolve = exports.appendIf = exports.assignIf = exports.append = exports.assign = void 0;
 const Es2019Array_1 = __webpack_require__(/*! ./Es2019Array */ "./typescript/mona_dish/Es2019Array.ts");
 /**
  * A nop as assign functionality (aka ignore assign)
@@ -4787,12 +4788,71 @@ function simpleShallowMerge(...assocArrays) {
     return shallowMerge(true, false, ...assocArrays);
 }
 exports.simpleShallowMerge = simpleShallowMerge;
+function _appendWithOverwrite(withAppend, target, key, arr, toAssign) {
+    if (!withAppend) {
+        target[key] = arr[key];
+    }
+    else {
+        //overwrite means in this case, no double entries!
+        //we do not a deep compare for now a single value compare suffices
+        if ('undefined' == typeof (target === null || target === void 0 ? void 0 : target[key])) {
+            target[key] = toAssign;
+        }
+        else if (!Array.isArray(target[key])) {
+            let oldVal = target[key];
+            let newVals = [];
+            //TODO maybe deep deep compare here, but on the other hand it is
+            //shallow
+            toAssign.forEach(item => {
+                if (oldVal != item) {
+                    newVals.push(item);
+                }
+            });
+            target[key] = new Es2019Array_1.Es2019Array(...[]);
+            target[key].push(oldVal);
+            target[key].push(...newVals);
+        }
+        else {
+            let oldVal = target[key];
+            let newVals = [];
+            //TODO deep compare here
+            toAssign.forEach(item => {
+                if (oldVal.indexOf(item) == -1) {
+                    newVals.push(item);
+                }
+            });
+            target[key].push(...newVals);
+        }
+    }
+}
+function _appendWithoutOverwrite(withAppend, target, key, arr, toAssign) {
+    if (!withAppend) {
+        return;
+    }
+    else {
+        //overwrite means in this case, no double entries!
+        //we do not a deep compare for now a single value compare suffices
+        if ('undefined' == typeof (target === null || target === void 0 ? void 0 : target[key])) {
+            target[key] = toAssign;
+        }
+        else if (!Array.isArray(target[key])) {
+            let oldVal = target[key];
+            target[key] = new Es2019Array_1.Es2019Array(...[]);
+            target[key].push(oldVal);
+            target[key].push(...toAssign);
+        }
+        else {
+            target[key].push(...toAssign);
+        }
+    }
+}
 /**
  * Shallow merge as in config, but on raw associative arrays
  *
- * @param overwrite
- * @param withAppend
- * @param assocArrays
+ * @param overwrite overwrite existing keys, if they exist with their subtrees
+ * @param withAppend if a key exist append the values or drop them
+ * Combination overwrite withappend filters doubles out of merged arrays
+ * @param assocArrays array of assoc arres reduced right to left
  */
 function shallowMerge(overwrite = true, withAppend = false, ...assocArrays) {
     let target = {};
@@ -4805,29 +4865,47 @@ function shallowMerge(overwrite = true, withAppend = false, ...assocArrays) {
                 toAssign = new Es2019Array_1.Es2019Array(...[toAssign]);
             }
             if (overwrite || !(target === null || target === void 0 ? void 0 : target[key])) {
-                if (!withAppend) {
-                    target[key] = arr[key];
-                }
-                else {
-                    if ('undefined' == typeof (target === null || target === void 0 ? void 0 : target[key])) {
-                        target[key] = toAssign;
-                    }
-                    else if (!Array.isArray(target[key])) {
-                        let oldVal = target[key];
-                        target[key] = new Es2019Array_1.Es2019Array(...[]);
-                        target[key].push(oldVal);
-                        target[key].push(...toAssign);
-                    }
-                    else {
-                        target[key].push(...toAssign);
-                    }
-                }
+                _appendWithOverwrite(withAppend, target, key, arr, toAssign);
+            }
+            else if (!overwrite && (target === null || target === void 0 ? void 0 : target[key])) {
+                _appendWithoutOverwrite(withAppend, target, key, arr, toAssign);
             }
         });
     });
     return target;
 }
 exports.shallowMerge = shallowMerge;
+//TODO test this, slightly altered from https://medium.com/@pancemarko/deep-equality-in-javascript-determining-if-two-objects-are-equal-bf98cf47e934
+//he overlooked some optimizations and a shortcut at typeof!
+function deepEqual(obj1, obj2) {
+    if (obj1 == obj2) {
+        return false;
+    }
+    if (typeof obj1 != typeof obj2) {
+        return false;
+    }
+    if (Array.isArray(obj1) && Array.isArray(obj2)) {
+        if (obj1.length != obj2.length) {
+            return;
+        }
+        //arrays must be equal, order as well, there is no way around it
+        //this is the major limitation we have
+        return obj1.every((item, cnt) => deepEqual(item, obj2[cnt]));
+    }
+    //string number and other primitives are filtered out here
+    if ("object" == typeof obj1 && "object" == typeof obj2) {
+        let keys1 = Object.keys(obj1);
+        let keys2 = Object.keys(obj2);
+        if (keys1.length != keys2.length) {
+            return false;
+        }
+        return keys1.every(key => keys2.indexOf(key) != -1) &&
+            keys1.every(key => deepEqual(obj1[key], obj2[key]));
+    }
+    return false;
+    //done here no match found
+}
+exports.deepEqual = deepEqual;
 
 
 /***/ }),
