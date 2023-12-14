@@ -642,12 +642,13 @@ public class TagLibraryCache extends Hashtable<String, Object> {
                                 logger.logp(Level.FINEST, CLASS_NAME, "loadWebInfTagFiles", "about to do tagfilescan for = [" + resourcePath + "]");
                             }
                             JspInputSource tagFileInputSource = ctxt.getJspInputSourceFactory().copyJspInputSource(implicitTli.getInputSource(), resourcePath);
-                            JspTranslator jspTranslator = JspTranslatorFactory.getFactory().createTranslator(TAGFILE_SCAN_ID,
-                                                                                                             tagFileInputSource,
-                                                                                                             ctxt,
-                                                                                                             configManager.createJspConfiguration(),
-                                                                                                             jspOptions, // 396002
-                                                                                                             implicitTagLibPrefixMap);
+                            JspTranslator jspTranslator = JspTranslatorFactory.getFactory()
+                                            .createTranslator(TAGFILE_SCAN_ID,
+                                                              tagFileInputSource,
+                                                              ctxt,
+                                                              configManager.createJspConfiguration(),
+                                                              jspOptions, // 396002
+                                                              implicitTagLibPrefixMap);
 
                             JspVisitorInputMap inputMap = new JspVisitorInputMap();
                             inputMap.put("TagLibraryInfo", implicitTli);

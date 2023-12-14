@@ -80,7 +80,8 @@ public class JspTranslationResult {
         if (jspIdAttr != null) {
             JspId jspId = new JspId(jspIdAttr.getValue());
             JspLineId lineId = new JspLineId(jspId.getFilePath(), jspResources.getGeneratedSourceFile().getPath(), jspResources.getInputSource().getRelativeURL(), // defect 203009 
-                            jspId.getStartSourceLineNum(), jspId.getStartSourceColNum(), jspId.getSourceLineCount(), jspId.getEndSourceLineNum(), jspId.getEndSourceColNum(), jspId.getStartGeneratedLineNum(), jspId.getStartGeneratedLineCount(), jspId.getEndGeneratedLineNum(), jspId.getEndGeneratedLineCount());
+                            jspId.getStartSourceLineNum(), jspId.getStartSourceColNum(), jspId.getSourceLineCount(), jspId.getEndSourceLineNum(), jspId.getEndSourceColNum(), jspId
+                                            .getStartGeneratedLineNum(), jspId.getStartGeneratedLineCount(), jspId.getEndGeneratedLineNum(), jspId.getEndGeneratedLineCount());
             jspLineIds.add(lineId);
         }
 

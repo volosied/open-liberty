@@ -162,7 +162,8 @@ public class Jsp2Dom {
         /* The isXmlSpecified flag should only be set for top level jsps. */
         /* statically included jsps and tag files will alway have this set to false */
         if (jspInputSource.isXmlDocument()) {
-            document = new JspDocumentConverter(jspInputSource, resolvedRelativeURL, context, directoryStack, jspConfiguration, jspOptions, dependencyStack, dependencyList, cdataJspIdMap, implicitTagLibMap).convert();
+            document = new JspDocumentConverter(jspInputSource, resolvedRelativeURL, context, directoryStack, jspConfiguration, jspOptions, dependencyStack, dependencyList, cdataJspIdMap, implicitTagLibMap)
+                            .convert();
             jspConfiguration.setIsXml(true);
         } else {
             getSyntaxAndEncoding();

@@ -116,12 +116,13 @@ public class TagFileDependencyVisitor extends JspVisitor {
                     tagFileDepConfig.setJspVersion(tli.getRequiredVersion());
                 }
             }
-            JspTranslator jspTranslator = JspTranslatorFactory.getFactory().createTranslator(TAGFILE_DEPENDENCY_ID,
-                                                                                             tagFileInputSource,
-                                                                                             context,
-                                                                                             tagFileDepConfig,
-                                                                                             jspOptions, // 396002
-                                                                                             tagLibraryCache.getImplicitTagLibPrefixMap());
+            JspTranslator jspTranslator = JspTranslatorFactory.getFactory()
+                            .createTranslator(TAGFILE_DEPENDENCY_ID,
+                                              tagFileInputSource,
+                                              context,
+                                              tagFileDepConfig,
+                                              jspOptions, // 396002
+                                              tagLibraryCache.getImplicitTagLibPrefixMap());
 
             JspVisitorInputMap tagFileInputMap = new JspVisitorInputMap();
             tagFileInputMap.put("TagLibraryCache", inputMap.get("TagLibraryCache"));

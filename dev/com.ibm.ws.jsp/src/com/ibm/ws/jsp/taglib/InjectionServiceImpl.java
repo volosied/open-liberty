@@ -61,7 +61,8 @@ public class InjectionServiceImpl implements WebAppInjectionClassListCollaborato
                     GlobalTagLibraryCache globalCache = JSPExtensionFactory.getGlobalTagLibraryCache();
                     Map globalTagLibMap = globalCache.getGlobalTagLibMapForWebApp(moduleContainer, jspConfig);
 
-                    TagLibraryCache tagLibCacheList = new TagLibraryCache(moduleContainer, tagLibs, options, null, globalTagLibMap, globalCache.getImplicitTagLibPrefixMap(), globalCache.getOptimizedTagConfigMap(), webAppConfiguration);
+                    TagLibraryCache tagLibCacheList = new TagLibraryCache(moduleContainer, tagLibs, options, null, globalTagLibMap, globalCache
+                                    .getImplicitTagLibPrefixMap(), globalCache.getOptimizedTagConfigMap(), webAppConfiguration);
                     List<String> jspListeners = (List<String>) tagLibCacheList.getEventListenerList(); //List<String>
                     result.addAll(jspListeners);
                     List<String> tags = tagLibCacheList.getTagsList();

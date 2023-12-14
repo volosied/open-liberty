@@ -54,12 +54,13 @@ public class ParsedTagFileElement {
         JspTranslator jspTranslator;
         TagFileInfo tfi = null;
         try {
-            jspTranslator = JspTranslatorFactory.getFactory().createTranslator(TagLibraryCache.TAGFILE_SCAN_ID,
-                                                                               tagFileInputSource,
-                                                                               ctxt,
-                                                                               configManager.createJspConfiguration(),
-                                                                               jspOptions, // 396002
-                                                                               new HashMap());
+            jspTranslator = JspTranslatorFactory.getFactory()
+                            .createTranslator(TagLibraryCache.TAGFILE_SCAN_ID,
+                                              tagFileInputSource,
+                                              ctxt,
+                                              configManager.createJspConfiguration(),
+                                              jspOptions, // 396002
+                                              new HashMap());
             JspVisitorInputMap inputMap = new JspVisitorInputMap();
             inputMap.put("TagLibraryInfo", tli);
             inputMap.put("TagFileName", tagFileName);

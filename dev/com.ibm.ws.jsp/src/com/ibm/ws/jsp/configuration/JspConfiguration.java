@@ -135,7 +135,11 @@ public class JspConfiguration {
 
     //This method is used for creating a configuration for a tag file.  The tag file may want to override some properties if it's jsp version in the tld is different than the server version
     public JspConfiguration createClonedJspConfiguration() {
-        return new JspConfiguration(configManager, this.getServletVersion(), this.jspVersion, this.isXml, this.isXmlSpecified, this.elIgnored, this.errorOnELNotFound, this.scriptingInvalid(), this.isTrimDirectiveWhitespaces(), this.isDeferredSyntaxAllowedAsLiteral(), this.getTrimDirectiveWhitespaces(), this.getDeferredSyntaxAllowedAsLiteral(), this.elIgnoredSetTrueInPropGrp(), this.elIgnoredSetTrueInPage(), this.errorOnELNotFoundSetTrueInPropGrp(), this.errorOnELNotFoundSetTrueInPage(), this.getDefaultContentType(), this.getBuffer(), this.isErrorOnUndeclaredNamespace());
+        return new JspConfiguration(configManager, this.getServletVersion(), this.jspVersion, this.isXml, this.isXmlSpecified, this.elIgnored, this.errorOnELNotFound, this
+                        .scriptingInvalid(), this.isTrimDirectiveWhitespaces(), this.isDeferredSyntaxAllowedAsLiteral(), this.getTrimDirectiveWhitespaces(), this
+                                        .getDeferredSyntaxAllowedAsLiteral(), this.elIgnoredSetTrueInPropGrp(), this.elIgnoredSetTrueInPage(), this
+                                                        .errorOnELNotFoundSetTrueInPropGrp(), this.errorOnELNotFoundSetTrueInPage(), this
+                                                                        .getDefaultContentType(), this.getBuffer(), this.isErrorOnUndeclaredNamespace());
     }
 
     public JspConfiguration createEmptyJspConfiguration() {

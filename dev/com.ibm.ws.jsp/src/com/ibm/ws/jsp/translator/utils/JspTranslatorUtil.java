@@ -113,8 +113,10 @@ public class JspTranslatorUtil {
                     String filePath = e.getFilePath();
                     JspTranslationException finalException = null;
                     if (filePath != null && !filePath.equals(jspResources.getInputSource().getRelativeURL())) {
-                        finalException = new JspTranslationException("jsp.error.exception.caught.translating.included.file", new Object[] { jspResources.getInputSource().getRelativeURL(),
-                                                                                                                                            separatorString + e.getLocalizedMessage() + separatorString }); // Defect 211450
+                        finalException = new JspTranslationException("jsp.error.exception.caught.translating.included.file", new Object[] { jspResources.getInputSource()
+                                        .getRelativeURL(),
+                                                                                                                                            separatorString
+                                                           + e.getLocalizedMessage() + separatorString }); // Defect 211450
                     } else {
                         String msg = jspResources.getInputSource().getRelativeURL() + ":  " + separatorString + e.getLocalizedMessage() + separatorString; // Defect 211450
                         finalException = new JspTranslationException("jsp.error.exception.caught.translating", new Object[] { msg });
@@ -246,8 +248,9 @@ public class JspTranslatorUtil {
             tagFileVisitorCollectionId = DEBUG_TAGFILE_TRANSLATION_ID;
         }
 
-        JspTranslator jspTranslator = JspTranslatorFactory.getFactory().createTranslator(jspVisitorCollectionId, jspResources.getInputSource(), context, config, options,
-                                                                                         tlc.getImplicitTagLibPrefixMap());
+        JspTranslator jspTranslator = JspTranslatorFactory.getFactory()
+                        .createTranslator(jspVisitorCollectionId, jspResources.getInputSource(), context, config, options,
+                                          tlc.getImplicitTagLibPrefixMap());
         HashMap resultMap = jspTranslator.processVisitors(inputMap);
 
         if (resultMap.containsKey("Smap")) {
@@ -287,8 +290,9 @@ public class JspTranslatorUtil {
                                 }
                             }
                             tagConfiguration.setElIgnored(config.elIgnored());
-                            JspTranslator tagFileTranslator = JspTranslatorFactory.getFactory().createTranslator(tagFileVisitorCollectionId, tagFileInputSource, context,
-                                                                                                                 tagConfiguration, options, tlc.getImplicitTagLibPrefixMap());
+                            JspTranslator tagFileTranslator = JspTranslatorFactory.getFactory()
+                                            .createTranslator(tagFileVisitorCollectionId, tagFileInputSource, context,
+                                                              tagConfiguration, options, tlc.getImplicitTagLibPrefixMap());
                             JspVisitorInputMap tagFileInputMap = new JspVisitorInputMap();
                             tagFileInputMap.put("JspOptions", options);
                             tagFileInputMap.put("TagLibraryCache", tlc);

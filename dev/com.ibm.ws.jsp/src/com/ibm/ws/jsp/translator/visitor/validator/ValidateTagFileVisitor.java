@@ -159,7 +159,8 @@ public class ValidateTagFileVisitor extends ValidateVisitor {
                             throw new JspTranslationException(jspElement, "jsp.error.page.invalid.trimdirectivewhitespaces");
                         }
                     } else if (!jspConfiguration.getTrimDirectiveWhitespaces().equals(directiveValue)) {
-                        throw new JspTranslationException(jspElement, "jsp.error.page.conflict.trimdirectivewhitespaces", new Object[] { jspConfiguration.getTrimDirectiveWhitespaces(),
+                        throw new JspTranslationException(jspElement, "jsp.error.page.conflict.trimdirectivewhitespaces", new Object[] { jspConfiguration
+                                        .getTrimDirectiveWhitespaces(),
                                                                                                                                          directiveName });
                     }
                 }

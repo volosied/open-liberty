@@ -405,7 +405,8 @@ public class JspRuntimeLibrary {
     public static String toString(Object o) {
         //PK56156 start
         if (o == null) {
-            boolean returnEmptyString = new Boolean(com.ibm.ws.webcontainer.WebContainer.getWebContainerProperties().getProperty("com.ibm.ws.jsp.getparameterreturnemptystring")).booleanValue();
+            boolean returnEmptyString = new Boolean(com.ibm.ws.webcontainer.WebContainer.getWebContainerProperties().getProperty("com.ibm.ws.jsp.getparameterreturnemptystring"))
+                            .booleanValue();
             if (returnEmptyString) {
                 return "";
             }

@@ -274,12 +274,14 @@ public class GeneratorUtils {
                                          boolean XmlEscape,
                                          String pageContextVar) { //PK65013
 
-        return JSPExtensionFactory.getGeneratorUtilsExtFactory().getGeneratorUtilsExt().interpreterCall(isTagFile,
-                                                                                                        expression,
-                                                                                                        expectedType,
-                                                                                                        fnmapvar,
-                                                                                                        XmlEscape,
-                                                                                                        pageContextVar); //PI59436
+        return JSPExtensionFactory.getGeneratorUtilsExtFactory()
+                        .getGeneratorUtilsExt()
+                        .interpreterCall(isTagFile,
+                                         expression,
+                                         expectedType,
+                                         fnmapvar,
+                                         XmlEscape,
+                                         pageContextVar); //PI59436
 
     }
 

@@ -166,7 +166,8 @@ public abstract class AbstractJSPExtensionProcessor extends com.ibm.ws.webcontai
                 preFragmentExtendedDocumentRoot = jspOptions.getPreFragmentExtendedDocumentRoot();
             }
             Map tagLibMap = webAppConfig.getTagLibMap();
-            jspConfigurationManager = new JspConfigurationManager(webAppConfig.getJspPropertyGroups(), webAppConfig.isServlet24(), webAppConfig.isServlet24_or_higher(), webAppConfig.getJspFileExtensions(), webAppConfig.isJCDIEnabledForRuntimeCheck());
+            jspConfigurationManager = new JspConfigurationManager(webAppConfig.getJspPropertyGroups(), webAppConfig.isServlet24(), webAppConfig
+                            .isServlet24_or_higher(), webAppConfig.getJspFileExtensions(), webAppConfig.isJCDIEnabledForRuntimeCheck());
             this.jspClassloaderContext = jspClassloaderContext;
             //  defect jdkcompiler
             String docRoot = null; //call getRealPath later - if needed
@@ -212,7 +213,8 @@ public abstract class AbstractJSPExtensionProcessor extends com.ibm.ws.webcontai
             }
 
             long start = System.nanoTime();
-            tlc = new TagLibraryCache(context, tagLibMap, jspOptions, jspConfigurationManager, globalTagLibMap, globalTagLibraryCache.getImplicitTagLibPrefixMap(), globalTagLibraryCache.getOptimizedTagConfigMap(), (WebAppConfiguration) webapp.getWebAppConfig());
+            tlc = new TagLibraryCache(context, tagLibMap, jspOptions, jspConfigurationManager, globalTagLibMap, globalTagLibraryCache
+                            .getImplicitTagLibPrefixMap(), globalTagLibraryCache.getOptimizedTagConfigMap(), (WebAppConfiguration) webapp.getWebAppConfig());
             long end = System.nanoTime();
             if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
                 logger.logp(Level.FINE, CLASS_NAME, "JSPExtensionProcessor", "TagLibraryCache created in " + ((end - start) / NANOS_IN_A_MILLISECONDS) + " ms");
@@ -763,7 +765,8 @@ public abstract class AbstractJSPExtensionProcessor extends com.ibm.ws.webcontai
                         try {
                             String docRoot = finalServletContext.getRealPath("/");
                             URL contextURL = new File(docRoot).toURL();
-                            JspInputSourceFactory jspInputSourceFactory = new JspInputSourceFactoryImpl(docRoot, contextURL, null, false, webapp.getModuleContainer(), jspClassloaderContext.getClassLoader(), finalServletContext);
+                            JspInputSourceFactory jspInputSourceFactory = new JspInputSourceFactoryImpl(docRoot, contextURL, null, false, webapp
+                                            .getModuleContainer(), jspClassloaderContext.getClassLoader(), finalServletContext);
                             Class contextClass = Class.forName(finalTranslationContextClass, true, extensionContext.getClassLoader());
                             Constructor constructor = contextClass.getConstructor(new Class[] { ServletContext.class });
                             JspTranslationContext ctxt = (JspTranslationContext) constructor.newInstance(new Object[] { finalServletContext });
@@ -783,7 +786,8 @@ public abstract class AbstractJSPExtensionProcessor extends com.ibm.ws.webcontai
             try {
                 String docRoot = servletContext.getRealPath("/");
                 URL contextURL = new File(docRoot).toURL();
-                JspInputSourceFactory jspInputSourceFactory = new JspInputSourceFactoryImpl(docRoot, contextURL, null, false, webapp.getModuleContainer(), jspClassloaderContext.getClassLoader(), servletContext);
+                JspInputSourceFactory jspInputSourceFactory = new JspInputSourceFactoryImpl(docRoot, contextURL, null, false, webapp.getModuleContainer(), jspClassloaderContext
+                                .getClassLoader(), servletContext);
                 Class contextClass = Class.forName(translationContextClass, true, extensionContext.getClassLoader());
                 Constructor constructor = contextClass.getConstructor(new Class[] { ServletContext.class });
                 ctxt = (JspTranslationContext) constructor.newInstance(new Object[] { servletContext });

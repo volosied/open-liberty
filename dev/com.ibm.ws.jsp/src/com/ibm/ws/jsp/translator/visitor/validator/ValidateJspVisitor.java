@@ -278,7 +278,8 @@ public class ValidateJspVisitor extends ValidateVisitor {
                             throw new JspTranslationException(jspElement, "jsp.error.page.invalid.trimdirectivewhitespaces");
                         }
                     } else if (!jspConfiguration.getTrimDirectiveWhitespaces().equals(directiveValue)) {
-                        throw new JspTranslationException(jspElement, "jsp.error.page.conflict.trimdirectivewhitespaces", new Object[] { jspConfiguration.getTrimDirectiveWhitespaces(),
+                        throw new JspTranslationException(jspElement, "jsp.error.page.conflict.trimdirectivewhitespaces", new Object[] { jspConfiguration
+                                        .getTrimDirectiveWhitespaces(),
                                                                                                                                          directiveName });
                     }
                 }
@@ -293,7 +294,8 @@ public class ValidateJspVisitor extends ValidateVisitor {
                             jspResult.setDeferredSyntaxAllowedAsLiteral(false);
                             jspConfiguration.setDeferredSyntaxAllowedAsLiteral(false);
                         } else {
-                            throw new JspTranslationException(jspElement, "jsp.error.page.invalid.deferredsyntaxallowedasliteral", new Object[] { jspConfiguration.getDeferredSyntaxAllowedAsLiteral(),
+                            throw new JspTranslationException(jspElement, "jsp.error.page.invalid.deferredsyntaxallowedasliteral", new Object[] { jspConfiguration
+                                            .getDeferredSyntaxAllowedAsLiteral(),
                                                                                                                                                   directiveName });
                         }
                     } else if (!jspConfiguration.getDeferredSyntaxAllowedAsLiteral().equals(directiveValue)) {

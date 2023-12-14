@@ -1835,7 +1835,8 @@ public abstract class ValidateVisitor extends JspVisitor {
                                         if (attrNodeElement.getLocalName().equals(Constants.JSP_SCRIPTLET_TYPE)
                                             || attrNodeElement.getLocalName().equals(Constants.JSP_EXPRESSION_TYPE)
                                             || attrNodeElement.getLocalName().equals(Constants.JSP_DECLARATION_TYPE)) {
-                                            throw new JspTranslationException(jspElement, "jsp.error.attribute.fragment.cannot.be.scriplet", new Object[] { attrNodeElement.getNodeName() });
+                                            throw new JspTranslationException(jspElement, "jsp.error.attribute.fragment.cannot.be.scriplet", new Object[] { attrNodeElement
+                                                            .getNodeName() });
                                         }
                                     }
                                 }

@@ -437,7 +437,8 @@ public class TldParser extends DefaultHandler {
                 if (parsedTagElements == null) {
                     parsedTagElements = new ArrayList<ParsedTagElement>();
                 }
-                parsedTagElements.add(new ParsedTagElement(tldLocation, tagName, tagClassName, bodyContent, tagDescription, tli, teiClassName, tagAttributes, displayName, smallIcon, largeIcon, tagVariables, dynamicAttributes));
+                parsedTagElements
+                                .add(new ParsedTagElement(tldLocation, tagName, tagClassName, bodyContent, tagDescription, tli, teiClassName, tagAttributes, displayName, smallIcon, largeIcon, tagVariables, dynamicAttributes));
                 //tags.add done later in ParsedTagElement
             } else {
                 TagExtraInfo tei = null;
@@ -477,12 +478,13 @@ public class TldParser extends DefaultHandler {
                     }
                     JspOptions jspOptions = new JspOptions(); // 396002
                     JspInputSource tagFileInputSource = ctxt.getJspInputSourceFactory().copyJspInputSource(tli.getInputSource(), path);
-                    JspTranslator jspTranslator = JspTranslatorFactory.getFactory().createTranslator(TagLibraryCache.TAGFILE_SCAN_ID,
-                                                                                                     tagFileInputSource,
-                                                                                                     ctxt,
-                                                                                                     configManager.createJspConfiguration(),
-                                                                                                     jspOptions, // 396002
-                                                                                                     new HashMap());
+                    JspTranslator jspTranslator = JspTranslatorFactory.getFactory()
+                                    .createTranslator(TagLibraryCache.TAGFILE_SCAN_ID,
+                                                      tagFileInputSource,
+                                                      ctxt,
+                                                      configManager.createJspConfiguration(),
+                                                      jspOptions, // 396002
+                                                      new HashMap());
 
                     JspVisitorInputMap inputMap = new JspVisitorInputMap();
                     inputMap.put("TagLibraryInfo", tli);

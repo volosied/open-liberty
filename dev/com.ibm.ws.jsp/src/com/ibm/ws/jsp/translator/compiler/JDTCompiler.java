@@ -163,7 +163,8 @@ public class JDTCompiler implements JspCompiler {
         //      jspCompilerRequestor,
         //      new DefaultProblemFactory(Locale.getDefault()));
 
-        Compiler compiler = new Compiler(new JspNameEnvironment(jspResources, dependencyResources), DefaultErrorHandlingPolicies.proceedWithAllProblems(), new CompilerOptions(compilerOptionsMap), jspCompilerRequestor, new DefaultProblemFactory(Locale.getDefault()));
+        Compiler compiler = new Compiler(new JspNameEnvironment(jspResources, dependencyResources), DefaultErrorHandlingPolicies
+                        .proceedWithAllProblems(), new CompilerOptions(compilerOptionsMap), jspCompilerRequestor, new DefaultProblemFactory(Locale.getDefault()));
 
         if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
             logger.logp(Level.FINE, CLASS_NAME, "JDTCompiler", "about to call compiler.compile()");

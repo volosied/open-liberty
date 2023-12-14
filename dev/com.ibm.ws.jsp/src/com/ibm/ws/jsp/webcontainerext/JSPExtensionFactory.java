@@ -309,16 +309,22 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
         if (checkZOSFlag && !WebContainer.isDefaultTempDir()) {
             // END PK31450
             // Begin 257796, part 1
-            dir.append(getNodeName()).append(java.io.File.separator).append(getServerName().replace(' ', '_')).append(
-                                                                                                                      "_"
-                                                                                                                      + WebContainer.getWebContainer().getPlatformHelper().getServerID());
+            dir.append(getNodeName())
+                            .append(java.io.File.separator)
+                            .append(getServerName().replace(' ', '_'))
+                            .append(
+                                    "_"
+                                    + WebContainer.getWebContainer().getPlatformHelper().getServerID());
             if (WebContainer.getTempDir() == null) {
                 WebContainer.setTempDir(dir.toString());
                 if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE))
                     logger.logp(Level.FINE, CLASS_NAME, "getTempDirectory", "ZOS temp dir is:" + WebContainer.getTempDir());
             }
-            dir.append(java.io.File.separator).append(getApplicationName(webapp).replace(' ', '_')).append(java.io.File.separator).append(
-                                                                                                                                          config.getModuleName().replace(' ', '_'));
+            dir.append(java.io.File.separator)
+                            .append(getApplicationName(webapp).replace(' ', '_'))
+                            .append(java.io.File.separator)
+                            .append(
+                                    config.getModuleName().replace(' ', '_'));
             // End 257796, part 1
         } else
             dir.append(getTempDirChildren(webapp));
@@ -412,10 +418,18 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
         // web module's display name
         // defect 113620 - replace spaces with underscores starting with
         // servername
-        dir.append(getNodeName()).append(java.io.File.separator).append(getServerName().replace(' ', '_')).append(java.io.File.separator).append(
-                                                                                                                                                 getApplicationName(webapp).replace(' ',
-                                                                                                                                                                                    '_')).append(java.io.File.separator).append(webapp.getWebAppConfig().getModuleName().replace(' ',
-                                                                                                                                                                                                                                                                                 '_'));
+        dir.append(getNodeName())
+                        .append(java.io.File.separator)
+                        .append(getServerName().replace(' ', '_'))
+                        .append(java.io.File.separator)
+                        .append(
+                                getApplicationName(webapp).replace(' ',
+                                                                   '_'))
+                        .append(java.io.File.separator)
+                        .append(webapp.getWebAppConfig()
+                                        .getModuleName()
+                                        .replace(' ',
+                                                 '_'));
 
         return dir.toString();
     }

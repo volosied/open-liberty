@@ -369,7 +369,8 @@ public abstract class AbstractJSPExtensionServletWrapper extends GenericServletW
 
                             try {
                                 tmpJCI = (JspClassInformation) Class.forName(jspResources.getPackageName() + "." + jspResources.getClassName(), true,
-                                                                             getTargetClassLoader()).newInstance();
+                                                                             getTargetClassLoader())
+                                                .newInstance();
                                 if (logger.isLoggable(Level.FINE)) {
                                     logger.logp(Level.FINE, CLASS_NAME, "_checkForTranslation",
                                                 "created a temporary JspClassInformation object to get dependencies and version: " + tmpJCI);
@@ -661,7 +662,8 @@ public abstract class AbstractJSPExtensionServletWrapper extends GenericServletW
                 } else {
                     //TODO: container work
                     urlList.add(new File(tcontext.getRealPath("/WEB-INF/classes")
-                                         + inputSource.getRelativeURL().substring(0, inputSource.getRelativeURL().lastIndexOf("/") + 1)).toURL());
+                                         + inputSource.getRelativeURL().substring(0, inputSource.getRelativeURL().lastIndexOf("/") + 1))
+                                    .toURL());
                     urlList.add(new File(tcontext.getRealPath("/WEB-INF/classes")).toURL());
                 }
             } else {
@@ -669,7 +671,8 @@ public abstract class AbstractJSPExtensionServletWrapper extends GenericServletW
                 urlList.add(new File(tcontext.getRealPath("/WEB-INF/classes")).toURL());
             }
             urls = urlList.toArray(new URL[urlList.size()]);
-            JSPExtensionClassLoader jspLoader = new JSPExtensionClassLoader(urls, tcontext.getJspClassloaderContext(), jspResources.getClassName(), codeSource, permissionCollection);
+            JSPExtensionClassLoader jspLoader = new JSPExtensionClassLoader(urls, tcontext.getJspClassloaderContext(), jspResources
+                            .getClassName(), codeSource, permissionCollection);
             if (servletConfig != null && jspResources.getPackageName().equals(Constants.JSP_FIXED_PACKAGE_NAME)) {
                 try {
                     jspLoader.loadClass(jspResources.getPackageName() + "." + jspResources.getClassName(), true);
