@@ -17,24 +17,23 @@ package com.ibm.ws.jsp.tsx.db;
 **
 ** -----------------------------------------------------------------
 */
-public interface JspConstants
-{
-//  Error Constants
-final static public String IntError                     = "InternalError";
-final static public String NotYetImpl                   = "NotYetImpl";
-final static public String SQLException                 = "SQLException";
-final static public String NullDbDriver                 = "NullDbDriver";
-final static public String NullQueryString              = "NullQueryString";
-final static public String NullUrl                              = "NullUrl";
-final static public String InvalidRowIndex              = "InvalidRowIndex";
-final static public String InvalidDbDriver              = "InvalidDbDriver";
-final static public String CurrRowNotInit               = "CurrRowNotInit";
-final static public String InvalidCurrRowRef            = "InvalidCurrRowRef";
-final static public String NamingException              = "NamingException";
-final static public String DatasourceException          = "DatasourceException";
-final static public String InvalidAttrName="InvalidAttrName";
-//  class names
-final static String   NlsClass  = "com.ibm.servlet.jsp.db.JspNLS";
-final static String   SETracer  = "com.ibm.servlet.debug.SETracer";
-                                          
+public interface JspConstants {
+    //  Error Constants
+    final static public String IntError = "InternalError";
+    final static public String NotYetImpl = "NotYetImpl";
+    final static public String SQLException = "SQLException";
+    final static public String NullDbDriver = "NullDbDriver";
+    final static public String NullQueryString = "NullQueryString";
+    final static public String NullUrl = "NullUrl";
+    final static public String InvalidRowIndex = "InvalidRowIndex";
+    final static public String InvalidDbDriver = "InvalidDbDriver";
+    final static public String CurrRowNotInit = "CurrRowNotInit";
+    final static public String InvalidCurrRowRef = "InvalidCurrRowRef";
+    final static public String NamingException = "NamingException";
+    final static public String DatasourceException = "DatasourceException";
+    final static public String InvalidAttrName = "InvalidAttrName";
+    //  class names
+    final static String NlsClass = "com.ibm.servlet.jsp.db.JspNLS";
+    final static String SETracer = "com.ibm.servlet.debug.SETracer";
+
 }

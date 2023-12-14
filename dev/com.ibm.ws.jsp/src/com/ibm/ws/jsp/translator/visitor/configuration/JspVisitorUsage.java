@@ -16,7 +16,7 @@ public class JspVisitorUsage {
     private int order = 0;
     private int visits = 0;
     private JspVisitorDefinition visitorDefinition = null;
-    
+
     public JspVisitorUsage(int order, int visits, JspVisitorDefinition visitorDefinition) {
         this.order = order;
         this.visits = visits;
@@ -26,7 +26,7 @@ public class JspVisitorUsage {
     public int getOrder() {
         return order;
     }
-    
+
     public int getVisits() {
         return visits;
     }

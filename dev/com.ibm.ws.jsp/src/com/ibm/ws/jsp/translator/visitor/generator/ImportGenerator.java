@@ -19,8 +19,7 @@ import com.ibm.ws.jsp.PagesVersionHandler;
 
 public class ImportGenerator extends CodeGeneratorBase {
 
-	public void startGeneration(int section, JavaCodeWriter writer)
-		throws JspCoreException {
+	public void startGeneration(int section, JavaCodeWriter writer) throws JspCoreException {
 		if (section == CodeGenerationPhase.IMPORT_SECTION) {
 			NamedNodeMap attributes = element.getAttributes();
 			if (attributes != null) {
@@ -53,7 +52,7 @@ public class ImportGenerator extends CodeGeneratorBase {
 							String singleImport = ((String) tokenizer.nextToken()).trim();
 							if (singleImport.startsWith(STATIC_IMPORT_PREPPEND)) {
 								writer.println("importStaticList.add(\"" + singleImport.substring(STATIC_IMPORT_PREPPEND.length()).trim() + "\");");
-							} else if(singleImport.endsWith(".*")){
+							} else if (singleImport.endsWith(".*")) {
 								writer.println("importPackageList.add(\"" + singleImport.replace(".*", "") + "\");");
 							} else {
 								writer.println("importClassList.add(\"" + singleImport + "\");");
@@ -67,8 +66,7 @@ public class ImportGenerator extends CodeGeneratorBase {
 		}
 	}
 
-	public void endGeneration(int section, JavaCodeWriter writer)
-		throws JspCoreException {
+	public void endGeneration(int section, JavaCodeWriter writer) throws JspCoreException {
 	}
 
 }

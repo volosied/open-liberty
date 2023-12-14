@@ -26,8 +26,8 @@ import com.ibm.wsspi.jsp.resource.JspInputSource;
 
 public class TagLibraryInfoProxy {
     static private Logger logger;
-	private static final String CLASS_NAME="com.ibm.ws.jsp.taglib.TagLibraryInfoProxy";
-    static{
+    private static final String CLASS_NAME = "com.ibm.ws.jsp.taglib.TagLibraryInfoProxy";
+    static {
         logger = Logger.getLogger("com.ibm.ws.jsp");
     }
     private String jarName = null;
@@ -36,22 +36,21 @@ public class TagLibraryInfoProxy {
     private GlobalTagLibraryCache globalTagLibraryCache = null;
     private boolean containsListenerDefs = false;
     private List eventListenerList = null;
-    
+
     public TagLibraryInfoProxy(String jarName, String tldPath, boolean containsListenerDefs, GlobalTagLibraryCache globalTagLibraryCache) {
         this.jarName = jarName;
         this.tldPath = tldPath;
         this.globalTagLibraryCache = globalTagLibraryCache;
         this.containsListenerDefs = containsListenerDefs;
     }
-    
+
     public synchronized TagLibraryInfoImpl getTagLibraryInfoImpl(String prefix) {
         if (tli == null) {
             loadTld();
         }
         if (tli == null) {
             return tli;
-        }
-        else {
+        } else {
             return tli.copy(prefix);
         }
     }
@@ -72,14 +71,14 @@ public class TagLibraryInfoProxy {
         if (jarUrl != null) {
             JspInputSource tldInputSource = null;
             try {
-                final boolean JCDIEnabledForRuntime=false;//set this to false since this configuration isn't used during runtime checking
-                JspConfigurationManager configManager = new JspConfigurationManager(Collections.EMPTY_LIST, false, true, Collections.EMPTY_LIST, JCDIEnabledForRuntime);    
+                final boolean JCDIEnabledForRuntime = false;//set this to false since this configuration isn't used during runtime checking
+                JspConfigurationManager configManager = new JspConfigurationManager(Collections.EMPTY_LIST, false, true, Collections.EMPTY_LIST, JCDIEnabledForRuntime);
                 TldParser tldParser = new TldParser(globalTagLibraryCache, configManager, false);
-                URL url = new URL("jar:" + jarUrl.toString()+"!/");
+                URL url = new URL("jar:" + jarUrl.toString() + "!/");
                 tldInputSource = globalTagLibraryCache.getJspInputSourceFactory().createJspInputSource(url, tldPath);
                 tli = tldParser.parseTLD(tldInputSource, jarName);
                 if (tli.getReliableURN() != null) {
-                    if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE)){
+                    if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
                         logger.logp(Level.FINE, CLASS_NAME, "loadTld", "Global jar tld in proxy loaded for {0}", tli.getReliableURN());
                     }
                     tli.setURI(tli.getReliableURN());
@@ -87,21 +86,18 @@ public class TagLibraryInfoProxy {
                         eventListenerList = new ArrayList();
                         eventListenerList.addAll(tldParser.getEventListenerList());
                     }
-                }
-                else {
-                    if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.WARNING)){
-                        logger.logp(Level.WARNING, CLASS_NAME, "loadTld", "jsp warning failed to find a uri tag in ["+tldInputSource.getAbsoluteURL()+"]");
+                } else {
+                    if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.WARNING)) {
+                        logger.logp(Level.WARNING, CLASS_NAME, "loadTld", "jsp warning failed to find a uri tag in [" + tldInputSource.getAbsoluteURL() + "]");
                     }
                 }
-            }
-            catch (JspCoreException e) {
-                if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.WARNING)){
-                    logger.logp(Level.WARNING, CLASS_NAME, "loadTld", "jsp warning failed to load tld in jar. uri = ["+tldInputSource.getAbsoluteURL()+"]", e);
+            } catch (JspCoreException e) {
+                if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.WARNING)) {
+                    logger.logp(Level.WARNING, CLASS_NAME, "loadTld", "jsp warning failed to load tld in jar. uri = [" + tldInputSource.getAbsoluteURL() + "]", e);
                 }
-            }
-            catch (IOException e) {
-                if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.WARNING)){
-                    logger.logp(Level.WARNING, CLASS_NAME, "loadTld", "jsp warning failed to load tld in jar. uri = ["+tldInputSource.getAbsoluteURL()+"]", e);
+            } catch (IOException e) {
+                if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.WARNING)) {
+                    logger.logp(Level.WARNING, CLASS_NAME, "loadTld", "jsp warning failed to load tld in jar. uri = [" + tldInputSource.getAbsoluteURL() + "]", e);
                 }
             }
         }

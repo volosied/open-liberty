@@ -54,7 +54,7 @@ public class JSPExtensionClassLoader extends URLClassLoader {
     private ClassLoader parent = null;
     private JspClassloaderContext jspClassloaderContext = null;
     private final ProtectionDomain defaultPD;
-    private Map<String,ProtectionDomain> pdCache = new HashMap<String,ProtectionDomain>();
+    private Map<String, ProtectionDomain> pdCache = new HashMap<String, ProtectionDomain>();
 
     public JSPExtensionClassLoader(URL[] urls,
                                    JspClassloaderContext jspClassloaderContext,
@@ -81,20 +81,19 @@ public class JSPExtensionClassLoader extends URLClassLoader {
     }
 
     Class<?> loadClass0(String name, boolean resolve) throws ClassNotFoundException {
-        if (System.getSecurityManager() != null){
+        if (System.getSecurityManager() != null) {
             final String tmpName = name;
             final boolean tmpResolve = resolve;
-            try{
+            try {
                 return AccessController.doPrivileged(new PrivilegedExceptionAction<Class<?>>() {
-                        public Class<?> run() throws ClassNotFoundException {
-                                return _loadClass(tmpName, tmpResolve, true);
-                        }
-                    });
-            }catch (PrivilegedActionException pae){
-                throw (ClassNotFoundException)pae.getException();
+                    public Class<?> run() throws ClassNotFoundException {
+                        return _loadClass(tmpName, tmpResolve, true);
+                    }
+                });
+            } catch (PrivilegedActionException pae) {
+                throw (ClassNotFoundException) pae.getException();
             }
-        }
-        else{
+        } else {
             return _loadClass(name, resolve, false);
         }
     }
@@ -115,8 +114,7 @@ public class JSPExtensionClassLoader extends URLClassLoader {
                 try {
                     //PK50834 switching from using securityManager variable to direct call to System
                     System.getSecurityManager().checkPackageAccess(name.substring(0, dot));
-                }
-                catch (SecurityException se) {
+                } catch (SecurityException se) {
                     String error = "Security Violation, attempt to use " + "Restricted Class: " + name;
                     throw new ClassNotFoundException(error);
                 }
@@ -132,22 +130,19 @@ public class JSPExtensionClassLoader extends URLClassLoader {
             if (resolve)
                 resolveClass(clazz);
             return clazz;
-        }
-        else {
+        } else {
             String classFile = null;
 
             if (name.startsWith(Constants.JSP_FIXED_PACKAGE_NAME + "." + className)) {
                 classFile = name.substring(Constants.JSP_FIXED_PACKAGE_NAME.length() + 1) + ".class";
-            }
-            else if (name.startsWith(Constants.OLD_JSP_PACKAGE_NAME+ "." + className)) {
+            } else if (name.startsWith(Constants.OLD_JSP_PACKAGE_NAME + "." + className)) {
                 classFile = name.substring(Constants.OLD_JSP_PACKAGE_NAME.length() + 1) + ".class";
-            }
-            else {
+            } else {
                 classFile = name.replace('.', File.separatorChar) + ".class";
             }
             byte[] cdata = loadClassDataFromFile(classFile);
             if (cdata != null) {
-                    
+
                 //PK71207 start
                 // add try/catch block to catch an Error like java.lang.LinkageError if two threads are trying to call defineClass with the same class name.
                 // We will try to find the loaded class again as if that error occurs means it should be loaded by the first thread.
@@ -155,16 +150,15 @@ public class JSPExtensionClassLoader extends URLClassLoader {
                 try {
                     ProtectionDomain pd = getClassSpecificProtectionDomain(classFile, checkPackageAccess);//new ProtectionDomain(codeSource, permissionCollection);
                     clazz = defClass(name, cdata, cdata.length, pd);
-                }
-                catch (Error e) {
+                } catch (Error e) {
                     clazz = findLoadedClass(name);
                     if (clazz != null) {
                         if (resolve)
                             resolveClass(clazz);
                         return (clazz);
                     }
-                    cdata = loadClassDataFromFile(classFile); 
-                    if (cdata==null) {
+                    cdata = loadClassDataFromFile(classFile);
+                    if (cdata == null) {
                         if (parent != null) {
                             clazz = parent.loadClass(classFile);
                             if (clazz != null) {
@@ -177,8 +171,7 @@ public class JSPExtensionClassLoader extends URLClassLoader {
                     throw e;
                 }
                 //PK71207 end
-            }
-            else {
+            } else {
                 if (parent != null) {
                     clazz = parent.loadClass(classFile);
                 }
@@ -199,8 +192,7 @@ public class JSPExtensionClassLoader extends URLClassLoader {
         }
         if (pd != null) {
             return defineClass(className, classData, 0, classData.length, pd);
-        }
-        else {
+        } else {
             return defineClass(className, classData, 0, classData.length);
         }
     }
@@ -217,13 +209,12 @@ public class JSPExtensionClassLoader extends URLClassLoader {
             }
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             byte buf[] = new byte[1024];
-            for (int i = 0;(i = in.read(buf)) != -1;)
+            for (int i = 0; (i = in.read(buf)) != -1;)
                 baos.write(buf, 0, i);
             in.close();
             baos.close();
             classBytes = baos.toByteArray();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             return null;
         }
         return classBytes;
@@ -244,15 +235,13 @@ public class JSPExtensionClassLoader extends URLClassLoader {
                 return null;
             }
             return resourceURL.openStream();
-        }
-        catch (java.net.MalformedURLException malURL) {
+        } catch (java.net.MalformedURLException malURL) {
             return null;
-        }
-        catch (IOException io) {
+        } catch (IOException io) {
             return null;
         }
     }
-    
+
     private ProtectionDomain getClassSpecificProtectionDomain(String classFile, boolean useDoPriv) {
         ProtectionDomain pd;
         URL classUrl = getResource(classFile);
@@ -276,28 +265,29 @@ public class JSPExtensionClassLoader extends URLClassLoader {
                 });
             }
         }
-            
+
         if (codeLocation != null && codeLocationString != null) {
-            synchronized(pdCache) {
+            synchronized (pdCache) {
                 pd = pdCache.get(codeLocationString);
                 if (pd == null) {
                     ClassLoader tccl = null;
                     try {
-                        tccl = (ClassLoader)AccessController.doPrivileged(new PrivilegedExceptionAction<Object>() {
+                        tccl = (ClassLoader) AccessController.doPrivileged(new PrivilegedExceptionAction<Object>() {
                             public Object run() {
-                                    return Thread.currentThread().getContextClassLoader();
+                                return Thread.currentThread().getContextClassLoader();
                             }
                         });
-                    }catch (PrivilegedActionException pae)
-                        {
-                            if (tc.isDebugEnabled()) Tr.debug(tc, "Failed to get the ContextClassLoader." + pae);
-                        }
-                    
-                    if (tccl !=null && tccl instanceof BundleReference) {
+                    } catch (PrivilegedActionException pae) {
+                        if (tc.isDebugEnabled())
+                            Tr.debug(tc, "Failed to get the ContextClassLoader." + pae);
+                    }
+
+                    if (tccl != null && tccl instanceof BundleReference) {
                         Bundle b = ((BundleReference) tccl).getBundle();
                         if (b.getHeaders("Web-ContextPath") != null) {
                             pd = b.adapt(ProtectionDomain.class);
-                            if (tc.isDebugEnabled()) Tr.debug(tc, "WAB ProtectionDomain obtained" + pd);
+                            if (tc.isDebugEnabled())
+                                Tr.debug(tc, "WAB ProtectionDomain obtained" + pd);
                         }
                     }
                     if (pd == null) {

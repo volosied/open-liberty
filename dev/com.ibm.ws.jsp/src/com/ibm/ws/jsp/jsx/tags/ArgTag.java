@@ -18,10 +18,10 @@ import javax.servlet.jsp.tagext.TagSupport;
 
 public class ArgTag extends TagSupport implements Tag {
     /**
-	 * Comment for <code>serialVersionUID</code>
-	 */
-	private static final long serialVersionUID = 3257006540509754937L;
-	String value;
+     * Comment for <code>serialVersionUID</code>
+     */
+    private static final long serialVersionUID = 3257006540509754937L;
+    String value;
 
     /**
      * @see TagSupport#doStartTag()
@@ -41,13 +41,16 @@ public class ArgTag extends TagSupport implements Tag {
 
     /**
      * Gets the value
+     * 
      * @return Returns a String
      */
     public String getValue() {
         return value;
     }
+
     /**
      * Sets the value
+     * 
      * @param value The value to set
      */
     public void setValue(String value) {

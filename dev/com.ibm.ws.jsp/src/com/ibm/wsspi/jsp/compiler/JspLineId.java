@@ -17,10 +17,10 @@ package com.ibm.wsspi.jsp.compiler;
  */
 
 public class JspLineId {
-    
+
     protected String filePath = null;
     protected String generatedFilePath = null;
-	protected String parentFile = null;
+    protected String parentFile = null;
     protected int startSourceLineNum = 0;
     protected int startSourceColNum = 0;
     protected int sourceLineCount = 0;
@@ -30,10 +30,10 @@ public class JspLineId {
     protected int startGeneratedLineCount = 0;
     protected int endGeneratedLineNum = 0;
     protected int endGeneratedLineCount = 0;
-    
-    public JspLineId(String filePath, 
+
+    public JspLineId(String filePath,
                      String generatedFilePath,
-                     String parentFile,  
+                     String parentFile,
                      int startSourceLineNum,
                      int startSourceColNum,
                      int sourceLineCount,
@@ -43,20 +43,20 @@ public class JspLineId {
                      int startGeneratedLineCount,
                      int endGeneratedLineNum,
                      int endGeneratedLineCount) {
-        this.filePath = filePath;                         
-        this.generatedFilePath = generatedFilePath;                         
-		this.parentFile = parentFile;                         
-        this.startSourceLineNum = startSourceLineNum; 
-        this.startSourceColNum = startSourceColNum; 
-        this.sourceLineCount = sourceLineCount; 
-        this.endSourceLineNum = endSourceLineNum; 
-        this.endSourceColNum = endSourceColNum; 
-        this.startGeneratedLineNum = startGeneratedLineNum; 
-        this.startGeneratedLineCount = startGeneratedLineCount; 
-        this.endGeneratedLineNum = endGeneratedLineNum; 
-        this.endGeneratedLineCount = endGeneratedLineCount; 
+        this.filePath = filePath;
+        this.generatedFilePath = generatedFilePath;
+        this.parentFile = parentFile;
+        this.startSourceLineNum = startSourceLineNum;
+        this.startSourceColNum = startSourceColNum;
+        this.sourceLineCount = sourceLineCount;
+        this.endSourceLineNum = endSourceLineNum;
+        this.endSourceColNum = endSourceColNum;
+        this.startGeneratedLineNum = startGeneratedLineNum;
+        this.startGeneratedLineCount = startGeneratedLineCount;
+        this.endGeneratedLineNum = endGeneratedLineNum;
+        this.endGeneratedLineCount = endGeneratedLineCount;
     }
-    
+
     /**
      * @return int The line count for the 'end' generated section of code
      */
@@ -121,41 +121,42 @@ public class JspLineId {
     }
 
     /**
-     * @return int The line number of the 'start' section of source code 
+     * @return int The line number of the 'start' section of source code
      */
     public int getStartSourceLineNum() {
         return startSourceLineNum;
     }
 
     /**
-     * @return String The path of the generated source file 
+     * @return String The path of the generated source file
      */
     public String getGeneratedFilePath() {
         return generatedFilePath;
     }
-	/**
-	 * @return String The path of the parent file 
-	 */
-	public String getParentFile() {
-		return parentFile;
-	}
+
+    /**
+     * @return String The path of the parent file
+     */
+    public String getParentFile() {
+        return parentFile;
+    }
 
     public String toString() {
         String separatorString = System.getProperty("line.separator");
-        
-        return new String (""+separatorString+
-            "filePath =                    [" + filePath +"]"+separatorString+                         
-            "generatedFilePath =           [" +generatedFilePath +"]"+separatorString+            
-			"parentFile =                  [" +parentFile +"]"+separatorString+            
-            "startSourceLineNum =          [" +startSourceLineNum +"]"+separatorString+
-            "startSourceColNum =           [" +startSourceColNum +"]"+separatorString+
-            "sourceLineCount =             [" +sourceLineCount +"]"+separatorString+
-            "endSourceLineNum =            [" +endSourceLineNum +"]"+separatorString+
-            "endSourceColNum =             [" +endSourceColNum +"]"+separatorString+
-            "startGeneratedLineNum =       [" +startGeneratedLineNum +"]"+separatorString+
-            "startGeneratedLineCount =     [" +startGeneratedLineCount +"]"+separatorString+
-            "endGeneratedLineNum =         [" +endGeneratedLineNum +"]"+separatorString+
-            "endGeneratedLineCount =       [" +endGeneratedLineCount +"]"+separatorString+
-            "");
+
+        return new String("" + separatorString +
+                          "filePath =                    [" + filePath + "]" + separatorString +
+                          "generatedFilePath =           [" + generatedFilePath + "]" + separatorString +
+                          "parentFile =                  [" + parentFile + "]" + separatorString +
+                          "startSourceLineNum =          [" + startSourceLineNum + "]" + separatorString +
+                          "startSourceColNum =           [" + startSourceColNum + "]" + separatorString +
+                          "sourceLineCount =             [" + sourceLineCount + "]" + separatorString +
+                          "endSourceLineNum =            [" + endSourceLineNum + "]" + separatorString +
+                          "endSourceColNum =             [" + endSourceColNum + "]" + separatorString +
+                          "startGeneratedLineNum =       [" + startGeneratedLineNum + "]" + separatorString +
+                          "startGeneratedLineCount =     [" + startGeneratedLineCount + "]" + separatorString +
+                          "endGeneratedLineNum =         [" + endGeneratedLineNum + "]" + separatorString +
+                          "endGeneratedLineCount =       [" + endGeneratedLineCount + "]" + separatorString +
+                          "");
     }
 }

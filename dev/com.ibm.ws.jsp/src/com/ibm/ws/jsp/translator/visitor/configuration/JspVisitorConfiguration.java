@@ -17,23 +17,23 @@ import java.util.HashMap;
 public class JspVisitorConfiguration {
     protected HashMap jspVisitorDefinitionMap = new HashMap();
     protected HashMap jspVisitorCollectionMap = new HashMap();
-    
+
     public JspVisitorConfiguration() {
     }
-    
+
     void addJspVisitorDefinition(JspVisitorDefinition jspVisitorDefinition) {
-        jspVisitorDefinitionMap.put(jspVisitorDefinition.getId(), jspVisitorDefinition);   
+        jspVisitorDefinitionMap.put(jspVisitorDefinition.getId(), jspVisitorDefinition);
     }
-    
+
     JspVisitorDefinition getJspVisitorDefinition(String id) {
-        return ((JspVisitorDefinition)jspVisitorDefinitionMap.get(id));
+        return ((JspVisitorDefinition) jspVisitorDefinitionMap.get(id));
     }
-    
+
     void addJspVisitorCollection(JspVisitorCollection jspVisitorCollection) {
-        jspVisitorCollectionMap.put(jspVisitorCollection.getId(), jspVisitorCollection);   
+        jspVisitorCollectionMap.put(jspVisitorCollection.getId(), jspVisitorCollection);
     }
-    
+
     public JspVisitorCollection getJspVisitorCollection(String id) {
-        return ((JspVisitorCollection)jspVisitorCollectionMap.get(id));
+        return ((JspVisitorCollection) jspVisitorCollectionMap.get(id));
     }
 }

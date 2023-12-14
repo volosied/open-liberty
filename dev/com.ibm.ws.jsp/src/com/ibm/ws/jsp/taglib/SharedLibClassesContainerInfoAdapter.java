@@ -53,7 +53,7 @@ import com.ibm.wsspi.library.Library;
  */
 public class SharedLibClassesContainerInfoAdapter implements ContainerAdapter<SharedLibClassesContainerInfo> {
     static final protected Logger logger;
-    static{
+    static {
         logger = Logger.getLogger("com.ibm.ws.jsp");
     }
 
@@ -104,7 +104,8 @@ public class SharedLibClassesContainerInfoAdapter implements ContainerAdapter<Sh
     }
 
     @Override
-    public SharedLibClassesContainerInfo adapt(Container root, OverlayContainer rootOverlay, ArtifactContainer artifactContainer, Container containerToAdapt) throws UnableToAdaptException {
+    public SharedLibClassesContainerInfo adapt(Container root, OverlayContainer rootOverlay, ArtifactContainer artifactContainer,
+                                               Container containerToAdapt) throws UnableToAdaptException {
         final List<ContainerInfo> sharedLibContainers = new ArrayList<ContainerInfo>();
         final List<ContainerInfo> commonLibContainers = new ArrayList<ContainerInfo>();
 
@@ -159,6 +160,7 @@ public class SharedLibClassesContainerInfoAdapter implements ContainerAdapter<Sh
             public List<ContainerInfo> getSharedLibraryClassesContainerInfo() {
                 return Collections.unmodifiableList(sharedLibContainers);
             }
+
             @Override
             public List<ContainerInfo> getCommonLibraryClassesContainerInfo() {
                 return Collections.unmodifiableList(commonLibContainers);
@@ -205,12 +207,12 @@ public class SharedLibClassesContainerInfoAdapter implements ContainerAdapter<Sh
                         public Type getType() {
                             return Type.SHARED_LIB;
                         }
-    
+
                         @Override
                         public String getName() {
                             return name;
                         }
-    
+
                         @Override
                         public Container getContainer() {
                             return container;

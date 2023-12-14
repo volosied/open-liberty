@@ -32,18 +32,19 @@ import com.ibm.wsspi.webcontainer.servlet.IServletContext;
 import com.ibm.wsspi.webcontainer.servlet.IServletWrapper;
 
 public class JSPLiteExtProcessor extends com.ibm.ws.webcontainer.extension.WebExtensionProcessor {
-    
+
     protected static final int numSyncObjects = 41;
     protected static Object[] syncObjects;
     static {
         syncObjects = new Object[numSyncObjects];
-        for (int i = 0; i < numSyncObjects; i++) syncObjects[i] = new Object();
+        for (int i = 0; i < numSyncObjects; i++)
+            syncObjects[i] = new Object();
     }
 
     static final protected Object getSyncObject(String name) {
         return syncObjects[Math.abs(name.hashCode() % numSyncObjects)];
     }
-    
+
     public JSPLiteExtProcessor(IServletContext webapp) throws Exception {
         super(webapp);
     }
@@ -57,43 +58,41 @@ public class JSPLiteExtProcessor extends com.ibm.ws.webcontainer.extension.WebEx
     public void handleRequest(ServletRequest req, ServletResponse res) throws Exception {
         if (req instanceof HttpServletRequest) {
             HttpServletRequest httpReq = (HttpServletRequest) req;
-            
-            IServletWrapper jspServletWrapper = findWrapper(httpReq, (HttpServletResponse)res);
+
+            IServletWrapper jspServletWrapper = findWrapper(httpReq, (HttpServletResponse) res);
             if (jspServletWrapper != null) {
                 jspServletWrapper.handleRequest(req, res);
             }
         }
     }
-    
+
     private IServletWrapper findWrapper(HttpServletRequest httpReq, HttpServletResponse res) throws Exception {
         IServletWrapper jspServletWrapper = null;
         IServletConfig sconfig = getConfig(httpReq);
 
         String filename = sconfig.getFileName();
-            
+
         synchronized (getSyncObject(filename)) {
             RequestProcessor rp = extensionContext.getMappingTarget(filename);
             if (rp instanceof ExtensionProcessor) {
                 jspServletWrapper = createServletWrapper(sconfig);
                 extensionContext.addMappingTarget(filename, jspServletWrapper);
-                
+
                 try {
-                	extensionContext.addMappingTarget(filename, jspServletWrapper);
+                    extensionContext.addMappingTarget(filename, jspServletWrapper);
+                } catch (Exception e) {
+                    extensionContext.replaceMappingTarget(filename, jspServletWrapper);
                 }
-                catch (Exception e) {
-                	extensionContext.replaceMappingTarget(filename, jspServletWrapper);
-                }
-            }
-            else {
-                jspServletWrapper = (IServletWrapper)rp;    
+            } else {
+                jspServletWrapper = (IServletWrapper) rp;
             }
         }
-        
-        return jspServletWrapper;         
+
+        return jspServletWrapper;
     }
 
     public List getPatternList() {
-        return Collections.EMPTY_LIST;    
+        return Collections.EMPTY_LIST;
     }
 
     public IServletConfig getConfig(HttpServletRequest req) throws ServletException {
@@ -104,26 +103,25 @@ public class JSPLiteExtProcessor extends com.ibm.ws.webcontainer.extension.WebEx
         if (includeUri == null) {
             jspUri = req.getServletPath();
             if (req.getPathInfo() != null) {
-            	String pathInfo = req.getPathInfo();
-            	int semicolon = pathInfo.indexOf(';');
-                if (semicolon != -1){
+                String pathInfo = req.getPathInfo();
+                int semicolon = pathInfo.indexOf(';');
+                if (semicolon != -1) {
                     pathInfo = pathInfo.substring(0, semicolon);
                 }
                 jspUri += pathInfo;
             }
-        }
-        else {
+        } else {
             String pathInfo = (String) req.getAttribute(Constants.INC_PATH_INFO);
             jspUri = includeUri;
             if (pathInfo != null) {
                 int semicolon = pathInfo.indexOf(';');
-                if (semicolon != -1){
+                if (semicolon != -1) {
                     pathInfo = pathInfo.substring(0, semicolon);
                 }
                 jspUri += pathInfo;
             }
         }
-        
+
         jspUri = com.ibm.ws.util.WSUtil.resolveURI(jspUri);
         IServletConfig sconfig = createConfig(jspUri);
         sconfig.setServletName(jspUri);
@@ -133,49 +131,48 @@ public class JSPLiteExtProcessor extends com.ibm.ws.webcontainer.extension.WebEx
         sconfig.setInitParams(new HashMap());
         sconfig.setFileName(jspUri);
         sconfig.setClassName(getPackageName(jspUri) + "." + getClassName(jspUri));
-        
+
         return sconfig;
     }
 
     private String getPackageName(String jspUri) {
-        String packageName=jspUri.substring(0,jspUri.lastIndexOf("/")+1);
-        if ( !packageName.equals("/") ) {
-            packageName = NameMangler.handlePackageName (packageName);
-            packageName=Constants.JSP_PACKAGE_PREFIX+"."+packageName.substring(0,packageName.length()-1);
-        }
-        else {
-            packageName=Constants.JSP_PACKAGE_PREFIX;
+        String packageName = jspUri.substring(0, jspUri.lastIndexOf("/") + 1);
+        if (!packageName.equals("/")) {
+            packageName = NameMangler.handlePackageName(packageName);
+            packageName = Constants.JSP_PACKAGE_PREFIX + "." + packageName.substring(0, packageName.length() - 1);
+        } else {
+            packageName = Constants.JSP_PACKAGE_PREFIX;
         }
         return packageName;
     }
-    
+
     private String getClassName(String jspUri) {
         if (jspUri.charAt(0) != '/') {
-            jspUri = "/"+jspUri;
+            jspUri = "/" + jspUri;
         }
         return NameMangler.mangleClassName(jspUri);
     }
-    
-	public boolean isAvailable(String resource) {
-		String resourcePath = getPackageName(resource) + "." + getClassName(resource);
-		resourcePath = resourcePath.replace('.', '/');
-		java.io.File resourceFile = new java.io.File(extensionContext.getRealPath(resourcePath));//PM21451
-		return resourceFile.exists();
-	}
 
-	public IServletWrapper getServletWrapper() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public boolean isAvailable(String resource) {
+        String resourcePath = getPackageName(resource) + "." + getClassName(resource);
+        resourcePath = resourcePath.replace('.', '/');
+        java.io.File resourceFile = new java.io.File(extensionContext.getRealPath(resourcePath));//PM21451
+        return resourceFile.exists();
+    }
 
-	public WebComponentMetaData getMetaData() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public IServletWrapper getServletWrapper() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	public IServletWrapper getServletWrapper(ServletRequest req,
-			ServletResponse resp) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public WebComponentMetaData getMetaData() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public IServletWrapper getServletWrapper(ServletRequest req,
+                                             ServletResponse resp) throws Exception {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

@@ -16,7 +16,7 @@ package com.ibm.ws.jsp.translator.visitor.generator;
  *
  */
 public interface GeneratorUtilsExtFactory {
-    
+
     public GeneratorUtilsExt getGeneratorUtilsExt();
 
 }

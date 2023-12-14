@@ -35,11 +35,11 @@ public class TagLibCacheConfigParser extends DefaultHandler {
     public static final String DTD_PUBLIC_ID = "http://www.ibm.com/xml/ns/TagLibCacheConfig.xsd";
 
     public static final String DTD_RESOURCE_PATH = "/com/ibm/ws/jsp/tablib/config/TagLibCacheConfig.xsd";
-    
+
     protected SAXParser saxParser = null;
 
     protected StringBuffer chars = null;
-    
+
     protected String uri = null;
     protected String prefix = null;
     protected String location = null;
@@ -47,119 +47,100 @@ public class TagLibCacheConfigParser extends DefaultHandler {
     protected String type = null;
     protected String webinfFileName = null;
     protected String servletClassName = null;
-    
+
     protected List implicitTagLibList = new ArrayList();
     protected List globalTagLibList = new ArrayList();
-    
+
     protected ImplicitTagLibConfig implicitTagLibConfig = null;
     protected GlobalTagLibConfig globalTagLibConfig = null;
     protected TldPathConfig tldPathConfig = null;
     protected AvailabilityCondition availabilityCondition = null;
-    
-    
+
     public TagLibCacheConfigParser() throws JspCoreException {
         try {
             saxParser = ParserFactory.newSAXParser(false, true);
-        }
-        catch (ParserConfigurationException e) {
+        } catch (ParserConfigurationException e) {
             throw new JspCoreException(e);
-        }
-        catch (SAXException e) {
+        } catch (SAXException e) {
             throw new JspCoreException(e);
         }
     }
-    
+
     public void parse(InputStream is) throws JspCoreException {
-    	reset();
+        reset();
         try {
             ParserFactory.parseDocument(saxParser, is, this);
-        }
-        catch (SAXException e) {
+        } catch (SAXException e) {
             if (e.getCause() != null)
                 throw new JspCoreException(e.getCause());
             else
                 throw new JspCoreException(e);
-                
-        }
-        catch (IOException e) {
+
+        } catch (IOException e) {
             throw new JspCoreException(e);
-        }
-        finally {
+        } finally {
             try {
                 is.close();
-            } catch (IOException e) {}
+            } catch (IOException e) {
+            }
         }
     }
-    
-    public void startElement(String namespaceURI, 
+
+    public void startElement(String namespaceURI,
                              String localName,
-                             String elementName, 
-                             Attributes attrs) 
-        throws SAXException {
+                             String elementName,
+                             Attributes attrs) throws SAXException {
         chars = new StringBuffer();
         if (elementName.equals("global-taglib")) {
             globalTagLibConfig = new GlobalTagLibConfig();
-        }
-        else if (elementName.equals("tld-path")) {
+        } else if (elementName.equals("tld-path")) {
             tldPathConfig = new TldPathConfig(attrs.getValue("path"), attrs.getValue("uri"), attrs.getValue("contains-listener-defs"));
         }
     }
-    
+
     @Trivial
     public void characters(char[] ch, int start, int length) throws SAXException {
         for (int i = 0; i < length; i++) {
             if (chars != null)
-                chars.append(ch[start+i]);
+                chars.append(ch[start + i]);
         }
     }
-    
+
     public void endElement(String namespaceURI,
                            String localName,
-                           String elementName)
-        throws SAXException {
+                           String elementName) throws SAXException {
         if (elementName.equals("uri")) {
             uri = chars.toString().trim();
-        }
-        else if (elementName.equals("prefix")) {
+        } else if (elementName.equals("prefix")) {
             prefix = chars.toString().trim();
-        }
-        else if (elementName.equals("location")) {
+        } else if (elementName.equals("location")) {
             location = chars.toString().trim();
-        }
-        else if (elementName.equals("jar-name")) {
+        } else if (elementName.equals("jar-name")) {
             jarName = chars.toString().trim();
-        }
-        else if (elementName.equals("type")) {
+        } else if (elementName.equals("type")) {
             type = chars.toString().trim();
-        }
-        else if (elementName.equals("webinf-filename")) {
+        } else if (elementName.equals("webinf-filename")) {
             webinfFileName = chars.toString().trim();
-        }
-        else if (elementName.equals("servlet-classname")) {
+        } else if (elementName.equals("servlet-classname")) {
             servletClassName = chars.toString().trim();
-        }
-        else if (elementName.equals("implict-taglib")) {
-            implicitTagLibConfig = new ImplicitTagLibConfig(uri, prefix, location); 
+        } else if (elementName.equals("implict-taglib")) {
+            implicitTagLibConfig = new ImplicitTagLibConfig(uri, prefix, location);
             implicitTagLibList.add(implicitTagLibConfig);
             implicitTagLibConfig = null;
-        }
-        else if (elementName.equals("global-taglib")) {
+        } else if (elementName.equals("global-taglib")) {
             globalTagLibConfig.setJarName(jarName);
             globalTagLibList.add(globalTagLibConfig);
             globalTagLibConfig = null;
-        }
-        else if (elementName.equals("tld-path")) {
+        } else if (elementName.equals("tld-path")) {
             globalTagLibConfig.getTldPathList().add(tldPathConfig);
             tldPathConfig = null;
-        }
-        else if (elementName.equals("availability-condition")) {
+        } else if (elementName.equals("availability-condition")) {
             AvailabilityConditionType conditionType = null;
             String conditionValue = null;
             if (type.equalsIgnoreCase("WEBINF-FILE")) {
                 conditionType = AvailabilityConditionType.webinfFileType;
-                conditionValue = webinfFileName; 
-            }
-            else if (type.equalsIgnoreCase("SERVLET-CLASSNAME")) {
+                conditionValue = webinfFileName;
+            } else if (type.equalsIgnoreCase("SERVLET-CLASSNAME")) {
                 conditionType = AvailabilityConditionType.servletClassNameType;
                 conditionValue = servletClassName;
             }
@@ -169,12 +150,11 @@ public class TagLibCacheConfigParser extends DefaultHandler {
         }
     }
 
-    public InputSource resolveEntity(String publicId, String systemId)
-        throws SAXException {
+    public InputSource resolveEntity(String publicId, String systemId) throws SAXException {
         InputSource isrc = null;
-        String resourcePath = null;            
+        String resourcePath = null;
         if (publicId.equals(DTD_PUBLIC_ID)) {
-            resourcePath = DTD_RESOURCE_PATH;     
+            resourcePath = DTD_RESOURCE_PATH;
         }
         if (resourcePath != null) {
             InputStream input = this.getClass().getResourceAsStream(resourcePath);
@@ -185,7 +165,7 @@ public class TagLibCacheConfigParser extends DefaultHandler {
         }
         return isrc;
     }
-    
+
     public List getGlobalTagLibList() {
         return globalTagLibList;
     }
@@ -193,21 +173,22 @@ public class TagLibCacheConfigParser extends DefaultHandler {
     public List getImplicitTagLibList() {
         return implicitTagLibList;
     }
-    private void reset() {    
-    	uri = null;
-    	prefix = null;
-    	location = null;
-    	jarName = null;
-    	type = null;
-    	webinfFileName = null;
-    	servletClassName = null;
 
-    	implicitTagLibList = new ArrayList();
-    	globalTagLibList = new ArrayList();
+    private void reset() {
+        uri = null;
+        prefix = null;
+        location = null;
+        jarName = null;
+        type = null;
+        webinfFileName = null;
+        servletClassName = null;
 
-    	implicitTagLibConfig = null;
-    	globalTagLibConfig = null;
-    	tldPathConfig = null;
-    	availabilityCondition = null;
+        implicitTagLibList = new ArrayList();
+        globalTagLibList = new ArrayList();
+
+        implicitTagLibConfig = null;
+        globalTagLibConfig = null;
+        tldPathConfig = null;
+        availabilityCondition = null;
     }
 }

@@ -27,9 +27,9 @@ public interface JspResourcesFactory {
      * @return JspResources
      */
     JspResources createJspResources(JspInputSource jspInputSource);
-    
+
     /**
-     * Returns a TagFileResouces object for the given TagFile Input Source and 
+     * Returns a TagFileResouces object for the given TagFile Input Source and
      * TagFileInfo object representing the tagfile.
      * 
      * @param tagFileInputSource

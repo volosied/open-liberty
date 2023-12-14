@@ -12,7 +12,6 @@
  *******************************************************************************/
 package com.ibm.ws.jsp.translator.visitor.validator;
 
-
 import com.ibm.ws.jsp.Constants;
 
 public class ValidateJspResult extends ValidateResult {
@@ -25,14 +24,14 @@ public class ValidateJspResult extends ValidateResult {
     protected boolean autoFlush = true;
     protected boolean singleThreaded = false;
     protected boolean isErrorPage = false;
-    
-    
+
     public ValidateJspResult(String jspVisitorId) {
         super(jspVisitorId);
     }
-    
+
     /**
      * Returns the autoFlush.
+     * 
      * @return boolean
      */
     public boolean isAutoFlush() {
@@ -41,6 +40,7 @@ public class ValidateJspResult extends ValidateResult {
 
     /**
      * Returns the bufferSize.
+     * 
      * @return int
      */
     public int getBufferSize() {
@@ -49,6 +49,7 @@ public class ValidateJspResult extends ValidateResult {
 
     /**
      * Returns the contentType.
+     * 
      * @return String
      */
     public String getContentType() {
@@ -57,6 +58,7 @@ public class ValidateJspResult extends ValidateResult {
 
     /**
      * Returns the error.
+     * 
      * @return String
      */
     public String getError() {
@@ -65,6 +67,7 @@ public class ValidateJspResult extends ValidateResult {
 
     /**
      * Returns the extendsClass.
+     * 
      * @return String
      */
     public String getExtendsClass() {
@@ -73,6 +76,7 @@ public class ValidateJspResult extends ValidateResult {
 
     /**
      * Returns the genSessionVariable.
+     * 
      * @return boolean
      */
     public boolean isGenSessionVariable() {
@@ -81,6 +85,7 @@ public class ValidateJspResult extends ValidateResult {
 
     /**
      * Returns the info.
+     * 
      * @return String
      */
     public String getInfo() {
@@ -89,6 +94,7 @@ public class ValidateJspResult extends ValidateResult {
 
     /**
      * Returns the isErrorPage.
+     * 
      * @return boolean
      */
     public boolean isErrorPage() {
@@ -97,6 +103,7 @@ public class ValidateJspResult extends ValidateResult {
 
     /**
      * Returns the singleThreaded.
+     * 
      * @return boolean
      */
     public boolean isSingleThreaded() {
@@ -105,6 +112,7 @@ public class ValidateJspResult extends ValidateResult {
 
     /**
      * Sets the autoFlush.
+     * 
      * @param autoFlush The autoFlush to set
      */
     public void setAutoFlush(boolean autoFlush) {
@@ -113,6 +121,7 @@ public class ValidateJspResult extends ValidateResult {
 
     /**
      * Sets the bufferSize.
+     * 
      * @param bufferSize The bufferSize to set
      */
     public void setBufferSize(int bufferSize) {
@@ -121,6 +130,7 @@ public class ValidateJspResult extends ValidateResult {
 
     /**
      * Sets the contentType.
+     * 
      * @param contentType The contentType to set
      */
     public void setContentType(String contentType) {
@@ -129,6 +139,7 @@ public class ValidateJspResult extends ValidateResult {
 
     /**
      * Sets the error.
+     * 
      * @param error The error to set
      */
     public void setError(String error) {
@@ -137,6 +148,7 @@ public class ValidateJspResult extends ValidateResult {
 
     /**
      * Sets the extendsClass.
+     * 
      * @param extendsClass The extendsClass to set
      */
     public void setExtendsClass(String extendsClass) {
@@ -145,6 +157,7 @@ public class ValidateJspResult extends ValidateResult {
 
     /**
      * Sets the genSessionVariable.
+     * 
      * @param genSessionVariable The genSessionVariable to set
      */
     public void setGenSessionVariable(boolean genSessionVariable) {
@@ -153,6 +166,7 @@ public class ValidateJspResult extends ValidateResult {
 
     /**
      * Sets the info.
+     * 
      * @param info The info to set
      */
     public void setInfo(String info) {
@@ -161,6 +175,7 @@ public class ValidateJspResult extends ValidateResult {
 
     /**
      * Sets the isErrorPage.
+     * 
      * @param isErrorPage The isErrorPage to set
      */
     public void setIsErrorPage(boolean isErrorPage) {
@@ -169,10 +184,11 @@ public class ValidateJspResult extends ValidateResult {
 
     /**
      * Sets the singleThreaded.
+     * 
      * @param singleThreaded The singleThreaded to set
      */
     public void setSingleThreaded(boolean singleThreaded) {
         this.singleThreaded = singleThreaded;
     }
-    
+
 }

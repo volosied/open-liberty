@@ -25,7 +25,7 @@ import com.ibm.ws.jsp.translator.utils.JspTranslatorUtil;
 
 class MapperELVisitor extends ELNode.Visitor {
 	ValidateFunctionMapper fmapper;
-	ClassLoader loader=null;
+	ClassLoader loader = null;
 
 	MapperELVisitor(ValidateFunctionMapper fmapper, ClassLoader loader) {
 		this.fmapper = fmapper;
@@ -33,23 +33,23 @@ class MapperELVisitor extends ELNode.Visitor {
 	}
 
 	public void visit(ELNode.Function n) throws JspTranslationException {
-        FunctionInfo fInfo = null;
-		if (n!=null) {	
+		FunctionInfo fInfo = null;
+		if (n != null) {
 			Class c = null;
 			Method method = null;
 			try {
-		        fInfo = n.getFunctionInfo();
-		        if (fInfo!=null) {
-			        String fClass = fInfo.getFunctionClass();
-			        if (loader!=null) {
-			        	c = loader.loadClass(fInfo.getFunctionClass());
-			        }
-		        }
-			} catch (ClassNotFoundException e){					
-                throw new JspTranslationException("jsp.error.function.classnotfound", new Object[] { n.getFunctionInfo().getFunctionClass()+" "+
-                		n.getPrefix()+ ':' + n.getName(), e.getMessage()});					
+				fInfo = n.getFunctionInfo();
+				if (fInfo != null) {
+					String fClass = fInfo.getFunctionClass();
+					if (loader != null) {
+						c = loader.loadClass(fInfo.getFunctionClass());
+					}
+				}
+			} catch (ClassNotFoundException e) {
+				throw new JspTranslationException("jsp.error.function.classnotfound", new Object[] {	n.getFunctionInfo().getFunctionClass()	+ " " +
+																										n.getPrefix() + ':' + n.getName(), e.getMessage() });
 			}
-			if (c!=null) {
+			if (c != null) {
 				String paramTypes[] = n.getParameters();
 				int size = paramTypes.length;
 				Class params[] = new Class[size];
@@ -60,21 +60,21 @@ class MapperELVisitor extends ELNode.Visitor {
 					}
 					method = c.getDeclaredMethod(n.getMethodName(), params);
 				} catch (ClassNotFoundException e) {
-	                throw new JspTranslationException("jsp.error.function.classnotfound", new Object[] { paramTypes[i]+" "+
-	                		n.getPrefix() + ':' + n.getName(), e.getMessage()});					
+					throw new JspTranslationException("jsp.error.function.classnotfound", new Object[] {	paramTypes[i]	+ " " +
+																											n.getPrefix() + ':' + n.getName(), e.getMessage() });
 				} catch (NoSuchMethodException e) {
-	                throw new JspTranslationException("jsp.error.noFunctionMethod", new Object[] { n.getMethodName()+" "+
-	                		n.getName()+" "+ c.getName(), e.getMessage()});					
+					throw new JspTranslationException("jsp.error.noFunctionMethod", new Object[] {	n.getMethodName()	+ " " +
+																									n.getName() + " " + c.getName(), e.getMessage() });
 				}
 				fmapper.mapFunction(n.getPrefix() + ':' + n.getName(), method);
-	            FunctionSignature fnSignature;
+				FunctionSignature fnSignature;
 				try {
 					fnSignature = new FunctionSignature(fInfo.getFunctionClass(), fInfo.getFunctionSignature(), n.getUri(), loader);
 				} catch (JspCoreException e) {
-	                throw new JspTranslationException("jsp.error.el.function.cannot.parse", e);
+					throw new JspTranslationException("jsp.error.el.function.cannot.parse", e);
 				}
 				fmapper.mapSignature(n.getPrefix() + ':' + n.getName(), fnSignature);
 			}
-		}				
+		}
 	}
 }

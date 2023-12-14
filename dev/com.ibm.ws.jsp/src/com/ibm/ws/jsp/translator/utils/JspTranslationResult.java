@@ -34,66 +34,56 @@ public class JspTranslationResult {
     private Collection jspLineIds = null;
     private List tagFileDependencyList = null;
     private JspCompilerResult tagFileCompileResult = null;
-    
+
     public JspTranslationResult() {
         jspLineIds = new ArrayList();
         tagFileDependencyList = new ArrayList();
     }
-    
+
     void addSmapGenerator(String resourceId, SmapGenerator smapGenerator) {
         if (smapGeneratorMap == null) {
-            smapGeneratorMap = new HashMap();            
+            smapGeneratorMap = new HashMap();
         }
-        smapGeneratorMap.put(resourceId, smapGenerator);    
+        smapGeneratorMap.put(resourceId, smapGenerator);
     }
-    
+
     public boolean hasSmap() {
         return (!(smapGeneratorMap == null));
     }
-    
+
     void addJspLineIds(JspResources jspResources, Document document) {
         loadJspIdList(jspResources, document.getDocumentElement(), jspLineIds);
     }
-    
+
     public Collection getJspLineIds() {
         return jspLineIds;
     }
 
     public SmapGenerator getSmapGenerator(String resourceId) {
-        return (SmapGenerator)smapGeneratorMap.get(resourceId);
+        return (SmapGenerator) smapGeneratorMap.get(resourceId);
     }
-    
+
     public List getTagFileDependencyList() {
         return tagFileDependencyList;
     }
-    
+
     public JspCompilerResult getTagFileCompileResult() {
         return tagFileCompileResult;
     }
-    
+
     public void setTagFileCompileResult(JspCompilerResult tagFileCompileResult) {
         this.tagFileCompileResult = tagFileCompileResult;
     }
-    
+
     public static void loadJspIdList(JspResources jspResources, Element element, Collection jspLineIds) {
         Attr jspIdAttr = element.getAttributeNodeNS(Constants.JSP_NAMESPACE, "id");
         if (jspIdAttr != null) {
             JspId jspId = new JspId(jspIdAttr.getValue());
-            JspLineId lineId = new JspLineId(jspId.getFilePath(),
-                                             jspResources.getGeneratedSourceFile().getPath(), 
-								    		 jspResources.getInputSource().getRelativeURL(), // defect 203009 
-                                             jspId.getStartSourceLineNum(),
-                                             jspId.getStartSourceColNum(),
-                                             jspId.getSourceLineCount(),
-                                             jspId.getEndSourceLineNum(),
-                                             jspId.getEndSourceColNum(),
-                                             jspId.getStartGeneratedLineNum(),
-                                             jspId.getStartGeneratedLineCount(),
-                                             jspId.getEndGeneratedLineNum(),
-                                             jspId.getEndGeneratedLineCount());
-            jspLineIds.add(lineId);                
+            JspLineId lineId = new JspLineId(jspId.getFilePath(), jspResources.getGeneratedSourceFile().getPath(), jspResources.getInputSource().getRelativeURL(), // defect 203009 
+                            jspId.getStartSourceLineNum(), jspId.getStartSourceColNum(), jspId.getSourceLineCount(), jspId.getEndSourceLineNum(), jspId.getEndSourceColNum(), jspId.getStartGeneratedLineNum(), jspId.getStartGeneratedLineCount(), jspId.getEndGeneratedLineNum(), jspId.getEndGeneratedLineCount());
+            jspLineIds.add(lineId);
         }
-        
+
         NodeList nl = element.getChildNodes();
         for (int i = 0; i < nl.getLength(); i++) {
             Node n = nl.item(i);

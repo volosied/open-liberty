@@ -27,7 +27,7 @@ package com.ibm.ws.jsp.translator.document;
  * <p>
  * <strong>Note:</strong> Methods that are passed an XMLString structure
  * are required to copy the information out of the buffer if it is to be
- * saved for use beyond the scope of the method. The contents of the 
+ * saved for use beyond the scope of the method. The contents of the
  * structure are volatile and the contents of the character buffer cannot
  * be assured once the method that is passed this structure returns.
  * Therefore, methods passed this structure should not save any reference
@@ -139,8 +139,8 @@ public class XMLString {
             return false;
         }
 
-        for (int i=0; i<length; i++) {
-            if (this.ch[this.offset+i] != ch[offset+i] ) {
+        for (int i = 0; i < length; i++) {
+            if (this.ch[this.offset + i] != ch[offset + i]) {
                 return false;
             }
         }
@@ -157,15 +157,15 @@ public class XMLString {
         if (s == null) {
             return false;
         }
-        if ( length != s.length() ) {
+        if (length != s.length()) {
             return false;
         }
 
         // is this faster than call s.toCharArray first and compare the 
         // two arrays directly, which will possibly involve creating a
         // new char array object.
-        for (int i=0; i<length; i++) {
-            if (ch[offset+i] != s.charAt(i)) {
+        for (int i = 0; i < length; i++) {
+            if (ch[offset + i] != s.charAt(i)) {
                 return false;
             }
         }

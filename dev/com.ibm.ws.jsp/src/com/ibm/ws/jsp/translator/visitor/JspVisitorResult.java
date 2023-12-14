@@ -12,7 +12,6 @@
  *******************************************************************************/
 package com.ibm.ws.jsp.translator.visitor;
 
-
 public class JspVisitorResult {
     protected String jspVisitorId = "";
 

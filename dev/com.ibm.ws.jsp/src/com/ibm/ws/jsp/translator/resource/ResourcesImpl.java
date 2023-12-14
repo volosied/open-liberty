@@ -25,11 +25,11 @@ public abstract class ResourcesImpl {
     protected File generatedSourceFile = null;
     protected File classFile = null;
     protected String className = null;
-	protected String packageName = null;
+    protected String packageName = null;
     protected File webinfClassFile = null;
     protected boolean keepgenerated = false;
     protected boolean keepGeneratedclassfiles = true;
-    
+
     public File getClassFile() {
         return classFile;
     }
@@ -54,13 +54,14 @@ public abstract class ResourcesImpl {
         ResourceUtil.sync(sourceFile, generatedSourceFile, classFile, className, keepgenerated, keepGeneratedclassfiles);
         sourceFileTimestamp = sourceFile.lastModified();
     }
-    
-    public void setCurrentRequest(HttpServletRequest request){}
 
-	public String getPackageName() {
-		return packageName;
-	}
-    
+    public void setCurrentRequest(HttpServletRequest request) {
+    }
+
+    public String getPackageName() {
+        return packageName;
+    }
+
     public boolean isExternallyTranslated() {
         return (sourceFileTimestamp != sourceFile.lastModified()) ? true : false;
     }

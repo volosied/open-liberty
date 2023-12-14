@@ -21,5 +21,6 @@ import com.ibm.ws.container.service.app.deploy.ContainerInfo;
  */
 public interface SharedLibClassesContainerInfo {
     public List<ContainerInfo> getSharedLibraryClassesContainerInfo();
+
     public List<ContainerInfo> getCommonLibraryClassesContainerInfo();
 }

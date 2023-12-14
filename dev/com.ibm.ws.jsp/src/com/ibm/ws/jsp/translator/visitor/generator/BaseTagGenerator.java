@@ -55,8 +55,8 @@ public abstract class BaseTagGenerator implements TagGenerator {
     protected boolean hasBody = false;
     protected boolean hasJspBody = false;
     protected boolean isFragment = false;
-    protected boolean isRepeatTag = false;	// PK26741
-    
+    protected boolean isRepeatTag = false; // PK26741
+
     protected Element element = null;
     protected TagLibraryCache tagLibraryCache = null;
     protected TagClassInfo tagClassInfo = null;
@@ -74,11 +74,11 @@ public abstract class BaseTagGenerator implements TagGenerator {
     protected boolean isConvertExpression = false; //PK53703
     protected String pageContextVar = Constants.JSP_PAGE_CONTEXT_ORIG; //PK65013
 
-	static private Logger logger;
-	private static final String CLASS_NAME="com.ibm.ws.jsp.translator.visitor.generator.BaseTagGenerator";
-	static{
-		logger = Logger.getLogger("com.ibm.ws.jsp");
-	}
+    static private Logger logger;
+    private static final String CLASS_NAME = "com.ibm.ws.jsp.translator.visitor.generator.BaseTagGenerator";
+    static {
+        logger = Logger.getLogger("com.ibm.ws.jsp");
+    }
 
     protected BaseTagGenerator(int nestingLevel,
                                boolean isTagFile,
@@ -95,38 +95,46 @@ public abstract class BaseTagGenerator implements TagGenerator {
                                ValidateResult.CollectedTagData collectedTagData,
                                FragmentHelperClassWriter fragmentHelperClassWriter,
                                JspOptions jspOptions) {
-        this.nestingLevel = nestingLevel;                                   
+        this.nestingLevel = nestingLevel;
         this.isTagFile = isTagFile;
         this.hasBody = hasBody;
         this.hasJspBody = hasJspBody;
         this.tagHandlerVar = tagHandlerVar;
-        if (tagHandlerVar.indexOf("_tsx_repeat") != -1)		// PK26741
-           	isRepeatTag = true;							// PK26741
-        this.element = element; 
-        this.tagLibraryCache = tagLibraryCache; 
-        this.jspConfiguration = jspConfiguration; 
+        if (tagHandlerVar.indexOf("_tsx_repeat") != -1) // PK26741
+            isRepeatTag = true; // PK26741
+        this.element = element;
+        this.tagLibraryCache = tagLibraryCache;
+        this.jspConfiguration = jspConfiguration;
         this.ctxt = ctxt;
-        this.tagClassInfo = tagClassInfo;  
+        this.tagClassInfo = tagClassInfo;
         this.ti = ti;
         this.persistentData = persistentData;
         this.collectedTagData = collectedTagData;
         this.fragmentHelperClassWriter = fragmentHelperClassWriter;
-        this.jspOptions = jspOptions; 
+        this.jspOptions = jspOptions;
         //PK65013 - start
         if (isTagFile && jspOptions.isModifyPageContextVariable()) {
             this.pageContextVar = Constants.JSP_PAGE_CONTEXT_NEW;
         }
         //PK65013 - end
     }
-    
+
     public abstract MethodWriter generateTagStart() throws JspCoreException;
+
     public abstract MethodWriter generateTagMiddle() throws JspCoreException;
+
     public abstract MethodWriter generateTagEnd() throws JspCoreException;
+
     public abstract void generateInitialization(JavaCodeWriter writer);
+
     public abstract void generateFinally(JavaCodeWriter writer);
-    public void generateImports(JavaCodeWriter writer){}
-    public void generateDeclarations(JavaCodeWriter writer) {}
-    
+
+    public void generateImports(JavaCodeWriter writer) {
+    }
+
+    public void generateDeclarations(JavaCodeWriter writer) {
+    }
+
     public void setParentTagInstanceInfo(CustomTagGenerator.TagInstanceInfo parentTagInstanceInfo) {
         this.parentTagInstanceInfo = parentTagInstanceInfo;
     }
@@ -134,7 +142,7 @@ public abstract class BaseTagGenerator implements TagGenerator {
     public void setIsInFragment(boolean isFragment) {
         this.isFragment = isFragment;
     }
-    
+
     public boolean fragmentWriterUsed() {
         return false;
     }
@@ -142,45 +150,43 @@ public abstract class BaseTagGenerator implements TagGenerator {
     public MethodWriter getBodyWriter() {
         return bodyWriter;
     }
-    
-    protected String createJspId(JspVisitorInputMap inputMap) throws JspCoreException {       
-        String jspIdPrefix = ((String)inputMap.get("JspIdConsumerPrefix"));
+
+    protected String createJspId(JspVisitorInputMap inputMap) throws JspCoreException {
+        String jspIdPrefix = ((String) inputMap.get("JspIdConsumerPrefix"));
         if (jspIdPrefix == null) {
-        	JspResources jspFiles = (JspResources)inputMap.get("JspFiles");
+            JspResources jspFiles = (JspResources) inputMap.get("JspFiles");
             //PM43852 start - change to use package name and class name instead of path to generated source.
-            String name = jspFiles.getPackageName() + "." + jspFiles.getClassName(); 
+            String name = jspFiles.getPackageName() + "." + jspFiles.getClassName();
             //PM43852 end            
             StringBuffer sb = new StringBuffer(32);
             sb.append("jsp_").append(Math.abs(name.hashCode())).append('_');
-            jspIdPrefix = sb.toString();            
-            inputMap.put("JspIdConsumerPrefix",jspIdPrefix);
+            jspIdPrefix = sb.toString();
+            inputMap.put("JspIdConsumerPrefix", jspIdPrefix);
         }
-        Integer jspIdValue = ((Integer)inputMap.get("JspIdConsumerCounter"));
-    	jspIdValue+=1;
-        inputMap.put("JspIdConsumerCounter",jspIdValue);
+        Integer jspIdValue = ((Integer) inputMap.get("JspIdConsumerCounter"));
+        jspIdValue += 1;
+        inputMap.put("JspIdConsumerCounter", jspIdValue);
         return jspIdPrefix + (jspIdValue.toString());
     }
-    
+
     public JavaCodeWriter getWriterForChild(int section, Node childElement) throws JspCoreException {
         JavaCodeWriter writerForChild = null;
         if (section == CodeGenerationPhase.METHOD_SECTION) {
             if (childElement.getNodeType() == Node.ELEMENT_NODE) {
                 if (childElement.getNamespaceURI() != null &&
-                    childElement.getNamespaceURI().equals(Constants.JSP_NAMESPACE) && 
+                    childElement.getNamespaceURI().equals(Constants.JSP_NAMESPACE) &&
                     childElement.getLocalName().equals(Constants.JSP_ATTRIBUTE_TYPE)) {
-                    writerForChild = (JavaCodeWriter)attributeWriterMap.get(childElement);    
-                }
-                else {
+                    writerForChild = (JavaCodeWriter) attributeWriterMap.get(childElement);
+                } else {
                     writerForChild = bodyWriter;
                 }
-            }
-            else {
+            } else {
                 writerForChild = bodyWriter;
             }
         }
         return (writerForChild);
     }
-    
+
     public void generateSetParent(MethodWriter writer) throws JspCoreException {
         if (tagClassInfo.implementsSimpleTag()) {
             String aliasMapVar = null;
@@ -190,10 +196,9 @@ public abstract class BaseTagGenerator implements TagGenerator {
             }
             writer.print(tagHandlerVar);
             if (aliasMapVar == null) {
-                writer.println(".setJspContext("+pageContextVar+");");
-            }
-            else {
-                writer.print(".setJspContext("+pageContextVar+", ");
+                writer.println(".setJspContext(" + pageContextVar + ");");
+            } else {
+                writer.print(".setJspContext(" + pageContextVar + ", ");
                 writer.print(aliasMapVar);
                 writer.println(");");
             }
@@ -213,11 +218,11 @@ public abstract class BaseTagGenerator implements TagGenerator {
             // PM24787 start
             else if (isTagFile) { //need to make sure we only set the parent if one tag invocation is nested within another or if we're within a tag file and need to support the top level
                 if (!(jspOptions.isAllowNullParentInTagFile())) {
-                	writer.print(tagHandlerVar);
-                	writer.print(".setParent(new javax.servlet.jsp.tagext.TagAdapter(");
-                	writer.print("(");
-                	writer.print("javax.servlet.jsp.tagext.SimpleTag");
-                	writer.print(") this ));");
+                    writer.print(tagHandlerVar);
+                    writer.print(".setParent(new javax.servlet.jsp.tagext.TagAdapter(");
+                    writer.print("(");
+                    writer.print("javax.servlet.jsp.tagext.SimpleTag");
+                    writer.print(") this ));");
                 } else {
                     writer.print(tagHandlerVar);
                     writer.print(".setParent(");
@@ -226,10 +231,9 @@ public abstract class BaseTagGenerator implements TagGenerator {
                 }
             }
             // PM24787 end
-        }
-        else {
+        } else {
             writer.print(tagHandlerVar);
-            writer.println(".setPageContext("+pageContextVar+");");
+            writer.println(".setPageContext(" + pageContextVar + ");");
             if (parentTagInstanceInfo != null) {
                 TagClassInfo parentTagClassInfo = tagLibraryCache.getTagClassInfo(parentTagInstanceInfo.getTi());
 
@@ -242,8 +246,7 @@ public abstract class BaseTagGenerator implements TagGenerator {
                     writer.print(") ");
                     writer.print(parentTagInstanceInfo.getTagHandlerVar());
                     writer.println("));");
-                }
-                else {
+                } else {
                     writer.print(tagHandlerVar);
                     writer.print(".setParent((javax.servlet.jsp.tagext.Tag) ");
                     writer.print(parentTagInstanceInfo.getTagHandlerVar());
@@ -275,25 +278,26 @@ public abstract class BaseTagGenerator implements TagGenerator {
 
     public List generateSetters() throws JspCoreException {
         List setterWriterList = new ArrayList();
-        
+
         JspId jspId = new JspId(element.getAttributeNS(Constants.JSP_NAMESPACE, "id"));
-		if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINEST)){
-			logger.logp(Level.FINEST, CLASS_NAME, "generateSetters","jspId = ["+jspId+"]");
-		}
-		NamedNodeMap attributesInElement = element.getAttributes(); //PI43036
+        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINEST)) {
+            logger.logp(Level.FINEST, CLASS_NAME, "generateSetters", "jspId = [" + jspId + "]");
+        }
+        NamedNodeMap attributesInElement = element.getAttributes(); //PI43036
         for (Iterator itr = jspId.getAttrNameList().iterator(); itr.hasNext();) {
             Attr attr = null;
-            String attrName = (String)itr.next();
+            String attrName = (String) itr.next();
             boolean attrIsQualifiedName = false; //PI43036
             if (attrName.indexOf(':') != -1) {
                 //PI43036 start
-                /* This is because in jsp:id we passed the uri:prefix:attrname (if it was a JSP in Document form)
-                * Modify the attrName to ignore the uri, we want to have prefix:attrname.
-                * If attributesInElement.getNamedItem(attrName) is null is because we have  uri:prefix:attrname
-                */
+                /*
+                 * This is because in jsp:id we passed the uri:prefix:attrname (if it was a JSP in Document form)
+                 * Modify the attrName to ignore the uri, we want to have prefix:attrname.
+                 * If attributesInElement.getNamedItem(attrName) is null is because we have uri:prefix:attrname
+                 */
                 if (attributesInElement.getNamedItem(attrName) == null)
                     attrName = attrName.substring(attrName.indexOf(':') + 1);
-                
+
                 String namespaceUri = element.lookupNamespaceURI(attrName.substring(0, attrName.indexOf(':')));
                 if (namespaceUri == null) {
                     //If a dynamic attribute has a prefix that does not map to a namespace, a translation error must occur.
@@ -303,36 +307,35 @@ public abstract class BaseTagGenerator implements TagGenerator {
                 attr = element.getAttributeNodeNS(namespaceUri, attrName.substring(attrName.indexOf(':') + 1));
                 attrIsQualifiedName = true;
                 //PI43036 end
+            } else {
+                attr = element.getAttributeNode(attrName);
             }
-            else {
-                attr = element.getAttributeNode(attrName);    
-            }
-            if (attr==null) {
+            if (attr == null) {
                 //attribute did not exist in namespace ... must break according to the spec
                 break;
             }
-    		if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINEST)){
-    			logger.logp(Level.FINEST, CLASS_NAME, "generateSetters","attrName = ["+attrName+"]");
-                logger.logp(Level.FINEST, CLASS_NAME, "generateSetters","attr.getName() = ["+attr.getName()+"]");
-    		}
+            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINEST)) {
+                logger.logp(Level.FINEST, CLASS_NAME, "generateSetters", "attrName = [" + attrName + "]");
+                logger.logp(Level.FINEST, CLASS_NAME, "generateSetters", "attr.getName() = [" + attr.getName() + "]");
+            }
             if (attr.getName().equals("jsp:id") == false && attr.getName().startsWith("xmlns") == false) {
                 MethodWriter setterWriter = new MethodWriter();
                 TagAttributeInfo tai = findTagAttributeInfo(attr.getName());
                 boolean isDynamic = false;
                 if (tai == null && ti.hasDynamicAttributes() == true)
                     isDynamic = true;
-        		if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINEST)){
-        			logger.logp(Level.FINEST, CLASS_NAME, "generateSetters","tai = ["+tai+"] isDynamic = ["+isDynamic+"]");
-        		}
+                if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINEST)) {
+                    logger.logp(Level.FINEST, CLASS_NAME, "generateSetters", "tai = [" + tai + "] isDynamic = [" + isDynamic + "]");
+                }
                 //PI30519 start
                 String evalAttrValue = null;
                 if (jspOptions.isAllowMultipleAttributeValues()) {
                     String tmpAttrVal = null;
                     List valueList = (ArrayList) element.getUserData(attr.getName());
-                    
+
                     if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINEST))
                         logger.logp(Level.FINEST, CLASS_NAME, "generateSetters", "allowMultipleAttributeValues is enabled valueList = " + valueList.toString());
-                    
+
                     if (valueList != null && valueList.size() > 0) {
                         tmpAttrVal = (String) valueList.get(0);
                         valueList.remove(0);
@@ -346,9 +349,9 @@ public abstract class BaseTagGenerator implements TagGenerator {
                     evalAttrValue = evaluateAttribute(attr.getName(), attr.getValue(), isDynamic, false, false, tai);
                 }
                 //PI30519 end
-        		if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINEST)){
-        			logger.logp(Level.FINEST, CLASS_NAME, "generateSetters","evalAttrValue = ["+evalAttrValue+"]");
-        		}
+                if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINEST)) {
+                    logger.logp(Level.FINEST, CLASS_NAME, "generateSetters", "evalAttrValue = [" + evalAttrValue + "]");
+                }
                 //PI43036 start
                 if (attrIsQualifiedName && isDynamic) {
                     String attrQualifiedName = attr.getName();
@@ -361,30 +364,30 @@ public abstract class BaseTagGenerator implements TagGenerator {
                 setterWriterList.add(setterWriter);
             }
         }
-        
+
         NodeList nl = element.getChildNodes();
         for (int i = 0; i < nl.getLength(); i++) {
             Node childNode = nl.item(i);
             if (childNode.getNodeType() == Node.ELEMENT_NODE) {
-                Element childElement = (Element)childNode;
-                if (childElement.getNamespaceURI() != null && 
-                    childElement.getNamespaceURI().equals(Constants.JSP_NAMESPACE) && 
+                Element childElement = (Element) childNode;
+                if (childElement.getNamespaceURI() != null &&
+                    childElement.getNamespaceURI().equals(Constants.JSP_NAMESPACE) &&
                     childElement.getLocalName().equals(Constants.JSP_ATTRIBUTE_TYPE)) {
                     String name = childElement.getAttribute("name");
                     if (name.indexOf(':') != -1) {
                         name = name.substring(name.indexOf(':') + 1);
                     }
-                                            
+
                     TagAttributeInfo tai = findTagAttributeInfo(name);
                     boolean isAttrFragment = false;
                     if (tai != null)
-                        isAttrFragment = tai.isFragment();    
-            		if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINEST)){
-            			logger.logp(Level.FINEST, CLASS_NAME, "generateSetters","childElement.getLocalName() = ["+childElement.getLocalName()+"]");
-            			logger.logp(Level.FINEST, CLASS_NAME, "generateSetters","name = ["+name+"]");
-            			logger.logp(Level.FINEST, CLASS_NAME, "generateSetters","tai = ["+tai+"]");
-            			logger.logp(Level.FINEST, CLASS_NAME, "generateSetters","isAttrFragment = ["+isAttrFragment+"]");
-            		}
+                        isAttrFragment = tai.isFragment();
+                    if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINEST)) {
+                        logger.logp(Level.FINEST, CLASS_NAME, "generateSetters", "childElement.getLocalName() = [" + childElement.getLocalName() + "]");
+                        logger.logp(Level.FINEST, CLASS_NAME, "generateSetters", "name = [" + name + "]");
+                        logger.logp(Level.FINEST, CLASS_NAME, "generateSetters", "tai = [" + tai + "]");
+                        logger.logp(Level.FINEST, CLASS_NAME, "generateSetters", "isAttrFragment = [" + isAttrFragment + "]");
+                    }
                     NamedAttributeWriter attributeWriter = createJspAttributeWriter(childElement, isAttrFragment);
                     setterWriterList.add(attributeWriter);
                 }
@@ -393,46 +396,44 @@ public abstract class BaseTagGenerator implements TagGenerator {
         return setterWriterList;
     }
 
-
     public void generateJspAttributeSetters() throws JspCoreException {
-        HashMap jspAttributes = (HashMap)persistentData.get("jspAttributes");
+        HashMap jspAttributes = (HashMap) persistentData.get("jspAttributes");
         if (jspAttributes != null) {
-            ArrayList jspAttributeList = (ArrayList)jspAttributes.get(element);
+            ArrayList jspAttributeList = (ArrayList) jspAttributes.get(element);
             if (jspAttributeList != null) {
                 for (Iterator itr = jspAttributeList.iterator(); itr.hasNext();) {
-                    AttributeGenerator.JspAttribute jspAttribute = (AttributeGenerator.JspAttribute)itr.next();
+                    AttributeGenerator.JspAttribute jspAttribute = (AttributeGenerator.JspAttribute) itr.next();
                     MethodWriter attributeWriter = findAttributeWriter(jspAttribute.getName());
                     TagAttributeInfo tai = findTagAttributeInfo(jspAttribute.getName());
                     boolean isAttrFragment = false;
                     boolean isDynamic = false;
                     if (tai != null)
-                        isAttrFragment = tai.isFragment();    
+                        isAttrFragment = tai.isFragment();
                     if (tai == null && ti.hasDynamicAttributes() == true)
                         isDynamic = true;
-                    if (isAttrFragment == false) {                        
+                    if (isAttrFragment == false) {
                         String evalAttrValue = evaluateAttribute(jspAttribute.getName(), jspAttribute.getVarName(), isDynamic, isAttrFragment, true, tai);
                         generateSetterCall(jspAttribute.getName(), evalAttrValue, jspAttribute.getJspAttrElement().getNamespaceURI(), attributeWriter, isDynamic);
                     }
                 }
             }
-            
+
         }
     }
-    
-    private String generateAliasMap(JavaCodeWriter writer, String tagHandlerVar)
-        throws JspCoreException {
+
+    private String generateAliasMap(JavaCodeWriter writer, String tagHandlerVar) throws JspCoreException {
         TagVariableInfo[] tagVars = ti.getTagVariableInfos();
         String aliasMapVar = null;
-        
+
         boolean aliasSeen = false;
         for (int i = 0; i < tagVars.length; i++) {
-        
+
             String nameFrom = tagVars[i].getNameFromAttribute();
             if (nameFrom != null) {
                 String aliasName = element.getAttribute(nameFrom);
                 if (aliasName.equals(""))
                     continue;
-        
+
                 if (!aliasSeen) {
                     writer.print("java.util.HashMap ");
                     aliasMapVar = tagHandlerVar + "_aliasMap";
@@ -452,23 +453,23 @@ public abstract class BaseTagGenerator implements TagGenerator {
         }
         return aliasMapVar;
     }
-    
+
     protected TagAttributeInfo findTagAttributeInfo(String attrName) {
         TagAttributeInfo foundAttr = null;
         TagAttributeInfo[] attributes = ti.getAttributes();
-        
+
         for (int i = 0; i < attributes.length; i++) {
             if (attributes[i].getName().equals(attrName)) {
                 foundAttr = attributes[i];
-                break;        
+                break;
             }
-        } 
-        
+        }
+
         return (foundAttr);
     }
-    
-    private String evaluateAttribute(String attrName, String attrValue, boolean isDynamic, boolean isAttrFragment, boolean isNamedAttribute,TagAttributeInfo tai) 
-        throws JspCoreException {
+
+    private String evaluateAttribute(String attrName, String attrValue, boolean isDynamic, boolean isAttrFragment, boolean isNamedAttribute,
+                                     TagAttributeInfo tai) throws JspCoreException {
         String evalAttrValue = attrValue;
         String parameterClassName = "Object";
         String fullParameterClassName = "java.lang.Object";
@@ -476,7 +477,7 @@ public abstract class BaseTagGenerator implements TagGenerator {
             fullParameterClassName = tagClassInfo.getParameterClassName(attrName, ctxt); //PK36246 need to pass the context for the correct classloader
             parameterClassName = fullParameterClassName;
             if (parameterClassName.startsWith("java.lang.")) {
-                parameterClassName = parameterClassName.substring(parameterClassName.indexOf("java.lang.")+10);    
+                parameterClassName = parameterClassName.substring(parameterClassName.indexOf("java.lang.") + 10);
             }
         }
 
@@ -485,16 +486,16 @@ public abstract class BaseTagGenerator implements TagGenerator {
         attrValue = attrValue.replaceAll("&amp;", "&");
         attrValue = attrValue.replaceAll("<\\%", "<%");
         attrValue = attrValue.replaceAll("%\\>", "%>");
-		if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINER)){
-			logger.logp(Level.FINER, CLASS_NAME, "evaluateAttribute","attrName = ["+attrName+"]");
-			logger.logp(Level.FINER, CLASS_NAME, "evaluateAttribute","attrValue = ["+attrValue+"]");
-			logger.logp(Level.FINER, CLASS_NAME, "evaluateAttribute","isDynamic = ["+isDynamic+"]");
-			logger.logp(Level.FINER, CLASS_NAME, "evaluateAttribute","isAttrFragment = ["+isAttrFragment+"]");
-			logger.logp(Level.FINER, CLASS_NAME, "evaluateAttribute","isNamedAttribute = ["+isNamedAttribute+"]");
-            logger.logp(Level.FINER, CLASS_NAME, "evaluateAttribute","parameterClassName = ["+parameterClassName+"]");
-		}
-        boolean isELInput=JspTranslatorUtil.isELInterpreterInput(attrValue, jspConfiguration);
-        isConvertExpression = false;  //PK53703
+        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINER)) {
+            logger.logp(Level.FINER, CLASS_NAME, "evaluateAttribute", "attrName = [" + attrName + "]");
+            logger.logp(Level.FINER, CLASS_NAME, "evaluateAttribute", "attrValue = [" + attrValue + "]");
+            logger.logp(Level.FINER, CLASS_NAME, "evaluateAttribute", "isDynamic = [" + isDynamic + "]");
+            logger.logp(Level.FINER, CLASS_NAME, "evaluateAttribute", "isAttrFragment = [" + isAttrFragment + "]");
+            logger.logp(Level.FINER, CLASS_NAME, "evaluateAttribute", "isNamedAttribute = [" + isNamedAttribute + "]");
+            logger.logp(Level.FINER, CLASS_NAME, "evaluateAttribute", "parameterClassName = [" + parameterClassName + "]");
+        }
+        boolean isELInput = JspTranslatorUtil.isELInterpreterInput(attrValue, jspConfiguration);
+        isConvertExpression = false; //PK53703
         if (JspTranslatorUtil.isExpression(attrValue)) {
             //PK53703 - start
             // this next line is the orignal code
@@ -502,34 +503,32 @@ public abstract class BaseTagGenerator implements TagGenerator {
             //This change is not spec compliant...we need to make this change to support
             //existing customer apps that expect the expression to be converted to a particular type
             //but the JSP spec says that we do not do this for expressions.  see section JSP.1.14.2.2
-            
-            if(jspOptions != null && jspOptions.isConvertExpression()) {
+
+            if (jspOptions != null && jspOptions.isConvertExpression()) {
                 isConvertExpression = true;
                 //evalAttrValue = convertString(parameterClassName, attrValue, attrName, tagClassInfo.getPropertyEditorClassName(attrName), isNamedAttribute);              
                 evalAttrValue = convertString(parameterClassName, attrValue, attrName, tagClassInfo.getPropertyEditorClassName(attrName), true);
             } else {
-                evalAttrValue = attrValue.substring(2, attrValue.length()-1);
+                evalAttrValue = attrValue.substring(2, attrValue.length() - 1);
             }
             //PK53703 - end
-    		if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINER)){
-    			logger.logp(Level.FINER, CLASS_NAME, "evaluateAttribute","isExpression, evalAttrValue = ["+evalAttrValue+"]");
-    		}
-        }
-        else if (isNamedAttribute == true) {
-    		if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINER)){
-    			logger.logp(Level.FINER, CLASS_NAME, "evaluateAttribute","isNamedAttribute = ["+isNamedAttribute+"]");
-    		}
+            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINER)) {
+                logger.logp(Level.FINER, CLASS_NAME, "evaluateAttribute", "isExpression, evalAttrValue = [" + evalAttrValue + "]");
+            }
+        } else if (isNamedAttribute == true) {
+            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINER)) {
+                logger.logp(Level.FINER, CLASS_NAME, "evaluateAttribute", "isNamedAttribute = [" + isNamedAttribute + "]");
+            }
             if (isAttrFragment == false && isDynamic == false) {
                 evalAttrValue = convertString(parameterClassName, attrValue, attrName, tagClassInfo.getPropertyEditorClassName(attrName), true);
-        		if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINER)){
-        			logger.logp(Level.FINER, CLASS_NAME, "evaluateAttribute","converted evalAttrValue = ["+evalAttrValue+"]");
-        		}
+                if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINER)) {
+                    logger.logp(Level.FINER, CLASS_NAME, "evaluateAttribute", "converted evalAttrValue = [" + evalAttrValue + "]");
+                }
             }
-        }
-        else if (isELInput || GeneratorUtils.isDeferredInput(tai) || GeneratorUtils.isDeferredMethodInput(tai)) {
-            try {            	
+        } else if (isELInput || GeneratorUtils.isDeferredInput(tai) || GeneratorUtils.isDeferredMethodInput(tai)) {
+            try {
                 String type;
-                if (tai!=null) {
+                if (tai != null) {
                     type = tai.getTypeName();
                 } else {
                     //default type for dynamic attribute 
@@ -538,7 +537,7 @@ public abstract class BaseTagGenerator implements TagGenerator {
                     type = "java.lang.Object";
                 }
                 Class c = JspTranslatorUtil.toClass(fullParameterClassName, ctxt.getJspClassloaderContext().getClassLoader());
-                
+
                 // results buffer
                 StringBuffer sb = new StringBuffer(64);
 
@@ -551,7 +550,7 @@ public abstract class BaseTagGenerator implements TagGenerator {
                 sb.append(jspCtxt);
                 sb.append(".getELContext()");
                 String elContext = sb.toString();
-                if (true/*isELInput*/) {
+                if (true/* isELInput */) {
                     sb.setLength(0);
                     sb.append("new org.apache.jasper.el.ELContextWrapper(");
                     sb.append(elContext);
@@ -563,64 +562,60 @@ public abstract class BaseTagGenerator implements TagGenerator {
 
                 // reset buffer
                 sb.setLength(0);
-                
-                
+
                 // create mark
                 String jspIdString = element.getAttributeNS(Constants.JSP_NAMESPACE, "id");
-                String msg="";
-                if (jspIdString.equals("") == false) { 
-                	JspId jspId = new JspId(jspIdString);
-                	msg = jspId.getFilePath() + "(" + jspId.getStartSourceLineNum() + "," + jspId.getStartSourceColNum() + ")";                	
-                }                
+                String msg = "";
+                if (jspIdString.equals("") == false) {
+                    JspId jspId = new JspId(jspIdString);
+                    msg = jspId.getFilePath() + "(" + jspId.getStartSourceLineNum() + "," + jspId.getStartSourceColNum() + ")";
+                }
                 sb.append(msg);
                 sb.append(" '");
                 sb.append(attrValue);
-                sb.append('\'');                
+                sb.append('\'');
                 String mark = sb.toString();
                 // reset buffer
                 sb.setLength(0);
-                
-        		if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINER)){
-        			logger.logp(Level.FINER, CLASS_NAME, "evaluateAttribute","isELInterperterInput Class= ["+c+"]  type= ["+type+"]");
-        		}
+
+                if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINER)) {
+                    logger.logp(Level.FINER, CLASS_NAME, "evaluateAttribute", "isELInterperterInput Class= [" + c + "]  type= [" + type + "]");
+                }
                 if (GeneratorUtils.isDeferredInput(tai)
-                        || ValueExpression.class.getName().equals(type)) {
-                	evalAttrValue = GeneratorUtils.createValueExpression(sb, mark, elContext, attrValue, isELInput,  c, tai, jspCtxt);
-                	
-	            } else if (GeneratorUtils.isDeferredMethodInput(tai)
-	                    || MethodExpression.class.getName().equals(type)) {
-	                //Can't use isELInput because when JSP version is <2.1, this doesn't check deferred values
+                    || ValueExpression.class.getName().equals(type)) {
+                    evalAttrValue = GeneratorUtils.createValueExpression(sb, mark, elContext, attrValue, isELInput, c, tai, jspCtxt);
+
+                } else if (GeneratorUtils.isDeferredMethodInput(tai)
+                           || MethodExpression.class.getName().equals(type)) {
+                    //Can't use isELInput because when JSP version is <2.1, this doesn't check deferred values
                     if (!JspTranslatorUtil.isELInterpreterInput(attrValue, jspConfiguration, true) && "void".equals(GeneratorUtils.getExpectedTypeName(tai))) {
-                	    throw new JspTranslationException("jsp.error.translation.invalid.void.deferredMethodClass", new Object[] {attrName});
+                        throw new JspTranslationException("jsp.error.translation.invalid.void.deferredMethodClass", new Object[] { attrName });
                     }
                     evalAttrValue = GeneratorUtils.createMethodExpression(sb, mark, elContext, attrValue, isELInput, c, tai, jspCtxt);
-	            	
-	            } else {
+
+                } else {
                     evalAttrValue = GeneratorUtils.interpreterCall(this.isTagFile, attrValue, c, "_jspx_fnmap", false, pageContextVar);//PK65013
-	            }
-        		if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINER)){
-        			logger.logp(Level.FINER, CLASS_NAME, "evaluateAttribute","isELInterperterInput evalAttrValue= ["+evalAttrValue+"]");
-        		}
+                }
+                if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINER)) {
+                    logger.logp(Level.FINER, CLASS_NAME, "evaluateAttribute", "isELInterperterInput evalAttrValue= [" + evalAttrValue + "]");
+                }
+            } catch (ClassNotFoundException e) {
+                throw new JspTranslationException(element, "jsp.error.loadclass.taghandler.attr", new Object[] { attrName }, e);
             }
-            catch(ClassNotFoundException e) {
-                throw new JspTranslationException(element,"jsp.error.loadclass.taghandler.attr", new Object[] {attrName}, e);
-            }
-        }
-        else {
+        } else {
             //PK31208
-            if(isRepeatTag == true && (attrName.equals("end") || attrName.equals("start")) && !jspOptions.isConvertAttrValueToString()) {
-                return evalAttrValue;       //PK31208
-            }
-            else {
-            	evalAttrValue = convertString(parameterClassName, attrValue, attrName, tagClassInfo.getPropertyEditorClassName(attrName), false);
-        		if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINER)){
-        			logger.logp(Level.FINER, CLASS_NAME, "evaluateAttribute","converted string evalAttrValue= ["+evalAttrValue+"]");
-        		}
+            if (isRepeatTag == true && (attrName.equals("end") || attrName.equals("start")) && !jspOptions.isConvertAttrValueToString()) {
+                return evalAttrValue; //PK31208
+            } else {
+                evalAttrValue = convertString(parameterClassName, attrValue, attrName, tagClassInfo.getPropertyEditorClassName(attrName), false);
+                if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINER)) {
+                    logger.logp(Level.FINER, CLASS_NAME, "evaluateAttribute", "converted string evalAttrValue= [" + evalAttrValue + "]");
+                }
             }
         }
         return (evalAttrValue);
     }
-    
+
     protected void generateSetterCall(String attrName,
                                       String evalAttrValue,
                                       String uri,
@@ -632,8 +627,7 @@ public abstract class BaseTagGenerator implements TagGenerator {
             setterWriter.print("setDynamicAttribute(");
             if ("".equals(uri) || (uri == null)) {
                 setterWriter.print("null");
-            }
-            else {
+            } else {
                 setterWriter.print("\"" + uri + "\"");
             }
             setterWriter.print(", \"");
@@ -641,8 +635,7 @@ public abstract class BaseTagGenerator implements TagGenerator {
             setterWriter.print("\", ");
             setterWriter.print(evalAttrValue);
             setterWriter.println(");");
-        }
-        else {
+        } else {
             setterWriter.print(tagHandlerVar);
             setterWriter.print(".");
             setterWriter.print(tagClassInfo.getSetterMethodName(attrName));
@@ -651,7 +644,7 @@ public abstract class BaseTagGenerator implements TagGenerator {
             setterWriter.println(");");
         }
     }
-    
+
     private String convertString(String parameterClassName,
                                  String s,
                                  String attrName,
@@ -672,147 +665,125 @@ public abstract class BaseTagGenerator implements TagGenerator {
 
         // PK53703 - start        
         //boolean isExpression = JspTranslatorUtil.isExpression(s);
-        
-        if(logger.isLoggable(Level.FINER)){
-            logger.logp(Level.FINER, CLASS_NAME, "convertString","attrValue: " + s);
+
+        if (logger.isLoggable(Level.FINER)) {
+            logger.logp(Level.FINER, CLASS_NAME, "convertString", "attrValue: " + s);
         }
 
         if (isConvertExpression) {
             //if(logger.isLoggable(Level.FINER)){
             //  logger.logp(Level.FINER, CLASS_NAME, "convertString","JspTranslatorUtil.isExpression(s): " + JspTranslatorUtil.isExpression(s));
             //}
-            
-            
+
             //if (!isExpression && !isNamedAttribute) {
             //  quoted = GeneratorUtils.quote(s);
             //} else {              
-                quoted = quoted.substring(2, quoted.length()-1);            
+            quoted = quoted.substring(2, quoted.length() - 1);
             //}
-            if(logger.isLoggable(Level.FINER)){
-                logger.logp(Level.FINER, CLASS_NAME, "convertString","quoted: " + quoted);
+            if (logger.isLoggable(Level.FINER)) {
+                logger.logp(Level.FINER, CLASS_NAME, "convertString", "quoted: " + quoted);
             }
-            
+
         }
         // PK53703 - end
 
         if (!isNamedAttribute) {
-            quoted = GeneratorUtils.quote(s, jspOptions.isEnableDoubleQuotesDecoding());                   //PM21395
+            quoted = GeneratorUtils.quote(s, jspOptions.isEnableDoubleQuotesDecoding()); //PM21395
         }
 
         // PK53703 - start
         if (isConvertExpression && !parameterClassName.equals("String")) {
             s = quoted;
-            if(logger.isLoggable(Level.FINER)){
-                logger.logp(Level.FINER, CLASS_NAME, "convertString","s: " + s);
+            if (logger.isLoggable(Level.FINER)) {
+                logger.logp(Level.FINER, CLASS_NAME, "convertString", "s: " + s);
             }
         }
         // PK53703 - end        
 
         if (propEditorClassName != null) {
             return "("
-                + parameterClassName
-                + ")org.apache.jasper.runtime.JspRuntimeLibrary.getValueFromBeanInfoPropertyEditor("
-                + parameterClassName
-                + ".class, \""
-                + attrName
-                + "\", "
-                + quoted
-                + ", "
-                + propEditorClassName
-                + ".class)";
-        }
-        else if (parameterClassName.equals("String")) {
+                   + parameterClassName
+                   + ")org.apache.jasper.runtime.JspRuntimeLibrary.getValueFromBeanInfoPropertyEditor("
+                   + parameterClassName
+                   + ".class, \""
+                   + attrName
+                   + "\", "
+                   + quoted
+                   + ", "
+                   + propEditorClassName
+                   + ".class)";
+        } else if (parameterClassName.equals("String")) {
             // PK53703 - start
             if (isConvertExpression) {
                 //return "new String(" + quoted.toString() + ")";   
                 return quoted + ".toString()";
             } else {
-            // PK53703 - end    
+                // PK53703 - end    
                 return quoted;
             }
-        }
-        else if (parameterClassName.equals("boolean")) {
+        } else if (parameterClassName.equals("boolean")) {
             return GeneratorUtils.coerceToPrimitiveBoolean(s, isNamedAttribute);
-        }
-        else if (parameterClassName.equals("Boolean")) {
+        } else if (parameterClassName.equals("Boolean")) {
             return GeneratorUtils.coerceToBoolean(s, isNamedAttribute);
-        }
-        else if (parameterClassName.equals("byte")) {
+        } else if (parameterClassName.equals("byte")) {
             return GeneratorUtils.coerceToPrimitiveByte(s, isNamedAttribute);
-        }
-        else if (parameterClassName.equals("Byte")) {
+        } else if (parameterClassName.equals("Byte")) {
             return GeneratorUtils.coerceToByte(s, isNamedAttribute);
-        }
-        else if (parameterClassName.equals("char")) {
+        } else if (parameterClassName.equals("char")) {
             return GeneratorUtils.coerceToChar(s, isNamedAttribute);
-        }
-        else if (parameterClassName.equals("Character")) {
+        } else if (parameterClassName.equals("Character")) {
             return GeneratorUtils.coerceToCharacter(s, isNamedAttribute);
-        }
-        else if (parameterClassName.equals("double")) {
+        } else if (parameterClassName.equals("double")) {
             return GeneratorUtils.coerceToPrimitiveDouble(s, isNamedAttribute);
-        }
-        else if (parameterClassName.equals("Double")) {
+        } else if (parameterClassName.equals("Double")) {
             return GeneratorUtils.coerceToDouble(s, isNamedAttribute);
-        }
-        else if (parameterClassName.equals("float")) {
+        } else if (parameterClassName.equals("float")) {
             return GeneratorUtils.coerceToPrimitiveFloat(s, isNamedAttribute);
-        }
-        else if (parameterClassName.equals("Float")) {
+        } else if (parameterClassName.equals("Float")) {
             return GeneratorUtils.coerceToFloat(s, isNamedAttribute);
-        }
-        else if (parameterClassName.equals("int")) {
+        } else if (parameterClassName.equals("int")) {
             return GeneratorUtils.coerceToInt(s, isNamedAttribute);
-        }
-        else if (parameterClassName.equals("Integer")) {
+        } else if (parameterClassName.equals("Integer")) {
             return GeneratorUtils.coerceToInteger(s, isNamedAttribute);
-        }
-        else if (parameterClassName.equals("short")) {
+        } else if (parameterClassName.equals("short")) {
             return GeneratorUtils.coerceToPrimitiveShort(s, isNamedAttribute);
-        }
-        else if (parameterClassName.equals("Short")) {
+        } else if (parameterClassName.equals("Short")) {
             return GeneratorUtils.coerceToShort(s, isNamedAttribute);
-        }
-        else if (parameterClassName.equals("long")) {
+        } else if (parameterClassName.equals("long")) {
             return GeneratorUtils.coerceToPrimitiveLong(s, isNamedAttribute);
-        }
-        else if (parameterClassName.equals("Long")) {
+        } else if (parameterClassName.equals("Long")) {
             return GeneratorUtils.coerceToLong(s, isNamedAttribute);
-        }
-        else if (parameterClassName.equals("Object")) {
+        } else if (parameterClassName.equals("Object")) {
             //PI05359 performance improvement
             return quoted;
-        }
-        else {
+        } else {
             //PK53703 - start
             if (isConvertExpression) {
                 return quoted;
-            }               
-            else {
-            // PK53703 - end    
+            } else {
+                // PK53703 - end    
                 return "("
-                    + parameterClassName
-                    + ")org.apache.jasper.runtime.JspRuntimeLibrary.getValueFromPropertyEditorManager("
-                    + parameterClassName
-                    + ".class, \""
-                    + attrName
-                    + "\", "
-                    + quoted
-                    + ")";
+                       + parameterClassName
+                       + ")org.apache.jasper.runtime.JspRuntimeLibrary.getValueFromPropertyEditorManager("
+                       + parameterClassName
+                       + ".class, \""
+                       + attrName
+                       + "\", "
+                       + quoted
+                       + ")";
             }
         }
     }
-    
-    private NamedAttributeWriter createJspAttributeWriter(Element attributeElement, 
-                                                          boolean isAttrFragment) 
-        throws JspCoreException {
-        int methodNesting =  ((Integer)persistentData.get("methodNesting")).intValue();
+
+    private NamedAttributeWriter createJspAttributeWriter(Element attributeElement,
+                                                          boolean isAttrFragment) throws JspCoreException {
+        int methodNesting = ((Integer) persistentData.get("methodNesting")).intValue();
         String name = attributeElement.getAttribute("name");
-            
+
         if (name.indexOf(':') != -1) {
             name = name.substring(name.indexOf(':') + 1);
         }
-            
+
         NamedAttributeWriter attributeWriter = new NamedAttributeWriter(name, GeneratorUtils.nextTemporaryVariableName(persistentData));
 
         if (isAttrFragment) {
@@ -821,80 +792,77 @@ public abstract class BaseTagGenerator implements TagGenerator {
             attributeWriter.print("new " + fragmentHelperClassWriter.getClassName() + "( ");
             if (jspOptions.isUsePageTagPool() ||
                 jspOptions.isUseThreadTagPool()) {
-                attributeWriter.print("_jspx_TagLookup, "); 
+                attributeWriter.print("_jspx_TagLookup, ");
             }
-            String pushBodyCountVar = (String)persistentData.get("pushBodyCountVar");
+            String pushBodyCountVar = (String) persistentData.get("pushBodyCountVar");
             //PK65013
             attributeWriter.print(fragment.getId()
-                                + ", "+pageContextVar+", "
-                                + tagHandlerVar 
-                                + ", " 
-                                + pushBodyCountVar
-                                + ")");
+                                  + ", " + pageContextVar + ", "
+                                  + tagHandlerVar
+                                  + ", "
+                                  + pushBodyCountVar
+                                  + ")");
             attributeWriter.println(";");
             attributeWriterMap.put(attributeElement, fragment);
             generateSetterCall(name, attributeWriter.getVarName(), attributeElement.getNamespaceURI(), attributeWriter, false);
-        }
-        else {
+        } else {
             attributeWriterMap.put(attributeElement, attributeWriter);
         }
         return (attributeWriter);
     }
-    
+
     protected void declareScriptingVars(JavaCodeWriter tagWriter, int scope) {
 
         Vector vec = getScriptingVars(scope);
-        
+
         if (vec != null) {
             for (int i = 0; i < vec.size(); i++) {
                 Object elem = vec.elementAt(i);
                 if (elem instanceof VariableInfo) {
                     VariableInfo varInfo = (VariableInfo) elem;
                     if (varInfo.getDeclare()) {
-						// PK26741
-						if(jspOptions.isUseRepeatInt() && isRepeatTag) {
-							tagWriter.print("int");
-						    tagWriter.print(" ");
-						    tagWriter.print(varInfo.getVarName());
-						    tagWriter.println(" = 0;");
-						} // PK26741
-						else {
-                            String className=varInfo.getClassName();
+                        // PK26741
+                        if (jspOptions.isUseRepeatInt() && isRepeatTag) {
+                            tagWriter.print("int");
+                            tagWriter.print(" ");
+                            tagWriter.print(varInfo.getVarName());
+                            tagWriter.println(" = 0;");
+                        } // PK26741
+                        else {
+                            String className = varInfo.getClassName();
                             className = replaceCharacters(className); //PK40417 &gt;,&lt;,&amp;,<\\%, and %\\> 
-                            
+
                             tagWriter.print(className);
-	                        tagWriter.print(" ");
-	                        tagWriter.print(varInfo.getVarName());
-	                        tagWriter.println(" = null;");
-						}
+                            tagWriter.print(" ");
+                            tagWriter.print(varInfo.getVarName());
+                            tagWriter.println(" = null;");
+                        }
                     }
-                }
-                else {
+                } else {
                     TagVariableInfo tagVarInfo = (TagVariableInfo) elem;
                     if (tagVarInfo.getDeclare()) {
                         String varName = tagVarInfo.getNameGiven();
                         if (varName == null) {
                             varName = collectedTagData.getTagData().getAttributeString(tagVarInfo.getNameFromAttribute());
-                        }
-                        else if (tagVarInfo.getNameFromAttribute() != null) {
+                        } else if (tagVarInfo.getNameFromAttribute() != null) {
                             // alias
                             continue;
                         }
                         // PK26741
-						if(jspOptions.isUseRepeatInt() && isRepeatTag) {
-							tagWriter.print("int");  //change tagVarInfo.getClassname to 0
-						    tagWriter.print(" ");
-						    tagWriter.print(varName);
-						    tagWriter.println(" = 0;");  //change null to 0
-						}	// PK26741
-						else {
+                        if (jspOptions.isUseRepeatInt() && isRepeatTag) {
+                            tagWriter.print("int"); //change tagVarInfo.getClassname to 0
+                            tagWriter.print(" ");
+                            tagWriter.print(varName);
+                            tagWriter.println(" = 0;"); //change null to 0
+                        } // PK26741
+                        else {
                             String className = tagVarInfo.getClassName();
                             className = replaceCharacters(className); //PK40417 &gt;, &lt;, &amp; <\\%, %\\>
                             tagWriter.print(className);
-	                        tagWriter.print(" ");
-	                        tagWriter.print(varName);
-	                        tagWriter.println(" = null;");
-						}
+                            tagWriter.print(" ");
+                            tagWriter.print(varName);
+                            tagWriter.println(" = null;");
+                        }
                     }
                 }
             }
@@ -905,7 +873,7 @@ public abstract class BaseTagGenerator implements TagGenerator {
      * This method is called as part of the custom tag's start element.
      *
      * If the given custom tag has a custom nesting level greater than 0,
-     * save the current values of its scripting variables to 
+     * save the current values of its scripting variables to
      * temporary variables, so those values may be restored in the tag's
      * end element. This way, the scripting variables may be synchronized
      * by the given tag without affecting their original values.
@@ -917,10 +885,10 @@ public abstract class BaseTagGenerator implements TagGenerator {
 
         TagVariableInfo[] tagVarInfos = ti.getTagVariableInfos();
         VariableInfo[] varInfos = ti.getVariableInfo(collectedTagData.getTagData());
-        
+
         if (varInfos == null)
             varInfos = new VariableInfo[0];
-            
+
         if ((varInfos.length == 0) && (tagVarInfos.length == 0)) {
             return;
         }
@@ -939,19 +907,17 @@ public abstract class BaseTagGenerator implements TagGenerator {
                 tagWriter.print(varName);
                 tagWriter.println(";");
             }
-        }
-        else {
+        } else {
             for (int i = 0; i < tagVarInfos.length; i++) {
                 if (tagVarInfos[i].getScope() != scope)
                     continue;
-                if (containsTagVariableInfo(getScriptingVars(scope),tagVarInfos[i])) {
+                if (containsTagVariableInfo(getScriptingVars(scope), tagVarInfos[i])) {
                     continue;
                 }
                 String varName = tagVarInfos[i].getNameGiven();
                 if (varName == null) {
                     varName = collectedTagData.getTagData().getAttributeString(tagVarInfos[i].getNameFromAttribute());
-                }
-                else if (tagVarInfos[i].getNameFromAttribute() != null) {
+                } else if (tagVarInfos[i].getNameFromAttribute() != null) {
                     // alias
                     continue;
                 }
@@ -978,10 +944,10 @@ public abstract class BaseTagGenerator implements TagGenerator {
 
         TagVariableInfo[] tagVarInfos = ti.getTagVariableInfos();
         VariableInfo[] varInfos = ti.getVariableInfo(collectedTagData.getTagData());
-        
+
         if (varInfos == null)
             varInfos = new VariableInfo[0];
-            
+
         if ((varInfos.length == 0) && (tagVarInfos.length == 0)) {
             return;
         }
@@ -1000,19 +966,17 @@ public abstract class BaseTagGenerator implements TagGenerator {
                 tagWriter.print(tmpVarName);
                 tagWriter.println(";");
             }
-        }
-        else {
+        } else {
             for (int i = 0; i < tagVarInfos.length; i++) {
                 if (tagVarInfos[i].getScope() != scope)
                     continue;
-                if (containsTagVariableInfo(getScriptingVars(scope),tagVarInfos[i])) {
+                if (containsTagVariableInfo(getScriptingVars(scope), tagVarInfos[i])) {
                     continue;
                 }
                 String varName = tagVarInfos[i].getNameGiven();
                 if (varName == null) {
                     varName = collectedTagData.getTagData().getAttributeString(tagVarInfos[i].getNameFromAttribute());
-                }
-                else if (tagVarInfos[i].getNameFromAttribute() != null) {
+                } else if (tagVarInfos[i].getNameFromAttribute() != null) {
                     // alias
                     continue;
                 }
@@ -1035,7 +999,7 @@ public abstract class BaseTagGenerator implements TagGenerator {
 
         if (varInfos == null)
             varInfos = new VariableInfo[0];
-            
+
         if ((varInfos.length == 0) && (tagVarInfos.length == 0)) {
             return;
         }
@@ -1045,56 +1009,54 @@ public abstract class BaseTagGenerator implements TagGenerator {
                 if (varInfos[i].getScope() == scope) {
                     tagWriter.print(varInfos[i].getVarName());
                     tagWriter.print(" = ((");
-                    String className=varInfos[i].getClassName();
+                    String className = varInfos[i].getClassName();
                     className = replaceCharacters(className); //PK40417 &gt;,&lt;,&amp;,<\\%, and %\\>
                     tagWriter.print(className);
-                    tagWriter.print(") "+pageContextVar+".findAttribute(");    //PK65013
+                    tagWriter.print(") " + pageContextVar + ".findAttribute("); //PK65013
                     tagWriter.print(GeneratorUtils.quote(varInfos[i].getVarName()));
-					tagWriter.print("))");
-					// PK26741
-					if(jspOptions.isUseRepeatInt() && isRepeatTag)
-						tagWriter.println(".intValue();");
-					else
-                    	tagWriter.println(";");		// PK26741
+                    tagWriter.print("))");
+                    // PK26741
+                    if (jspOptions.isUseRepeatInt() && isRepeatTag)
+                        tagWriter.println(".intValue();");
+                    else
+                        tagWriter.println(";"); // PK26741
                 }
             }
-        }
-        else {
+        } else {
             for (int i = 0; i < tagVarInfos.length; i++) {
                 if (tagVarInfos[i].getScope() == scope) {
                     String name = tagVarInfos[i].getNameGiven();
                     if (name == null) {
                         name = collectedTagData.getTagData().getAttributeString(tagVarInfos[i].getNameFromAttribute());
-                    }
-                    else if (tagVarInfos[i].getNameFromAttribute() != null) {
+                    } else if (tagVarInfos[i].getNameFromAttribute() != null) {
                         // alias
                         continue;
                     }
                     tagWriter.print(name);
-					tagWriter.print(" = ((");
-                    String className=tagVarInfos[i].getClassName();
+                    tagWriter.print(" = ((");
+                    String className = tagVarInfos[i].getClassName();
                     className = replaceCharacters(className); //PK40417 &gt;,&lt;,&amp;,<\\%, and %\\>
                     tagWriter.print(className);
-                    tagWriter.print(") "+pageContextVar+".findAttribute("); //PK65013
+                    tagWriter.print(") " + pageContextVar + ".findAttribute("); //PK65013
                     tagWriter.print(GeneratorUtils.quote(name));
-					tagWriter.print("))");
-					// PK26741
-					if(jspOptions.isUseRepeatInt() && isRepeatTag)
-						tagWriter.println(".intValue();");
-					else
-                    	tagWriter.println(";");		// PK26741
+                    tagWriter.print("))");
+                    // PK26741
+                    if (jspOptions.isUseRepeatInt() && isRepeatTag)
+                        tagWriter.println(".intValue();");
+                    else
+                        tagWriter.println(";"); // PK26741
                 }
             }
         }
     }
-    
+
     private MethodWriter findAttributeWriter(String attributeName) {
         MethodWriter attributeWriter = null;
-        
+
         for (Iterator itr = attributeWriterMap.values().iterator(); itr.hasNext();) {
-            MethodWriter writer = (MethodWriter)itr.next();
+            MethodWriter writer = (MethodWriter) itr.next();
             if (writer instanceof NamedAttributeWriter) {
-                if (((NamedAttributeWriter)writer).getAttributeName().equals(attributeName)) {
+                if (((NamedAttributeWriter) writer).getAttributeName().equals(attributeName)) {
                     attributeWriter = writer;
                     break;
                 }
@@ -1102,47 +1064,47 @@ public abstract class BaseTagGenerator implements TagGenerator {
         }
         return (attributeWriter);
     }
-    
+
     private Vector getScriptingVars(int scope) {
         Vector vec = null;
 
         switch (scope) {
-            case VariableInfo.AT_BEGIN :
+            case VariableInfo.AT_BEGIN:
                 vec = collectedTagData.getAtBeginScriptingVars();
                 break;
-            case VariableInfo.AT_END :
-            	//PK29373
-			    if(jspOptions.isUseScriptVarDupInit() && collectedTagData.getAtEndDuplicateVars()!=null)
-					vec = collectedTagData.getAtEndDuplicateVars();
-				else   //PK29373
-                vec = collectedTagData.getAtEndScriptingVars();
+            case VariableInfo.AT_END:
+                //PK29373
+                if (jspOptions.isUseScriptVarDupInit() && collectedTagData.getAtEndDuplicateVars() != null)
+                    vec = collectedTagData.getAtEndDuplicateVars();
+                else //PK29373
+                    vec = collectedTagData.getAtEndScriptingVars();
                 break;
-            case VariableInfo.NESTED :
+            case VariableInfo.NESTED:
                 vec = collectedTagData.getNestedScriptingVars();
                 break;
         }
 
         return vec;
     }
-    
+
     private boolean containsVariableInfo(Vector vec, VariableInfo varInfo) {
         boolean found = false;
-        
+
         for (Iterator itr = vec.iterator(); itr.hasNext();) {
-            VariableInfo vi = (VariableInfo)itr.next();
+            VariableInfo vi = (VariableInfo) itr.next();
             if (vi.getVarName().equals(varInfo.getVarName())) {
                 found = true;
-                break;    
+                break;
             }
         }
         return found;
     }
-    
+
     private boolean containsTagVariableInfo(Vector vec, TagVariableInfo tagVarInfo) {
         boolean found = false;
-        
+
         for (Iterator itr = vec.iterator(); itr.hasNext();) {
-            TagVariableInfo tvi = (TagVariableInfo)itr.next();
+            TagVariableInfo tvi = (TagVariableInfo) itr.next();
             String varName = tvi.getNameGiven();
             if (varName == null) {
                 varName = collectedTagData.getTagData().getAttributeString(tvi.getNameFromAttribute());
@@ -1155,7 +1117,7 @@ public abstract class BaseTagGenerator implements TagGenerator {
                 if (varName.equals(compareVarName)) {
                     found = true;
                     break;
-                }    
+                }
             }
         }
         return found;
@@ -1167,8 +1129,8 @@ public abstract class BaseTagGenerator implements TagGenerator {
         name = name.replaceAll("&lt;", "<");
         name = name.replaceAll("&amp;", "&");
         name = name.replaceAll("<\\%", "<%");
-        name = name.replaceAll("%\\>", "%>"); 
+        name = name.replaceAll("%\\>", "%>");
         return name;
     }
-    
+
 }

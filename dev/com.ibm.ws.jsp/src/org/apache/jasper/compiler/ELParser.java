@@ -30,7 +30,7 @@ package org.apache.jasper.compiler;
  * @author Kin-man Chung
  */
 
-public class ELParser { 
+public class ELParser {
 
     private Token curToken; // current token
 
@@ -41,14 +41,14 @@ public class ELParser {
     private int index; // Current index of the expression
 
     private String expression; // The EL expression
-    
+
     private char type;
 
     private boolean escapeBS; // is '\' an escape char in text outside EL?
 
     private static final String reservedWords[] = { "and", "div", "empty",
-            "eq", "false", "ge", "gt", "instanceof", "le", "lt", "mod", "ne",
-            "not", "null", "or", "true" };
+                                                    "eq", "false", "ge", "gt", "instanceof", "le", "lt", "mod", "ne",
+                                                    "not", "null", "or", "true" };
 
     public ELParser(String expression) {
         index = 0;
@@ -60,8 +60,8 @@ public class ELParser {
      * Parse an EL expression
      * 
      * @param expression
-     *            The input expression string of the form Char* ('${' Char*
-     *            '}')* Char*
+     *                       The input expression string of the form Char* ('${' Char*
+     *                       '}')* Char*
      * @return Parsed EL expression in ELNode.Nodes
      */
     public static ELNode.Nodes parse(String expression) {
@@ -232,7 +232,7 @@ public class ELParser {
                 StringBuffer buf = new StringBuffer();
                 buf.append(ch);
                 while ((ch = peekChar()) != -1
-                        && Character.isJavaIdentifierPart(ch)) {
+                       && Character.isJavaIdentifierPart(ch)) {
                     buf.append(ch);
                     nextChar();
                 }

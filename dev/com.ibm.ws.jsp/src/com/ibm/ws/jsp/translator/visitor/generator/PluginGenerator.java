@@ -26,17 +26,18 @@ public class PluginGenerator extends PageTranslationTimeGenerator {
     private static final String NS_PLUGIN_URL = "http://java.sun.com/products/plugin/";
     private static final String IE_PLUGIN_URL = "http://java.sun.com/products/plugin/1.2.2/jinstall-1_2_2-win.cab#Version=1,2,2,0";
     private static final String IE_CLASS_ID = "clsid:8AD9C840-044E-11D1-B3E9-00805F499D93";
-    
+
     private MethodWriter attributesWriter = null;
     private MethodWriter bodyWriter = null;
-    
-    public PluginGenerator() {
-        super(new String[] {"type", "code", "name", "hspace", "vspace", "align", "iepluginurl", "nspluginurl", "codebase", "archive", "jreversion"});
-    }
-    
-    public void startGeneration(int section, JavaCodeWriter writer) throws JspCoreException {}
 
-    public void endGeneration(int section, JavaCodeWriter writer)  throws JspCoreException {
+    public PluginGenerator() {
+        super(new String[] { "type", "code", "name", "hspace", "vspace", "align", "iepluginurl", "nspluginurl", "codebase", "archive", "jreversion" });
+    }
+
+    public void startGeneration(int section, JavaCodeWriter writer) throws JspCoreException {
+    }
+
+    public void endGeneration(int section, JavaCodeWriter writer) throws JspCoreException {
         if (section == CodeGenerationPhase.METHOD_SECTION) {
             String type = getAttributeValue("type");
             String code = getAttributeValue("code");
@@ -58,31 +59,28 @@ public class PluginGenerator extends PageTranslationTimeGenerator {
             }
             //PK65013 - end
 
-            HashMap jspAttributes = (HashMap)persistentData.get("jspAttributes");
+            HashMap jspAttributes = (HashMap) persistentData.get("jspAttributes");
             ArrayList jspAttributeList = null;
             if (jspAttributes != null) {
-                jspAttributeList = (ArrayList)jspAttributes.get(element);
-            }
-            else {
+                jspAttributeList = (ArrayList) jspAttributes.get(element);
+            } else {
                 jspAttributeList = new ArrayList();
             }
-            
+
             String widthStr = null;
             if (width == null) {
                 widthStr = findAttributeValue("width", jspAttributeList);
-            }
-            else {
+            } else {
                 widthStr = GeneratorUtils.attributeValue(width, false, String.class, jspConfiguration, isTagFile, pageContextVar); //PK65013
             }
 
             String heightStr = null;
             if (height == null) {
                 heightStr = findAttributeValue("height", jspAttributeList);
-            }
-            else {
+            } else {
                 heightStr = GeneratorUtils.attributeValue(height, false, String.class, jspConfiguration, isTagFile, pageContextVar); //PK65013
             }
-            
+
             if (attributesWriter != null)
                 writer.printMultiLn(attributesWriter.toString());
 
@@ -91,26 +89,26 @@ public class PluginGenerator extends PageTranslationTimeGenerator {
             if (nspluginurl == null)
                 nspluginurl = NS_PLUGIN_URL;
 
-            HashMap jspParams = (HashMap)persistentData.get("jspParams");
+            HashMap jspParams = (HashMap) persistentData.get("jspParams");
             ArrayList jspParamList = null;
             if (jspParams != null) {
-                jspParamList = (ArrayList)jspParams.get(element);
+                jspParamList = (ArrayList) jspParams.get(element);
             }
 
-            writeDebugStartBegin(writer);            
+            writeDebugStartBegin(writer);
             // XXX - Fixed a bug here - width and height can be set 
             // dynamically.  Double-check if this generation is correct.
 
             // IE style plugin
             // <OBJECT ...>
             // First compose the runtime output string 
-    		//Start changes Defect PK28029
-    		String ieClassId = IE_CLASS_ID;
+            //Start changes Defect PK28029
+            String ieClassId = IE_CLASS_ID;
             if (jspOptions != null && jspOptions.getIeClassId() != null) {
-            	ieClassId = jspOptions.getIeClassId();
+                ieClassId = jspOptions.getIeClassId();
             }
             String s0 = "<OBJECT classid=\"" + ieClassId + "\"" + makeAttr("name", name);
-			//End changes Defect PK28029
+            //End changes Defect PK28029
 
             String s1 = "";
             if (width != null) {
@@ -122,12 +120,11 @@ public class PluginGenerator extends PageTranslationTimeGenerator {
                 s2 = " + \" height=\\\"\" + " + heightStr + " + \"\\\"\"";
             }
 
-            String s3 =
-                makeAttr("hspace", hspace)
-                    + makeAttr("vspace", vspace)
-                    + makeAttr("align", align)
-                    + makeAttr("codebase", iepluginurl)
-                    + '>';
+            String s3 = makeAttr("hspace", hspace)
+                        + makeAttr("vspace", vspace)
+                        + makeAttr("align", align)
+                        + makeAttr("codebase", iepluginurl)
+                        + '>';
 
             // Then print the output string to the java file
             writer.println("out.write(" + GeneratorUtils.quote(s0) + s1 + s2 + " + " + GeneratorUtils.quote(s3) + ");");
@@ -153,12 +150,11 @@ public class PluginGenerator extends PageTranslationTimeGenerator {
             }
 
             // <PARAM > for type
-            s0 =
-                "<PARAM name=\"type\""
-                    + makeAttr(
-                        "value",
-                        "application/x-java-" + type + ";" + ((jreversion == null) ? "" : "version=" + jreversion))
-                    + '>';
+            s0 = "<PARAM name=\"type\""
+                 + makeAttr(
+                            "value",
+                            "application/x-java-" + type + ";" + ((jreversion == null) ? "" : "version=" + jreversion))
+                 + '>';
             writer.println("out.write(" + GeneratorUtils.quote(s0) + ");");
             writer.println("out.write(\"\\n\");");
 
@@ -167,20 +163,20 @@ public class PluginGenerator extends PageTranslationTimeGenerator {
              */
             if (jspParamList != null) {
                 for (Iterator itr = jspParamList.iterator(); itr.hasNext();) {
-                    ParamGenerator.JspParam jspParam = (ParamGenerator.JspParam)itr.next();
+                    ParamGenerator.JspParam jspParam = (ParamGenerator.JspParam) itr.next();
                     String paramName = jspParam.getName();
-                    
+
                     if (paramName.equalsIgnoreCase("object"))
                         paramName = "java_object";
                     else if (paramName.equalsIgnoreCase("type"))
                         paramName = "java_type";
-                        
+
                     writer.println(
-                            "out.write( \"<PARAM name=\\\""
-                                + GeneratorUtils.escape(paramName)
-                                + "\\\" value=\\\"\" + "
-                                + jspParam.getValue()
-                                + " + \"\\\">\" );");
+                                   "out.write( \"<PARAM name=\\\""
+                                   + GeneratorUtils.escape(paramName)
+                                   + "\\\" value=\\\"\" + "
+                                   + jspParam.getValue()
+                                   + " + \"\\\">\" );");
                     writer.println("out.write(\"\\n\");");
                 }
             }
@@ -190,23 +186,21 @@ public class PluginGenerator extends PageTranslationTimeGenerator {
              */
             writer.println("out.write(" + GeneratorUtils.quote("<COMMENT>") + ");");
             writer.println("out.write(\"\\n\");");
-            s0 =
-                "<EMBED"
-                    + makeAttr(
-                        "type",
-                        "application/x-java-" + type + ";" + ((jreversion == null) ? "" : "version=" + jreversion))
-                    + makeAttr("name", name);
+            s0 = "<EMBED"
+                 + makeAttr(
+                            "type",
+                            "application/x-java-" + type + ";" + ((jreversion == null) ? "" : "version=" + jreversion))
+                 + makeAttr("name", name);
 
             // s1 and s2 are the same as before.
 
-            s3 =
-                makeAttr("hspace", hspace)
-                    + makeAttr("vspace", vspace)
-                    + makeAttr("align", align)
-                    + makeAttr("pluginspage", nspluginurl)
-                    + makeAttr("java_code", code)
-                    + makeAttr("java_codebase", codebase)
-                    + makeAttr("java_archive", archive);
+            s3 = makeAttr("hspace", hspace)
+                 + makeAttr("vspace", vspace)
+                 + makeAttr("align", align)
+                 + makeAttr("pluginspage", nspluginurl)
+                 + makeAttr("java_code", code)
+                 + makeAttr("java_codebase", codebase)
+                 + makeAttr("java_archive", archive);
             writer.println("out.write(" + GeneratorUtils.quote(s0) + s1 + s2 + " + " + GeneratorUtils.quote(s3) + ");");
 
             /*
@@ -214,9 +208,9 @@ public class PluginGenerator extends PageTranslationTimeGenerator {
              */
             if (jspParamList != null) {
                 for (Iterator itr = jspParamList.iterator(); itr.hasNext();) {
-                    ParamGenerator.JspParam jspParam = (ParamGenerator.JspParam)itr.next();
+                    ParamGenerator.JspParam jspParam = (ParamGenerator.JspParam) itr.next();
                     String paramName = jspParam.getName();
-                    
+
                     if (paramName.equalsIgnoreCase("object"))
                         paramName = "java_object";
                     else if (paramName.equalsIgnoreCase("type"))
@@ -239,9 +233,9 @@ public class PluginGenerator extends PageTranslationTimeGenerator {
              * Fallback
              */
             if (bodyWriter != null) {
-                writeDebugStartEnd(writer);            
+                writeDebugStartEnd(writer);
                 writer.printMultiLn(bodyWriter.toString());
-                writeDebugEndBegin(writer);            
+                writeDebugEndBegin(writer);
                 writer.println("out.write(\"\\n\");");
             }
 
@@ -251,53 +245,51 @@ public class PluginGenerator extends PageTranslationTimeGenerator {
             writer.println("out.write(\"\\n\");");
             writer.println("out.write(" + GeneratorUtils.quote("</OBJECT>") + ");");
             writer.println("out.write(\"\\n\");");
-            
-            if (bodyWriter != null) 
-                writeDebugEndEnd(writer);            
+
+            if (bodyWriter != null)
+                writeDebugEndEnd(writer);
             else
-                writeDebugStartEnd(writer);            
+                writeDebugStartEnd(writer);
         }
     }
-    
+
     public JavaCodeWriter getWriterForChild(int section, Node childElement) throws JspCoreException {
         JavaCodeWriter writerForChild = super.getWriterForChild(section, childElement);
         if (writerForChild == null) {
             if (section == CodeGenerationPhase.METHOD_SECTION) {
                 if (childElement.getNodeType() == Node.ELEMENT_NODE) {
-                    if (childElement.getNamespaceURI().equals(Constants.JSP_NAMESPACE) && 
+                    if (childElement.getNamespaceURI().equals(Constants.JSP_NAMESPACE) &&
                         childElement.getLocalName().equals(Constants.JSP_ATTRIBUTE_TYPE)) {
                         if (attributesWriter == null)
                             attributesWriter = new MethodWriter();
                         writerForChild = attributesWriter;
-                    }
-                    else {
-                        if (bodyWriter == null) 
+                    } else {
+                        if (bodyWriter == null)
                             bodyWriter = new MethodWriter();
                         writerForChild = bodyWriter;
                     }
-                }
-                else {
-                    if (bodyWriter == null) 
+                } else {
+                    if (bodyWriter == null)
                         bodyWriter = new MethodWriter();
                     writerForChild = bodyWriter;
                 }
             }
         }
-        
+
         return writerForChild;
     }
-    
+
     private String makeAttr(String attr, String value) {
         if (value == null)
             return "";
 
         return " " + attr + "=\"" + value + '\"';
     }
-    
+
     private String findAttributeValue(String name, List jspAttributeList) {
         String value = "";
         for (Iterator itr = jspAttributeList.iterator(); itr.hasNext();) {
-            AttributeGenerator.JspAttribute jspAttribute = (AttributeGenerator.JspAttribute)itr.next();
+            AttributeGenerator.JspAttribute jspAttribute = (AttributeGenerator.JspAttribute) itr.next();
             if (jspAttribute.getName().equals(name)) {
                 value = jspAttribute.getVarName();
             }

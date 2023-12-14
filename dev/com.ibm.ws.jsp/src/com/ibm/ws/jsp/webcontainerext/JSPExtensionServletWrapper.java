@@ -30,12 +30,12 @@ import com.ibm.wsspi.jsp.context.translation.JspTranslationContext;
 import com.ibm.wsspi.webcontainer.servlet.IServletContext;
 
 public class JSPExtensionServletWrapper extends AbstractJSPExtensionServletWrapper {
-    
-    public JSPExtensionServletWrapper(IServletContext parent, 
-                                      JspOptions options, 
-                                      JspConfigurationManager configManager, 
+
+    public JSPExtensionServletWrapper(IServletContext parent,
+                                      JspOptions options,
+                                      JspConfigurationManager configManager,
                                       TagLibraryCache tlc,
-                                      JspTranslationContext context, 
+                                      JspTranslationContext context,
                                       CodeSource codeSource) throws Exception {
         super(parent, options, configManager, tlc, context, codeSource);
     }
@@ -43,12 +43,12 @@ public class JSPExtensionServletWrapper extends AbstractJSPExtensionServletWrapp
     protected PermissionCollection createPermissionCollection() throws MalformedURLException {
         return Policy.getPolicy().getPermissions(getCodeSource());
     }
-    
+
     private CodeSource getCodeSource() {
         CodeSource topLevelContainerCodeSource = getTopLevelContainerCodeSource(context.getModuleContainer());
         return topLevelContainerCodeSource != null ? topLevelContainerCodeSource : codeSource;
     }
-    
+
     private CodeSource getTopLevelContainerCodeSource(Container container) {
         CodeSource topLevelCodeSource = null;
         Container topLevelContainer = getTopLevelContainerContainer(container);
@@ -67,7 +67,7 @@ public class JSPExtensionServletWrapper extends AbstractJSPExtensionServletWrapp
         }
         return topLevelContainer;
     }
-    
+
     protected void preinvokeCheckForTranslation(HttpServletRequest req) throws JspCoreException {
     }
 }

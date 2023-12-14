@@ -25,8 +25,8 @@ import com.ibm.wsspi.webcontainer.servlet.IServletContext;
 import com.ibm.wsspi.webcontainer.servlet.IServletWrapper;
 
 public class JSPExtensionProcessor extends AbstractJSPExtensionProcessor {
-    public JSPExtensionProcessor(IServletContext webapp, 
-                                 JspXmlExtConfig webAppConfig, 
+    public JSPExtensionProcessor(IServletContext webapp,
+                                 JspXmlExtConfig webAppConfig,
                                  GlobalTagLibraryCache globalTagLibraryCache,
                                  JspClassloaderContext jspClassloaderContext) throws Exception {
         super(webapp, webAppConfig, globalTagLibraryCache, jspClassloaderContext);
@@ -37,8 +37,8 @@ public class JSPExtensionProcessor extends AbstractJSPExtensionProcessor {
         return true;
     }
 
-	public WebComponentMetaData getMetaData() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public WebComponentMetaData getMetaData() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

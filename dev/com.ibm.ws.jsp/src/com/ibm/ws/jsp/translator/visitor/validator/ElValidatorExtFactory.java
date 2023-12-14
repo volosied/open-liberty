@@ -16,7 +16,7 @@ package com.ibm.ws.jsp.translator.visitor.validator;
  *
  */
 public interface ElValidatorExtFactory {
-    
+
     public ElValidatorExt getELValidatorExt();
 
 }

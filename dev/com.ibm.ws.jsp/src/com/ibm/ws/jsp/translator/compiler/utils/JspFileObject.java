@@ -32,28 +32,29 @@ import javax.tools.SimpleJavaFileObject;
 import com.ibm.wsspi.jsp.resource.translation.JspResources;
 
 public class JspFileObject extends SimpleJavaFileObject {
-    
+
     static final protected Logger logger = Logger.getLogger("com.ibm.ws.jsp");
     private static final String CLASS_NAME = "com.ibm.ws.jsp.translator.compiler.utils.JspFileObject";
-    
+
     private URI uri;
-    
+
     private final File source;
     private String binaryName;
     private boolean isJar = false;
     private String protocol = "";
     private String javaEncoding = "UTF-8"; //This is the encoding by default
-    private JarFile jarFile = null; 
+    private JarFile jarFile = null;
 
     /**
      * Create a JspFileObject for a class file.
+     * 
      * @param binaryName
      * @param uri
      * @param protocol
      */
     JspFileObject(final String binaryName, final URI uri, String protocol) {
         super(uri, Kind.CLASS);
-        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE)) {
+        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
             logger.logp(Level.FINE, CLASS_NAME, "JspFileObject", "Creating JspFileObject. binaryName = " + binaryName + " uri = " + uri + " protocol = " + protocol);
         }
         this.binaryName = binaryName;
@@ -68,27 +69,29 @@ public class JspFileObject extends SimpleJavaFileObject {
                 //I need to do this here of wsjar because I need to close JarFiles when the compilation finishes
                 if (System.getSecurityManager() != null) {
                     this.jarFile = java.security.AccessController.doPrivileged(
-                        new java.security.PrivilegedAction<JarFile>() {
-                            public JarFile run() {
-                                try {
-                                    return new JarFile(uri.toURL().getFile());
-                                } catch (IOException e) {
-                                    if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE)) {
-                                        logger.logp(Level.FINE, CLASS_NAME, "JspFileObject", "IOException in doPriviledged creating JarFile.", e);
-                                    }
-                                }
-                                return null;
-                            }
-                        });
+                                                                               new java.security.PrivilegedAction<JarFile>() {
+                                                                                   public JarFile run() {
+                                                                                       try {
+                                                                                           return new JarFile(uri.toURL().getFile());
+                                                                                       } catch (IOException e) {
+                                                                                           if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()
+                                                                                               && logger.isLoggable(Level.FINE)) {
+                                                                                               logger.logp(Level.FINE, CLASS_NAME, "JspFileObject",
+                                                                                                           "IOException in doPriviledged creating JarFile.", e);
+                                                                                           }
+                                                                                       }
+                                                                                       return null;
+                                                                                   }
+                                                                               });
                 } else {
                     this.jarFile = new JarFile(uri.toURL().getFile());
                 }
             } catch (MalformedURLException e) {
-                if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE)) {
+                if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
                     logger.logp(Level.FINE, CLASS_NAME, "JspFileObject", "Unable to get URI of wsjar file.", e);
                 }
             } catch (IOException e) {
-                if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE)) {
+                if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
                     logger.logp(Level.FINE, CLASS_NAME, "JspFileObject", "IOException processing jar.", e);
                 }
             }
@@ -97,6 +100,7 @@ public class JspFileObject extends SimpleJavaFileObject {
 
     /**
      * Create a JspFileObject for a class or source with encoding UTF-8.
+     * 
      * @param source
      * @param kind
      */
@@ -106,6 +110,7 @@ public class JspFileObject extends SimpleJavaFileObject {
 
     /**
      * Create a JspFileObject to represent a class or source code.
+     * 
      * @param source
      * @param kind
      * @param javaEncoding If the kind is source code, it is important to define the encoding. If null, UTF-8 is used.
@@ -117,11 +122,12 @@ public class JspFileObject extends SimpleJavaFileObject {
         this.uri = jspResourceSourceOrClassURI(source, kind);
         if (javaEncoding != null)
             this.javaEncoding = javaEncoding;
-        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE)) {
-            logger.logp(Level.FINE, CLASS_NAME, "JspFileObject", "Creating JspFileObject. source = " + this.source + " uri = " + this.uri + " binaryName = " + binaryName + " Kind = " + kind);
+        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
+            logger.logp(Level.FINE, CLASS_NAME, "JspFileObject",
+                        "Creating JspFileObject. source = " + this.source + " uri = " + this.uri + " binaryName = " + binaryName + " Kind = " + kind);
         }
     }
-    
+
     private static URI jspResourceSourceOrClassURI(JspResources source, Kind kind) {
         if (kind.equals(Kind.CLASS))
             return new File(source.getGeneratedSourceFile().getAbsolutePath().replaceAll(Kind.SOURCE.extension + "$", Kind.CLASS.extension)).toURI();
@@ -130,43 +136,45 @@ public class JspFileObject extends SimpleJavaFileObject {
     }
 
     @Override
-    public CharSequence getCharContent(final boolean ignoreEncodingErrors) 
-                    throws UnsupportedOperationException, IOException {
-        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE)) {
+    public CharSequence getCharContent(final boolean ignoreEncodingErrors) throws UnsupportedOperationException, IOException {
+        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
             logger.logp(Level.FINE, CLASS_NAME, "getCharContent", "Reading file = " + this.source);
         }
         if (source == null)
             throw new UnsupportedOperationException("Trying to read a file that does not contain source code.");
-        
+
         FileInputStream jspSourceInputStream;
         if (System.getSecurityManager() != null) {
             jspSourceInputStream = java.security.AccessController.doPrivileged(
-                new java.security.PrivilegedAction<FileInputStream>() {
-                    public FileInputStream run() {
-                        try {
-                            return new FileInputStream(source);
-                        } catch (FileNotFoundException e) {
-                            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE)) {
-                                logger.logp(Level.FINE, CLASS_NAME, "getCharContent", "There was a problem getting the FileInputStream of source = " + source, e);
-                            }
-                        }
-                        return null;
-                    }
-                });
+                                                                               new java.security.PrivilegedAction<FileInputStream>() {
+                                                                                   public FileInputStream run() {
+                                                                                       try {
+                                                                                           return new FileInputStream(source);
+                                                                                       } catch (FileNotFoundException e) {
+                                                                                           if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()
+                                                                                               && logger.isLoggable(Level.FINE)) {
+                                                                                               logger.logp(Level.FINE, CLASS_NAME, "getCharContent",
+                                                                                                           "There was a problem getting the FileInputStream of source = " + source,
+                                                                                                           e);
+                                                                                           }
+                                                                                       }
+                                                                                       return null;
+                                                                                   }
+                                                                               });
         } else {
             jspSourceInputStream = new FileInputStream(source);
         }
-        
+
         if (jspSourceInputStream == null)
             throw new IOException("There was a problem getting the FileInputStream of source = [" + source + "]");
-        
+
         InputStreamReader file = new InputStreamReader(jspSourceInputStream, javaEncoding);
         BufferedReader reader = new BufferedReader(file);
         StringBuffer sourceStringBuffer = new StringBuffer();
         String line;
         while ((line = reader.readLine()) != null)
             sourceStringBuffer.append(line).append('\n'); //appending new line char should not be of any benefit... it feels correct
-        
+
         try {
             reader.close();
         } catch (IOException ex) {
@@ -175,7 +183,7 @@ public class JspFileObject extends SimpleJavaFileObject {
              * we should try to return sourceStringBuffer as it probably
              * has all the content already.
              */
-            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE)) {
+            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
                 logger.logp(Level.FINE, CLASS_NAME, "getCharContent", "There was a problem closing reader", ex);
             }
         }
@@ -184,23 +192,23 @@ public class JspFileObject extends SimpleJavaFileObject {
 
     @Override
     public InputStream openInputStream() throws MalformedURLException, IOException {
-    
+
         JarFile jarFile = null;
         if (this.isJar) {
             if (protocol.equals("wsjar"))
                 jarFile = this.jarFile;
             else {
-                JarURLConnection jarUrlConnection = (JarURLConnection)uri.toURL().openConnection();
+                JarURLConnection jarUrlConnection = (JarURLConnection) uri.toURL().openConnection();
                 jarFile = jarUrlConnection.getJarFile();
             }
-            
+
             JarEntry jarEntry = jarFile.getJarEntry(binaryName.replace('.', '/') + Kind.CLASS.extension);
-            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE)) {
+            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
                 logger.logp(Level.FINE, CLASS_NAME, "openInputStream", "Opening the stream of jarEntry = " + jarEntry + " from jar = " + jarFile);
             }
             return jarFile.getInputStream(jarEntry);
         }
-        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE)) {
+        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
             logger.logp(Level.FINE, CLASS_NAME, "openInputStream", "Opening the stream of uri = " + uri);
         }
         return uri.toURL().openStream();

@@ -12,4 +12,5 @@
  *******************************************************************************/
 package com.ibm.ws.jsp.tsx;
 
-public interface TsxDynamicPropertyBeanIndex {}
+public interface TsxDynamicPropertyBeanIndex {
+}

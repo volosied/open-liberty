@@ -17,7 +17,7 @@ import com.ibm.ws.jsp.translator.optimizedtag.OptimizedTagContext;
 
 public class JSTLChooseOptimizedTag implements OptimizedTag {
     private boolean firstWhenSpecified = false;
-    
+
     public boolean doOptimization(OptimizedTagContext context) {
         return true;
     }
@@ -37,15 +37,15 @@ public class JSTLChooseOptimizedTag implements OptimizedTag {
 
     public void setAttribute(String attrName, Object attrValue) {
     }
-    
+
     public boolean isFirstWhenSpecified() {
         return firstWhenSpecified;
     }
-    
+
     public void setFirstWhenSpecified(boolean flag) {
-        firstWhenSpecified = flag;    
+        firstWhenSpecified = flag;
     }
-    
+
     public boolean canGenTagInMethod(OptimizedTagContext context) {
         return false;
     }

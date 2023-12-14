@@ -20,23 +20,22 @@ import com.ibm.websphere.ras.annotation.Trivial;
 import com.ibm.ws.jsp.Constants;
 import com.ibm.ws.jsp.JspCoreException;
 
-public class JspEncodingScanner
-{
-	// 221083 - pageEncoding overrides charset regardless of the order in which they're found.  Also,
-	//			scan all page directives until pageEncoding is found, or end of page directives.
-	protected String pageEncoding = null;
+public class JspEncodingScanner {
+    // 221083 - pageEncoding overrides charset regardless of the order in which they're found.  Also,
+    //			scan all page directives until pageEncoding is found, or end of page directives.
+    protected String pageEncoding = null;
     protected String charset = null;
     protected boolean jspRootFound = false;
     protected Reader jspReader = null;
     protected int charCount = 0;
 
     public JspEncodingScanner(Reader jspReader) {
-        this.jspReader = jspReader;    
+        this.jspReader = jspReader;
     }
-    
+
     public boolean scan() throws JspCoreException {
         boolean scanOk = true;
-        try {            
+        try {
             jspReader.mark(Constants.DEFAULT_BUFFER_SIZE);
             int character = 0;
             boolean endFound = false;
@@ -45,106 +44,100 @@ public class JspEncodingScanner
 
             while (endFound == false) {
                 character = readCharacter();
-                
-                if (charCount < Constants.DEFAULT_BUFFER_SIZE-1) {
+
+                if (charCount < Constants.DEFAULT_BUFFER_SIZE - 1) {
                     switch (character) {
                         case -1: {
                             endFound = true;
-                            break;    
+                            break;
                         }
-                        
+
                         case '<': {
                             int nextChar = readCharacter();
                             int nextNextChar = readCharacter();
                             if (nextChar == '%' && nextNextChar == '@') {
                                 scanPageDirective();
                                 if (pageEncoding != null) // 221083
-                                    endFound = true;    
+                                    endFound = true;
                             }
                             // begin 221074: code was checking inside of commented 
                             // out directives for pageEncoding and contentType
                             else if (nextChar == '%' && nextNextChar == '-') {
-                            	int nextNextNextChar = readCharacter();
-                            	if(nextNextNextChar == '-')
-                                {
+                                int nextNextNextChar = readCharacter();
+                                if (nextNextNextChar == '-') {
                                     // PQ99398: change ignoreComment to return boolean
-                            		if ( ignoreComment () )
+                                    if (ignoreComment())
                                         endFound = true;
-                            	}
-                            	else{
-                                    saveChars = true;    
-                                    chars.append((char)character);
-                                    chars.append((char)nextChar);
-                                    chars.append((char)nextNextChar);
-                                    chars.append((char)nextNextNextChar);
-                            	}
+                                } else {
+                                    saveChars = true;
+                                    chars.append((char) character);
+                                    chars.append((char) nextChar);
+                                    chars.append((char) nextNextChar);
+                                    chars.append((char) nextNextNextChar);
+                                }
                             }
-                        	//end 221074: code was checking inside of commented out directives for pageEncoding and contentType
-                            
+                            //end 221074: code was checking inside of commented out directives for pageEncoding and contentType
+
                             else {
-                                saveChars = true;    
-                                chars.append((char)character);
-                                chars.append((char)nextChar);
-                                chars.append((char)nextNextChar);
+                                saveChars = true;
+                                chars.append((char) character);
+                                chars.append((char) nextChar);
+                                chars.append((char) nextNextChar);
                             }
-                            break;	
+                            break;
                         }
-                        
+
                         case '>': {
                             if (saveChars) {
                                 saveChars = false;
                                 if (chars.toString().startsWith("<jsp:root"))
-                                    jspRootFound = true;                            
+                                    jspRootFound = true;
                                 chars.delete(0, chars.length());
                             }
                         }
-                        
-                        default : {
+
+                        default: {
                             if (saveChars)
-                                chars.append((char)character);
+                                chars.append((char) character);
                         }
                     }
-                }
-                else {
+                } else {
                     endFound = true;
                 }
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new JspCoreException(e);
-        }
-        finally {
+        } finally {
             try {
                 jspReader.reset();
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 scanOk = false;
             }
         }
         return scanOk;
     }
-    
+
     public String getEncoding() {
-        return (pageEncoding!=null?pageEncoding:charset); // 221083
+        return (pageEncoding != null ? pageEncoding : charset); // 221083
     }
-    
+
     public boolean jspRootFound() {
-        return jspRootFound; 
+        return jspRootFound;
     }
 
     protected void scanPageDirective() throws JspCoreException, IOException {
         boolean endFound = false;
-        
+
         StringBuffer directive = new StringBuffer();
         StringBuffer name = new StringBuffer();
         StringBuffer value = new StringBuffer();
 
         boolean inValue = false;
         boolean inDirective = true;
-        
+
         int prev = 0;
         int character = 0;
-        
+
         while (endFound == false) {
             prev = character;
             character = readCharacter();
@@ -153,17 +146,17 @@ public class JspEncodingScanner
                 case -1: {
                     throw new JspCoreException("jsp.error.end.of.file.reached");
                 }
-                
+
                 case '<': {
                     if (inValue)
                         value.append("&lt;");
                     else if (inDirective)
-                        throw new JspCoreException("jsp.error.invalid.jsp.syntax", new Object[] {directive.toString()});
-                    else                                                         
-                        throw new JspCoreException("jsp.error.invalid.jsp.syntax", new Object[] {name.toString()});
-                    break;                        
+                        throw new JspCoreException("jsp.error.invalid.jsp.syntax", new Object[] { directive.toString() });
+                    else
+                        throw new JspCoreException("jsp.error.invalid.jsp.syntax", new Object[] { name.toString() });
+                    break;
                 }
-                
+
                 case '>': {
                     if (prev == '%')
                         endFound = true;
@@ -173,30 +166,26 @@ public class JspEncodingScanner
                         else if (!inDirective)
                             name.append("&gt;");
                     }
-                    break; 
-                }
-
-                case '\r':
-                {
                     break;
                 }
-                
+
+                case '\r': {
+                    break;
+                }
+
                 case '=': {
-                    if (inValue) 
-                        value.append((char)character);
+                    if (inValue)
+                        value.append((char) character);
                     break;
                 }
                 // PK00433: Treat new line and tab as equivalent to space
                 case '\n':
-                case '\t': 
-                case ' ': 
-                {
-                    if (inDirective && directive.toString().trim().length() > 0) 
-                    {
+                case '\t':
+                case ' ': {
+                    if (inDirective && directive.toString().trim().length() > 0) {
                         inDirective = false;
-                    }
-                    else if (inValue) {
-                        value.append((char)character);
+                    } else if (inValue) {
+                        value.append((char) character);
                     }
                     break;
                 }
@@ -208,87 +197,80 @@ public class JspEncodingScanner
                             directive.toString().equals("tag")) {
                             if (name.toString().equals("pageEncoding")) {
                                 pageEncoding = value.toString(); // 221083
-                            }
-                            else if (name.toString().equals("contentType")) {
-                        		// begin 221074: this code was working per the specification but regressed behavior of 5.0. 
-                            	// changed to search for charset without the leading ; being immediately 1 or zero characters before charset.
-                               /* if (value.indexOf("; charset=") != -1 ||		// defect 219340 change from && to ||
-                                    value.indexOf(";charset=") != -1) {
-                                    encoding = value.substring(value.indexOf("charset=")+8);	// defect 219340 change to 8 instead of 9
+                            } else if (name.toString().equals("contentType")) {
+                                // begin 221074: this code was working per the specification but regressed behavior of 5.0. 
+                                // changed to search for charset without the leading ; being immediately 1 or zero characters before charset.
+                                /*
+                                 * if (value.indexOf("; charset=") != -1 || // defect 219340 change from && to ||
+                                 * value.indexOf(";charset=") != -1) {
+                                 * encoding = value.substring(value.indexOf("charset=")+8); // defect 219340 change to 8 instead of 9
+                                 * }
+                                 */
+
+                                if ((value != null) && (value.indexOf(";") != -1)) {
+                                    StringTokenizer st = new StringTokenizer(value.toString(), ";");
+                                    while (st.hasMoreTokens()) {
+                                        String token = st.nextToken();
+                                        if (token.indexOf("charset=") != -1) {
+                                            charset = value.substring(value.indexOf("charset=") + 8).trim(); // 221083
+                                        }
+                                    }
                                 }
-                                */
-                            	
-                            	if( (value!= null) && (value.indexOf(";") != -1 )){
-                            		StringTokenizer st = new StringTokenizer (value.toString(), ";");
-                            		while (st.hasMoreTokens()){
-                            			String token = st.nextToken();
-                                    	if (token.indexOf("charset=") != -1){
-                                    		charset = value.substring(value.indexOf("charset=")+8).trim(); // 221083
-                                    	}
-                            		}
-                            	}
-                        		//end 221074: this code was working per the specification but regressed behavior of 5.0. 
+                                //end 221074: this code was working per the specification but regressed behavior of 5.0. 
                             }
                         }
                         name.delete(0, name.length());
                         value.delete(0, value.length());
                         inValue = false;
-                    }
-                    else {
+                    } else {
                         inValue = true;
                     }
                     break;
                 }
                 default: {
                     if (inValue)
-                        value.append((char)character);
+                        value.append((char) character);
                     else if (inDirective)
-                        directive.append((char)character);
+                        directive.append((char) character);
                     else
-                        name.append((char)character);
+                        name.append((char) character);
                     break;
                 }
             }
         }
     }
-    
+
     @Trivial
     private int readCharacter() throws IOException {
         int character = jspReader.read();
-        charCount++;        
+        charCount++;
         return character;
     }
-	// begin 221074: code was added to ignore comments when searching for page directive. 
-    private boolean ignoreComment( ) throws IOException
-    {
-    	StringBuffer comment = new StringBuffer();
+
+    // begin 221074: code was added to ignore comments when searching for page directive. 
+    private boolean ignoreComment() throws IOException {
+        StringBuffer comment = new StringBuffer();
         int prev = 0;
         int character = 0;
         boolean endFound = false;
         boolean eofFound = false;
-        while( endFound == false )
-        {
+        while (endFound == false) {
             prev = character;
             character = readCharacter();
-            if (character != -1) 
-            {
-                comment.append( (char) character );
-                if ( character == '>' && prev =='%' )
-                {
-                   String fullComment = comment.toString(); 
-                   if (fullComment.endsWith("--%>"))
-                   {
-                     endFound = true;
-                   }
+            if (character != -1) {
+                comment.append((char) character);
+                if (character == '>' && prev == '%') {
+                    String fullComment = comment.toString();
+                    if (fullComment.endsWith("--%>")) {
+                        endFound = true;
+                    }
                 }
-            }
-            else 
-            {
-              eofFound = endFound = true;
+            } else {
+                eofFound = endFound = true;
             }
         } // end "while"
         return eofFound;
     }
     // end 221074: code was added to ignore comments when searching for page directive.
-    
+
 }

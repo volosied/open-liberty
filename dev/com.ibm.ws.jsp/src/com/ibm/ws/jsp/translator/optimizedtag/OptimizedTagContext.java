@@ -16,14 +16,24 @@ import com.ibm.ws.jsp.JspOptions; //PK65013
 
 public interface OptimizedTagContext {
     void writeSource(String source);
+
     void writeImport(String importId, String importSource);
+
     void writeDeclaration(String declarationId, String declarationSource);
+
     String createTemporaryVariable();
+
     boolean hasAttribute(String attrName);
+
     boolean isJspAttribute(String attrName);
+
     OptimizedTag getParent();
+
     boolean hasBody();
+
     boolean hasJspBody();
-    JspOptions getJspOptions();  //PK65013
+
+    JspOptions getJspOptions(); //PK65013
+
     boolean isTagFile(); //PK65013
 }

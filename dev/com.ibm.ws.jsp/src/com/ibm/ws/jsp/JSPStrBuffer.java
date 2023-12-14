@@ -45,7 +45,7 @@ public interface JSPStrBuffer {
 	public abstract int capacity();
 
 	public abstract char charAt(int index);
-	
+
 	public abstract JSPStrBuffer delete(int start, int end);
 
 	public abstract JSPStrBuffer deleteCharAt(int location);
@@ -105,6 +105,6 @@ public interface JSPStrBuffer {
 	public abstract String substring(int start);
 
 	public abstract String toString();
-	
-	public abstract void clear();							//PM19500
+
+	public abstract void clear(); //PM19500
 }

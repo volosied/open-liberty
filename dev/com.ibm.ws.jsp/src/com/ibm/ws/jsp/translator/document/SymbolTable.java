@@ -23,18 +23,18 @@ package com.ibm.ws.jsp.translator.document;
  * The symbol table performs the same task as <code>String.intern()</code>
  * with the following differences:
  * <ul>
- *  <li>
- *   A new string object does not need to be created in order to
- *   retrieve a unique reference. Symbols can be added by using
- *   a series of characters in a character array.
- *  </li>
- *  <li>
- *   Users of the symbol table can provide their own symbol hashing
- *   implementation. For example, a simple string hashing algorithm
- *   may fail to produce a balanced set of hashcodes for symbols
- *   that are <em>mostly</em> unique. Strings with similar leading
- *   characters are especially prone to this poor hashing behavior.
- *  </li>
+ * <li>
+ * A new string object does not need to be created in order to
+ * retrieve a unique reference. Symbols can be added by using
+ * a series of characters in a character array.
+ * </li>
+ * <li>
+ * Users of the symbol table can provide their own symbol hashing
+ * implementation. For example, a simple string hashing algorithm
+ * may fail to produce a balanced set of hashcodes for symbols
+ * that are <em>mostly</em> unique. Strings with similar leading
+ * characters are especially prone to this poor hashing behavior.
+ * </li>
  * </ul>
  *
  * @author Andy Clark
@@ -167,7 +167,7 @@ public class SymbolTable {
      *
      * @param buffer The character buffer containing the symbol.
      * @param offset The offset into the character buffer of the start
-     *               of the symbol.
+     *                   of the symbol.
      * @param length The length of the symbol.
      */
     public int hash(char[] buffer, int offset, int length) {

@@ -13,7 +13,7 @@
 package com.ibm.ws.jsp.webcontainerext;
 
 import java.io.File;
-import java.io.FileNotFoundException;				//PM30435
+import java.io.FileNotFoundException; //PM30435
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Level;
@@ -43,13 +43,13 @@ public class JSPExtensionContext implements JspTranslationContext {
     protected JspCompilerFactory jspCompilerFactory = null;
 
     static private Logger logger;
-	private static final String CLASS_NAME="com.ibm.ws.jsp.webcontainerext.JSPExtensionContext";
+    private static final String CLASS_NAME = "com.ibm.ws.jsp.webcontainerext.JSPExtensionContext";
     static {
         logger = Logger.getLogger("com.ibm.ws.jsp");
     }
 
     public JSPExtensionContext(IServletContext context,
-    						   JspOptions jspOptions,
+                               JspOptions jspOptions,
                                String extDocRoot,
                                String preFragExtDocRoot,
                                JspClassloaderContext jspClassloaderContext,
@@ -57,77 +57,75 @@ public class JSPExtensionContext implements JspTranslationContext {
         this.context = context;
         this.jspClassloaderContext = jspClassloaderContext;
         this.jspCompilerFactory = jspCompilerFactory;
-        dru = new DocumentRootUtils(context, extDocRoot,preFragExtDocRoot);
+        dru = new DocumentRootUtils(context, extDocRoot, preFragExtDocRoot);
         String docRoot = null;
         try {
             Container container = context.getModuleContainer();
-            if (container==null) {
+            if (container == null) {
                 docRoot = context.getRealPath("/");
                 contextURL = new File(docRoot).toURL();
             } else {
-                docRoot=null;
+                docRoot = null;
                 //the contextURL should not be used when figuring paths out with containers
                 contextURL = null;
                 //Collection<URI> rootUris = container.getUri();
                 //rootUris.iterator().next();
                 //contextURL = new File("/").toURL();
             }
-        }
-        catch (MalformedURLException e) {
-            logger.logp(Level.WARNING,"JSPExtensionContext","JSPExtensionContext", "Failed to create context URL for docRoot: "+ context.getRealPath("/") , e);
+        } catch (MalformedURLException e) {
+            logger.logp(Level.WARNING, "JSPExtensionContext", "JSPExtensionContext", "Failed to create context URL for docRoot: " + context.getRealPath("/"), e);
         }
         jspResourcesFactory = new JspResourcesFactoryImpl(jspOptions, this, context.getModuleContainer());
-        jspInputSourceFactory = new JspInputSourceFactoryImpl(docRoot,contextURL, dru, false, context.getModuleContainer(), jspClassloaderContext.getClassLoader(),context);
-        
+        jspInputSourceFactory = new JspInputSourceFactoryImpl(docRoot, contextURL, dru, false, context.getModuleContainer(), jspClassloaderContext.getClassLoader(), context);
+
     }
 
     public long getRealTimeStamp(String path) {
         JspInputSource inputSource = getJspInputSourceFactory().createJspInputSource(path);
-        return inputSource.getLastModified();        
+        return inputSource.getLastModified();
     }
-    
+
     public String getRealPath(String path) {
-        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINER)) {
+        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINER)) {
             logger.entering(this.getClass().getName(), "getRealPath", path);
         }
         if (context != null) {
             String realPath = context.getRealPath(path);
             if (realPath == null || new java.io.File(realPath).exists() == false) {
-                    //PK76503 add synchronized block
-                    synchronized (dru) {
-                        try {
-                            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINER)) {  //PK76503 added trace
-                                logger.logp(Level.FINE,CLASS_NAME,"getRealPath", "Checking extendedDocumentRoot path: " + path);
-                            }
-                            dru.handleDocumentRoots(path);
-                            // return jar name or file name if not in jar.
-                            realPath = dru.getFilePath();
-                            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINER)) { //PK76503 added trace
-                                logger.logp(Level.FINE,CLASS_NAME,"getRealPath", "Path was retrieved from the extendedDoucumentRoots realPath: " + realPath);
-                            }
+                //PK76503 add synchronized block
+                synchronized (dru) {
+                    try {
+                        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINER)) { //PK76503 added trace
+                            logger.logp(Level.FINE, CLASS_NAME, "getRealPath", "Checking extendedDocumentRoot path: " + path);
                         }
-                        // PM30435 start
-                        catch (FileNotFoundException fne_io){
-                            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINER)) {
-                                logger.logp(Level.FINER,CLASS_NAME,"getRealPath", "FileNotFound exception while obtaining realPath: " +realPath + ", exception was: " + fne_io);
-                            }
-                            // this may happen if resource does not exist
-                            // follow behavior from above and just return path below
-                        } 
-                        // PM30435 end
-                        catch (Exception e) {
-                            com.ibm.ws.ffdc.FFDCFilter.processException( e, "com.ibm.ws.jsp.webcontainerext.JspExtensionContext.getResourceAsStream", "102", this);
-                            // follow behavior from above and just return path below
+                        dru.handleDocumentRoots(path);
+                        // return jar name or file name if not in jar.
+                        realPath = dru.getFilePath();
+                        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINER)) { //PK76503 added trace
+                            logger.logp(Level.FINE, CLASS_NAME, "getRealPath", "Path was retrieved from the extendedDoucumentRoots realPath: " + realPath);
                         }
                     }
+                    // PM30435 start
+                    catch (FileNotFoundException fne_io) {
+                        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINER)) {
+                            logger.logp(Level.FINER, CLASS_NAME, "getRealPath", "FileNotFound exception while obtaining realPath: " + realPath + ", exception was: " + fne_io);
+                        }
+                        // this may happen if resource does not exist
+                        // follow behavior from above and just return path below
+                    }
+                    // PM30435 end
+                    catch (Exception e) {
+                        com.ibm.ws.ffdc.FFDCFilter.processException(e, "com.ibm.ws.jsp.webcontainerext.JspExtensionContext.getResourceAsStream", "102", this);
+                        // follow behavior from above and just return path below
+                    }
+                }
             }
-            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINER)) {
+            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINER)) {
                 logger.exiting(this.getClass().getName(), "getRealPath", realPath);
             }
             return realPath;
-        }
-        else {
-            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINER)) {
+        } else {
+            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINER)) {
                 logger.exiting(this.getClass().getName(), "getRealPath", path);
             }
             return path;
@@ -137,9 +135,9 @@ public class JSPExtensionContext implements JspTranslationContext {
     public java.util.Set getResourcePaths(String paths) {
         return context.getResourcePaths(paths);
     }
-    
-    public java.util.Set getResourcePaths(String path,boolean searchMetaInfResources) {   	
-    	return context.getResourcePaths(path,searchMetaInfResources);
+
+    public java.util.Set getResourcePaths(String path, boolean searchMetaInfResources) {
+        return context.getResourcePaths(path, searchMetaInfResources);
     }
 
     public JspResourcesFactory getJspResourcesFactory() {
@@ -160,7 +158,7 @@ public class JSPExtensionContext implements JspTranslationContext {
 
     public void setJspTranslationEnviroment(JspTranslationEnvironment jspEnvironment) {
     }
-    
+
     /**
      * @return the servletContext
      */

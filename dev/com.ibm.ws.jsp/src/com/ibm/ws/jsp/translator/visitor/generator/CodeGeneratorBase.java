@@ -36,19 +36,19 @@ public abstract class CodeGeneratorBase implements CodeGenerator {
     protected boolean isTagFile = false;
     protected JspConfiguration jspConfiguration = null;
     protected JspOptions jspOptions = null;
-    
-    public CodeGeneratorBase() {}
 
-    public void init(JspCoreContext ctxt, 
-                     Element element, 
+    public CodeGeneratorBase() {
+    }
+
+    public void init(JspCoreContext ctxt,
+                     Element element,
                      ValidateResult validatorResult,
                      JspVisitorInputMap inputMap,
                      ArrayList methodWriterList,
-                     FragmentHelperClassWriter fragmentHelperClassWriter, 
+                     FragmentHelperClassWriter fragmentHelperClassWriter,
                      HashMap persistentData,
                      JspConfiguration jspConfiguration,
-                     JspOptions jspOptions) 
-        throws JspCoreException {
+                     JspOptions jspOptions) throws JspCoreException {
         this.ctxt = ctxt;
         this.element = element;
         this.validatorResult = validatorResult;
@@ -59,30 +59,31 @@ public abstract class CodeGeneratorBase implements CodeGenerator {
         this.jspConfiguration = jspConfiguration;
         this.jspOptions = jspOptions;
         if (inputMap.containsKey("isTagFile")) {
-            this.isTagFile = ((Boolean)inputMap.get("isTagFile")).booleanValue();
+            this.isTagFile = ((Boolean) inputMap.get("isTagFile")).booleanValue();
         }
     }
-    
+
     public JavaCodeWriter getWriterForChild(int section, Node jspElement) throws JspCoreException {
         return null;
     }
-    
+
     protected void writeDebugStartBegin(JavaCodeWriter writer) {
         writer.println("/* ElementId[" + element.hashCode() + "] sb */");
     }
-    
+
     protected void writeDebugStartEnd(JavaCodeWriter writer) {
         writer.println("/* ElementId[" + element.hashCode() + "] se */");
     }
-    
+
     protected void writeDebugEndBegin(JavaCodeWriter writer) {
         writer.println("/* ElementId[" + element.hashCode() + "] eb */");
     }
-    
+
     protected void writeDebugEndEnd(JavaCodeWriter writer) {
         writer.println("/* ElementId[" + element.hashCode() + "] ee */");
     }
-    
+
     public abstract void startGeneration(int section, JavaCodeWriter writer) throws JspCoreException;
-    public abstract void endGeneration(int section, JavaCodeWriter writer)  throws JspCoreException;
+
+    public abstract void endGeneration(int section, JavaCodeWriter writer) throws JspCoreException;
 }

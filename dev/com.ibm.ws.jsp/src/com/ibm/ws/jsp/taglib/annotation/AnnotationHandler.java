@@ -23,90 +23,82 @@ import com.ibm.wsspi.webcontainer.facade.ServletContextFacade;
 import com.ibm.wsspi.webcontainer.servlet.IServletContext;
 
 public abstract class AnnotationHandler {
-     private static HashMap<IServletContext, AnnotationHandler>
-          tagAnnotationHandlers = new HashMap<IServletContext,
-          AnnotationHandler>();
-     
+     private static HashMap<IServletContext, AnnotationHandler> tagAnnotationHandlers = new HashMap<IServletContext, AnnotationHandler>();
+
      private IServletContext context;
-     
-     protected AnnotationHandler () {
+
+     protected AnnotationHandler() {
      }
-     
-     public static synchronized AnnotationHandler getInstance
-          (ServletContext context) {
+
+     public static synchronized AnnotationHandler getInstance(ServletContext context) {
           IServletContext servletContext;
           AnnotationHandler tagAnnotationHandler;
-          
+
           // Find the underlying IServletContext for the passed in context
           // first.
-          
+
           if (context instanceof ServletContextFacade) {
-               servletContext = ((ServletContextFacade)
-                    context).getIServletContext();
+               servletContext = ((ServletContextFacade) context).getIServletContext();
           }
-          
+
           else {
                servletContext = (IServletContext) context;
           }
-          
-          tagAnnotationHandler = AnnotationHandler.tagAnnotationHandlers.get
-               (servletContext);
-          
+
+          tagAnnotationHandler = AnnotationHandler.tagAnnotationHandlers.get(servletContext);
+
           if (tagAnnotationHandler == null) {
                tagAnnotationHandler = AnnotationHandler.createInstance();
-               
-               tagAnnotationHandler.setServletContext (servletContext);
-               
-               AnnotationHandler.tagAnnotationHandlers.put (servletContext,
-                    tagAnnotationHandler);
+
+               tagAnnotationHandler.setServletContext(servletContext);
+
+               AnnotationHandler.tagAnnotationHandlers.put(servletContext,
+                                                           tagAnnotationHandler);
           }
-          
+
           return tagAnnotationHandler;
      }
-     
+
      public static synchronized AnnotationHandler removeAnnotationHandler(ServletContext context) {
-         AnnotationHandler rc = null;
-         if (AnnotationHandler.tagAnnotationHandlers!=null) {
-             IServletContext servletContext;
-             if (context instanceof ServletContextFacade) {
-                 servletContext = ((ServletContextFacade)
-                      context).getIServletContext();
-             } else {
-                 servletContext = (IServletContext) context;
-             }
-             rc = AnnotationHandler.tagAnnotationHandlers.remove(servletContext);
-         }
-         return rc;
+          AnnotationHandler rc = null;
+          if (AnnotationHandler.tagAnnotationHandlers != null) {
+               IServletContext servletContext;
+               if (context instanceof ServletContextFacade) {
+                    servletContext = ((ServletContextFacade) context).getIServletContext();
+               } else {
+                    servletContext = (IServletContext) context;
+               }
+               rc = AnnotationHandler.tagAnnotationHandlers.remove(servletContext);
+          }
+          return rc;
      }
-     
-     protected IServletContext getServletContext () {
+
+     protected IServletContext getServletContext() {
           return this.context;
      }
-     
-     protected void setServletContext (IServletContext context) {
+
+     protected void setServletContext(IServletContext context) {
           this.context = context;
      }
-     
-     public abstract void doPostConstructAction (JspTag tag);
-     
-     public abstract void doPostConstructAction (EventListener listener);
-     
-     public abstract void doPreDestroyAction (JspTag tag);
-     
-     private static AnnotationHandler createInstance () {
-          String implClassName = System.getProperty
-               (AnnotationHandler.class.getName());
+
+     public abstract void doPostConstructAction(JspTag tag);
+
+     public abstract void doPostConstructAction(EventListener listener);
+
+     public abstract void doPreDestroyAction(JspTag tag);
+
+     private static AnnotationHandler createInstance() {
+          String implClassName = System.getProperty(AnnotationHandler.class.getName());
           AnnotationHandler instance = null;
-          
+
           try {
-               instance = (AnnotationHandler) Class.forName
-                    (implClassName).newInstance();
+               instance = (AnnotationHandler) Class.forName(implClassName).newInstance();
           }
-          
+
           catch (Exception e) {
                instance = new DefaultAnnotationHandler();
           }
-          
+
           return instance;
      }
 }

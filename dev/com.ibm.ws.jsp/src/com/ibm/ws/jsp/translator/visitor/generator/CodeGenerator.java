@@ -27,16 +27,18 @@ import com.ibm.wsspi.jsp.context.JspCoreContext;
 
 public interface CodeGenerator {
     void init(JspCoreContext ctxt,
-              Element element, 
+              Element element,
               ValidateResult validatorResult,
               JspVisitorInputMap inputMap,
               ArrayList methodWriterList,
               FragmentHelperClassWriter fragmentHelperClassWriter,
               HashMap persistentData,
-              JspConfiguration jspConfiguration, 
+              JspConfiguration jspConfiguration,
               JspOptions jspOptions) throws JspCoreException;
+
     void startGeneration(int section, JavaCodeWriter writer) throws JspCoreException;
+
     void endGeneration(int section, JavaCodeWriter writer) throws JspCoreException;
+
     JavaCodeWriter getWriterForChild(int section, Node jspElement) throws JspCoreException;
 }
-

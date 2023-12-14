@@ -24,11 +24,12 @@ import com.ibm.ws.jsp.tsx.db.ConnectionProperties;
 public class UseridTag extends BodyTagSupport {
 
     /**
-	 * Comment for <code>serialVersionUID</code>
-	 */
-	private static final long serialVersionUID = 3833468413799641141L;
+     * Comment for <code>serialVersionUID</code>
+     */
+    private static final long serialVersionUID = 3833468413799641141L;
 
-	public UseridTag() {}
+    public UseridTag() {
+    }
 
     public int doEndTag() throws JspException {
 

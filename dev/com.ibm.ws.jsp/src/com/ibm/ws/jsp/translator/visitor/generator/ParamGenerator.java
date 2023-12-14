@@ -25,17 +25,18 @@ import com.ibm.ws.jsp.JspCoreException;
 public class ParamGenerator extends PageTranslationTimeGenerator {
 
     public ParamGenerator() {
-        super(new String[] {"name"});
+        super(new String[] { "name" });
     }
 
-    public void startGeneration(int section, JavaCodeWriter writer) throws JspCoreException {}
+    public void startGeneration(int section, JavaCodeWriter writer) throws JspCoreException {
+    }
 
-    public void endGeneration(int section, JavaCodeWriter writer)  throws JspCoreException {
+    public void endGeneration(int section, JavaCodeWriter writer) throws JspCoreException {
         if (section == CodeGenerationPhase.METHOD_SECTION) {
             boolean encode = true;
 
             Node parent = element.getParentNode();
-            if (findPluginParent(parent)){
+            if (findPluginParent(parent)) {
                 encode = false;
             }
             String name = getAttributeValue("name");
@@ -43,19 +44,18 @@ public class ParamGenerator extends PageTranslationTimeGenerator {
 
             String expressionValue = null;
             if (value == null) {
-                HashMap jspAttributes = (HashMap)persistentData.get("jspAttributes");
+                HashMap jspAttributes = (HashMap) persistentData.get("jspAttributes");
                 if (jspAttributes != null) {
-                    ArrayList jspAttributeList = (ArrayList)jspAttributes.get(element);
+                    ArrayList jspAttributeList = (ArrayList) jspAttributes.get(element);
 
                     for (Iterator itr = jspAttributeList.iterator(); itr.hasNext();) {
-                        AttributeGenerator.JspAttribute jspAttribute = (AttributeGenerator.JspAttribute)itr.next();
+                        AttributeGenerator.JspAttribute jspAttribute = (AttributeGenerator.JspAttribute) itr.next();
                         if (jspAttribute.getName().equals("value")) {
                             expressionValue = jspAttribute.getVarName();
                         }
                     }
                 }
-            }
-            else {
+            } else {
                 boolean newEncode = encode && !jspOptions.isDisableURLEncodingForParamTag(); //PK47738
                 //PK65013 - start
                 String pageContextVar = Constants.JSP_PAGE_CONTEXT_ORIG;
@@ -69,17 +69,17 @@ public class ParamGenerator extends PageTranslationTimeGenerator {
             JspParam jspParam = null;
 
             if (encode) {
-				if (!jspOptions.isDisableURLEncodingForParamTag()) { //PK47738
-                	name = "org.apache.jasper.runtime.JspRuntimeLibrary.URLEncode(" +
-                       GeneratorUtils.quote(name) + ", request.getCharacterEncoding())";
-				}else {
-					name = GeneratorUtils.quote(name); //PK47738
-            	}
+                if (!jspOptions.isDisableURLEncodingForParamTag()) { //PK47738
+                    name = "org.apache.jasper.runtime.JspRuntimeLibrary.URLEncode(" +
+                           GeneratorUtils.quote(name) + ", request.getCharacterEncoding())";
+                } else {
+                    name = GeneratorUtils.quote(name); //PK47738
+                }
             }
 
             jspParam = new JspParam(name, expressionValue);
 
-            HashMap jspParams = (HashMap)persistentData.get("jspParams");
+            HashMap jspParams = (HashMap) persistentData.get("jspParams");
             if (jspParams == null) {
                 jspParams = new HashMap();
                 persistentData.put("jspParams", jspParams);
@@ -92,7 +92,7 @@ public class ParamGenerator extends PageTranslationTimeGenerator {
                 parent = parent.getParentNode();
             }
 
-            ArrayList jspParamList = (ArrayList)jspParams.get(parent);
+            ArrayList jspParamList = (ArrayList) jspParams.get(parent);
             if (jspParamList == null) {
                 jspParamList = new ArrayList();
                 jspParams.put(parent, jspParamList);
@@ -108,8 +108,7 @@ public class ParamGenerator extends PageTranslationTimeGenerator {
                 parent.getNamespaceURI().equals(Constants.JSP_NAMESPACE) &&
                 parent.getLocalName().equals(Constants.JSP_PLUGIN_TYPE)) {
                 pluginFound = true;
-            }
-            else {
+            } else {
                 pluginFound = findPluginParent(parent.getParentNode());
             }
         }

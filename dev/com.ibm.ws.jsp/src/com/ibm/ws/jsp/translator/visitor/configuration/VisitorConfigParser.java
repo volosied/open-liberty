@@ -29,10 +29,9 @@ import com.ibm.ws.jsp.translator.visitor.xml.ParserFactory;
 
 public class VisitorConfigParser extends DefaultHandler {
 
-
     public static final String DTD_PUBLIC_ID = "http://www.ibm.com/xml/ns/JspVisitorConfiguration.xsd";
     public static final String DTD_RESOURCE_PATH = "/com/ibm/ws/jsp/translator/visitor/configuration/JspVisitorConfiguration.xsd";
-    
+
     protected SAXParser saxParser = null;
     protected JspVisitorUsage visitorUsage = null;
     protected JspVisitorCollection visitorCollection = null;
@@ -40,108 +39,96 @@ public class VisitorConfigParser extends DefaultHandler {
     protected JspVisitorConfiguration visitorConfiguration = null;
     protected String className = null;
     protected String resultType = null;
-    
+
     protected StringBuffer chars = null;
     protected ClassLoader cl = null;
-    
+
     public VisitorConfigParser(ClassLoader cl) throws JspCoreException {
         this.cl = cl;
         try {
-			saxParser = ParserFactory.newSAXParser(false, true);
-		}
-        catch (ParserConfigurationException e) {
+            saxParser = ParserFactory.newSAXParser(false, true);
+        } catch (ParserConfigurationException e) {
             throw new JspCoreException(e);
-        }
-        catch (SAXException e) {
+        } catch (SAXException e) {
             throw new JspCoreException(e);
         }
     }
-    
+
     public JspVisitorConfiguration parse(InputStream is) throws JspCoreException {
         visitorConfiguration = new JspVisitorConfiguration();
         try {
-			ParserFactory.parseDocument(saxParser, is, this);            
-        }
-        catch (SAXException e) {
+            ParserFactory.parseDocument(saxParser, is, this);
+        } catch (SAXException e) {
             if (e.getCause() != null)
                 throw new JspCoreException(e.getCause());
             else
                 throw new JspCoreException(e);
-                
-        }
-        catch (IOException e) {
+
+        } catch (IOException e) {
             throw new JspCoreException(e);
-        }
-        finally {
+        } finally {
             try {
                 is.close();
-            } catch (IOException e) {}
+            } catch (IOException e) {
+            }
         }
-        
+
         return (visitorConfiguration);
     }
-    
-    public void startElement(String namespaceURI, 
+
+    public void startElement(String namespaceURI,
                              String localName,
-                             String elementName, 
-                             Attributes attrs) 
-        throws SAXException {
+                             String elementName,
+                             Attributes attrs) throws SAXException {
         chars = new StringBuffer();
         if (elementName.equals("jsp-visitor-collection")) {
             visitorCollection = new JspVisitorCollection();
             visitorCollection.setId(attrs.getValue("id"));
-        }
-        else if (elementName.equals("jsp-visitor-definition")) {
+        } else if (elementName.equals("jsp-visitor-definition")) {
             visitorDefinition = new JspVisitorDefinition();
             visitorDefinition.setId(attrs.getValue("id"));
-        }
-        else if (elementName.equals("jsp-visitor")) {
+        } else if (elementName.equals("jsp-visitor")) {
             int order = 1;
             int visits = 1;
             try {
                 order = Integer.valueOf(attrs.getValue("order")).intValue();
                 visits = Integer.valueOf(attrs.getValue("visits")).intValue();
+            } catch (NumberFormatException e) {
             }
-            catch (NumberFormatException e) {}
             String id = attrs.getValue("id");
             visitorUsage = new JspVisitorUsage(order, visits, visitorConfiguration.getJspVisitorDefinition(id));
             visitorCollection.getJspVisitorUsageList().add(visitorUsage);
             visitorUsage = null;
         }
     }
-    
+
     @Trivial
     public void characters(char[] ch, int start, int length) throws SAXException {
         for (int i = 0; i < length; i++) {
             if (chars != null)
-                chars.append(ch[start+i]);
+                chars.append(ch[start + i]);
         }
     }
-    
+
     public void endElement(String namespaceURI,
                            String localName,
-                           String elementName)
-        throws SAXException {
+                           String elementName) throws SAXException {
         if (elementName.equals("class-name")) {
             className = chars.toString().trim();
-        }
-        else if (elementName.equals("result-type")) {
+        } else if (elementName.equals("result-type")) {
             resultType = chars.toString().trim();
-        }
-        else if (elementName.equals("jsp-visitor-collection")) {
+        } else if (elementName.equals("jsp-visitor-collection")) {
             visitorConfiguration.addJspVisitorCollection(visitorCollection);
             visitorCollection = null;
-        }
-        else if (elementName.equals("jsp-visitor-definition")) {
+        } else if (elementName.equals("jsp-visitor-definition")) {
             try {
                 Class visitorClass = Class.forName(className, true, cl);
                 Class visitorResultClass = Class.forName(resultType, true, cl);
                 visitorDefinition.setVisitorClass(visitorClass);
                 visitorDefinition.setVisitorResultClass(visitorResultClass);
-            }
-            catch (ClassNotFoundException e) {
-            	String message = JspCoreException.getMsg("jsp.error.failed.load.jsp-visitor-definition");
-                throw new SAXException (message, e);
+            } catch (ClassNotFoundException e) {
+                String message = JspCoreException.getMsg("jsp.error.failed.load.jsp-visitor-definition");
+                throw new SAXException(message, e);
             }
             visitorConfiguration.addJspVisitorDefinition(visitorDefinition);
             visitorDefinition = null;
@@ -150,11 +137,10 @@ public class VisitorConfigParser extends DefaultHandler {
         }
         chars = null;
     }
-    
-    public InputSource resolveEntity(String publicId, String systemId)
-        throws SAXException {
+
+    public InputSource resolveEntity(String publicId, String systemId) throws SAXException {
         InputSource isrc = null;
-        String resourcePath = null;            
+        String resourcePath = null;
         if (publicId.equals(DTD_PUBLIC_ID)) {
             resourcePath = DTD_RESOURCE_PATH;
         }

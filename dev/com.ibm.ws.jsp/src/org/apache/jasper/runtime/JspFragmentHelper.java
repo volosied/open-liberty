@@ -67,7 +67,6 @@ import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.JspTag;
 import javax.servlet.jsp.tagext.JspFragment;
 
-
 /**
  * Helper class from which all Jsp Fragment helper classes extend.
  * This class allows for the emulation of numerous fragments within
@@ -79,23 +78,20 @@ import javax.servlet.jsp.tagext.JspFragment;
  *
  * @author Mark Roth
  */
-public abstract class JspFragmentHelper
-    extends JspFragment
-{
+public abstract class JspFragmentHelper extends JspFragment {
 
     protected int discriminator;
     protected JspContext jspContext;
     protected PageContext pageContext;
     protected JspTag parentTag;
 
-    public JspFragmentHelper( int discriminator, JspContext jspContext,
-        JspTag parentTag )
-    {
+    public JspFragmentHelper(int discriminator, JspContext jspContext,
+                             JspTag parentTag) {
         this.discriminator = discriminator;
         this.jspContext = jspContext;
         this.pageContext = null;
-        if( jspContext instanceof PageContext ) {
-            pageContext = (PageContext)jspContext;
+        if (jspContext instanceof PageContext) {
+            pageContext = (PageContext) jspContext;
         }
         this.parentTag = parentTag;
     }

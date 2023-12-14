@@ -28,73 +28,74 @@ import com.ibm.ws.jsp.translator.utils.JspTranslatorUtil;
 public class ElementGenerator extends CodeGeneratorBase {
     private MethodWriter attributesWriter = new MethodWriter();
     private MethodWriter bodyWriter = new MethodWriter();
-    
-    public void startGeneration(int section, JavaCodeWriter writer) throws JspCoreException {}
 
-    public void endGeneration(int section, JavaCodeWriter writer)  throws JspCoreException {
-        
+    public void startGeneration(int section, JavaCodeWriter writer) throws JspCoreException {
+    }
+
+    public void endGeneration(int section, JavaCodeWriter writer) throws JspCoreException {
+
         if (section == CodeGenerationPhase.METHOD_SECTION) {
             String nameValue = null;
             HashMap map = new HashMap();
-            
+
             //PK65013 - start
             String pageContextVar = Constants.JSP_PAGE_CONTEXT_ORIG;
             if (isTagFile && jspOptions.isModifyPageContextVariable()) {
-            	pageContextVar = Constants.JSP_PAGE_CONTEXT_NEW;
+                pageContextVar = Constants.JSP_PAGE_CONTEXT_NEW;
             }
             //PK65013 - end
-            
+
             Node attr = element.getAttributeNode("name");
             nameValue = " + " + GeneratorUtils.attributeValue(attr.getNodeValue(), false, String.class, jspConfiguration, isTagFile, pageContextVar); //PK65013
 
             writeDebugStartBegin(writer);
-            HashMap jspAttributes = (HashMap)persistentData.get("jspAttributes");
+            HashMap jspAttributes = (HashMap) persistentData.get("jspAttributes");
             if (jspAttributes != null) {
-                ArrayList jspAttributeList = (ArrayList)jspAttributes.get(element);
+                ArrayList jspAttributeList = (ArrayList) jspAttributes.get(element);
                 if (jspAttributeList != null) {
                     writer.printMultiLn(attributesWriter.toString());
 
                     for (Iterator itr = jspAttributeList.iterator(); itr.hasNext();) {
-                        AttributeGenerator.JspAttribute jspAttribute = (AttributeGenerator.JspAttribute)itr.next();
+                        AttributeGenerator.JspAttribute jspAttribute = (AttributeGenerator.JspAttribute) itr.next();
                         String s = null;
                         String attrName = jspAttribute.getName();
                         if (jspAttribute.getPrefix() != null) {
-                            attrName = jspAttribute.getPrefix() + ":" + attrName; 
+                            attrName = jspAttribute.getPrefix() + ":" + attrName;
                         }
                         s = " + \" " + attrName + "=\\\"\" + " + jspAttribute.getVarName() + " + \"\\\"\"";
                         map.put(jspAttribute, s);
                     }
                 }
             }
-            
+
             writer.print("out.write(\"<\"");
             writer.print(nameValue);
             writer.println(");");
-            
+
             for (Iterator itr = map.keySet().iterator(); itr.hasNext();) {
-            	AttributeGenerator.JspAttribute thisAttribute = (AttributeGenerator.JspAttribute)itr.next();
+                AttributeGenerator.JspAttribute thisAttribute = (AttributeGenerator.JspAttribute) itr.next();
                 //JSP2.1MR2 - F000743-2571.1 need to test if omit attribute is set and not print out attribute if it is - this could be a runtime expression
-            	if (thisAttribute.isOmitSet()) {
-            		writer.print("if (!");
-            		String expression = thisAttribute.getOmit();
+                if (thisAttribute.isOmitSet()) {
+                    writer.print("if (!");
+                    String expression = thisAttribute.getOmit();
                     String stringResult;
                     if (JspTranslatorUtil.isExpression(expression) || JspTranslatorUtil.isELInterpreterInput(expression, jspConfiguration)) {
-                        boolean _ENCODE=false; // same as above
-                        stringResult=GeneratorUtils.attributeValue(expression, _ENCODE, Boolean.class,
-                                jspConfiguration, isTagFile, pageContextVar);
+                        boolean _ENCODE = false; // same as above
+                        stringResult = GeneratorUtils.attributeValue(expression, _ENCODE, Boolean.class,
+                                                                     jspConfiguration, isTagFile, pageContextVar);
                     } else {
-                        stringResult=(Boolean.valueOf(expression)).toString();
+                        stringResult = (Boolean.valueOf(expression)).toString();
                     }
                     writer.print(stringResult);
-            		writer.println(") {");
-            	}
-            	String attrName = (String) thisAttribute.getName();
+                    writer.println(") {");
+                }
+                String attrName = (String) thisAttribute.getName();
                 writer.print("out.write(\"\"");
                 writer.print((String) map.get(thisAttribute));
                 writer.println(");");
-            	if (thisAttribute.isOmitSet()) {
-            		writer.println("}");
-            	}
+                if (thisAttribute.isOmitSet()) {
+                    writer.println("}");
+                }
             }
             writer.print("out.write(\"\""); //start the out.write up again
 
@@ -104,27 +105,23 @@ public class ElementGenerator extends CodeGeneratorBase {
             NodeList childNodes = element.getChildNodes();
             boolean hasJspAttributes = false;
             boolean hasJspBody = false;
-            
+
             for (int i = 0; i < childNodes.getLength(); i++) {
                 Node child = childNodes.item(i);
                 if (child.getNodeType() == Node.ELEMENT_NODE) {
-                    Element childElement = (Element)child;
+                    Element childElement = (Element) child;
                     if (childElement.getNamespaceURI().equals(Constants.JSP_NAMESPACE)) {
                         if (childElement.getLocalName().equals(Constants.JSP_ATTRIBUTE_TYPE)) {
                             hasJspAttributes = true;
-                        }
-                        else if (childElement.getLocalName().equals(Constants.JSP_BODY_TYPE)) {
+                        } else if (childElement.getLocalName().equals(Constants.JSP_BODY_TYPE)) {
                             hasJspBody = true;
-                        }
-                        else {
+                        } else {
                             hasBody = true;
                         }
-                    }
-                    else {
+                    } else {
                         hasBody = true;
                     }
-                }
-                else if (child.getNodeType() == Node.CDATA_SECTION_NODE) {
+                } else if (child.getNodeType() == Node.CDATA_SECTION_NODE) {
                     hasBody = true;
                 }
             }
@@ -143,32 +140,29 @@ public class ElementGenerator extends CodeGeneratorBase {
                 writer.print(" + \">\");");
                 writer.println();
                 writeDebugEndEnd(writer);
-            }
-            else {
+            } else {
                 writer.print(" + \"/>\");");
                 writer.println();
                 writeDebugStartEnd(writer);
             }
         }
     }
-    
+
     public JavaCodeWriter getWriterForChild(int section, Node childElement) throws JspCoreException {
         JavaCodeWriter writerForChild = null;
         if (section == CodeGenerationPhase.METHOD_SECTION) {
             if (childElement.getNodeType() == Node.ELEMENT_NODE) {
-                if (childElement.getNamespaceURI().equals(Constants.JSP_NAMESPACE) && 
+                if (childElement.getNamespaceURI().equals(Constants.JSP_NAMESPACE) &&
                     childElement.getLocalName().equals(Constants.JSP_ATTRIBUTE_TYPE)) {
                     writerForChild = attributesWriter;
-                }
-                else {
+                } else {
                     writerForChild = bodyWriter;
                 }
-            }
-            else {
+            } else {
                 writerForChild = bodyWriter;
             }
         }
-        
+
         return writerForChild;
     }
 }

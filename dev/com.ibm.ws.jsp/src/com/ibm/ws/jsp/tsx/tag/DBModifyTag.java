@@ -25,12 +25,13 @@ import com.ibm.ws.jsp.tsx.db.*;
 
 public class DBModifyTag extends BodyTagSupport {
     /**
-	 * Comment for <code>serialVersionUID</code>
-	 */
-	private static final long serialVersionUID = 3763099643902310454L;
-	private String connection = "";
+     * Comment for <code>serialVersionUID</code>
+     */
+    private static final long serialVersionUID = 3763099643902310454L;
+    private String connection = "";
 
-    public DBModifyTag() {}
+    public DBModifyTag() {
+    }
 
     public String getConnection() {
         return (connection);
@@ -53,12 +54,10 @@ public class DBModifyTag extends BodyTagSupport {
         try {
             Query query = new Query(conn, getBodyContent().getString());
             query.executeUpdate();
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             //com.ibm.ws.ffdc.FFDCFilter.processException(e, "com.ibm.ws.webcontainer.jsp.tsx.tag.DBModifyTag.doEndTag", "43", this);
             outputString.append("Exception: " + e.toString());
-        }
-        catch (JspCoreException e) {
+        } catch (JspCoreException e) {
             //com.ibm.ws.ffdc.FFDCFilter.processException(e, "com.ibm.ws.webcontainer.jsp.tsx.tag.DBModifyTag.doEndTag", "47", this);
             outputString.append("Exception: " + e.toString());
         }
@@ -67,8 +66,7 @@ public class DBModifyTag extends BodyTagSupport {
             JspWriter writer = pageContext.getOut();
             try {
                 writer.print(outputString.toString());
-            }
-            catch (java.io.IOException e) {
+            } catch (java.io.IOException e) {
                 //com.ibm.ws.ffdc.FFDCFilter.processException(e, "com.ibm.ws.webcontainer.jsp.tsx.tag.DBModifyTag.doEndTag", "57", this);
                 throw new JspException("IOException writing tag : " + e.toString());
             }

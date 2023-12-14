@@ -126,13 +126,13 @@ public class JspConfiguratorHelper implements ServletConfiguratorHelper, JspXmlE
     @Override
     public void configureWebExt(WebExt webExt) throws UnableToAdaptException {
         // OLGH24793
-        if (webExt!=null) {
+        if (webExt != null) {
             Properties propsFromWebXml = null;
             List<Attribute> jspAttributeInWebExt = webExt.getJspAttributes();
 
-            if (jspAttributeInWebExt!=null) {
+            if (jspAttributeInWebExt != null) {
                 propsFromWebXml = new Properties();
-                for (Attribute a:jspAttributeInWebExt) {
+                for (Attribute a : jspAttributeInWebExt) {
                     propsFromWebXml.put(a.getName(), a.getValue());
                 }
                 getJspOptions().populateOptions(propsFromWebXml);
@@ -144,7 +144,7 @@ public class JspConfiguratorHelper implements ServletConfiguratorHelper, JspXmlE
         configurator.addToModuleCache(JspXmlExtConfig.class, this);
         WebModuleMetaData wmmd = (WebModuleMetaData) configurator.getFromModuleCache(WebModuleMetaData.class);
         JspComponentMetaData jspmetaData = new JspComponentMetaData();
-        jspmetaData.setApplicationDisplayName(wmmd.getConfiguration().getApplicationName()); 
+        jspmetaData.setApplicationDisplayName(wmmd.getConfiguration().getApplicationName());
         jspmetaData.setServlet2_2(this.getJspOptions().isServlet2_2());
         jspmetaData.setServletEngineReloadEnabled(this.getJspOptions().isServletEngineReloadEnabled());
         jspmetaData.setServletEngineReloadInterval(this.getJspOptions().getServletEngineReloadInterval());
@@ -158,8 +158,7 @@ public class JspConfiguratorHelper implements ServletConfiguratorHelper, JspXmlE
     public Map<String, String> getTagLibMap() {
         if (tagLibMap != null) {
             return Collections.unmodifiableMap(tagLibMap);
-        }
-        else {
+        } else {
             return Collections.emptyMap();
         }
     }
@@ -167,8 +166,7 @@ public class JspConfiguratorHelper implements ServletConfiguratorHelper, JspXmlE
     public List<JspConfigPropertyGroup> getJspPropertyGroups() {
         if (jspPropertyGroups != null) {
             return Collections.unmodifiableList(jspPropertyGroups);
-        }
-        else {
+        } else {
             return Collections.emptyList();
         }
     }
@@ -188,7 +186,7 @@ public class JspConfiguratorHelper implements ServletConfiguratorHelper, JspXmlE
     @Trivial
     public JspOptions getJspOptions() {
         return options;
-    }        
+    }
 
     private double getVersion(String v) {
         if (v != null) {
@@ -198,7 +196,7 @@ public class JspConfiguratorHelper implements ServletConfiguratorHelper, JspXmlE
             }
         }
         return 2.3;
-    }    
+    }
 
     public List<String> getJspFileExtensions() {
         return Collections.emptyList();
@@ -225,7 +223,7 @@ public class JspConfiguratorHelper implements ServletConfiguratorHelper, JspXmlE
 
     @Override
     public void setJCDIEnabledForRuntimeCheck(boolean b) {
-        JCDIEnabled = b;        
+        JCDIEnabled = b;
     }
 
 }

@@ -16,7 +16,7 @@ package com.ibm.ws.jsp.webcontainerext;
  *
  */
 public interface JspVersionFactory {
-    
+
     public JspVersion getJspVersion();
 
 }

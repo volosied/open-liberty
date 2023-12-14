@@ -24,26 +24,26 @@ import com.ibm.ws.jsp.tsx.db.ConnectionProperties;
 public class PasswdTag extends BodyTagSupport {
 
     /**
-	 * Comment for <code>serialVersionUID</code>
-	 */
-	private static final long serialVersionUID = 3256446923367003186L;
+     * Comment for <code>serialVersionUID</code>
+     */
+    private static final long serialVersionUID = 3256446923367003186L;
 
-	public PasswdTag() {}
+    public PasswdTag() {
+    }
 
-    public int doEndTag()
-        throws JspException {
-            
-        Hashtable connectionLookup = (Hashtable)pageContext.getAttribute("TSXConnectionLookup", PageContext.PAGE_SCOPE);
+    public int doEndTag() throws JspException {
+
+        Hashtable connectionLookup = (Hashtable) pageContext.getAttribute("TSXConnectionLookup", PageContext.PAGE_SCOPE);
         if (connectionLookup == null) {
             throw new JspException("No dbconnect tag found in jsp");
         }
-        Stack connectionStack = (Stack)pageContext.getAttribute("TSXConnectionStack", PageContext.PAGE_SCOPE);
+        Stack connectionStack = (Stack) pageContext.getAttribute("TSXConnectionStack", PageContext.PAGE_SCOPE);
         if (connectionStack == null) {
             throw new JspException("No dbconnect tag found in jsp");
         }
-        
-        String connectionId = (String)connectionStack.peek();
-        ConnectionProperties connection = (ConnectionProperties)connectionLookup.get(connectionId);
+
+        String connectionId = (String) connectionStack.peek();
+        ConnectionProperties connection = (ConnectionProperties) connectionLookup.get(connectionId);
 
         connection.setLoginPasswd(getBodyContent().getString());
         return (EVAL_PAGE);

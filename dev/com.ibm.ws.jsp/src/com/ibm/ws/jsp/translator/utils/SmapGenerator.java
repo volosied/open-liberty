@@ -28,12 +28,12 @@ public class SmapGenerator {
     // Overview
 
     /*
-     * The SMAP syntax is reasonably straightforward.  The purpose of this
+     * The SMAP syntax is reasonably straightforward. The purpose of this
      * class is currently twofold:
-     *  - to provide a simple but low-level Java interface to build
-     *    a logical SMAP
-     *  - to serialize this logical SMAP for eventual inclusion directly
-     *    into a .class file.
+     * - to provide a simple but low-level Java interface to build
+     * a logical SMAP
+     * - to serialize this logical SMAP for eventual inclusion directly
+     * into a .class file.
      */
 
     //*********************************************************************
@@ -50,7 +50,7 @@ public class SmapGenerator {
 
     /**
      * Sets the filename (without path information) for the generated
-     * source file.  E.g., "foo$jsp.java".
+     * source file. E.g., "foo$jsp.java".
      */
     public synchronized void setOutputFileName(String x) {
         outputFileName = x;
@@ -59,14 +59,14 @@ public class SmapGenerator {
     /**
      * Adds the given SmapStratum object, representing a Stratum with
      * logically associated FileSection and LineSection blocks, to
-     * the current SmapGenerator.  If <tt>default</tt> is true, this
+     * the current SmapGenerator. If <tt>default</tt> is true, this
      * stratum is made the default stratum, overriding any previously
      * set default.
      *
-     * @param stratum the SmapStratum object to add
+     * @param stratum        the SmapStratum object to add
      * @param defaultStratum if <tt>true</tt>, this SmapStratum is considered
-     *                to represent the default SMAP stratum unless
-     *                overwritten
+     *                           to represent the default SMAP stratum unless
+     *                           overwritten
      */
     public synchronized void addStratum(SmapStratum stratum, boolean defaultStratum) {
         strata.add(stratum);
@@ -77,9 +77,9 @@ public class SmapGenerator {
     /**
      * Adds the given string as an embedded SMAP with the given stratum name.
      *
-     * @param smap the SMAP to embed
+     * @param smap        the SMAP to embed
      * @param stratumName the name of the stratum output by the compilation
-     *                    that produced the <tt>smap</tt> to be embedded
+     *                        that produced the <tt>smap</tt> to be embedded
      */
     public synchronized void addSmap(String smap, String stratumName) {
         embedded.add("*O " + stratumName + "\n" + smap + "*C " + stratumName + "\n");
@@ -87,7 +87,7 @@ public class SmapGenerator {
 
     /**
      * Instructs the SmapGenerator whether to actually print any embedded
-     * SMAPs or not.  Intended for situations without an SMAP resolver.
+     * SMAPs or not. Intended for situations without an SMAP resolver.
      *
      * @param status If <tt>false</tt>, ignore any embedded SMAPs.
      */

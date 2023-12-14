@@ -57,117 +57,153 @@ public class JSTLForEachIteratorSupport {
     private static Iterator toIterator(final Object[] a) {
         return (new Iterator() {
             int index = 0;
+
             public boolean hasNext() {
                 return index < a.length;
             }
+
             public Object next() {
                 return a[index++];
             }
-            public void remove() {}
+
+            public void remove() {
+            }
         });
     }
 
     private static Iterator toIterator(final boolean[] a) {
         return (new Iterator() {
             int index = 0;
+
             public boolean hasNext() {
                 return index < a.length;
             }
+
             public Object next() {
                 return new Boolean(a[index++]);
             }
-            public void remove() {}
+
+            public void remove() {
+            }
         });
     }
 
     private static Iterator toIterator(final byte[] a) {
         return (new Iterator() {
             int index = 0;
+
             public boolean hasNext() {
                 return index < a.length;
             }
+
             public Object next() {
                 return new Byte(a[index++]);
             }
-            public void remove() {}
+
+            public void remove() {
+            }
         });
     }
 
     private static Iterator toIterator(final char[] a) {
         return (new Iterator() {
             int index = 0;
+
             public boolean hasNext() {
                 return index < a.length;
             }
+
             public Object next() {
                 return new Character(a[index++]);
             }
-            public void remove() {}
+
+            public void remove() {
+            }
         });
     }
 
     private static Iterator toIterator(final short[] a) {
         return (new Iterator() {
             int index = 0;
+
             public boolean hasNext() {
                 return index < a.length;
             }
+
             public Object next() {
                 return new Short(a[index++]);
             }
-            public void remove() {}
+
+            public void remove() {
+            }
         });
     }
 
     private static Iterator toIterator(final int[] a) {
         return (new Iterator() {
             int index = 0;
+
             public boolean hasNext() {
                 return index < a.length;
             }
+
             public Object next() {
                 return new Integer(a[index++]);
             }
-            public void remove() {}
+
+            public void remove() {
+            }
         });
     }
 
     private static Iterator toIterator(final long[] a) {
         return (new Iterator() {
             int index = 0;
+
             public boolean hasNext() {
                 return index < a.length;
             }
+
             public Object next() {
                 return new Long(a[index++]);
             }
-            public void remove() {}
+
+            public void remove() {
+            }
         });
     }
 
     private static Iterator toIterator(final float[] a) {
         return (new Iterator() {
             int index = 0;
+
             public boolean hasNext() {
                 return index < a.length;
             }
+
             public Object next() {
                 return new Float(a[index++]);
             }
-            public void remove() {}
+
+            public void remove() {
+            }
         });
     }
 
     private static Iterator toIterator(final double[] a) {
         return (new Iterator() {
             int index = 0;
+
             public boolean hasNext() {
                 return index < a.length;
             }
+
             public Object next() {
                 return new Double(a[index++]);
             }
-            public void remove() {}
+
+            public void remove() {
+            }
         });
     }
 

@@ -44,20 +44,20 @@ public class JspDocumentConverter {
     private String encodedRelativeURL = null;
     private JspCoreContext ctxt = null;
     private JspConfiguration jspConfiguration = null;
-    private JspOptions jspOptions = null;  //396002
+    private JspOptions jspOptions = null; //396002
     private Stack directoryStack = null;
     private Stack dependencyStack = null;
     private List dependencyList = null;
     private Map cdataJspIdMap = null;
     private Map implicitTagLibMap = null;
     private String jspPrefix = "jsp";
-    
+
     public JspDocumentConverter(JspInputSource inputSource,
                                 String resovledRelativeURL,
                                 JspCoreContext ctxt,
                                 Stack directoryStack,
                                 JspConfiguration jspConfiguration,
-                                JspOptions jspOptions,  // 396002
+                                JspOptions jspOptions, // 396002
                                 Stack dependencyStack,
                                 List dependencyList,
                                 Map cdataJspIdMap,
@@ -66,84 +66,78 @@ public class JspDocumentConverter {
         this.resovledRelativeURL = resovledRelativeURL;
         try {
             encodedRelativeURL = URLEncoder.encode(resovledRelativeURL, "UTF-8");
-        }
-        catch (UnsupportedEncodingException e) {
-            FFDCFilter.processException(e, "com.ibm.ws.jsp.translator.document.JspDocumentConverter", "66", new Object[] {resovledRelativeURL});
+        } catch (UnsupportedEncodingException e) {
+            FFDCFilter.processException(e, "com.ibm.ws.jsp.translator.document.JspDocumentConverter", "66", new Object[] { resovledRelativeURL });
         }
         this.ctxt = ctxt;
         this.jspConfiguration = jspConfiguration;
-        this.jspOptions = jspOptions;  //396002
+        this.jspOptions = jspOptions; //396002
         this.directoryStack = directoryStack;
         this.dependencyStack = dependencyStack;
         this.dependencyList = dependencyList;
         this.cdataJspIdMap = cdataJspIdMap;
         this.implicitTagLibMap = implicitTagLibMap;
     }
-    
+
     public Document convert() throws JspCoreException {
         Document convertedDocument = null;
         try {
             convertedDocument = ParserFactory.newDocument(false, false);
-        }
-        catch (ParserConfigurationException e) {
+        } catch (ParserConfigurationException e) {
             throw new JspCoreException(e);
         }
-        
+
         convertDocument(convertedDocument, convertedDocument, inputSource.getDocument().getChildNodes());
         return convertedDocument;
     }
-    
+
     private void convertDocument(Document convertedDocument, Node node, NodeList childNodes) throws JspCoreException {
         for (int i = 0; i < childNodes.getLength(); i++) {
             Node childNode = childNodes.item(i);
             if (childNode.getNamespaceURI() != null && childNode.getNamespaceURI().equals(Constants.JSP_NAMESPACE)) {
                 jspPrefix = childNode.getPrefix();
             }
-            
+
             if (childNode.getNodeType() == Node.ELEMENT_NODE) {
-                Element element = (Element)childNode;
+                Element element = (Element) childNode;
                 if (element.getLocalName() != null &&
                     element.getLocalName().equals(Constants.JSP_INCLUDE_DIRECTIVE_TYPE) &&
                     element.getNamespaceURI().equals(Constants.JSP_NAMESPACE)) {
-                    insertInclude(convertedDocument, element.getParentNode(), element.getAttribute("file"));   
-                }
-                else {
+                    insertInclude(convertedDocument, element.getParentNode(), element.getAttribute("file"));
+                } else {
                     Node newNode = convertedDocument.importNode(childNode, false);
                     StringBuffer attrNames = new StringBuffer();
                     NamedNodeMap attrs = element.getAttributes();
                     for (int j = 0; j < attrs.getLength(); j++) {
-                        Attr attr = (Attr)attrs.item(j);
+                        Attr attr = (Attr) attrs.item(j);
                         if (attr.getNodeName().startsWith("xmlns") == false) {
                             if (attr.getPrefix() != null) {
-                                attrNames.append(attr.getPrefix()+":"+attr.getLocalName()+"~");
-                            }
-                            else {
-                                attrNames.append(attr.getLocalName()+"~");
+                                attrNames.append(attr.getPrefix() + ":" + attr.getLocalName() + "~");
+                            } else {
+                                attrNames.append(attr.getLocalName() + "~");
                             }
                         }
                     }
                     String jspId = null;
                     if (attrs.getLength() > 0) {
-                        jspId = "{"+attrNames.toString()+"}"+encodedRelativeURL + "[0,0,0]";
-                    }
-                    else {                         
+                        jspId = "{" + attrNames.toString() + "}" + encodedRelativeURL + "[0,0,0]";
+                    } else {
                         jspId = encodedRelativeURL + "[0,0,0]";
                     }
-                        
-                    ((Element)newNode).setAttributeNS(Constants.JSP_NAMESPACE, jspPrefix + ":id", jspId);
+
+                    ((Element) newNode).setAttributeNS(Constants.JSP_NAMESPACE, jspPrefix + ":id", jspId);
                     node.appendChild(newNode);
-                    convertDocument(convertedDocument, newNode, childNode.getChildNodes());           
+                    convertDocument(convertedDocument, newNode, childNode.getChildNodes());
                 }
-            }
-            else if (childNode.getNodeType() == Node.CDATA_SECTION_NODE) {
+            } else if (childNode.getNodeType() == Node.CDATA_SECTION_NODE) {
                 boolean keepWhitespace = false;
                 boolean nonWhiteSpaceFound = false;
-                if (node.getNamespaceURI() != null && 
+                if (node.getNamespaceURI() != null &&
                     node.getNamespaceURI().equals(Constants.JSP_NAMESPACE) &&
                     node.getLocalName().equals(Constants.JSP_TEXT_TYPE)) {
-                   keepWhitespace = true;
+                    keepWhitespace = true;
                 }
-                CDATASection cdata = (CDATASection)childNode;
+                CDATASection cdata = (CDATASection) childNode;
                 for (int j = 0; j < cdata.getLength(); j++) {
                     char ch = cdata.getData().charAt(j);
                     if (ch != '\n' && ch != ' ' && ch != '\r' && ch != '\t') {
@@ -153,21 +147,19 @@ public class JspDocumentConverter {
                 if (nonWhiteSpaceFound) {
                     Node newNode = convertedDocument.importNode(childNode, false);
                     node.appendChild(newNode);
-                }
-                else if (keepWhitespace) {
+                } else if (keepWhitespace) {
                     Node newNode = convertedDocument.importNode(childNode, false);
                     node.appendChild(newNode);
                 }
-            }
-            else if (childNode.getNodeType() == Node.TEXT_NODE) {
+            } else if (childNode.getNodeType() == Node.TEXT_NODE) {
                 boolean keepWhitespace = false;
                 boolean nonWhiteSpaceFound = false;
-                if (node.getNamespaceURI() != null && 
+                if (node.getNamespaceURI() != null &&
                     node.getNamespaceURI().equals(Constants.JSP_NAMESPACE) &&
                     node.getLocalName().equals(Constants.JSP_TEXT_TYPE)) {
-                   keepWhitespace = true;
+                    keepWhitespace = true;
                 }
-                Text text = (Text)childNode;
+                Text text = (Text) childNode;
                 for (int j = 0; j < text.getLength(); j++) {
                     char ch = text.getData().charAt(j);
                     if (ch != '\n' && ch != ' ' && ch != '\r' && ch != '\t') {
@@ -177,20 +169,18 @@ public class JspDocumentConverter {
                 if (nonWhiteSpaceFound) {
                     Node newNode = convertedDocument.createCDATASection(text.getData());
                     node.appendChild(newNode);
-                }
-                else if (keepWhitespace) {
+                } else if (keepWhitespace) {
                     Node newNode = convertedDocument.createCDATASection(text.getData());
                     node.appendChild(newNode);
                 }
-            }
-            else {
+            } else {
                 Node newNode = convertedDocument.importNode(childNode, false);
                 node.appendChild(newNode);
-                convertDocument(convertedDocument, newNode, childNode.getChildNodes());           
+                convertDocument(convertedDocument, newNode, childNode.getChildNodes());
             }
         }
     }
-    
+
     private void insertInclude(Document document, Node parentNode, String includePath) throws JspCoreException {
         String fullPath = ctxt.getRealPath(includePath);
         if (dependencyStack.contains(fullPath))
@@ -203,8 +193,7 @@ public class JspDocumentConverter {
                 int pos = resovledRelativeURL.lastIndexOf("/");
                 if (pos > 0) {
                     depIncludePath = resovledRelativeURL.substring(0, pos + 1) + depIncludePath;
-                }
-                else {
+                } else {
                     depIncludePath = "/" + depIncludePath;
                 }
             }
@@ -212,16 +201,8 @@ public class JspDocumentConverter {
         }
         JspConfiguration includeConfiguration = jspConfiguration.getConfigManager().getConfigurationForStaticInclude(includePath, jspConfiguration);
         JspInputSource includePathInputSource = ctxt.getJspInputSourceFactory().copyJspInputSource(inputSource, includePath);
-        Jsp2Dom jsp2Dom = new Jsp2Dom(includePathInputSource, 
-                                      ctxt, 
-                                      directoryStack, 
-                                      includeConfiguration, 
-                                      jspOptions,  //396002
-                                      dependencyStack, 
-                                      dependencyList, 
-                                      cdataJspIdMap, 
-                                      implicitTagLibMap, 
-                                      true);
+        Jsp2Dom jsp2Dom = new Jsp2Dom(includePathInputSource, ctxt, directoryStack, includeConfiguration, jspOptions, //396002
+                        dependencyStack, dependencyList, cdataJspIdMap, implicitTagLibMap, true);
         Document includeDocument = jsp2Dom.getJspDocument();
         if (includeDocument.getDocumentElement().getNamespaceURI() != null
             && includeDocument.getDocumentElement().getNamespaceURI().equals(Constants.JSP_NAMESPACE)
@@ -238,8 +219,7 @@ public class JspDocumentConverter {
                 }
                 parentNode.appendChild(n);
             }
-        }
-        else {
+        } else {
             for (int i = 0; i < includeDocument.getChildNodes().getLength(); i++) {
                 Node n = document.importNode(includeDocument.getChildNodes().item(i), true);
                 parentNode.appendChild(n);
@@ -247,7 +227,7 @@ public class JspDocumentConverter {
         }
         dependencyStack.pop();
     }
-    
+
     public void printElements(Element element, int level) {
         for (int i = 0; i < level; i++) {
             System.out.print("\t");
@@ -270,8 +250,7 @@ public class JspDocumentConverter {
                 Element childElement = (Element) n;
                 System.out.println();
                 printElements(childElement, level + 1);
-            }
-            else if (n instanceof CDATASection) {
+            } else if (n instanceof CDATASection) {
                 System.out.println();
                 CDATASection cdata = (CDATASection) n;
                 for (int j = 0; j < level + 1; j++) {
@@ -281,10 +260,9 @@ public class JspDocumentConverter {
                 s = s.replaceAll("\r", "");
                 s = s.replaceAll("\n", "{cr}");
                 System.out.println("CDATA - [" + s + "]");
-            }
-            else if (n instanceof Text) {
+            } else if (n instanceof Text) {
                 System.out.println();
-                Text text = (Text)n;
+                Text text = (Text) n;
                 for (int j = 0; j < level + 1; j++) {
                     System.out.print("\t");
                 }
@@ -292,7 +270,7 @@ public class JspDocumentConverter {
                 s = s.replaceAll("\r", "");
                 s = s.replaceAll("\n", "{cr}");
                 System.out.println("Text - [" + s + "]");
-                
+
             }
         }
     }

@@ -33,11 +33,11 @@ public class InjectionServiceImpl implements WebAppInjectionClassListCollaborato
 
     static final protected Logger logger = Logger.getLogger("com.ibm.ws.jsp");
     static final protected Level logLevel = Level.FINEST;
-    private static final String CLASS_NAME="com.ibm.ws.jsp.taglib.InjectionServiceImpl";
-    
+    private static final String CLASS_NAME = "com.ibm.ws.jsp.taglib.InjectionServiceImpl";
+
     /** {@inheritDoc} */
     @Override
-    @FFDCIgnore({JspCoreException.class})
+    @FFDCIgnore({ JspCoreException.class })
     public List<String> getInjectionClasses(Container moduleContainer) {
         List<String> result = new ArrayList<String>();
         //WebAppConfig webAppConfig = null;
@@ -47,29 +47,28 @@ public class InjectionServiceImpl implements WebAppInjectionClassListCollaborato
             webAppConfiguration = (WebAppConfiguration) moduleContainer.adapt(WebAppConfig.class);
             jspConfig = moduleContainer.adapt(JspXmlExtConfig.class);
         } catch (UnableToAdaptException e) {
-            if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE)){
+            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
                 logger.logp(Level.FINE, CLASS_NAME, "getInjectionClasses", "exception getting injection classes for jsp", e);
             }
         }
         //if (webAppConfig!=null) {
-        if (jspConfig!=null) {
+        if (jspConfig != null) {
             //List tagLibs = webAppConfig.getTagLibs();
             Map tagLibs = jspConfig.getTagLibMap();
             JspOptions options = jspConfig.getJspOptions();
-            if (tagLibs!=null) {
+            if (tagLibs != null) {
                 try {
                     GlobalTagLibraryCache globalCache = JSPExtensionFactory.getGlobalTagLibraryCache();
                     Map globalTagLibMap = globalCache.getGlobalTagLibMapForWebApp(moduleContainer, jspConfig);
-                    
-                    TagLibraryCache tagLibCacheList = new TagLibraryCache(moduleContainer, tagLibs, options, null, globalTagLibMap, globalCache.getImplicitTagLibPrefixMap(), 
-                                                                                                  globalCache.getOptimizedTagConfigMap(), webAppConfiguration);
-                    List<String> jspListeners = (List<String>)tagLibCacheList.getEventListenerList(); //List<String>
+
+                    TagLibraryCache tagLibCacheList = new TagLibraryCache(moduleContainer, tagLibs, options, null, globalTagLibMap, globalCache.getImplicitTagLibPrefixMap(), globalCache.getOptimizedTagConfigMap(), webAppConfiguration);
+                    List<String> jspListeners = (List<String>) tagLibCacheList.getEventListenerList(); //List<String>
                     result.addAll(jspListeners);
                     List<String> tags = tagLibCacheList.getTagsList();
                     result.addAll(tags);
                     return result;
                 } catch (JspCoreException e) {
-                    if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE)){
+                    if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
                         logger.logp(Level.FINE, CLASS_NAME, "getInjectionClasses", "exception getting injection classes for jsp", e);
                     }
                 }

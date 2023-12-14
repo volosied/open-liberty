@@ -21,11 +21,11 @@ public class GlobalTagLibConfig {
     private URL jarURL = null;
     private ClassLoader classloader = null;
     private List tldPathList = null;
-    
+
     public GlobalTagLibConfig() {
         tldPathList = new ArrayList();
     }
-    
+
     public String getJarName() {
         return jarName;
     }
@@ -33,24 +33,24 @@ public class GlobalTagLibConfig {
     public List getTldPathList() {
         return tldPathList;
     }
-    
+
     public void setJarName(String string) {
         jarName = string;
     }
 
-	public void setJarURL(URL jarURL) {
-		this.jarURL = jarURL;
-	}
-    
-	public URL getJarURL() {
-		return jarURL;
-	}
-    
-	public ClassLoader getClassloader() {
-		return classloader;
-	}
-    
-	public void setClassloader(ClassLoader classloader) {
-		this.classloader = classloader;
-	}
+    public void setJarURL(URL jarURL) {
+        this.jarURL = jarURL;
+    }
+
+    public URL getJarURL() {
+        return jarURL;
+    }
+
+    public ClassLoader getClassloader() {
+        return classloader;
+    }
+
+    public void setClassloader(ClassLoader classloader) {
+        this.classloader = classloader;
+    }
 }

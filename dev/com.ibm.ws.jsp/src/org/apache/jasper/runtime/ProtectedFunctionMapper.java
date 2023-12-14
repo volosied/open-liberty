@@ -71,7 +71,7 @@ import java.lang.reflect.Method;
 import javax.servlet.jsp.el.FunctionMapper;
 
 /**
- * Maps EL functions to their Java method counterparts.  Keeps the
+ * Maps EL functions to their Java method counterparts. Keeps the
  * actual Method objects protected so that JSP pages can't indirectly
  * do reflection.
  *
@@ -80,8 +80,8 @@ import javax.servlet.jsp.el.FunctionMapper;
  */
 public final class ProtectedFunctionMapper extends javax.el.FunctionMapper implements FunctionMapper {
 
-    /** 
-     * Maps "prefix:name" to java.lang.Method objects.  Lazily created.
+    /**
+     * Maps "prefix:name" to java.lang.Method objects. Lazily created.
      */
     private HashMap fnmap = null;
 
@@ -101,78 +101,74 @@ public final class ProtectedFunctionMapper extends javax.el.FunctionMapper imple
      */
     public static ProtectedFunctionMapper getInstance() {
         ProtectedFunctionMapper funcMapper;
-		if (System.getSecurityManager() != null) {
-		    funcMapper= (ProtectedFunctionMapper)AccessController.doPrivileged( 
-		    		new PrivilegedAction() {
-		    			public Object run() {
-		    				return new ProtectedFunctionMapper();
-		    			}
-		    		} );
-		} else {
+        if (System.getSecurityManager() != null) {
+            funcMapper = (ProtectedFunctionMapper) AccessController.doPrivileged(
+                                                                                 new PrivilegedAction() {
+                                                                                     public Object run() {
+                                                                                         return new ProtectedFunctionMapper();
+                                                                                     }
+                                                                                 });
+        } else {
             funcMapper = new ProtectedFunctionMapper();
-		}
+        }
         funcMapper.fnmap = new java.util.HashMap();
         return funcMapper;
     }
 
     /**
-     * Stores a mapping from the given EL function prefix and name to 
+     * Stores a mapping from the given EL function prefix and name to
      * the given Java method.
      *
-     * @param prefix The EL function prefix
-     * @param fnName The EL function name
-     * @param c The class containing the Java method
+     * @param prefix     The EL function prefix
+     * @param fnName     The EL function name
+     * @param c          The class containing the Java method
      * @param methodName The name of the Java method
-     * @param args The arguments of the Java method
+     * @param args       The arguments of the Java method
      * @throws RuntimeException if no method with the given signature
-     *     could be found.
+     *                              could be found.
      */
-    public void mapFunction( String prefix, String fnName,
-        final Class c, final String methodName, final Class[] args ) 
-    {
-    	//192474 start
-    	//We can get in to this method with null parameters if a JSP was compiled against the jsp-2.3 feature but running in a jsp-2.2 server.
-    	//This check is needed for the temporary JspClassInformation created in AbstractJSPExtensionServletWrapper class.
-    	if (fnName == null) {
+    public void mapFunction(String prefix, String fnName,
+                            final Class c, final String methodName, final Class[] args) {
+        //192474 start
+        //We can get in to this method with null parameters if a JSP was compiled against the jsp-2.3 feature but running in a jsp-2.2 server.
+        //This check is needed for the temporary JspClassInformation created in AbstractJSPExtensionServletWrapper class.
+        if (fnName == null) {
             return;
         }
-    	//192474 end
-    	
-    	java.lang.reflect.Method method;
-        if (System.getSecurityManager() != null){
-            try{
-                method = (java.lang.reflect.Method)AccessController.doPrivileged(new PrivilegedExceptionAction(){
+        //192474 end
 
-                    public Object run() throws Exception{
+        java.lang.reflect.Method method;
+        if (System.getSecurityManager() != null) {
+            try {
+                method = (java.lang.reflect.Method) AccessController.doPrivileged(new PrivilegedExceptionAction() {
+
+                    public Object run() throws Exception {
                         return c.getDeclaredMethod(methodName, args);
-                    }                
-                });      
-            } catch (PrivilegedActionException ex){
-                throw new RuntimeException(
-                    "Invalid function mapping - no such method: " + ex.getException().getMessage());               
+                    }
+                });
+            } catch (PrivilegedActionException ex) {
+                throw new RuntimeException("Invalid function mapping - no such method: " + ex.getException().getMessage());
             }
         } else {
-             try {
+            try {
                 method = c.getDeclaredMethod(methodName, args);
-            } catch( NoSuchMethodException e ) {
-                throw new RuntimeException(
-                    "Invalid function mapping - no such method: " + e.getMessage());
+            } catch (NoSuchMethodException e) {
+                throw new RuntimeException("Invalid function mapping - no such method: " + e.getMessage());
             }
         }
 
-        this.fnmap.put( prefix + ":" + fnName, method );
+        this.fnmap.put(prefix + ":" + fnName, method);
     }
 
     /**
      * Resolves the specified local name and prefix into a Java.lang.Method.
      * Returns null if the prefix and local name are not found.
      * 
-     * @param prefix the prefix of the function
+     * @param prefix    the prefix of the function
      * @param localName the short name of the function
-     * @return the result of the method mapping.  Null means no entry found.
+     * @return the result of the method mapping. Null means no entry found.
      **/
     public Method resolveFunction(String prefix, String localName) {
-    	return (Method) this.fnmap.get(prefix + ":" + localName);
+        return (Method) this.fnmap.get(prefix + ":" + localName);
     }
 }
-

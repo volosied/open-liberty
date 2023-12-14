@@ -17,10 +17,10 @@ import com.ibm.ws.jsp.JspCoreException;
 public class RootGenerator extends CodeGeneratorBase {
     public void startGeneration(int section, JavaCodeWriter writer) throws JspCoreException {
         if (section == CodeGenerationPhase.METHOD_SECTION) {
-            
+
         }
     }
 
-    public void endGeneration(int section, JavaCodeWriter writer)  throws JspCoreException {
+    public void endGeneration(int section, JavaCodeWriter writer) throws JspCoreException {
     }
 }

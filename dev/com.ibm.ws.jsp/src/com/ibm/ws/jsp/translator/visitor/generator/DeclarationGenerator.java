@@ -23,7 +23,7 @@ public class DeclarationGenerator extends CodeGeneratorBase {
             for (int i = 0; i < element.getChildNodes().getLength(); i++) {
                 Node n = element.getChildNodes().item(i);
                 if (n.getNodeType() == Node.CDATA_SECTION_NODE) {
-                    CDATASection cdata = (CDATASection)n;
+                    CDATASection cdata = (CDATASection) n;
                     String data = cdata.getData();
                     data = data.replaceAll("&gt;", ">");
                     data = data.replaceAll("&lt;", "<");
@@ -37,5 +37,6 @@ public class DeclarationGenerator extends CodeGeneratorBase {
         }
     }
 
-    public void endGeneration(int section, JavaCodeWriter writer)  throws JspCoreException {}
+    public void endGeneration(int section, JavaCodeWriter writer) throws JspCoreException {
+    }
 }

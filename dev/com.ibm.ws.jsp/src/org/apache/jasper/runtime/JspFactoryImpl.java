@@ -63,7 +63,6 @@
 //defect  388930 "Incorrect ELContext may be used"  2006/09/06  Scott Johnson
 //PI24001 Non-reusable objects of type BodyContentImpl cause a memory leak when using custom tags in a JSP  11/11/2014  hmpadill
 
-
 package org.apache.jasper.runtime;
 
 import java.security.AccessController;
@@ -89,47 +88,46 @@ import com.ibm.ws.util.WSThreadLocal;
  * @author Anil K. Vijendran
  */
 public class JspFactoryImpl extends JspFactory {
-	private static Logger logger;
-	private static final String CLASS_NAME="org.apache.jasper.runtime.JspFactoryImpl";
-	static{
-		logger = Logger.getLogger("com.ibm.ws.jsp");
-	}       
-
+    private static Logger logger;
+    private static final String CLASS_NAME = "org.apache.jasper.runtime.JspFactoryImpl";
+    static {
+        logger = Logger.getLogger("com.ibm.ws.jsp");
+    }
 
     private static final String SPEC_VERSION = com.ibm.ws.jsp.PagesVersionHandler.LOADED_SPEC_LEVEL;
 
     private static WSThreadLocal _threadLocal = new WSThreadLocal();
-    
+
     private int bodyContentBufferSize = BodyContentImpl.DEFAULT_TAG_BUFFER_SIZE;
 
     public JspFactoryImpl() {
-    	this(BodyContentImpl.DEFAULT_TAG_BUFFER_SIZE);
-		if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE)) {
-			logger.logp(Level.FINE, CLASS_NAME, "JspFactoryImpl", "JspFactoryImpl ctor 1 buffsize=["+BodyContentImpl.DEFAULT_TAG_BUFFER_SIZE+"]  this=["+this+"]");
-		}
-    }    
+        this(BodyContentImpl.DEFAULT_TAG_BUFFER_SIZE);
+        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
+            logger.logp(Level.FINE, CLASS_NAME, "JspFactoryImpl", "JspFactoryImpl ctor 1 buffsize=[" + BodyContentImpl.DEFAULT_TAG_BUFFER_SIZE + "]  this=[" + this + "]");
+        }
+    }
+
     public JspFactoryImpl(int bodyContentBufferSize) {
         super();
         this.bodyContentBufferSize = bodyContentBufferSize;
-		if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE)) {
-			logger.logp(Level.FINE, CLASS_NAME, "JspFactoryImpl", "JspFactoryImpl ctor 2 buffsize=["+this.bodyContentBufferSize+"]  this=["+this+"]");
-		}
+        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
+            logger.logp(Level.FINE, CLASS_NAME, "JspFactoryImpl", "JspFactoryImpl ctor 2 buffsize=[" + this.bodyContentBufferSize + "]  this=[" + this + "]");
+        }
     }
-    
+
     public PageContext getPageContext(
-        Servlet servlet,
-        ServletRequest request,
-        ServletResponse response,
-        String errorPageURL,
-        boolean needsSession,
-        int bufferSize,
-        boolean autoflush) {
+                                      Servlet servlet,
+                                      ServletRequest request,
+                                      ServletResponse response,
+                                      String errorPageURL,
+                                      boolean needsSession,
+                                      int bufferSize,
+                                      boolean autoflush) {
 
         if (System.getSecurityManager() != null) {
             PrivilegedGetPageContext dp = new PrivilegedGetPageContext((JspFactoryImpl) this, servlet, request, response, errorPageURL, needsSession, bufferSize, autoflush);
             return (PageContext) AccessController.doPrivileged(dp);
-        }
-        else {
+        } else {
             return internalGetPageContext(servlet, request, response, errorPageURL, needsSession, bufferSize, autoflush);
         }
     }
@@ -140,8 +138,7 @@ public class JspFactoryImpl extends JspFactory {
         if (System.getSecurityManager() != null) {
             PrivilegedReleasePageContext dp = new PrivilegedReleasePageContext((JspFactoryImpl) this, pc);
             AccessController.doPrivileged(dp);
-        }
-        else {
+        } else {
             internalReleasePageContext(pc);
         }
     }
@@ -155,21 +152,20 @@ public class JspFactoryImpl extends JspFactory {
     }
 
     private PageContext internalGetPageContext(
-        Servlet servlet,
-        ServletRequest request,
-        ServletResponse response,
-        String errorPageURL,
-        boolean needsSession,
-        int bufferSize,
-        boolean autoflush) {
+                                               Servlet servlet,
+                                               ServletRequest request,
+                                               ServletResponse response,
+                                               String errorPageURL,
+                                               boolean needsSession,
+                                               int bufferSize,
+                                               boolean autoflush) {
         try {
             PageContext pc = getPool().remove();
             pc.initialize(servlet, request, response, errorPageURL, needsSession, bufferSize, autoflush);
             return pc;
-        }
-        catch (Throwable ex) {
+        } catch (Throwable ex) {
             /* FIXME: need to do something reasonable here!! */
-  			ex.printStackTrace(System.out);
+            ex.printStackTrace(System.out);
             return null;
         }
     }
@@ -181,32 +177,35 @@ public class JspFactoryImpl extends JspFactory {
     void returnFreePageContext(PageContextImpl pc) {
         getPool().add(pc);
     }
+
     //PI24001 start
     /**
      * Add a PageContextImpl object to the pool.
+     * 
      * @param pc - the PageContextImpl object to put in the pool.
      * @return true if <i>pc</i> was added to the pool, false otherwise.
      */
     boolean poolFreePageContextIfNotFull(PageContextImpl pc) {
         return getPool().add(pc);
     }
+
     //PI24001 end
     protected PageContextPool getPool() {
         PageContextPool pool = null;
         if ((pool = (PageContextPool) _threadLocal.get()) == null) {
             //pool = new PageContextPool(4) {
-            pool = new PageContextPool(8) {		//PK25630
+            pool = new PageContextPool(8) { //PK25630
                 protected PageContext createPageContext() {
                     return new PageContextImpl(JspFactoryImpl.this, bodyContentBufferSize);
                 }
             };
-            
+
             _threadLocal.set(pool);
         }
 
         return pool;
     }
-    
+
     private class PrivilegedGetPageContext implements PrivilegedAction {
 
         private JspFactoryImpl factory;
@@ -219,14 +218,14 @@ public class JspFactoryImpl extends JspFactory {
         private boolean autoflush;
 
         PrivilegedGetPageContext(
-            JspFactoryImpl factory,
-            Servlet servlet,
-            ServletRequest request,
-            ServletResponse response,
-            String errorPageURL,
-            boolean needsSession,
-            int bufferSize,
-            boolean autoflush) {
+                                 JspFactoryImpl factory,
+                                 Servlet servlet,
+                                 ServletRequest request,
+                                 ServletResponse response,
+                                 String errorPageURL,
+                                 boolean needsSession,
+                                 int bufferSize,
+                                 boolean autoflush) {
             this.factory = factory;
             this.servlet = servlet;
             this.request = request;
@@ -257,13 +256,13 @@ public class JspFactoryImpl extends JspFactory {
             return null;
         }
     }
-    
+
     //LIDB4147-9 Begin new method for JSP 2.1.
 
     // defect 388930 begin
-	public JspApplicationContext getJspApplicationContext(ServletContext context) {
-        return JspApplicationContextImpl.getInstance(context);	
-	}
+    public JspApplicationContext getJspApplicationContext(ServletContext context) {
+        return JspApplicationContextImpl.getInstance(context);
+    }
     // defect 388930 end
 
     //LIDB4147-9 End

@@ -17,7 +17,7 @@ import com.ibm.ws.jsp.translator.optimizedtag.OptimizedTagContext;
 
 public class JSTLWhenOptimizedTag implements OptimizedTag {
     private String test = null;
-    
+
     public boolean doOptimization(OptimizedTagContext context) {
         boolean optimize = false;
         if (context.getParent() != null && context.getParent() instanceof JSTLChooseOptimizedTag) {
@@ -33,11 +33,10 @@ public class JSTLWhenOptimizedTag implements OptimizedTag {
     }
 
     public void generateStart(OptimizedTagContext context) {
-        JSTLChooseOptimizedTag chooseTag = (JSTLChooseOptimizedTag)context.getParent();
+        JSTLChooseOptimizedTag chooseTag = (JSTLChooseOptimizedTag) context.getParent();
         if (chooseTag.isFirstWhenSpecified()) {
             context.writeSource("} else if(");
-        }
-        else {
+        } else {
             context.writeSource("if (");
             chooseTag.setFirstWhenSpecified(true);
         }
@@ -50,10 +49,10 @@ public class JSTLWhenOptimizedTag implements OptimizedTag {
 
     public void setAttribute(String attrName, Object attrValue) {
         if (attrName.equals("test")) {
-            test = (String)attrValue;
+            test = (String) attrValue;
         }
     }
-    
+
     public boolean canGenTagInMethod(OptimizedTagContext context) {
         return false;
     }

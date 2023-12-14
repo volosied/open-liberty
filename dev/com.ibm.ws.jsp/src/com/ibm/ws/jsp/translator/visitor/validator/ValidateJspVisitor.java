@@ -30,37 +30,36 @@ import com.ibm.ws.jsp.translator.visitor.JspVisitorInputMap;
 import com.ibm.ws.jsp.translator.visitor.configuration.JspVisitorUsage;
 import com.ibm.wsspi.jsp.context.JspCoreContext;
 
-public class ValidateJspVisitor extends ValidateVisitor {  
+public class ValidateJspVisitor extends ValidateVisitor {
     static private Logger logger;
-    private static final String CLASS_NAME="com.ibm.ws.jsp.translator.visitor.validator.ValidateJspVisitor";
-    static{
+    private static final String CLASS_NAME = "com.ibm.ws.jsp.translator.visitor.validator.ValidateJspVisitor";
+    static {
         logger = Logger.getLogger("com.ibm.ws.jsp");
     }
-    
+
     private HashMap userDefinedDirectives = new HashMap();
     private Boolean autoFlushValue = null;
     private String bufferValue = null;
 
-    public ValidateJspVisitor(JspVisitorUsage visitorUsage, 
-                              JspConfiguration jspConfiguration, 
-                              JspCoreContext context, 
-                              HashMap resultMap, 
-                              JspVisitorInputMap inputMap)
-        throws JspCoreException {
+    public ValidateJspVisitor(JspVisitorUsage visitorUsage,
+                              JspConfiguration jspConfiguration,
+                              JspCoreContext context,
+                              HashMap resultMap,
+                              JspVisitorInputMap inputMap) throws JspCoreException {
         super(visitorUsage, jspConfiguration, context, resultMap, inputMap);
         result = new ValidateJspResult(visitorUsage.getJspVisitorDefinition().getId());
         //JSP2.1MR2
-        if (jspConfiguration.getBuffer()!=null) {
-        	//((ValidateJspResult)result).setBufferSize(jspConfiguration.getBuffer());
-        	setBufferValue((ValidateJspResult)result, null, jspConfiguration.getBuffer());
+        if (jspConfiguration.getBuffer() != null) {
+            //((ValidateJspResult)result).setBufferSize(jspConfiguration.getBuffer());
+            setBufferValue((ValidateJspResult) result, null, jspConfiguration.getBuffer());
         }
         //JSP2.1MR2
-        if (jspConfiguration.getDefaultContentType()!=null) {
-        	((ValidateJspResult)result).setContentType(jspConfiguration.getDefaultContentType());
+        if (jspConfiguration.getDefaultContentType() != null) {
+            ((ValidateJspResult) result).setContentType(jspConfiguration.getDefaultContentType());
         }
         //JSP2.1MR2
         if (jspConfiguration.isErrorOnUndeclaredNamespace()) {
-        	
+
         }
     }
 
@@ -74,8 +73,7 @@ public class ValidateJspVisitor extends ValidateVisitor {
                 if (jspResult.isGenSessionVariable() != true)
                     throw new JspTranslationException(jspElement, "jsp.error.usebean.prohibited.as.session");
             }
-        }
-        else {
+        } else {
             throw new JspTranslationException(jspElement, "jsp.error.usebean.contains.no.attributes");
         }
     }
@@ -85,18 +83,18 @@ public class ValidateJspVisitor extends ValidateVisitor {
             jspResult.setBufferSize(0);
         else {
             /*
-             *  May want to revisit the handling of buffersize
-             *  JSP Specification section JSP.1.10.1 The page directive
-             *  Table JSP1-8 Page Directive Attributes: explicitly 
-             *  states that "The size can only be specified in kilobytes
-             *  The suffix kb is mandatory or a translation error must occur"
-             *  The current version (same as jasper) does not care if suffix
-             *  kb exists.  Change not made to prevent possible regression 
-             *  when customers move to current spec level.
-            */
+             * May want to revisit the handling of buffersize
+             * JSP Specification section JSP.1.10.1 The page directive
+             * Table JSP1-8 Page Directive Attributes: explicitly
+             * states that "The size can only be specified in kilobytes
+             * The suffix kb is mandatory or a translation error must occur"
+             * The current version (same as jasper) does not care if suffix
+             * kb exists. Change not made to prevent possible regression
+             * when customers move to current spec level.
+             */
             String servletVersion = jspConfiguration.getServletVersion();
-            if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINEST)){
-                logger.logp(Level.FINEST, CLASS_NAME, "visitPageDirectiveStart","ServletVersion=" + servletVersion);
+            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINEST)) {
+                logger.logp(Level.FINEST, CLASS_NAME, "visitPageDirectiveStart", "ServletVersion=" + servletVersion);
             }
             Integer integer = null;
             try {
@@ -111,35 +109,33 @@ public class ValidateJspVisitor extends ValidateVisitor {
                 } else { //servletVersion must be 2.5
                     int ind = bufferValue.indexOf("kb");
                     if (ind == -1) {
-                    	if (jspElement==null) {
-                    		throw new JspTranslationException("jsp.error.invalid.value.for.buffer");
-                    	} else {
-                    		throw new JspTranslationException(jspElement, "jsp.error.invalid.value.for.buffer");
-                    	}
-                    }
-                    else
+                        if (jspElement == null) {
+                            throw new JspTranslationException("jsp.error.invalid.value.for.buffer");
+                        } else {
+                            throw new JspTranslationException(jspElement, "jsp.error.invalid.value.for.buffer");
+                        }
+                    } else
                         num = bufferValue.substring(0, ind);
                 }
                 integer = new Integer(num);
-                if (integer<0) {
-                	if (jspElement==null) {
-                		throw new JspTranslationException("jsp.error.page.invalid.buffer");
-                	} else {
-                		throw new JspTranslationException(jspElement, "jsp.error.page.invalid.buffer");
-                	}
+                if (integer < 0) {
+                    if (jspElement == null) {
+                        throw new JspTranslationException("jsp.error.page.invalid.buffer");
+                    } else {
+                        throw new JspTranslationException(jspElement, "jsp.error.page.invalid.buffer");
+                    }
                 }
-            }
-            catch (NumberFormatException n) {
-            	if (jspElement==null) {
-            		throw new JspTranslationException("jsp.error.page.invalid.buffer");
-            	} else {
-            		throw new JspTranslationException(jspElement, "jsp.error.page.invalid.buffer");
-            	}
+            } catch (NumberFormatException n) {
+                if (jspElement == null) {
+                    throw new JspTranslationException("jsp.error.page.invalid.buffer");
+                } else {
+                    throw new JspTranslationException(jspElement, "jsp.error.page.invalid.buffer");
+                }
             }
             jspResult.setBufferSize(integer.intValue() * 1024);
         }
     }
-    
+
     protected void visitPageDirectiveStart(Element jspElement) throws JspCoreException {
         ValidateJspResult jspResult = (ValidateJspResult) result;
         NamedNodeMap attributes = jspElement.getAttributes();
@@ -154,8 +150,9 @@ public class ValidateJspVisitor extends ValidateVisitor {
                     && (directiveName.equals("import") == false) // import can appear more than once in translation unit.
                     && (directiveName.equals("pageEncoding") == false) // pageEncoding can appear more than once in translation unit (only once per page or fragment).
                     && (directiveName.equals("jsp:id") == false)) {
-                    if (oldDirectiveValue.equals(directiveValue) == false) {                            
-                        throw new JspTranslationException(jspElement, "jsp.error.multiple.occurrences.directive", new Object[] { directiveName, oldDirectiveValue, directiveValue });
+                    if (oldDirectiveValue.equals(directiveValue) == false) {
+                        throw new JspTranslationException(jspElement, "jsp.error.multiple.occurrences.directive", new Object[] { directiveName, oldDirectiveValue,
+                                                                                                                                 directiveValue });
                     }
                 }
 
@@ -163,20 +160,16 @@ public class ValidateJspVisitor extends ValidateVisitor {
                 if (directiveName.equals("language")) {
                     if (directiveValue != null && directiveValue.equals("java") == false) {
                         throw new JspTranslationException(jspElement, "jsp.error.invalid.value.for.language", new Object[] { directiveValue });
-                    }
-                    else {
+                    } else {
                         valid = true;
                         jspResult.setLanguage(directiveValue);
                     }
-                }
-                else if (directiveName.equals("extends")) {
+                } else if (directiveName.equals("extends")) {
                     valid = true;
                     jspResult.setExtendsClass(directiveValue);
-                }
-                else if (directiveName.equals("import")) {
+                } else if (directiveName.equals("import")) {
                     valid = true;
-                }
-                else if (directiveName.equals("session")) {
+                } else if (directiveName.equals("session")) {
                     valid = true;
                     if (directiveValue.equalsIgnoreCase("true"))
                         jspResult.setGenSessionVariable(true);
@@ -184,8 +177,7 @@ public class ValidateJspVisitor extends ValidateVisitor {
                         jspResult.setGenSessionVariable(false);
                     else
                         throw new JspTranslationException(jspElement, "jsp.error.invalid.value.for.session");
-                }
-                else if (directiveName.equals("buffer")) {
+                } else if (directiveName.equals("buffer")) {
                     valid = true;
                     setBufferValue(jspResult, jspElement, directiveValue);
                     bufferValue = directiveValue;
@@ -194,26 +186,22 @@ public class ValidateJspVisitor extends ValidateVisitor {
                             throw new JspTranslationException(jspElement, "jsp.error.page.invalid.autoflush.buffer");
                         }
                     }
-                }
-                else if (directiveName.equals("autoFlush")) {
+                } else if (directiveName.equals("autoFlush")) {
                     valid = true;
                     if (directiveValue.equalsIgnoreCase("true")) {
                         jspResult.setAutoFlush(true);
                         autoFlushValue = new Boolean(true);
-                    }
-                    else if (directiveValue.equalsIgnoreCase("false")) {
+                    } else if (directiveValue.equalsIgnoreCase("false")) {
                         jspResult.setAutoFlush(false);
                         autoFlushValue = new Boolean(false);
-                    }
-                    else
+                    } else
                         throw new JspTranslationException(jspElement, "jsp.error.page.invalid.autoflush");
                     if (bufferValue != null) {
                         if (bufferValue.equalsIgnoreCase("none") && autoFlushValue.booleanValue() == false) {
                             throw new JspTranslationException(jspElement, "jsp.error.page.invalid.autoflush.buffer");
                         }
                     }
-                }
-                else if (directiveName.equals("isThreadSafe")) {
+                } else if (directiveName.equals("isThreadSafe")) {
                     valid = true;
                     if (directiveValue.equalsIgnoreCase("true"))
                         jspResult.setSingleThreaded(false);
@@ -221,16 +209,13 @@ public class ValidateJspVisitor extends ValidateVisitor {
                         jspResult.setSingleThreaded(true);
                     else
                         throw new JspTranslationException(jspElement, "jsp.error.page.invalid.threadsafe");
-                }
-                else if (directiveName.equals("info")) {
+                } else if (directiveName.equals("info")) {
                     valid = true;
                     jspResult.setInfo(directiveValue);
-                }
-                else if (directiveName.equals("errorPage")) {
+                } else if (directiveName.equals("errorPage")) {
                     valid = true;
                     jspResult.setError(directiveValue);
-                }
-                else if (directiveName.equals("isErrorPage")) {
+                } else if (directiveName.equals("isErrorPage")) {
                     valid = true;
                     if (directiveValue.equalsIgnoreCase("true"))
                         jspResult.setIsErrorPage(true);
@@ -238,119 +223,104 @@ public class ValidateJspVisitor extends ValidateVisitor {
                         jspResult.setIsErrorPage(false);
                     else
                         throw new JspTranslationException(jspElement, "jsp.error.page.invalid.iserrorpage");
-                }
-                else if (directiveName.equals("contentType")) {
+                } else if (directiveName.equals("contentType")) {
                     valid = true;
                     jspResult.setContentType(directiveValue);
-                }
-                else if (directiveName.equals("pageEncoding")) {
+                } else if (directiveName.equals("pageEncoding")) {
                     valid = true;
 
                     JspId jspId = new JspId(jspElement.getAttribute("jsp:id"));
 
                     String configPageEncoding = jspConfiguration.getResponseEncoding();
-                    if(configPageEncoding == null){
-                    	configPageEncoding = jspConfiguration.getPageEncoding();
+                    if (configPageEncoding == null) {
+                        configPageEncoding = jspConfiguration.getPageEncoding();
                     }
                     String convertedPageEncoding = com.ibm.wsspi.webcontainer.util.EncodingUtils.getJvmConverter(directiveValue);
                     if (configPageEncoding != null) {
                         if (convertedPageEncoding.toUpperCase().startsWith("UTF-16")) {
                             if (configPageEncoding.toUpperCase().startsWith("UTF-16") == false) {
                                 throw new JspTranslationException(jspElement, "jsp.error.page.pageencoding.mismatch", new Object[] { convertedPageEncoding, configPageEncoding });
-                            }else if(configPageEncoding.equalsIgnoreCase("UTF-16LE") ||configPageEncoding.equalsIgnoreCase("UTF-16BE")){
-                            	convertedPageEncoding = configPageEncoding;
+                            } else if (configPageEncoding.equalsIgnoreCase("UTF-16LE") || configPageEncoding.equalsIgnoreCase("UTF-16BE")) {
+                                convertedPageEncoding = configPageEncoding;
                             }
-                        }
-                        else if (convertedPageEncoding.equalsIgnoreCase(configPageEncoding) == false) {
+                        } else if (convertedPageEncoding.equalsIgnoreCase(configPageEncoding) == false) {
                             throw new JspTranslationException(jspElement, "jsp.error.page.pageencoding.mismatch", new Object[] { convertedPageEncoding, configPageEncoding });
                         }
                     }
                     jspResult.setPageEncoding(convertedPageEncoding);
-                }
-                else if (directiveName.equals("isELIgnored")) {
+                } else if (directiveName.equals("isELIgnored")) {
                     valid = true;
                     if (directiveValue.equalsIgnoreCase("true")) {
                         jspResult.setIsELIgnored(true);
                         jspConfiguration.setElIgnored(true);
                         jspConfiguration.setElIgnoredSetTrueInPage(true);
-                    }
-                    else if (directiveValue.equalsIgnoreCase("false")) {
+                    } else if (directiveValue.equalsIgnoreCase("false")) {
                         jspResult.setIsELIgnored(false);
                         jspConfiguration.setElIgnored(false);
-                    }
-                    else
+                    } else
                         throw new JspTranslationException(jspElement, "jsp.error.page.invalid.iselignored");
-                }
-                else if (directiveName.equals("jsp:id")) {
+                } else if (directiveName.equals("jsp:id")) {
                     valid = true;
-                }
-                else if (directiveName.startsWith("xmlns")) {
+                } else if (directiveName.startsWith("xmlns")) {
                     valid = true;
                 }
                 // jsp2.1work
                 else if (directiveName.equals("trimDirectiveWhitespaces")) {
                     valid = true;
                     if (jspConfiguration.getTrimDirectiveWhitespaces() == null) {
-	                    if (directiveValue.equalsIgnoreCase("true")) {
-	                        jspResult.setTrimDirectiveWhitespaces(true);
-	                        jspConfiguration.setTrimDirectiveWhitespaces(true);
-	                    }
-	                    else if (directiveValue.equalsIgnoreCase("false")) {
-	                        jspResult.setTrimDirectiveWhitespaces(false);
-	                        jspConfiguration.setTrimDirectiveWhitespaces(false);
-	                    }
-	                    else {
-	                        throw new JspTranslationException(jspElement, "jsp.error.page.invalid.trimdirectivewhitespaces");
-	                    }
-                    }
-                    else if (!jspConfiguration.getTrimDirectiveWhitespaces().equals(directiveValue)) {
-                    	 throw new JspTranslationException(jspElement, "jsp.error.page.conflict.trimdirectivewhitespaces", new Object[] {jspConfiguration.getTrimDirectiveWhitespaces(), directiveName });                    
+                        if (directiveValue.equalsIgnoreCase("true")) {
+                            jspResult.setTrimDirectiveWhitespaces(true);
+                            jspConfiguration.setTrimDirectiveWhitespaces(true);
+                        } else if (directiveValue.equalsIgnoreCase("false")) {
+                            jspResult.setTrimDirectiveWhitespaces(false);
+                            jspConfiguration.setTrimDirectiveWhitespaces(false);
+                        } else {
+                            throw new JspTranslationException(jspElement, "jsp.error.page.invalid.trimdirectivewhitespaces");
+                        }
+                    } else if (!jspConfiguration.getTrimDirectiveWhitespaces().equals(directiveValue)) {
+                        throw new JspTranslationException(jspElement, "jsp.error.page.conflict.trimdirectivewhitespaces", new Object[] { jspConfiguration.getTrimDirectiveWhitespaces(),
+                                                                                                                                         directiveName });
                     }
                 }
                 // jsp2.1ELwork
                 else if (directiveName.equals("deferredSyntaxAllowedAsLiteral")) {
                     valid = true;
                     if (jspConfiguration.getDeferredSyntaxAllowedAsLiteral() == null) {
-	                    if (directiveValue.equalsIgnoreCase("true")) {
-	                        jspResult.setDeferredSyntaxAllowedAsLiteral(true);
-	                        jspConfiguration.setDeferredSyntaxAllowedAsLiteral(true);
-	                    }
-	                    else if (directiveValue.equalsIgnoreCase("false")) {
-	                        jspResult.setDeferredSyntaxAllowedAsLiteral(false);
-	                        jspConfiguration.setDeferredSyntaxAllowedAsLiteral(false);
-	                    }
-	                    else {
-	                    	throw new JspTranslationException(jspElement, "jsp.error.page.invalid.deferredsyntaxallowedasliteral", new Object[] {jspConfiguration.getDeferredSyntaxAllowedAsLiteral(), directiveName });                    
-	                    }
-                    }
-                    else if (!jspConfiguration.getDeferredSyntaxAllowedAsLiteral().equals(directiveValue)) {
-	                        throw new JspTranslationException(jspElement, "jsp.error.page.conflict.deferredsyntaxallowedasliteral");
+                        if (directiveValue.equalsIgnoreCase("true")) {
+                            jspResult.setDeferredSyntaxAllowedAsLiteral(true);
+                            jspConfiguration.setDeferredSyntaxAllowedAsLiteral(true);
+                        } else if (directiveValue.equalsIgnoreCase("false")) {
+                            jspResult.setDeferredSyntaxAllowedAsLiteral(false);
+                            jspConfiguration.setDeferredSyntaxAllowedAsLiteral(false);
+                        } else {
+                            throw new JspTranslationException(jspElement, "jsp.error.page.invalid.deferredsyntaxallowedasliteral", new Object[] { jspConfiguration.getDeferredSyntaxAllowedAsLiteral(),
+                                                                                                                                                  directiveName });
+                        }
+                    } else if (!jspConfiguration.getDeferredSyntaxAllowedAsLiteral().equals(directiveValue)) {
+                        throw new JspTranslationException(jspElement, "jsp.error.page.conflict.deferredsyntaxallowedasliteral");
                     }
                 }
 
-                if(PagesVersionHandler.isPages31OrHigherLoaded()){
+                if (PagesVersionHandler.isPages31OrHigherLoaded()) {
                     if (directiveName.equals("errorOnELNotFound")) {
                         valid = true;
                         if (directiveValue.equalsIgnoreCase("true")) {
                             jspResult.setErrorOnELNotFound(true);
                             jspConfiguration.setErrorOnELNotFound(true);
                             jspConfiguration.setErrorOnELNotFoundSetTrueInPage(true);
-                        }
-                        else if (directiveValue.equalsIgnoreCase("false")) {
+                        } else if (directiveValue.equalsIgnoreCase("false")) {
                             jspResult.setErrorOnELNotFound(false);
                             jspConfiguration.setErrorOnELNotFound(false);
-                        }
-                        else
+                        } else
                             throw new JspTranslationException(jspElement, "jsp.error.page.invalid.erroronelnotfound");
                     }
                 }
-                
+
                 if (valid == false) {
                     throw new JspTranslationException(jspElement, "jsp.error.page.directive.unknown", new Object[] { directiveName });
                 }
             }
-        }
-        else {
+        } else {
             throw new JspTranslationException(jspElement, "jsp.error.page.directive.contains.no.attributes");
         }
     }

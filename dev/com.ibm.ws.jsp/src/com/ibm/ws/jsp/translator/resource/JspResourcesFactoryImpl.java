@@ -26,15 +26,15 @@ public class JspResourcesFactoryImpl implements JspResourcesFactory {
     protected JspOptions jspOptions = null;
     protected JspCoreContext context = null;
     protected Container container;
-    
+
     public JspResourcesFactoryImpl(JspOptions jspOptions, JspCoreContext context, Container container) {
         this.jspOptions = jspOptions;
-        this.context = context;    
+        this.context = context;
         this.container = container;
     }
-    
+
     public JspResources createJspResources(JspInputSource inputSource) {
-        if (container!=null) {
+        if (container != null) {
             return new JspResourcesContainerImpl(inputSource, jspOptions, context);
         } else {
             return new JspResourcesImpl(inputSource, jspOptions, context);

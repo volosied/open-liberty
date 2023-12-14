@@ -18,15 +18,15 @@ import com.ibm.ws.jsp.translator.visitor.JspVisitorResult;
 
 public class TagFileScanResult extends JspVisitorResult {
     TagInfo ti = null;
-    
+
     public TagFileScanResult(String jspVisitorId) {
         super(jspVisitorId);
     }
-    
+
     public TagInfo getTagInfo() {
         return (ti);
     }
-    
+
     void setTagInfo(TagInfo ti) {
         this.ti = ti;
     }

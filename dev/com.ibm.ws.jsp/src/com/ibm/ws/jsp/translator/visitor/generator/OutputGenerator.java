@@ -18,6 +18,6 @@ public class OutputGenerator extends CodeGeneratorBase {
     public void startGeneration(int section, JavaCodeWriter writer) throws JspCoreException {
     }
 
-    public void endGeneration(int section, JavaCodeWriter writer)  throws JspCoreException {
+    public void endGeneration(int section, JavaCodeWriter writer) throws JspCoreException {
     }
 }

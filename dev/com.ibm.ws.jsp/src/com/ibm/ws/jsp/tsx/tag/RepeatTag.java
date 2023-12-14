@@ -29,18 +29,17 @@ import javax.servlet.jsp.tagext.BodyContent;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 import javax.servlet.jsp.tagext.TryCatchFinally;
 
-public class RepeatTag extends BodyTagSupport implements TryCatchFinally{
+public class RepeatTag extends BodyTagSupport implements TryCatchFinally {
     /**
-	 * Comment for <code>serialVersionUID</code>
-	 */
-	private static final long serialVersionUID = 3257568395246778423L;
-	static protected Logger logger;
-	private static final String CLASS_NAME="com.ibm.ws.jsp.tsx.tag.RepeatTag";
+     * Comment for <code>serialVersionUID</code>
+     */
+    private static final long serialVersionUID = 3257568395246778423L;
+    static protected Logger logger;
+    private static final String CLASS_NAME = "com.ibm.ws.jsp.tsx.tag.RepeatTag";
     static {
         logger = Logger.getLogger("com.ibm.ws.jsp");
     }
 
-	
     private String index = "";
     private int start = 0;
     // PQ73915.1 - end default
@@ -48,10 +47,9 @@ public class RepeatTag extends BodyTagSupport implements TryCatchFinally{
     private int end = Integer.MAX_VALUE;
     // PQ73915.1
     private int currentIteration = 0;
-    
+
     private StringBuffer internalBodyContent;
     private boolean breakTsxRepeatLoop = false;
-    
 
     public String getIndex() {
         return (index);
@@ -83,11 +81,12 @@ public class RepeatTag extends BodyTagSupport implements TryCatchFinally{
         // PQ73915.2
     }
 
-    public RepeatTag() {}
+    public RepeatTag() {
+    }
 
     public int doStartTag() throws JspException {
-    	this.internalBodyContent = new StringBuffer();
-    	
+        this.internalBodyContent = new StringBuffer();
+
         DefinedIndexManager indexMgr = (DefinedIndexManager) pageContext.getAttribute("TSXDefinedIndexManager", PageContext.PAGE_SCOPE);
         if (indexMgr == null) {
             indexMgr = new DefinedIndexManager();
@@ -106,19 +105,17 @@ public class RepeatTag extends BodyTagSupport implements TryCatchFinally{
         }
         if (index == null || index.equals("")) {
             index = indexMgr.getNextIndex();
-        }
-        else {
+        } else {
             if (indexMgr.exists(index) == true) {
                 throw new JspException("Index specified in <tsx:repeat> tag has already been defined. index =[" + index + "]");
-            }
-            else {
+            } else {
                 indexMgr.addIndex(index);
             }
         }
         if (start > 0) {
             currentIteration = start;
         }
-        pageContext.setAttribute (index, new Integer(currentIteration));
+        pageContext.setAttribute(index, new Integer(currentIteration));
 
         repeatStack.push(index);
         repeatLookup.put(index, new Integer(currentIteration++));
@@ -129,7 +126,7 @@ public class RepeatTag extends BodyTagSupport implements TryCatchFinally{
             // PQ73915.3
             end = Integer.MAX_VALUE;
         }
-        
+
         // begin 150288: part 1: create a BodyContent writer to store temporary data created
         //						 the jsp repeat tag instead of using current JspWriter.
         //return (EVAL_BODY_INCLUDE);
@@ -142,34 +139,33 @@ public class RepeatTag extends BodyTagSupport implements TryCatchFinally{
         Hashtable repeatLookup = (Hashtable) pageContext.getAttribute("TSXRepeatLookup", PageContext.PAGE_SCOPE);
 
         //PK63483 - add check for pageContext attribute that is set in GetPropertyTag
-        Boolean breakRepeat = (Boolean)pageContext.findAttribute("TSXBreakRepeat");
+        Boolean breakRepeat = (Boolean) pageContext.findAttribute("TSXBreakRepeat");
         if (breakTsxRepeatLoop || breakRepeat != null) {
             return (SKIP_BODY);
         }
-        
+
         BodyContent bodyContent = getBodyContent();
         String output = bodyContent.getString();
         this.internalBodyContent.append(output);
-        try{
-        	bodyContent.clearBuffer();
-        }catch (IOException io){
+        try {
+            bodyContent.clearBuffer();
+        } catch (IOException io) {
         }
-        
+
         // PQ73915.4 - includes end index
         //if ((currentIteration + 1) <= end) {
         if (currentIteration <= end) {
             // PQ73915.4
-        	pageContext.setAttribute (index, new Integer(currentIteration));
+            pageContext.setAttribute(index, new Integer(currentIteration));
             repeatLookup.put(index, new Integer(currentIteration++));
             return (EVAL_BODY_AGAIN);
-        }
-        else {
+        } else {
             return (SKIP_BODY);
         }
     }
 
     public int doEndTag() throws JspException {
-    	doOutput(true);
+        doOutput(true);
         return (EVAL_PAGE);
     }
 
@@ -178,22 +174,21 @@ public class RepeatTag extends BodyTagSupport implements TryCatchFinally{
         index = (String) repeatStack.pop();
         currentIteration = 0;
 
-        if(writeToClient){
-	        // begin 150288: part 2
-	        String output = this.internalBodyContent.toString();
-	        JspWriter out = pageContext.getOut();
-	        try {
-	            out.write(output);
-	        }
-	        catch (java.io.IOException io) {
-	            throw new JspException("Unable to write <tsx:repeat> tag output " + io.getMessage());
-	        }
-	        //PK63483 - start 
-	        //remove attribute from context in case of multiple tsx:repeat tags 
-	        finally {
-				super.pageContext.removeAttribute("TSXBreakRepeat", 2); // prepare for next repeat tag.				
-			}
-	        //PK63483 - end
+        if (writeToClient) {
+            // begin 150288: part 2
+            String output = this.internalBodyContent.toString();
+            JspWriter out = pageContext.getOut();
+            try {
+                out.write(output);
+            } catch (java.io.IOException io) {
+                throw new JspException("Unable to write <tsx:repeat> tag output " + io.getMessage());
+            }
+            //PK63483 - start 
+            //remove attribute from context in case of multiple tsx:repeat tags 
+            finally {
+                super.pageContext.removeAttribute("TSXBreakRepeat", 2); // prepare for next repeat tag.				
+            }
+            //PK63483 - end
         }
 
         // begin 150288: part 3 remove used repeat tag index so it can be reused when done.
@@ -203,50 +198,55 @@ public class RepeatTag extends BodyTagSupport implements TryCatchFinally{
             indexMgr.removeIndex(index);
         }
         // end 150288: part 3
-        
+
         reset();
 
-	}
+    }
 
-	public void release() {
+    public void release() {
         super.release();
         reset();
 
     }
-	/* (non-Javadoc)
-	 * @see javax.servlet.jsp.tagext.TryCatchFinally#doCatch(java.lang.Throwable)
-	 */
-	public void doCatch(Throwable caughtException) throws Throwable {
-		
-		breakTsxRepeatLoop = true;
-		if(caughtException instanceof ArrayIndexOutOfBoundsException || caughtException instanceof  NoSuchElementException){
-			doOutput (true);	// only output for certain exceptions.
-		}
-		else{
-			logger.logp(Level.SEVERE,CLASS_NAME, "doCatch","Caught unexpected exception in tsx:repeat. breaking loop @["+ currentIteration +"]",caughtException);
-			doOutput(false);	// do not write output from tag to client.
-		}
 
-	}
-	/* (non-Javadoc)
-	 * @see javax.servlet.jsp.tagext.TryCatchFinally#doFinally()
-	 */
-	public void doFinally() {
-		// TODO Auto-generated method stub
+    /*
+     * (non-Javadoc)
+     * 
+     * @see javax.servlet.jsp.tagext.TryCatchFinally#doCatch(java.lang.Throwable)
+     */
+    public void doCatch(Throwable caughtException) throws Throwable {
 
-	}
-	
-	private void reset(){
+        breakTsxRepeatLoop = true;
+        if (caughtException instanceof ArrayIndexOutOfBoundsException || caughtException instanceof NoSuchElementException) {
+            doOutput(true); // only output for certain exceptions.
+        } else {
+            logger.logp(Level.SEVERE, CLASS_NAME, "doCatch", "Caught unexpected exception in tsx:repeat. breaking loop @[" + currentIteration + "]", caughtException);
+            doOutput(false); // do not write output from tag to client.
+        }
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see javax.servlet.jsp.tagext.TryCatchFinally#doFinally()
+     */
+    public void doFinally() {
+        // TODO Auto-generated method stub
+
+    }
+
+    private void reset() {
         index = "";
         start = 0;
         // PQ73915.6 - default end index value
         // end = 0;
         end = Integer.MAX_VALUE;
         // pq73915.6
-        
+
         this.internalBodyContent = new StringBuffer();
         breakTsxRepeatLoop = false;
-        
-	}
-	
+
+    }
+
 }

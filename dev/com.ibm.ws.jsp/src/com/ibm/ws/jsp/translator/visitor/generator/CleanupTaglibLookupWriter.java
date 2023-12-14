@@ -16,9 +16,8 @@ public class CleanupTaglibLookupWriter extends MethodWriter {
     public CleanupTaglibLookupWriter(boolean isThreadTagPooling) {
         println();
         if (isThreadTagPooling) {
-        	println("private void cleanupTaglibLookup(HttpServletRequest request, java.util.HashMap _jspx_TagLookup) {");
-        }
-        else {
+            println("private void cleanupTaglibLookup(HttpServletRequest request, java.util.HashMap _jspx_TagLookup) {");
+        } else {
             println("private void cleanupTaglibLookup(java.util.HashMap _jspx_TagLookup) {");
         }
     }

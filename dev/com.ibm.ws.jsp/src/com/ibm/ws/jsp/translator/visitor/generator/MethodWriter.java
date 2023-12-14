@@ -17,10 +17,10 @@ import java.io.PrintWriter;
 
 public class MethodWriter extends JavaCodeWriter {
     CharArrayWriter charWriter = null;
-    
+
     public MethodWriter() {
         super();
-        charWriter = new CharArrayWriter();    
+        charWriter = new CharArrayWriter();
         setWriter(new PrintWriter(charWriter));
     }
 

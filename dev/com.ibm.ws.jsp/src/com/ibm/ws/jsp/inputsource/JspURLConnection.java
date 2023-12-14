@@ -28,12 +28,12 @@ public class JspURLConnection extends URLConnection {
     private DocumentRootUtils dru = null;
     private boolean searchOnClasspath = false;
     private ClassLoader classloader = null;
-	private String docRoot;
-	private ServletContext servletContext;
-    
-    public JspURLConnection(String docRoot, URL url, 
-                            String relativeUrl, 
-                            DocumentRootUtils dru, 
+    private String docRoot;
+    private ServletContext servletContext;
+
+    public JspURLConnection(String docRoot, URL url,
+                            String relativeUrl,
+                            DocumentRootUtils dru,
                             boolean searchOnClasspath,
                             ClassLoader classloader, ServletContext servletContext) {
         super(url);
@@ -43,29 +43,28 @@ public class JspURLConnection extends URLConnection {
         this.searchOnClasspath = searchOnClasspath;
         this.classloader = classloader;
         this.servletContext = servletContext;
-        
-        if (this.dru==null) {
-    	    if (servletContext!=null) {
-    		    this.dru = new DocumentRootUtils(servletContext,(String)null,(String)null);
-    	    }
-    	    else if (docRoot!=null){
-    		    this.dru = new DocumentRootUtils(docRoot,(String)null,(String)null);
-    	    }
+
+        if (this.dru == null) {
+            if (servletContext != null) {
+                this.dru = new DocumentRootUtils(servletContext, (String) null, (String) null);
+            } else if (docRoot != null) {
+                this.dru = new DocumentRootUtils(docRoot, (String) null, (String) null);
+            }
         }
     }
-    
-    public void connect() throws IOException {}
-    
+
+    public void connect() throws IOException {
+    }
+
     @FFDCIgnore(IOException.class)
     public InputStream getInputStream() throws IOException {
         InputStream is = null;
         try {
-            URL newURL = new URL(url.toExternalForm()); 
+            URL newURL = new URL(url.toExternalForm());
             URLConnection conn = newURL.openConnection();
             conn.setUseCaches(false);
             is = conn.getInputStream();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             if (relativeUrl.endsWith(".tag") || relativeUrl.endsWith(".tld") || relativeUrl.endsWith(".jar") || searchOnClasspath) { // .tag file will now be in WEB-INF/lib
                 String s = relativeUrl;
                 if (s.charAt(0) == '/')
@@ -73,21 +72,20 @@ public class JspURLConnection extends URLConnection {
                 is = classloader.getResourceAsStream(s);
             }
         }
-        
+
         if (is == null) {
-        	if (dru!=null){
-	            	//PK97121 start - add synchronized block
-	            	synchronized (dru) {
-	            		dru.handleDocumentRoots(relativeUrl);
-	            		is = dru.getInputStream();
-	            	}
-	            	// PK97121 end
-	        }
-	        else {
-	                throw new IOException(JspCoreException.getMsg("jsp.error.failed.to.find.resource", new Object[] {url}));
-        	}
+            if (dru != null) {
+                //PK97121 start - add synchronized block
+                synchronized (dru) {
+                    dru.handleDocumentRoots(relativeUrl);
+                    is = dru.getInputStream();
+                }
+                // PK97121 end
+            } else {
+                throw new IOException(JspCoreException.getMsg("jsp.error.failed.to.find.resource", new Object[] { url }));
+            }
         }
-        
+
         return is;
     }
 }

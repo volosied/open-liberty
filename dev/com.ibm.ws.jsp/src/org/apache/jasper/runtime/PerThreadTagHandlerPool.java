@@ -57,7 +57,7 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  *
- */ 
+ */
 
 package org.apache.jasper.runtime;
 
@@ -76,13 +76,13 @@ import java.util.Enumeration;
  */
 public class PerThreadTagHandlerPool extends TagHandlerPool {
 
-    public static int MAX_SIZE=100;
+    public static int MAX_SIZE = 100;
 
-    private int maxSize=MAX_SIZE;
-    private int initialSize=5;
-    private ThreadLocal perThread=new ThreadLocal();
+    private int maxSize = MAX_SIZE;
+    private int initialSize = 5;
+    private ThreadLocal perThread = new ThreadLocal();
     // for cleanup
-    private Hashtable threadData=new Hashtable();
+    private Hashtable threadData = new Hashtable();
 
     private static class PerThreadData {
         Tag handlers[];
@@ -97,10 +97,10 @@ public class PerThreadTagHandlerPool extends TagHandlerPool {
     }
 
     protected void init(Servlet servlet) {
-        String maxSizeS=TagHandlerPool.getOption(servlet.getServletConfig(), OPTION_MAXSIZE, null);
-        maxSize=Integer.parseInt(maxSizeS);
-        if( maxSize <0  ) {
-            maxSize=MAX_SIZE;
+        String maxSizeS = TagHandlerPool.getOption(servlet.getServletConfig(), OPTION_MAXSIZE, null);
+        maxSize = Integer.parseInt(maxSizeS);
+        if (maxSize < 0) {
+            maxSize = MAX_SIZE;
         }
     }
 
@@ -112,8 +112,8 @@ public class PerThreadTagHandlerPool extends TagHandlerPool {
      */
     public PerThreadTagHandlerPool(int capacity) {
         this.maxSize = capacity;
-	//this.handlers = new Tag[capacity];
-	//this.current = -1;
+        //this.handlers = new Tag[capacity];
+        //this.current = -1;
     }
 
     /**
@@ -127,16 +127,16 @@ public class PerThreadTagHandlerPool extends TagHandlerPool {
      * @throws JspException if a tag handler cannot be instantiated
      */
     public Tag get(Class handlerClass) throws JspException {
-        PerThreadData ptd=(PerThreadData)perThread.get();
-        if( ptd!=null && ptd.current >=0 ) {
+        PerThreadData ptd = (PerThreadData) perThread.get();
+        if (ptd != null && ptd.current >= 0) {
             return ptd.handlers[ptd.current--];
         } else {
-	    try {
-		return (Tag) handlerClass.newInstance();
-	    } catch (Exception e) {
-		throw new JspException(e.getMessage(), e);
-	    }
-	}
+            try {
+                return (Tag) handlerClass.newInstance();
+            } catch (Exception e) {
+                throw new JspException(e.getMessage(), e);
+            }
+        }
     }
 
     /**
@@ -147,32 +147,32 @@ public class PerThreadTagHandlerPool extends TagHandlerPool {
      * @param handler Tag handler to add to this tag handler pool
      */
     public void reuse(Tag handler) {
-        PerThreadData ptd=(PerThreadData)perThread.get();
+        PerThreadData ptd = (PerThreadData) perThread.get();
 
-        if( ptd==null ) {
-            ptd=new PerThreadData();
-            ptd.handlers=new Tag[ initialSize ];
-            ptd.current=0;
-            threadData.put( ptd, ptd );
+        if (ptd == null) {
+            ptd = new PerThreadData();
+            ptd.handlers = new Tag[initialSize];
+            ptd.current = 0;
+            threadData.put(ptd, ptd);
         }
 
-	if (ptd.current < (ptd.handlers.length - 1)) {
-	    ptd.handlers[++ptd.current] = handler;
+        if (ptd.current < (ptd.handlers.length - 1)) {
+            ptd.handlers[++ptd.current] = handler;
             return;
         }
 
         // no more space
-        if( ptd.handlers.length < maxSize ) {
+        if (ptd.handlers.length < maxSize) {
             // reallocate
-            Tag newH[]=new Tag[ptd.handlers.length + initialSize];
+            Tag newH[] = new Tag[ptd.handlers.length + initialSize];
             System.arraycopy(ptd.handlers, 0, newH, 0, ptd.handlers.length);
-            ptd.handlers=newH;
-            ptd.handlers[++ptd.current]=handler;
+            ptd.handlers = newH;
+            ptd.handlers[++ptd.current] = handler;
             return;
         }
 
         //else
-	handler.release();
+        handler.release();
     }
 
     /**
@@ -180,14 +180,13 @@ public class PerThreadTagHandlerPool extends TagHandlerPool {
      * handler pool.
      */
     public synchronized void release() {
-        Enumeration ptdE=threadData.keys();
-        while( ptdE.hasMoreElements() ) {
-            PerThreadData ptd=(PerThreadData)ptdE.nextElement();
-            for (int i=ptd.current; i>=0; i--) {
-                if( ptd.handlers != null && ptd.handlers[i]!=null )
+        Enumeration ptdE = threadData.keys();
+        while (ptdE.hasMoreElements()) {
+            PerThreadData ptd = (PerThreadData) ptdE.nextElement();
+            for (int i = ptd.current; i >= 0; i--) {
+                if (ptd.handlers != null && ptd.handlers[i] != null)
                     ptd.handlers[i].release();
             }
         }
     }
 }
-

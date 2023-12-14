@@ -19,20 +19,21 @@ import com.ibm.ws.jsp.translator.visitor.validator.ValidateResult;
  *
  */
 public interface GeneratorUtilsExt {
-    
+
     public void generateELFunctionCode(JavaCodeWriter writer, ValidateResult validatorResult) throws JspCoreException;
-    
+
     /**
      * Produces a String representing a call to the EL interpreter.
-     * @param expression a String containing zero or more "${}" expressions
-     * @param expectedType the expected type of the interpreted result
-     * @param defaultPrefix Default prefix, or literal "null"
-     * @param fnmapvar Variable pointing to a function map.
-     * @param XmlEscape True if the result should do XML escaping
+     * 
+     * @param expression     a String containing zero or more "${}" expressions
+     * @param expectedType   the expected type of the interpreted result
+     * @param defaultPrefix  Default prefix, or literal "null"
+     * @param fnmapvar       Variable pointing to a function map.
+     * @param XmlEscape      True if the result should do XML escaping
      * @param pageContextVar Variable for PageContext variable name in generated Java code.
      * @return a String representing a call to the EL interpreter.
      */
     public String interpreterCall(boolean isTagFile, String expression, Class expectedType, String fnmapvar, boolean XmlEscape, String pageContextVar); //PI59436
-    
+
     public String getClassFileVersion();
 }

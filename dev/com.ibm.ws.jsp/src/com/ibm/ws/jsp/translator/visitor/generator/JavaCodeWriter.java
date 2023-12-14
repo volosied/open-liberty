@@ -24,8 +24,9 @@ public class JavaCodeWriter {
         this.writer = writer;
     }
 
-    protected JavaCodeWriter() {}
-    
+    protected JavaCodeWriter() {
+    }
+
     protected void setWriter(PrintWriter writer) {
         this.writer = writer;
     }
@@ -33,7 +34,7 @@ public class JavaCodeWriter {
     public void close() throws IOException {
         writer.close();
     }
-    
+
     public String quoteString(String s) {
         // Turn null string into quoted empty strings:
         if (s == null)
@@ -50,18 +51,14 @@ public class JavaCodeWriter {
                 sb.append('\\');
                 sb.append('\\');
                 sb.append(s.charAt(++i));
-            }
-            else if (ch == '"') {
+            } else if (ch == '"') {
                 sb.append('\\');
                 sb.append('"');
-            }
-            else if (ch == '\n') {
+            } else if (ch == '\n') {
                 sb.append("\\n");
-            }
-            else if (ch == '\r') {
+            } else if (ch == '\r') {
                 sb.append("\\r");
-            }
-            else {
+            } else {
                 sb.append(ch);
             }
         }
@@ -85,16 +82,15 @@ public class JavaCodeWriter {
         // Try to be smart (i.e. indent properly) at generating the code:
         BufferedReader reader = new BufferedReader(new StringReader(multiline));
         try {
-            for (String line = null;(line = reader.readLine()) != null;) {
+            for (String line = null; (line = reader.readLine()) != null;) {
                 //		println(SPACES.substring(0, indent)+line);
                 println(line);
             }
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             // Unlikely to happen, since we're acting on strings
         }
     }
-    
+
     public void write(char[] buff, int off, int len) {
         writer.write(buff, off, len);
     }

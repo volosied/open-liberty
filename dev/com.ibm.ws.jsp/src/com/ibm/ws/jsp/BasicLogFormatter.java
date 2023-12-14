@@ -20,17 +20,21 @@ import java.util.logging.LogRecord;
 /**
  * @author Scott Johnson
  *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ *         To change the template for this generated type comment go to
+ *         Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class BasicLogFormatter extends Formatter {
 
     private String lineSeparator = (String) java.security.AccessController.doPrivileged(
-    	            new java.security.PrivilegedAction() {public Object run() 
-    	            {return System.getProperty("line.separator");}});
+                                                                                        new java.security.PrivilegedAction() {
+                                                                                            public Object run() {
+                                                                                                return System.getProperty("line.separator");
+                                                                                            }
+                                                                                        });
 
-
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.util.logging.Formatter#format(java.util.logging.LogRecord)
      */
     public String format(LogRecord record) {
@@ -44,14 +48,14 @@ public class BasicLogFormatter extends Formatter {
                 PrintWriter pw = new PrintWriter(sw);
                 record.getThrown().printStackTrace(pw);
                 pw.close();
-            sb.append(sw.toString());
+                sb.append(sw.toString());
             } catch (Exception ex) {
-            	if (record.getThrown().getCause() != null){
-					sb.append(record.getThrown().getCause().getLocalizedMessage());
-            	}else{
-					sb.append(record.getThrown().getLocalizedMessage());
-            	}
-            	
+                if (record.getThrown().getCause() != null) {
+                    sb.append(record.getThrown().getCause().getLocalizedMessage());
+                } else {
+                    sb.append(record.getThrown().getLocalizedMessage());
+                }
+
             }
         }
         return sb.toString();

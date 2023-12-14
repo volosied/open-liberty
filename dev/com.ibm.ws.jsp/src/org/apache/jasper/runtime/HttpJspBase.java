@@ -69,7 +69,7 @@ import com.ibm.ws.jsp.JspCoreException;
  * @author Anil K. Vijendran
  */
 public abstract class HttpJspBase extends HttpServlet implements HttpJspPage {
-    
+
     static {
         if (JspFactory.getDefaultFactory() == null) {
             JspFactoryImpl factory = new JspFactoryImpl(BodyContentImpl.DEFAULT_TAG_BUFFER_SIZE);
@@ -77,17 +77,16 @@ public abstract class HttpJspBase extends HttpServlet implements HttpJspPage {
                 String basePackage = "org.apache.jasper.";
                 try {
                     factory.getClass().getClassLoader().loadClass(
-                        basePackage + "runtime.JspFactoryImpl$PrivilegedGetPageContext");
+                                                                  basePackage + "runtime.JspFactoryImpl$PrivilegedGetPageContext");
                     factory.getClass().getClassLoader().loadClass(
-                        basePackage + "runtime.JspFactoryImpl$PrivilegedReleasePageContext");
+                                                                  basePackage + "runtime.JspFactoryImpl$PrivilegedReleasePageContext");
                     factory.getClass().getClassLoader().loadClass(basePackage + "runtime.JspRuntimeLibrary");
                     factory.getClass().getClassLoader().loadClass(
-                        basePackage + "runtime.JspRuntimeLibrary$PrivilegedIntrospectHelper");
+                                                                  basePackage + "runtime.JspRuntimeLibrary$PrivilegedIntrospectHelper");
                     factory.getClass().getClassLoader().loadClass(
-                        basePackage + "runtime.ServletResponseWrapperInclude");
+                                                                  basePackage + "runtime.ServletResponseWrapperInclude");
                     //factory.getClass().getClassLoader().loadClass(basePackage + "servlet.JspServletWrapper");
-                }
-                catch (ClassNotFoundException ex) {
+                } catch (ClassNotFoundException ex) {
                     System.out.println("Jasper JspRuntimeContext preload of class failed: " + ex.getMessage());
                 }
             }
@@ -95,7 +94,8 @@ public abstract class HttpJspBase extends HttpServlet implements HttpJspPage {
         }
     }
 
-    protected HttpJspBase() {}
+    protected HttpJspBase() {
+    }
 
     public final void init(ServletConfig config) throws ServletException {
         super.init(config);
@@ -115,19 +115,21 @@ public abstract class HttpJspBase extends HttpServlet implements HttpJspPage {
     /**
      * Entry point into service.
      */
-    public final void service(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
+    public final void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         _jspService(request, response);
     }
 
-    public void jspInit() {}
+    public void jspInit() {
+    }
 
-    public void _jspInit() {}
+    public void _jspInit() {
+    }
 
-    public void jspDestroy() {}
+    public void jspDestroy() {
+    }
 
-    protected void _jspDestroy() {}
+    protected void _jspDestroy() {
+    }
 
-    public abstract void _jspService(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException;
+    public abstract void _jspService(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException;
 }

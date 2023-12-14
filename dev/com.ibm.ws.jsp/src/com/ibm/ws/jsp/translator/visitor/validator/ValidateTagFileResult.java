@@ -20,12 +20,14 @@ public class ValidateTagFileResult extends ValidateResult {
     protected String largeIcon = "";
     protected String description = "";
     protected String example = "";
-    
+
     public ValidateTagFileResult(String jspVisitorId) {
         super(jspVisitorId);
     }
+
     /**
      * Returns the bodyContent.
+     * 
      * @return String
      */
     public String getBodyContent() {
@@ -34,6 +36,7 @@ public class ValidateTagFileResult extends ValidateResult {
 
     /**
      * Returns the description.
+     * 
      * @return String
      */
     public String getDescription() {
@@ -42,6 +45,7 @@ public class ValidateTagFileResult extends ValidateResult {
 
     /**
      * Returns the displayName.
+     * 
      * @return String
      */
     public String getDisplayName() {
@@ -50,6 +54,7 @@ public class ValidateTagFileResult extends ValidateResult {
 
     /**
      * Returns the dynamicAttributes.
+     * 
      * @return String
      */
     public String getDynamicAttributes() {
@@ -58,6 +63,7 @@ public class ValidateTagFileResult extends ValidateResult {
 
     /**
      * Returns the example.
+     * 
      * @return String
      */
     public String getExample() {
@@ -66,6 +72,7 @@ public class ValidateTagFileResult extends ValidateResult {
 
     /**
      * Returns the largeIcon.
+     * 
      * @return String
      */
     public String getLargeIcon() {
@@ -74,6 +81,7 @@ public class ValidateTagFileResult extends ValidateResult {
 
     /**
      * Returns the smallIcon.
+     * 
      * @return String
      */
     public String getSmallIcon() {
@@ -82,6 +90,7 @@ public class ValidateTagFileResult extends ValidateResult {
 
     /**
      * Sets the bodyContent.
+     * 
      * @param bodyContent The bodyContent to set
      */
     public void setBodyContent(String bodyContent) {
@@ -90,6 +99,7 @@ public class ValidateTagFileResult extends ValidateResult {
 
     /**
      * Sets the description.
+     * 
      * @param description The description to set
      */
     public void setDescription(String description) {
@@ -98,6 +108,7 @@ public class ValidateTagFileResult extends ValidateResult {
 
     /**
      * Sets the displayName.
+     * 
      * @param displayName The displayName to set
      */
     public void setDisplayName(String displayName) {
@@ -106,6 +117,7 @@ public class ValidateTagFileResult extends ValidateResult {
 
     /**
      * Sets the dynamicAttributes.
+     * 
      * @param dynamicAttributes The dynamicAttributes to set
      */
     public void setDynamicAttributes(String dynamicAttributes) {
@@ -114,6 +126,7 @@ public class ValidateTagFileResult extends ValidateResult {
 
     /**
      * Sets the example.
+     * 
      * @param example The example to set
      */
     public void setExample(String example) {
@@ -122,6 +135,7 @@ public class ValidateTagFileResult extends ValidateResult {
 
     /**
      * Sets the largeIcon.
+     * 
      * @param largeIcon The largeIcon to set
      */
     public void setLargeIcon(String largeIcon) {
@@ -130,6 +144,7 @@ public class ValidateTagFileResult extends ValidateResult {
 
     /**
      * Sets the smallIcon.
+     * 
      * @param smallIcon The smallIcon to set
      */
     public void setSmallIcon(String smallIcon) {

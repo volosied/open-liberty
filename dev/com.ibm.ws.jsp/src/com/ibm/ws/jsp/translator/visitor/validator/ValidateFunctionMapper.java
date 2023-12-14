@@ -20,14 +20,14 @@ import javax.el.FunctionMapper;
 
 import com.ibm.ws.jsp.translator.utils.FunctionSignature;
 
-public class ValidateFunctionMapper extends FunctionMapper  {
+public class ValidateFunctionMapper extends FunctionMapper {
     /**
-	 * Comment for <code>serialVersionUID</code>
-	 */
-	private static final long serialVersionUID = 3977017366255185969L;
-	private HashMap fnMap = new HashMap();
-	private HashMap sigMap = new HashMap();
-    
+     * Comment for <code>serialVersionUID</code>
+     */
+    private static final long serialVersionUID = 3977017366255185969L;
+    private HashMap fnMap = new HashMap();
+    private HashMap sigMap = new HashMap();
+
     public void mapFunction(String fnQName, Method method) {
         fnMap.put(fnQName, method);
     }
@@ -41,12 +41,12 @@ public class ValidateFunctionMapper extends FunctionMapper  {
     }
 
     public FunctionSignature getSignature(String fnQName) {
-        return (FunctionSignature) sigMap.get(fnQName);   
+        return (FunctionSignature) sigMap.get(fnQName);
     }
-    
+
     //LIDB4147-9 Begin
     public Map getFnMap() {
-    	return fnMap;
+        return fnMap;
     }
     //LIDB4147-9 End
 }

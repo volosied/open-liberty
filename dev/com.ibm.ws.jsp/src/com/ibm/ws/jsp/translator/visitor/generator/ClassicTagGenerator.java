@@ -108,9 +108,9 @@ public class ClassicTagGenerator extends BaseTagGenerator {
 
                 if (genTagInMethod) {
                     tagStartWriter.println("try {");
-                } 
+                }
 
-                tagStartWriter.print("_jsp_tagPostConstruct(" +tagHandlerVar+ ", " + (!genTagInMethod ? "_jspTagList, " : "null, ") + tagHandlerVar + "_mo" + ");");
+                tagStartWriter.print("_jsp_tagPostConstruct(" + tagHandlerVar + ", " + (!genTagInMethod ? "_jspTagList, " : "null, ") + tagHandlerVar + "_mo" + ");");
 
             } else {
                 // not using CDI

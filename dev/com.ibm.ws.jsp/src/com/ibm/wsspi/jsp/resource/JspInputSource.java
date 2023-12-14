@@ -26,45 +26,51 @@ import org.w3c.dom.Document;
 public interface JspInputSource {
     /**
      * Returns a URL object that represents the absolute path to the jsp.
+     * 
      * @return URL
      */
     URL getAbsoluteURL();
-    
+
     /**
      * Returns a URL object that represents the context portion of the jsp URL.
+     * 
      * @return URL
      */
     URL getContextURL();
-    
+
     /**
      * Returns a String the represents the relative portion of the jsp URL
-     * @return String 
+     * 
+     * @return String
      */
     String getRelativeURL();
-    
+
     /**
      * Returns an IOStream object typcially obtained from the AbsoluteURL object.
+     * 
      * @return InputStream
      * @throws IOException
      */
     InputStream getInputStream() throws IOException;
-    
+
     /**
      * Returns the timestamp of the input source if it is available.
+     * 
      * @return
      */
     long getLastModified();
-    
+
     /**
      * Return an XML document version of the jsp input.
+     * 
      * @return org.w3c.dom.Document
      */
     Document getDocument();
-    
-    
+
     /**
-     * Indicated that this JspInputSource contain an xml document version of the 
+     * Indicated that this JspInputSource contain an xml document version of the
      * input source.
+     * 
      * @return boolean
      */
     boolean isXmlDocument();

@@ -12,12 +12,11 @@
  *******************************************************************************/
 package com.ibm.ws.jsp.translator.visitor.configuration;
 
-
 public class JspVisitorDefinition {
     private String id = null;
     private Class visitorResultClass = null;
     private Class visitorClass = null;
-    
+
     public String getId() {
         return id;
     }
@@ -39,7 +38,7 @@ public class JspVisitorDefinition {
     }
 
     public void setVisitorClass(Class visitorClass) {
-        this.visitorClass = visitorClass;    
+        this.visitorClass = visitorClass;
     }
 
 }

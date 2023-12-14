@@ -23,20 +23,21 @@ import com.ibm.ws.jsp.translator.JspTranslationException;
 
 public class GetPropertyGenerator extends PageTranslationTimeGenerator {
     public GetPropertyGenerator() {
-        super(new String[] {"name", "property"});
+        super(new String[] { "name", "property" });
     }
-    
-    public void startGeneration(int section, JavaCodeWriter writer) throws JspCoreException {}
 
-    public void endGeneration(int section, JavaCodeWriter writer)  throws JspCoreException {
-    	//PK65013 start
-    	String pageContextVar = Constants.JSP_PAGE_CONTEXT_ORIG;
-    	if (isTagFile) {
+    public void startGeneration(int section, JavaCodeWriter writer) throws JspCoreException {
+    }
+
+    public void endGeneration(int section, JavaCodeWriter writer) throws JspCoreException {
+        //PK65013 start
+        String pageContextVar = Constants.JSP_PAGE_CONTEXT_ORIG;
+        if (isTagFile) {
             if (jspOptions.isModifyPageContextVariable()) {
                 pageContextVar = Constants.JSP_PAGE_CONTEXT_NEW;
             }
         }
-    	//PK65013 end
+        //PK65013 end
         if (section == CodeGenerationPhase.METHOD_SECTION) {
             String name = getAttributeValue("name");
             String property = getAttributeValue("property");
@@ -50,19 +51,18 @@ public class GetPropertyGenerator extends PageTranslationTimeGenerator {
                 String methodName = meth.getName();
                 //PK65013
                 writer.println("out.print(org.apache.jasper.runtime.JspRuntimeLibrary.toString(" +
-                               "(((" + clsName + ")"+pageContextVar+".findAttribute(" +
+                               "(((" + clsName + ")" + pageContextVar + ".findAttribute(" +
                                "\"" + name + "\"))." + methodName + "())));");
-            }
-            else {
+            } else {
                 //PK65013
                 writer.println("out.print(org.apache.jasper.runtime.JspRuntimeLibrary.toString(org.apache.jasper.runtime.JspRuntimeLibrary." +
-                               "handleGetProperty("+pageContextVar+".findAttribute(" +
+                               "handleGetProperty(" + pageContextVar + ".findAttribute(" +
                                "\"" + name + "\"), \"" + property + "\")));");
             }
             writeDebugStartEnd(writer);
         }
     }
-    
+
     public static Method getReadMethod(Class beanClass, String prop, Element element) throws JspCoreException {
         java.lang.reflect.Method method = null;
         Class type = null;
@@ -78,19 +78,16 @@ public class GetPropertyGenerator extends PageTranslationTimeGenerator {
                         break;
                     }
                 }
-            }
-            else {
+            } else {
                 throw new JspTranslationException(element, "jsp.error.beans.nobeaninfo");
             }
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             throw new JspCoreException(ex);
         }
         if (method == null) {
             if (type == null) {
                 throw new JspTranslationException(element, "jsp.error.beans.noproperty");
-            }
-            else {
+            } else {
                 throw new JspTranslationException(element, "jsp.error.beans.nomethod");
             }
         }

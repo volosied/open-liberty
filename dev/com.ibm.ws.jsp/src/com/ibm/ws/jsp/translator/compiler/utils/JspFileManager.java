@@ -57,7 +57,7 @@ public class JspFileManager extends ForwardingJavaFileManager<JavaFileManager> {
 
     // List to keep track of the JarFile objects that need to be closed after a compilation is done
     private List<JarFile> jarFilesOfWsjars = new ArrayList<JarFile>();
-        
+
     private ClassLoader classLoader;
     private final WebModuleClassLoaderPackageFinder finder;
     Map<String, LinkedList<JspFileObject>> compiledTagFiles = new HashMap<String, LinkedList<JspFileObject>>();
@@ -70,26 +70,26 @@ public class JspFileManager extends ForwardingJavaFileManager<JavaFileManager> {
         super(fileManager);
         this.classLoader = classLoader;
         finder = new WebModuleClassLoaderPackageFinder();
-        
-        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE)) {
+
+        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
             logger.logp(Level.FINE, CLASS_NAME, "JspFileManager", "Creating JspFileManager with classloader = " + classLoader);
         }
     }
 
     @Override
-    public Iterable<JavaFileObject> list(Location location, String packageName, 
+    public Iterable<JavaFileObject> list(Location location, String packageName,
                                          Set<Kind> kinds, boolean recurse) throws IOException {
-        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE)) {
+        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
             logger.logp(Level.FINE, CLASS_NAME, "list", "Looking for classes in package = " + packageName + " from location = " + location.getName());
         }
         Iterable<JavaFileObject> results = new ArrayList<JavaFileObject>();
-        
+
         if (location == StandardLocation.PLATFORM_CLASS_PATH) // let standard manager handle
             results = super.list(location, packageName, kinds, recurse);
         else if (location == StandardLocation.CLASS_PATH && kinds.contains(JavaFileObject.Kind.CLASS)) {
             results = super.list(location, packageName, kinds, recurse);
-            /* 
-             * If it is empty, try to look for the classes in the custom finder 
+            /*
+             * If it is empty, try to look for the classes in the custom finder
              * which contains application and Liberty specific classes.
              * results will be empty if are processing classes that are not part
              * of the java package.
@@ -104,7 +104,7 @@ public class JspFileManager extends ForwardingJavaFileManager<JavaFileManager> {
     public String inferBinaryName(Location location, JavaFileObject file) {
         if (file instanceof JspFileObject) {
             String binaryName = ((JspFileObject) file).getBinaryName();
-            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE)) {
+            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
                 logger.logp(Level.FINE, CLASS_NAME, "inferBinaryName", "JspFileObject.getBinaryName()  = " + binaryName);
             }
             return binaryName;
@@ -116,15 +116,15 @@ public class JspFileManager extends ForwardingJavaFileManager<JavaFileManager> {
     @Override
     public JavaFileObject getJavaFileForOutput(Location location, String className,
                                                Kind kind, FileObject sibling) throws IOException {
-        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE)) {
+        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
             logger.logp(Level.FINE, CLASS_NAME, "getJavaFileForOutput", "className  = " + className + "sibling.getName() = " + sibling.getName());
         }
 
-        /* 
+        /*
          * If areTagFiles is true, we want to store the .class files
          * in the folder location that matches its fully qualified class name
          * relative to the outputDirectory.
-         * Basically JspOptions.getOutputDir()/packageName/className.class 
+         * Basically JspOptions.getOutputDir()/packageName/className.class
          */
         if (areTagFiles) {
             return super.getJavaFileForOutput(location, className, kind, sibling);
@@ -135,13 +135,13 @@ public class JspFileManager extends ForwardingJavaFileManager<JavaFileManager> {
              * class file needs to be placed in this folder and the package name
              * directory structure is not necessary.
              */
-            String classNameNoPackage = className.substring(className.lastIndexOf('.')+1);
+            String classNameNoPackage = className.substring(className.lastIndexOf('.') + 1);
             return super.getJavaFileForOutput(location, classNameNoPackage, kind, sibling);
         }
-        
+
     }
 
-    public void addDependencies(JspResources[] dependencies){
+    public void addDependencies(JspResources[] dependencies) {
         if (dependencies != null)
             for (JspResources resource : dependencies) {
                 if (compiledTagFiles.containsKey(resource.getPackageName())) {
@@ -160,14 +160,14 @@ public class JspFileManager extends ForwardingJavaFileManager<JavaFileManager> {
     }
 
     public void setAreTagFiles(boolean areTagFiles) {
-        this.areTagFiles  = areTagFiles;
+        this.areTagFiles = areTagFiles;
     }
 
     @Override
     public void close() throws IOException {
         for (JarFile jarFile : jarFilesOfWsjars) {
             jarFile.close();
-            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE)) {
+            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
                 logger.logp(Level.FINE, CLASS_NAME, "close", "closing jar [" + jarFile.getName() + "]");
             }
         }
@@ -179,7 +179,8 @@ public class JspFileManager extends ForwardingJavaFileManager<JavaFileManager> {
         private List<BundleWiring> bundleWiringOfActiveBundles = new ArrayList<BundleWiring>();
 
         /**
-         * This method helps getting JspFileObjects from dependencies (compiled tag files), Bundles, folders, and/or jar files. 
+         * This method helps getting JspFileObjects from dependencies (compiled tag files), Bundles, folders, and/or jar files.
+         * 
          * @param packageName Package name of the package to find.
          * @param recursive
          * @return
@@ -187,9 +188,9 @@ public class JspFileManager extends ForwardingJavaFileManager<JavaFileManager> {
          */
         public List<JavaFileObject> find(String packageName, boolean recursive) throws IOException {
             String javaPackageName = packageName.replace('.', '/');
-            
+
             List<JavaFileObject> result = new ArrayList<JavaFileObject>();
-            
+
             Collection<URL> urlCollection = getClassLoaderResources(javaPackageName);
 
             /*
@@ -198,12 +199,14 @@ public class JspFileManager extends ForwardingJavaFileManager<JavaFileManager> {
              * tag files (as java classes).
              */
             if (urlCollection.isEmpty()) {
-                if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE)) {
-                    logger.logp(Level.FINE, CLASS_NAME + "$WebModuleClassLoaderPackageFinder", "find", "Nothing was found in the classloader after recovery. Checking if we find any JspFileObject from our dependencies list for packageName = " + packageName);
+                if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
+                    logger.logp(Level.FINE, CLASS_NAME + "$WebModuleClassLoaderPackageFinder", "find",
+                                "Nothing was found in the classloader after recovery. Checking if we find any JspFileObject from our dependencies list for packageName = "
+                                                                                                       + packageName);
                 }
-                
+
                 if (compiledTagFiles.containsKey(packageName)) {
-                    if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE)) {
+                    if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
                         logger.logp(Level.FINE, CLASS_NAME + "$WebModuleClassLoaderPackageFinder", "find", "Dependencies were found for packageName = " + packageName);
                     }
                     result.addAll(compiledTagFiles.get(packageName));
@@ -216,58 +219,62 @@ public class JspFileManager extends ForwardingJavaFileManager<JavaFileManager> {
             }
             return result;
         }
-        
+
         /**
          * Equivalent to classLoader.getResources(String javaPackageName) but
          * making sure the returned URLs are not repeated. classLoader.getResources
          * can return a list with the resources repeated; we avoid this with this
          * method.
+         * 
          * @param javaPackageName
          * @return A Collection<URL> without duplicated URL representing the returned value of classLoader.getResources(String javaPackageName)
          * @throws IOException
          */
         private Collection<URL> getClassLoaderResources(String javaPackageName) throws IOException {
-            
+
             /*
              * Appending a trailing slash as method getResources behaves inconsistently without it...
              * Without a trailing slash, sometimes, the Enumeration is empty when it should not.
              */
             Enumeration<URL> urlEnumeration = classLoader.getResources(javaPackageName + '/');
-            
-            /* classloader.getResources is returning each location twice for some odd reason
+
+            /*
+             * classloader.getResources is returning each location twice for some odd reason
              * Using LinkedHashMap as the order needs to be preserved; i.e. compilation
              * with special classloading policies need this ordering (parent_last and parent_first).
              */
             Map<String, URL> hashMap = new LinkedHashMap<String, URL>();
-            
+
             /*
              * Making sure we don't have repeated URLs...
              */
-            while (urlEnumeration.hasMoreElements()) { 
+            while (urlEnumeration.hasMoreElements()) {
                 // one URL for each jar or bundle on the classpath that has the given package
                 URL packageFolderURL = urlEnumeration.nextElement();
                 hashMap.put(packageFolderURL.getFile(), packageFolderURL);
             }
-            
+
             return hashMap.values();
         }
 
         /**
          * Depending on the location of the packageName, this method help determine if the resource if in a Jar, Bundle, or folder.
          * Based in the location, it will return a collection of the JspFileObjects that match the package name.
+         * 
          * @param packageName
          * @param packageFolderURL
          * @param recursive
          * @return
          */
         private Collection<JavaFileObject> listUnder(String packageName, URL packageFolderURL, boolean recursive) {
-            
-            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE)) {
-                logger.logp(Level.FINE, CLASS_NAME + "$WebModuleClassLoaderPackageFinder", "listUnder", "Looking for packageName = " + packageName + "in URL = " + packageFolderURL);
+
+            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
+                logger.logp(Level.FINE, CLASS_NAME + "$WebModuleClassLoaderPackageFinder", "listUnder",
+                            "Looking for packageName = " + packageName + "in URL = " + packageFolderURL);
             }
-            
+
             final File directory = new File(packageFolderURL.getFile());
-            
+
             /*
              * We only care about directories, bundles and jars. Files are not in the equation
              * as we are working we packages... and not classes directly.
@@ -275,22 +282,22 @@ public class JspFileManager extends ForwardingJavaFileManager<JavaFileManager> {
             boolean isDirectory = false;
             if (System.getSecurityManager() != null) {
                 isDirectory = java.security.AccessController.doPrivileged(
-                    new java.security.PrivilegedAction<Boolean>() {
-                        public Boolean run() {
-                            return directory.isDirectory();
-                        }
-                    });
+                                                                          new java.security.PrivilegedAction<Boolean>() {
+                                                                              public Boolean run() {
+                                                                                  return directory.isDirectory();
+                                                                              }
+                                                                          });
             } else {
                 isDirectory = directory.isDirectory();
             }
-            
-            if (isDirectory) { 
+
+            if (isDirectory) {
                 // useful for when there are references to classes in WEB-INF/classes
                 return processDir(packageName, directory, recursive);
             } else if (packageFolderURL.getProtocol().equals("bundleresource") || packageFolderURL.getProtocol().equals("jarentry")) {
                 // meaning that this URL is a bundle
                 return processBundle(packageName, recursive);
-            } else { 
+            } else {
                 // browse a jar file
                 return processJar(packageFolderURL, recursive);
             }
@@ -298,6 +305,7 @@ public class JspFileManager extends ForwardingJavaFileManager<JavaFileManager> {
 
         /**
          * If a package name has its classes in a OSGi Bundle, this method creates one JspFileObject per class in the package.
+         * 
          * @param packageFolderURL
          * @param recursive
          * @return
@@ -307,8 +315,9 @@ public class JspFileManager extends ForwardingJavaFileManager<JavaFileManager> {
             // Getting all the BundleWiring objects this way to avoid getting the active bundles repeated times during one compilation
             for (final BundleWiring bundleWiring : getBundleWiringOfActiveBundles()) {
                 Bundle bundle = bundleWiring.getBundle();
-                if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE)) {
-                    logger.logp(Level.FINE, CLASS_NAME + "$WebModuleClassLoaderPackageFinder", "processBundle", "Creating JspFileObjects of the classes in bundle = " + bundle.getSymbolicName());
+                if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
+                    logger.logp(Level.FINE, CLASS_NAME + "$WebModuleClassLoaderPackageFinder", "processBundle",
+                                "Creating JspFileObjects of the classes in bundle = " + bundle.getSymbolicName());
                 }
 
                 Collection<String> classesInBundle = bundleWiring.listResources(packageName.replace('.', '/'), "*" + Kind.CLASS.extension, BundleWiring.LISTRESOURCES_LOCAL);
@@ -320,14 +329,16 @@ public class JspFileManager extends ForwardingJavaFileManager<JavaFileManager> {
                         String protocol = resourceURI.toURL().getProtocol();
                         result.add(new JspFileObject(binaryName, resourceURI, protocol));
                     } catch (MalformedURLException e) {
-                        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE)) {
-                            logger.logp(Level.FINE, CLASS_NAME + "$WebModuleClassLoaderPackageFinder", "processBundle", "There was a problem getting the URL of the URI representing binaryName = " + binaryName, e);
+                        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
+                            logger.logp(Level.FINE, CLASS_NAME + "$WebModuleClassLoaderPackageFinder", "processBundle",
+                                        "There was a problem getting the URL of the URI representing binaryName = " + binaryName, e);
                         }
                         //Recovering; it has to be a bundleresource
                         result.add(new JspFileObject(binaryName, resourceURI, "bundleresource"));
                     } catch (URISyntaxException e) {
-                        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE)) {
-                            logger.logp(Level.FINE, CLASS_NAME + "$WebModuleClassLoaderPackageFinder", "processBundle", "There was a problem getting  the URI representing binaryName = " + binaryName, e);
+                        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
+                            logger.logp(Level.FINE, CLASS_NAME + "$WebModuleClassLoaderPackageFinder", "processBundle",
+                                        "There was a problem getting  the URI representing binaryName = " + binaryName, e);
                         }
                     }
                 }
@@ -343,30 +354,30 @@ public class JspFileManager extends ForwardingJavaFileManager<JavaFileManager> {
                 BundleContext jspBundleContext = null;
                 if (System.getSecurityManager() != null) {
                     jspBundleContext = java.security.AccessController.doPrivileged(
-                        new java.security.PrivilegedAction<BundleContext>() {
-                            public BundleContext run() {
-                                return FrameworkUtil.getBundle(this.getClass()).getBundleContext();
-                            }
-                        });
+                                                                                   new java.security.PrivilegedAction<BundleContext>() {
+                                                                                       public BundleContext run() {
+                                                                                           return FrameworkUtil.getBundle(this.getClass()).getBundleContext();
+                                                                                       }
+                                                                                   });
                 } else {
                     jspBundleContext = FrameworkUtil.getBundle(this.getClass()).getBundleContext();
                 }
-                
+
                 /*
                  * Get all the active bundles to create the corresponding JspFileObject objects
                  * with the classes needed to compile JSPs.
                  */
                 Bundle[] activeBundles = jspBundleContext.getBundles();
-                
-                for(final Bundle bundle : activeBundles){
+
+                for (final Bundle bundle : activeBundles) {
                     BundleWiring bundleWiring = null;
-                    if(System.getSecurityManager() != null) {
+                    if (System.getSecurityManager() != null) {
                         bundleWiring = java.security.AccessController.doPrivileged(
-                            new java.security.PrivilegedAction<BundleWiring>() {
-                                public BundleWiring run() {
-                                    return bundle.adapt(BundleWiring.class);
-                                }
-                            });
+                                                                                   new java.security.PrivilegedAction<BundleWiring>() {
+                                                                                       public BundleWiring run() {
+                                                                                           return bundle.adapt(BundleWiring.class);
+                                                                                       }
+                                                                                   });
                     } else {
                         bundleWiring = bundle.adapt(BundleWiring.class);
                     }
@@ -379,22 +390,23 @@ public class JspFileManager extends ForwardingJavaFileManager<JavaFileManager> {
         /**
          * If a package name has its classes in a Jar, this method creates one JspFileObject per class in the package.
          * This method can process jar and wsjar protocols. Wsjar is a jar in essence. See {@link WSJarURLConnection}
+         * 
          * @param packageFolderURL
          * @param recursive
          * @return
          */
         private List<JavaFileObject> processJar(URL packageFolderURL, boolean recursive) {
-            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE)) {
+            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
                 logger.logp(Level.FINE, CLASS_NAME + "$WebModuleClassLoaderPackageFinder", "processJar", "Processing jar = " + packageFolderURL + " recursive = " + recursive);
             }
             List<JavaFileObject> result = new ArrayList<JavaFileObject>();
-            
+
             // Since we are always looking for packages (folders) the second element of the array exists
             String packageName = packageFolderURL.getPath().split("!/")[1];
-            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE)) {
+            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
                 logger.logp(Level.FINE, CLASS_NAME + "$WebModuleClassLoaderPackageFinder", "processJar", "packageName = " + packageName);
             }
-            
+
             JarFile jarFile = null;
             try {
                 URLConnection urlConnection = packageFolderURL.openConnection();
@@ -404,20 +416,22 @@ public class JspFileManager extends ForwardingJavaFileManager<JavaFileManager> {
                 if (protocol.equals("wsjar")) {
                     WSJarURLConnection wsJarUrlConnection = (WSJarURLConnection) urlConnection;
                     final File fileLocationOfJar = wsJarUrlConnection.getFile();
-                    if(System.getSecurityManager() != null) {
+                    if (System.getSecurityManager() != null) {
                         jarFile = java.security.AccessController.doPrivileged(
-                            new java.security.PrivilegedAction<JarFile>() {
-                                public JarFile run() {
-                                    try {
-                                        return new JarFile(fileLocationOfJar);
-                                    } catch (IOException e) {
-                                        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE)) {
-                                            logger.logp(Level.FINE, CLASS_NAME + "$WebModuleClassLoaderPackageFinder", "processJar", "IOException in doPriviledged processing jar.", e);
-                                        }
-                                    }
-                                    return null;
-                                }
-                            });
+                                                                              new java.security.PrivilegedAction<JarFile>() {
+                                                                                  public JarFile run() {
+                                                                                      try {
+                                                                                          return new JarFile(fileLocationOfJar);
+                                                                                      } catch (IOException e) {
+                                                                                          if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()
+                                                                                              && logger.isLoggable(Level.FINE)) {
+                                                                                              logger.logp(Level.FINE, CLASS_NAME + "$WebModuleClassLoaderPackageFinder",
+                                                                                                          "processJar", "IOException in doPriviledged processing jar.", e);
+                                                                                          }
+                                                                                      }
+                                                                                      return null;
+                                                                                  }
+                                                                              });
                     } else {
                         jarFile = new JarFile(fileLocationOfJar);
                     }
@@ -448,20 +462,20 @@ public class JspFileManager extends ForwardingJavaFileManager<JavaFileManager> {
                             jarFilesOfWsjars.add(jspFileObject.getJarFile());
                     }
                 }
-            }
-            catch (IOException e) {
-                if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE)) {
+            } catch (IOException e) {
+                if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
                     logger.logp(Level.FINE, CLASS_NAME + "$WebModuleClassLoaderPackageFinder", "processJar", "IOException processing jar.", e);
                 }
             } catch (URISyntaxException e) {
-                if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE)) {
+                if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
                     logger.logp(Level.FINE, CLASS_NAME + "$WebModuleClassLoaderPackageFinder", "processJar", "Unable to get URI of jar file.", e);
                 }
             } finally {
                 try {
-                    if (jarFile != null) jarFile.close();
+                    if (jarFile != null)
+                        jarFile.close();
                 } catch (IOException e) {
-                    if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE)) {
+                    if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
                         logger.logp(Level.FINE, CLASS_NAME + "$WebModuleClassLoaderPackageFinder", "processJar", "Unable to close jarFile.", e);
                     }
                 }
@@ -471,43 +485,45 @@ public class JspFileManager extends ForwardingJavaFileManager<JavaFileManager> {
 
         /**
          * If a package name has its classes in a folder, this method creates one JspFileObject per class in the package.
+         * 
          * @param packageName
          * @param directory
          * @param recursive
          * @return
          */
         private List<JavaFileObject> processDir(String packageName, final File directory, boolean recursive) {
-            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE)) {
-                logger.logp(Level.FINE, CLASS_NAME + "$WebModuleClassLoaderPackageFinder", "processDir", "Processing directory = " + directory + " looking for classes in packageName = " + packageName);
+            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
+                logger.logp(Level.FINE, CLASS_NAME + "$WebModuleClassLoaderPackageFinder", "processDir",
+                            "Processing directory = " + directory + " looking for classes in packageName = " + packageName);
             }
             List<JavaFileObject> result = new ArrayList<JavaFileObject>();
             File[] childFiles = directory.listFiles();
-            
-            if(System.getSecurityManager() != null) {
+
+            if (System.getSecurityManager() != null) {
                 childFiles = java.security.AccessController.doPrivileged(
-                    new java.security.PrivilegedAction<File[]>() {
-                        public File[] run() {
-                            return directory.listFiles();
-                        }
-                    });
+                                                                         new java.security.PrivilegedAction<File[]>() {
+                                                                             public File[] run() {
+                                                                                 return directory.listFiles();
+                                                                             }
+                                                                         });
             } else {
                 childFiles = directory.listFiles();
             }
 
-            if(childFiles != null) // If we are here, childFiles shouldn't be null. Validation.
+            if (childFiles != null) // If we are here, childFiles shouldn't be null. Validation.
                 for (final File childFile : childFiles) {
                     boolean isFile = false;
                     if (System.getSecurityManager() != null) {
                         isFile = java.security.AccessController.doPrivileged(
-                            new java.security.PrivilegedAction<Boolean>() {
-                                public Boolean run() {
-                                    return childFile.isFile();
-                                }
-                            });
+                                                                             new java.security.PrivilegedAction<Boolean>() {
+                                                                                 public Boolean run() {
+                                                                                     return childFile.isFile();
+                                                                                 }
+                                                                             });
                     } else {
                         isFile = childFile.isFile();
                     }
-                    
+
                     if (isFile && childFile.getName().endsWith(Kind.CLASS.extension)) {
                         String binaryName = packageName + "." + childFile.getName().replaceAll(Kind.CLASS.extension + "$", "");
                         String protocol = "file";
@@ -515,8 +531,9 @@ public class JspFileManager extends ForwardingJavaFileManager<JavaFileManager> {
                             // Should be file, but I want to avoid hardcoding the string
                             protocol = childFile.toURI().toURL().getProtocol();
                         } catch (MalformedURLException e) {
-                            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE)) {
-                                logger.logp(Level.FINE, CLASS_NAME + "$WebModuleClassLoaderPackageFinder", "processDir", "There was a problem getting the URL protocol; using file as the protocol ", e);
+                            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
+                                logger.logp(Level.FINE, CLASS_NAME + "$WebModuleClassLoaderPackageFinder", "processDir",
+                                            "There was a problem getting the URL protocol; using file as the protocol ", e);
                             }
                         }
                         result.add(new JspFileObject(binaryName, childFile.toURI(), protocol));

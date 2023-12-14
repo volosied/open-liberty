@@ -64,11 +64,11 @@ public class JspDocumentParser extends DefaultHandler implements LexicalHandler 
     private static final String LEXICAL_HANDLER_PROPERTY = "http://xml.org/sax/properties/lexical-handler";
     private static final String DTD_FOUND_MESSAGE = "dtd has been found";
 
-	private static Logger logger;
-	private static final String CLASS_NAME="com.ibm.ws.jsp.translator.document.JspDocumentParser";
-	static{
-		logger = Logger.getLogger("com.ibm.ws.jsp");
-	}       
+    private static Logger logger;
+    private static final String CLASS_NAME = "com.ibm.ws.jsp.translator.document.JspDocumentParser";
+    static {
+        logger = Logger.getLogger("com.ibm.ws.jsp");
+    }
 
     protected Locator locator;
     protected int textLineNum = 0;
@@ -88,7 +88,7 @@ public class JspDocumentParser extends DefaultHandler implements LexicalHandler 
     protected HashMap tagPrefixes = new HashMap(); // PK24144.2
 
     protected JspConfiguration jspConfiguration = null;
-    protected JspOptions jspOptions = null;  //396002
+    protected JspOptions jspOptions = null; //396002
     protected JspInputSource inputSource = null;
     protected String resolvedRelativeURL = null;
     protected String encodedRelativeURL = null;
@@ -106,21 +106,21 @@ public class JspDocumentParser extends DefaultHandler implements LexicalHandler 
     //  jsp2.1work
 
     public JspDocumentParser(JspInputSource inputSource,
-        String resolvedRelativeURL,
-        JspCoreContext ctxt,
-        JspConfiguration jspConfiguration,
-        JspOptions jspOptions,  // 396002
-        Stack directoryStack,
-        Stack dependencyStack,
-        List dependencyList,
-        Map cdataJspIdMap,
-        Map implicitTagLibMap,
-        boolean isBomPresent,  
-        boolean isEncodingSpecifiedInProlog,
-        String sourceEnc)
-        
+                             String resolvedRelativeURL,
+                             JspCoreContext ctxt,
+                             JspConfiguration jspConfiguration,
+                             JspOptions jspOptions, // 396002
+                             Stack directoryStack,
+                             Stack dependencyStack,
+                             List dependencyList,
+                             Map cdataJspIdMap,
+                             Map implicitTagLibMap,
+                             boolean isBomPresent,
+                             boolean isEncodingSpecifiedInProlog,
+                             String sourceEnc)
+
         throws JspCoreException {
-        this.inputSource = inputSource;            
+        this.inputSource = inputSource;
         this.ctxt = ctxt;
         this.directoryStack = directoryStack;
         this.dependencyStack = dependencyStack;
@@ -128,28 +128,27 @@ public class JspDocumentParser extends DefaultHandler implements LexicalHandler 
         this.cdataJspIdMap = cdataJspIdMap;
         this.implicitTagLibMap = implicitTagLibMap;
         this.jspConfiguration = jspConfiguration;
-        this.jspOptions = jspOptions;  //396002
+        this.jspOptions = jspOptions; //396002
         this.resolvedRelativeURL = resolvedRelativeURL;
         this.isBomPresent = isBomPresent;
         this.isEncodingSpecifiedInProlog = isEncodingSpecifiedInProlog;
         this.sourceEnc = sourceEnc;
         try {
             encodedRelativeURL = URLEncoder.encode(resolvedRelativeURL, "UTF-8");
-        }
-        catch (UnsupportedEncodingException e) {
+        } catch (UnsupportedEncodingException e) {
             throw new JspCoreException(e);
         }
-/*
-        Set keys=implicitTagLibMap.keySet();
-        if (!keys.isEmpty()) {
-            Iterator iter=keys.iterator();
-            while (iter.hasNext()) {
-                String prefix = (String) iter.next();
-                String uri = (String) implicitTagLibMap.get(prefix);
-                System.out.println("JspDocumentParser...implicitTagLibMap  prefix ["+prefix+"]  uri ["+uri+"]");
-            }
-        }
-*/
+        /*
+         * Set keys=implicitTagLibMap.keySet();
+         * if (!keys.isEmpty()) {
+         * Iterator iter=keys.iterator();
+         * while (iter.hasNext()) {
+         * String prefix = (String) iter.next();
+         * String uri = (String) implicitTagLibMap.get(prefix);
+         * System.out.println("JspDocumentParser...implicitTagLibMap  prefix ["+prefix+"]  uri ["+uri+"]");
+         * }
+         * }
+         */
         // PK24144.2 begin
         if (this.implicitTagLibMap != null && this.implicitTagLibMap.size() > 0) {
             tagPrefixes.putAll(implicitTagLibMap);
@@ -158,59 +157,58 @@ public class JspDocumentParser extends DefaultHandler implements LexicalHandler 
     }
 
     public Document parse(InputSource is) throws JspCoreException {
-		if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINER)){
-			logger.logp(Level.FINER, CLASS_NAME, "parse(InputSource is)","is =[" + is +"]");
-		}
+        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINER)) {
+            logger.logp(Level.FINER, CLASS_NAME, "parse(InputSource is)", "is =[" + is + "]");
+        }
 
         try {
-    		if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINER)){
-    			logger.logp(Level.FINER, CLASS_NAME, "parse(InputSource is)","getting new document...");
-    		}
+            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINER)) {
+                logger.logp(Level.FINER, CLASS_NAME, "parse(InputSource is)", "getting new document...");
+            }
             document = ParserFactory.newDocument(false, false);
-    		if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINER)){
-    			logger.logp(Level.FINER, CLASS_NAME, "parse(InputSource is)","got new document: ["+document+"]");
-    		}
-        }
-        catch (ParserConfigurationException e) {
+            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINER)) {
+                logger.logp(Level.FINER, CLASS_NAME, "parse(InputSource is)", "got new document: [" + document + "]");
+            }
+        } catch (ParserConfigurationException e) {
             throw new JspCoreException(e);
         }
 
         elementStack.push(document);
 
-		if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINER)){
-			logger.logp(Level.FINER, CLASS_NAME, "parse(InputSource is)","about to call parse(false,is), is: ["+is+"]");
-		}
+        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINER)) {
+            logger.logp(Level.FINER, CLASS_NAME, "parse(InputSource is)", "about to call parse(false,is), is: [" + is + "]");
+        }
         if (parse(false, is)) {
-    		if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINER)){
-    			logger.logp(Level.FINER, CLASS_NAME, "parse(InputSource is)","about to call parse(true,is)), is: ["+is+"]");
-    		}
-    		InputStream is2 = null;
-    		try {
-        		is2 = getInputStream(this.inputSource);
-	            InputSource inputSource = new InputSource(is2);    		
-	            parse(true, inputSource);
-    		} finally {
+            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINER)) {
+                logger.logp(Level.FINER, CLASS_NAME, "parse(InputSource is)", "about to call parse(true,is)), is: [" + is + "]");
+            }
+            InputStream is2 = null;
+            try {
+                is2 = getInputStream(this.inputSource);
+                InputSource inputSource = new InputSource(is2);
+                parse(true, inputSource);
+            } finally {
                 if (is2 != null) {
                     try {
                         is2.close();
+                    } catch (IOException e) {
                     }
-                    catch (IOException e) {}
-                }    			
-    		}
+                }
+            }
         }
-        
+
         return document;
     }
-    
+
     protected boolean parse(boolean validating, InputSource is) throws JspCoreException {
         isValidating = validating;
         boolean reparseWithValidation = false;
-        
+
         ClassLoader oldLoader = ThreadContextHelper.getContextClassLoader();
         ThreadContextHelper.setClassLoader(JspDocumentParser.class.getClassLoader());
-		if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINER)){
-			logger.logp(Level.FINER, CLASS_NAME, "(boolean validating, InputSource is)"," validating: ["+validating+"] is: ["+is+"]");
-		}
+        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINER)) {
+            logger.logp(Level.FINER, CLASS_NAME, "(boolean validating, InputSource is)", " validating: [" + validating + "] is: [" + is + "]");
+        }
         try {
             SAXParserFactory saxFactory = SAXParserFactory.newInstance();
             saxFactory.setNamespaceAware(true);
@@ -220,80 +218,75 @@ public class JspDocumentParser extends DefaultHandler implements LexicalHandler 
             XMLReader xmlReader = saxParser.getXMLReader();
             xmlReader.setProperty(LEXICAL_HANDLER_PROPERTY, this);
             xmlReader.setErrorHandler(this);
-    		if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINER)){
-    			logger.logp(Level.FINER, CLASS_NAME, "(boolean validating, InputSource is)"," about to call ParserFactory.parseDocument");
-    		}
+            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINER)) {
+                logger.logp(Level.FINER, CLASS_NAME, "(boolean validating, InputSource is)", " about to call ParserFactory.parseDocument");
+            }
             ParserFactory.parseDocument(saxParser, is, this);
-    		if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINER)){
-    			logger.logp(Level.FINER, CLASS_NAME, "(boolean validating, InputSource is)"," back from ParserFactory.parseDocument");
-    		}
-        }
-        catch (ParserConfigurationException e) {
-    		if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINER)){
-    			logger.logp(Level.FINER, CLASS_NAME, "(boolean validating, InputSource is)"," caught ParserConfigurationException e: ["+e.getMessage()+"]");
-    		}
+            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINER)) {
+                logger.logp(Level.FINER, CLASS_NAME, "(boolean validating, InputSource is)", " back from ParserFactory.parseDocument");
+            }
+        } catch (ParserConfigurationException e) {
+            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINER)) {
+                logger.logp(Level.FINER, CLASS_NAME, "(boolean validating, InputSource is)", " caught ParserConfigurationException e: [" + e.getMessage() + "]");
+            }
             throw new JspCoreException(e);
-        }
-        catch (SAXException e) {
-    		if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINER)){
-    			logger.logp(Level.FINER, CLASS_NAME, "(boolean validating, InputSource is)"," caught SAXException e: ["+e.getMessage()+"]");
-    		}
+        } catch (SAXException e) {
+            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINER)) {
+                logger.logp(Level.FINER, CLASS_NAME, "(boolean validating, InputSource is)", " caught SAXException e: [" + e.getMessage() + "]");
+            }
             if (e.getMessage().equals(DTD_FOUND_MESSAGE)) {
                 reparseWithValidation = true;
-            }
-            else {
+            } else {
                 if (e.getCause() != null)
                     throw new JspCoreException(buildLineNumberMessage(e.getCause().getLocalizedMessage()));
                 else
                     throw new JspCoreException(buildLineNumberMessage(e.getLocalizedMessage()));
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new JspCoreException(buildLineNumberMessage(e.getLocalizedMessage()));
-        }
-        finally {
+        } finally {
             ThreadContextHelper.setClassLoader(oldLoader);
         }
-        
+
         return reparseWithValidation;
     }
-    
-    private InputStream getInputStream(JspInputSource jspInputSource) throws JspCoreException{
+
+    private InputStream getInputStream(JspInputSource jspInputSource) throws JspCoreException {
         InputStream is = null;
         try {
             is = jspInputSource.getInputStream();
-        }
-        catch (IOException e) {
-            String msg = JspCoreException.getMsg("jsp.error.failed.to.find.resource", new Object[] {jspInputSource.getRelativeURL()});
-            throw new JspCoreException(msg, new FileNotFoundException (msg));
+        } catch (IOException e) {
+            String msg = JspCoreException.getMsg("jsp.error.failed.to.find.resource", new Object[] { jspInputSource.getRelativeURL() });
+            throw new JspCoreException(msg, new FileNotFoundException(msg));
         }
         return is;
     }
 
     public void startElement(String uri, String localName, String qName, Attributes attrs) throws SAXException {
-		if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINER)){
-			logger.logp(Level.FINER, CLASS_NAME, "startElement","uri =[" + uri +"]");
-			logger.logp(Level.FINER, CLASS_NAME, "startElement","localName =[" + localName +"]");
-			logger.logp(Level.FINER, CLASS_NAME, "startElement","qName =[" + qName +"]");
-			logger.logp(Level.FINER, CLASS_NAME, "startElement","attrs =[" + attrs +"]");
-			logger.logp(Level.FINER, CLASS_NAME, "startElement","encoding =[" + encoding +"]");
-			logger.logp(Level.FINER, CLASS_NAME, "startElement","jspConfiguration.getPageEncoding() =[" + jspConfiguration.getPageEncoding() +"]");		
-		}
+        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINER)) {
+            logger.logp(Level.FINER, CLASS_NAME, "startElement", "uri =[" + uri + "]");
+            logger.logp(Level.FINER, CLASS_NAME, "startElement", "localName =[" + localName + "]");
+            logger.logp(Level.FINER, CLASS_NAME, "startElement", "qName =[" + qName + "]");
+            logger.logp(Level.FINER, CLASS_NAME, "startElement", "attrs =[" + attrs + "]");
+            logger.logp(Level.FINER, CLASS_NAME, "startElement", "encoding =[" + encoding + "]");
+            logger.logp(Level.FINER, CLASS_NAME, "startElement", "jspConfiguration.getPageEncoding() =[" + jspConfiguration.getPageEncoding() + "]");
+        }
         if (encoding == null) {
-        	if (this.sourceEnc!=null) {
-        		this.encoding=this.sourceEnc;
-	            if (jspConfiguration.getPageEncoding() != null) {
-	            	if (isEncodingSpecifiedInProlog || isBomPresent) {
-		        		if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINER)){
-		        			logger.logp(Level.FINER, CLASS_NAME, "startElement","comparing encodings configuration: =[" + jspConfiguration.getPageEncoding() +"] returned encoding: ["+encoding+"]");
-		        		}
-		                if (compareEncoding(jspConfiguration.getPageEncoding(), encoding) == false) {
-		                    throw new SAXException(
-		                        JspCoreException.getMsg("jsp.error.encoding.mismatch.config.xml", new Object[] { jspConfiguration.getPageEncoding(), encoding }));
-		                }
-	            	}
-	            }
-        	}
+            if (this.sourceEnc != null) {
+                this.encoding = this.sourceEnc;
+                if (jspConfiguration.getPageEncoding() != null) {
+                    if (isEncodingSpecifiedInProlog || isBomPresent) {
+                        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINER)) {
+                            logger.logp(Level.FINER, CLASS_NAME, "startElement",
+                                        "comparing encodings configuration: =[" + jspConfiguration.getPageEncoding() + "] returned encoding: [" + encoding + "]");
+                        }
+                        if (compareEncoding(jspConfiguration.getPageEncoding(), encoding) == false) {
+                            throw new SAXException(JspCoreException.getMsg("jsp.error.encoding.mismatch.config.xml",
+                                                                           new Object[] { jspConfiguration.getPageEncoding(), encoding }));
+                        }
+                    }
+                }
+            }
         }
 
         if (localName.equals(Constants.JSP_INCLUDE_DIRECTIVE_TYPE) && uri.equals(Constants.JSP_NAMESPACE)) {
@@ -306,8 +299,7 @@ public class JspDocumentParser extends DefaultHandler implements LexicalHandler 
                     if (attrLocalName.equals("") == false) {
                         if (attrLocalName.equals("file") == false) {
                             throw new JspCoreException("jsp.error.include.directive.attribute.invalid", new Object[] { attrLocalName });
-                        }
-                        else {
+                        } else {
                             includePath = attrs.getValue("file");
                             seenIncludePath = true;
                         }
@@ -317,12 +309,10 @@ public class JspDocumentParser extends DefaultHandler implements LexicalHandler 
                     throw new JspCoreException("jsp.error.static.include.value.missing");
                 }
                 insertInclude(includePath);
-            }
-            catch (JspCoreException e) {
+            } catch (JspCoreException e) {
                 throw new SAXException(e.getLocalizedMessage());
             }
-        }
-        else {
+        } else {
             Node parentNode = (Node) elementStack.peek();
 
             if (charsBuffers.size() > 0) {
@@ -339,39 +329,37 @@ public class JspDocumentParser extends DefaultHandler implements LexicalHandler 
                     if (attrs.getValue(i).equals(Constants.JSP_NAMESPACE)) {
                         jspPrefix = attrs.getQName(i).substring(attrs.getQName(i).indexOf("xmlns:") + 6);
 
-                    }/*else {       //PK24144-rework
-						jspPrefix = attrs.getQName(i).substring(attrs.getQName(i).indexOf("xmlns:") +6);
-                        if(!jspPrefix.equals(""))
-                            implicitTagLibMap.put(jspPrefix,attrs.getValue(i));
-	            	} //PK24144-rework
-                    */
+                    } /*
+                       * else { //PK24144-rework
+                       * jspPrefix = attrs.getQName(i).substring(attrs.getQName(i).indexOf("xmlns:") +6);
+                       * if(!jspPrefix.equals(""))
+                       * implicitTagLibMap.put(jspPrefix,attrs.getValue(i));
+                       * } //PK24144-rework
+                       */
                     else {
                         // PK24144.2 begin
-                        String thisPrefix=attrs.getQName(i).substring(attrs.getQName(i).indexOf("xmlns:") + 6);
+                        String thisPrefix = attrs.getQName(i).substring(attrs.getQName(i).indexOf("xmlns:") + 6);
                         if (!thisPrefix.equals("")) {
                             tagPrefixes.put(thisPrefix, attrs.getValue(i));
                         }
                         // PK24144.2 end
                     }
-                }
-                else {
+                } else {
                     jspElement.setAttributeNS(attrs.getURI(i), attrs.getQName(i), attrs.getValue(i));
                     if (attrs.getURI(i).equals("") == false) {
-                        attrNames.append(attrs.getURI(i)+":"+attrs.getQName(i)+"~");
-                    }
-                    else {
-                        attrNames.append(attrs.getQName(i)+"~");
+                        attrNames.append(attrs.getURI(i) + ":" + attrs.getQName(i) + "~");
+                    } else {
+                        attrNames.append(attrs.getQName(i) + "~");
                     }
                 }
             }
             String jspId = null;
             if (uri.equals(Constants.JSP_NAMESPACE) == false && attrNames.length() > 0) {
                 jspId = "{" + attrNames.toString() + "}" + encodedRelativeURL + "[" + lastLineNum + "," + lastColNum + "," + (locator.getLineNumber() - (lastLineNum - 1)) + "]";
-            }
-            else {
+            } else {
                 jspId = encodedRelativeURL + "[" + lastLineNum + "," + lastColNum + "," + (locator.getLineNumber() - (lastLineNum - 1)) + "]";
             }
-            
+
             jspElement.setAttributeNS(Constants.JSP_NAMESPACE, "jsp:id", jspId); //245645.1
 
             if (uri.equals(Constants.JSP_NAMESPACE) && localName.equals(Constants.JSP_PAGE_DIRECTIVE_TYPE)) {
@@ -380,28 +368,26 @@ public class JspDocumentParser extends DefaultHandler implements LexicalHandler 
                         pageEncodingSpecified = true;
                         if (jspConfiguration.getPageEncoding() != null) {
                             if (compareEncoding(jspConfiguration.getPageEncoding(), encoding) == false) {
-                                throw new SAXException(
-                                    JspCoreException.getMsg("jsp.error.encoding.mismatch.config.xml", new Object[] { jspConfiguration.getPageEncoding(), encoding }));
+                                throw new SAXException(JspCoreException.getMsg("jsp.error.encoding.mismatch.config.xml",
+                                                                               new Object[] { jspConfiguration.getPageEncoding(), encoding }));
                             }
                             if (compareEncoding(jspConfiguration.getPageEncoding(), jspElement.getAttribute("pageEncoding")) == false) {
-                                throw new SAXException(
-                                    JspCoreException.getMsg(
-                                        "jsp.error.encoding.mismatch.config.pageencoding",
-                                        new Object[] { jspConfiguration.getPageEncoding(), jspElement.getAttribute("pageEncoding")}));
+                                throw new SAXException(JspCoreException.getMsg(
+                                                                               "jsp.error.encoding.mismatch.config.pageencoding",
+                                                                               new Object[] { jspConfiguration.getPageEncoding(), jspElement.getAttribute("pageEncoding") }));
                             }
                         }
 
                         if (compareEncoding(jspElement.getAttribute("pageEncoding"), encoding) == false) {
-                            throw new SAXException(
-                                JspCoreException.getMsg("jsp.error.encoding.mismatch.pageencoding.xml", new Object[] { jspElement.getAttribute("pageEncoding"), encoding }));
+                            throw new SAXException(JspCoreException.getMsg("jsp.error.encoding.mismatch.pageencoding.xml",
+                                                                           new Object[] { jspElement.getAttribute("pageEncoding"), encoding }));
                         }
 
                         if (jspConfiguration.getPageEncoding() == null) {
                             jspConfiguration.setPageEncoding(encoding);
                         }
-                    }
-                    else {
-                        throw new SAXException(JspCoreException.getMsg("jsp.error.page.pageencoding.dup", new Object[] { resolvedRelativeURL}));
+                    } else {
+                        throw new SAXException(JspCoreException.getMsg("jsp.error.page.pageencoding.dup", new Object[] { resolvedRelativeURL }));
                     }
                 }
             }
@@ -415,8 +401,7 @@ public class JspDocumentParser extends DefaultHandler implements LexicalHandler 
                 if (jspConfiguration.getPreludeList().size() > 0) {
                     try {
                         insertImplictIncludes(jspConfiguration.getPreludeList());
-                    }
-                    catch (JspCoreException e) {
+                    } catch (JspCoreException e) {
                         throw new SAXException(e.getLocalizedMessage());
                     }
                 }
@@ -457,41 +442,38 @@ public class JspDocumentParser extends DefaultHandler implements LexicalHandler 
         lastLineNum = locator.getLineNumber();
         lastColNum = locator.getColumnNumber();
     }
-    
+
     public void endElement(String uri, String localName, String qName) throws SAXException {
         Node node = null;
         CharacterBuffer chars = (CharacterBuffer) charsBuffers.pop();
         if (uri.equals(Constants.JSP_NAMESPACE)) {
-            if (localName.equals(Constants.JSP_DECLARATION_TYPE) || 
-                localName.equals(Constants.JSP_EXPRESSION_TYPE) || 
+            if (localName.equals(Constants.JSP_DECLARATION_TYPE) ||
+                localName.equals(Constants.JSP_EXPRESSION_TYPE) ||
                 localName.equals(Constants.JSP_SCRIPTLET_TYPE)) {
                 String jspText = chars.charsBuffer.toString();
                 CDATASection cdata = document.createCDATASection(jspText);
                 node = (Node) elementStack.pop();
                 node.appendChild(cdata);
-            }
-            else if (localName.equals(Constants.JSP_INCLUDE_DIRECTIVE_TYPE)) {}
-            else {
+            } else if (localName.equals(Constants.JSP_INCLUDE_DIRECTIVE_TYPE)) {
+            } else {
                 node = getJspElement();
                 createJspTextElement(node, chars.charsBuffer);
             }
-        }
-        else {
+        } else {
             node = getJspElement();
             createJspTextElement(node, chars.charsBuffer);
         }
         if (node != null && node.getParentNode() instanceof Document) {
-            elementStack.push(node);    
+            elementStack.push(node);
             if (jspConfiguration.getCodaList().size() > 0) {
                 try {
                     insertImplictIncludes(jspConfiguration.getCodaList());
-                }
-                catch (JspCoreException e) {
+                } catch (JspCoreException e) {
                     throw new SAXException(e.getLocalizedMessage());
                 }
             }
             elementStack.pop();
-        }                    
+        }
         lastLineNum = locator.getLineNumber();
         lastColNum = locator.getColumnNumber();
         chars = null;
@@ -520,15 +502,15 @@ public class JspDocumentParser extends DefaultHandler implements LexicalHandler 
 
     public void comment(char[] buf, int offset, int len) throws SAXException {
         if (inDTD == false) {
-            /*                        
-                        Node node = (Node)elementStack.peek();
-                        CDATASection cdata = document.createCDATASection("<!--" + new String(buf, offset, len) + "-->");
-                        Element jspTextElement = document.createElementNS(Constants.JSP_NAMESPACE, "jsp:text");
-                        jspTextElement.appendChild(cdata);
-                        if (node instanceof Document)
-                            preRootCommentList.add(jspTextElement);
-                        else
-                            node.appendChild(jspTextElement);
+            /*
+             * Node node = (Node)elementStack.peek();
+             * CDATASection cdata = document.createCDATASection("<!--" + new String(buf, offset, len) + "-->");
+             * Element jspTextElement = document.createElementNS(Constants.JSP_NAMESPACE, "jsp:text");
+             * jspTextElement.appendChild(cdata);
+             * if (node instanceof Document)
+             * preRootCommentList.add(jspTextElement);
+             * else
+             * node.appendChild(jspTextElement);
              */
         }
         lastLineNum = locator.getLineNumber();
@@ -539,16 +521,19 @@ public class JspDocumentParser extends DefaultHandler implements LexicalHandler 
         this.locator = locator;
     }
 
-    public void startCDATA() throws SAXException {}
+    public void startCDATA() throws SAXException {
+    }
 
     public void endCDATA() throws SAXException {
         CharacterBuffer chars = (CharacterBuffer) charsBuffers.peek();
         chars.clearNonWhiteSpaceFound();
     }
 
-    public void startEntity(String name) throws SAXException {}
+    public void startEntity(String name) throws SAXException {
+    }
 
-    public void endEntity(String name) throws SAXException {}
+    public void endEntity(String name) throws SAXException {
+    }
 
     public void startDTD(String name, String publicId, String systemId) throws SAXException {
         inDTD = true;
@@ -572,25 +557,24 @@ public class JspDocumentParser extends DefaultHandler implements LexicalHandler 
     private void insertInclude(String includePath) throws JspCoreException {
 
         String fullPath = null;
-        
+
         if (includePath.startsWith("/") == false) {
             int lastLocation = this.resolvedRelativeURL.lastIndexOf("/");
             if (lastLocation > 0) {
-                includePath = WSUtil.resolveURI(this.resolvedRelativeURL.substring(0, lastLocation+1) + includePath);
-            }
-            else {
-                includePath = WSUtil.resolveURI("/"+ includePath);
+                includePath = WSUtil.resolveURI(this.resolvedRelativeURL.substring(0, lastLocation + 1) + includePath);
+            } else {
+                includePath = WSUtil.resolveURI("/" + includePath);
             }
         }
 
         Container container = ctxt.getServletContext().getModuleContainer();
-        if (container!=null) {
+        if (container != null) {
             Entry e = container.getEntry(includePath);
-            if (e!=null) {
+            if (e != null) {
                 fullPath = e.getPath();
                 try {
-                    Container convertedContainer = e.adapt(Container.class); 
-                    if (convertedContainer!=null && e.getSize()==0 && !WCCustomProperties.ALLOW_DIRECTORY_INCLUDE)
+                    Container convertedContainer = e.adapt(Container.class);
+                    if (convertedContainer != null && e.getSize() == 0 && !WCCustomProperties.ALLOW_DIRECTORY_INCLUDE)
                         return;
                 } catch (UnableToAdaptException ex) {
                     throw new IllegalStateException(ex);
@@ -606,7 +590,6 @@ public class JspDocumentParser extends DefaultHandler implements LexicalHandler 
             //PM22082
         }
 
-        
         if (dependencyStack.contains(fullPath))
             throw new JspCoreException("jsp.error.static.include.circular.dependency", new Object[] { fullPath });
         dependencyStack.push(fullPath);
@@ -621,16 +604,9 @@ public class JspDocumentParser extends DefaultHandler implements LexicalHandler 
         Map mergedTagLibMap = new HashMap(implicitTagLibMap);
         mergedTagLibMap.putAll(tagPrefixes);
         // PK24144.2 end
-        Jsp2Dom jsp2Dom = new Jsp2Dom(includePathInputSource, 
-                                      ctxt, 
-                                      directoryStack, 
-                                      includeConfiguration, 
-                                      jspOptions,  //396002
-                                      dependencyStack, 
-                                      dependencyList, 
-                                      cdataJspIdMap, 
-                                      mergedTagLibMap, // PK24144.2
-                                      true);
+        Jsp2Dom jsp2Dom = new Jsp2Dom(includePathInputSource, ctxt, directoryStack, includeConfiguration, jspOptions, //396002
+                        dependencyStack, dependencyList, cdataJspIdMap, mergedTagLibMap, // PK24144.2
+                        true);
         Document includeDocument = jsp2Dom.getJspDocument();
         Node parentNode = (Node) elementStack.peek();
         if (includeDocument.getDocumentElement().getNamespaceURI() != null
@@ -648,8 +624,7 @@ public class JspDocumentParser extends DefaultHandler implements LexicalHandler 
                 }
                 parentNode.appendChild(n);
             }
-        }
-        else {
+        } else {
             for (int i = 0; i < includeDocument.getChildNodes().getLength(); i++) {
                 Node n = document.importNode(includeDocument.getChildNodes().item(i), true);
                 parentNode.appendChild(n);
@@ -672,8 +647,7 @@ public class JspDocumentParser extends DefaultHandler implements LexicalHandler 
 
         if (enc1.equalsIgnoreCase(enc2)) {
             equal = true;
-        }
-        else if (enc1.toUpperCase().startsWith("UTF-16") && enc2.toUpperCase().startsWith("UTF-16")) {
+        } else if (enc1.toUpperCase().startsWith("UTF-16") && enc2.toUpperCase().startsWith("UTF-16")) {
             equal = true;
         }
 
@@ -691,19 +665,19 @@ public class JspDocumentParser extends DefaultHandler implements LexicalHandler 
             insertInclude(includePath);
         }
     }
-    
+
     private class CharacterBuffer {
         StringBuffer charsBuffer = new StringBuffer();
         private boolean nonWhiteSpaceFound = false;
-            
+
         public boolean isNonWhiteSpaceFound() {
             return nonWhiteSpaceFound;
         }
-        
+
         public void setNonWhiteSpaceFound() {
             nonWhiteSpaceFound = true;
         }
-        
+
         public void clearNonWhiteSpaceFound() {
             nonWhiteSpaceFound = false;
         }

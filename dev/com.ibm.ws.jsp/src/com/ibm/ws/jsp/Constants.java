@@ -15,23 +15,23 @@ public class Constants {
     public static final String JSP_SERVLET_BASE = "com.ibm.ws.jsp.runtime.HttpJspBase";
     public static final String SERVICE_METHOD_NAME = "_jspService";
     public static final String[] STANDARD_IMPORTS = {
-                                                     "javax.servlet.*",
-                                                     "javax.servlet.http.*",
-                                                     "javax.servlet.jsp.*"
+                                                      "javax.servlet.*",
+                                                      "javax.servlet.http.*",
+                                                      "javax.servlet.jsp.*"
     };
 
     public static final String[] STANDARD_JSP_EXTENSIONS = {
-                                                            "*.jsp",
-                                                            "*.jspx",
-                                                            "*.jsw",
-                                                            "*.jsv"
+                                                             "*.jsp",
+                                                             "*.jspx",
+                                                             "*.jsw",
+                                                             "*.jsv"
     };
 
     public static final String[] STANDARD_REQUIRED_JSP_JARS_FROM_LIB = {
-                    "j2ee.jar"
+                                                                         "j2ee.jar"
     };
     public static final String[] STANDARD_REQUIRED_JSP_JARS = {
-                    "com.ibm.ws.webcontainer_8.0.jar"
+                                                                "com.ibm.ws.webcontainer_8.0.jar"
     };
 
     public static final int K = 1024;

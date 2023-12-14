@@ -18,13 +18,15 @@ package com.ibm.wsspi.jsp.compiler;
 public interface JspCompilerResult {
     /**
      * Returns the return code for the java compile
+     * 
      * @return int java compile return code. Non-zero is treated as a compile failure
      */
     int getCompilerReturnValue();
-    
+
     /**
      * Returns any messages that the java compiler produced. When a compile fails this method is called
      * to provide the error message that is passed back to the caller of the JSP.
+     * 
      * @return
      */
     String getCompilerMessage();
@@ -32,6 +34,7 @@ public interface JspCompilerResult {
     //PK72039
     /**
      * Returns a List of JSPs which failed to compile in a directory during batch compilation.
+     * 
      * @return List
      */
     java.util.List getCompilerFailureFileNames();

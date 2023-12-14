@@ -12,9 +12,8 @@
  *******************************************************************************/
 package com.ibm.ws.jsp.configuration;
 
-
 public class StaticIncludeJspConfiguration extends JspConfiguration {
     public StaticIncludeJspConfiguration(JspConfiguration parentConfig) {
-        super(parentConfig.getConfigManager(), parentConfig.getServletVersion(), parentConfig.getJspVersion(), parentConfig.isXml(), parentConfig.isXmlSpecified(), parentConfig.elIgnored(), parentConfig.errorOnELNotFound(), parentConfig.scriptingInvalid(), parentConfig.isTrimDirectiveWhitespaces(), parentConfig.isDeferredSyntaxAllowedAsLiteral(), parentConfig.getTrimDirectiveWhitespaces(), parentConfig.getDeferredSyntaxAllowedAsLiteral(), parentConfig.elIgnoredSetTrueInPropGrp(), parentConfig.elIgnoredSetTrueInPage(), parentConfig.errorOnELNotFoundSetTrueInPropGrp(), parentConfig.errorOnELNotFoundSetTrueInPage(), parentConfig.getDefaultContentType(), parentConfig.getBuffer(), parentConfig.isErrorOnUndeclaredNamespace()); 
+        super(parentConfig.getConfigManager(), parentConfig.getServletVersion(), parentConfig.getJspVersion(), parentConfig.isXml(), parentConfig.isXmlSpecified(), parentConfig.elIgnored(), parentConfig.errorOnELNotFound(), parentConfig.scriptingInvalid(), parentConfig.isTrimDirectiveWhitespaces(), parentConfig.isDeferredSyntaxAllowedAsLiteral(), parentConfig.getTrimDirectiveWhitespaces(), parentConfig.getDeferredSyntaxAllowedAsLiteral(), parentConfig.elIgnoredSetTrueInPropGrp(), parentConfig.elIgnoredSetTrueInPage(), parentConfig.errorOnELNotFoundSetTrueInPropGrp(), parentConfig.errorOnELNotFoundSetTrueInPage(), parentConfig.getDefaultContentType(), parentConfig.getBuffer(), parentConfig.isErrorOnUndeclaredNamespace());
     }
 }

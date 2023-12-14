@@ -18,19 +18,19 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 public class JspMessages {
-    private static ResourceBundle NLS_BUNDLE; 
+    private static ResourceBundle NLS_BUNDLE;
     static {
-        try{
+        try {
             NLS_BUNDLE = ResourceBundle.getBundle("com.ibm.ws.jsp.resources.messages", Locale.getDefault());
-        } catch (Exception e){
+        } catch (Exception e) {
             NLS_BUNDLE = ResourceBundle.getBundle("com.ibm.ws.jsp.resources.messages");
         }
     }
-  
-    public static String getMessage(String key){
-        return getMessage (key, null);
+
+    public static String getMessage(String key) {
+        return getMessage(key, null);
     }
-  
+
     public static String getMessage(String key, Object[] args) {
         String msg = null;
         try {

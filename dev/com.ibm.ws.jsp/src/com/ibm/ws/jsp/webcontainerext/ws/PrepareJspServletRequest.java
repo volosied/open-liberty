@@ -13,17 +13,18 @@
 package com.ibm.ws.jsp.webcontainerext.ws;
 
 import javax.servlet.http.HttpServletRequest;
+
 /**
  *
  */
 public interface PrepareJspServletRequest {
-    
+
     public void setQueryString(String string);
 
     public void setRequestURI(String string);
 
     public void setServletPath(String string);
-    
+
     public HttpServletRequest getHttpServletRequest();
 
 }

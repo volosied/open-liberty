@@ -26,21 +26,21 @@ public class JspTranslationEnvironmentImpl implements JspTranslationEnvironment 
     private JspResourcesFactory jspResourcesFactory = null;
     private JspClassloaderContext jspClassloaderContext = null;
     private JspCompilerFactory jspCompilerFactory = null;
-    
-    public JspTranslationEnvironmentImpl(String outputDir, 
-                                         String contextRoot, 
+
+    public JspTranslationEnvironmentImpl(String outputDir,
+                                         String contextRoot,
                                          JspInputSourceFactory jspInputSourceFactory,
-                                         JspResourcesFactory jspResourcesFactory, 
+                                         JspResourcesFactory jspResourcesFactory,
                                          JspClassloaderContext jspClassloaderContext,
                                          JspCompilerFactory jspCompilerFactory) {
         this.outputDir = outputDir;
         this.contextRoot = contextRoot;
         this.jspInputSourceFactory = jspInputSourceFactory;
-        this.jspResourcesFactory = jspResourcesFactory; 
+        this.jspResourcesFactory = jspResourcesFactory;
         this.jspClassloaderContext = jspClassloaderContext;
-        this.jspCompilerFactory = jspCompilerFactory;    
+        this.jspCompilerFactory = jspCompilerFactory;
     }
-    
+
     public String mangleClassName(String jspFileName) {
         return (NameMangler.mangleClassName(jspFileName));
     }
@@ -52,15 +52,15 @@ public class JspTranslationEnvironmentImpl implements JspTranslationEnvironment 
     public String getContextRoot() {
         return contextRoot;
     }
-    
+
     public JspInputSourceFactory getDefaultJspInputSourceFactory() {
-        return jspInputSourceFactory; 
+        return jspInputSourceFactory;
     }
 
     public JspResourcesFactory getDefaultJspResourcesFactory() {
         return jspResourcesFactory;
     }
-    
+
     public JspClassloaderContext getDefaultJspClassloaderContext() {
         return jspClassloaderContext;
     }

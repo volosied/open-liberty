@@ -44,30 +44,35 @@ public class Query {
 
     /*
      * This method was created in VisualAge.
+     * 
      * @param qs java.lang.String
+     * 
      * @param qr com.ibm.websphere.jsp.QueryResults
      */
     protected Query() {
         // do nothing   
     }
+
     /**
      * This method was created in VisualAge.
+     * 
      * @param cp com.ibm.websphere.jsp.ConnectionProperties
      */
     public Query(ConnectionProperties cp, String queryString) throws JspCoreException {
         setConnProperties(cp);
         setQueryString(queryString);
     }
+
     /**
      * This method was created in VisualAge.
+     * 
      * @return com.ibm.websphere.jsp.QueryResults
      */
     public QueryResults execute() throws JspCoreException, SQLException {
 
         Connection conn = null;
         Statement stmt = null;
-        ResultSet rs = null;
-        ;
+        ResultSet rs = null;;
         QueryResults qs = null;
         // verify all parameters
         verify();
@@ -85,12 +90,10 @@ public class Query {
             rs = stmt.executeQuery(getQueryString());
             qs = new QueryResults();
             qs.compute(rs);
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             //com.ibm.ws.ffdc.FFDCFilter.processException(e, "com.ibm.ws.webcontainer.jsp.tsx.db.Query.execute", "73", this);
             throw e;
-        }
-        finally { // always free up database resources
+        } finally { // always free up database resources
             if (rs != null)
                 rs.close();
             if (stmt != null)
@@ -114,33 +117,38 @@ public class Query {
             conn = getJdbcConnection();
             stmt = conn.createStatement();
             stmt.executeUpdate(getQueryString());
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             //com.ibm.ws.ffdc.FFDCFilter.processException(e, "com.ibm.ws.webcontainer.jsp.tsx.db.Query.executeUpdate", "101", this);
             throw e;
-        }
-        finally { // always free up database resources
+        } finally { // always free up database resources
             if (stmt != null)
                 stmt.close();
             if (conn != null)
                 conn.close();
         }
-    } /**
-         * This method was created in VisualAge.
-         * @return com.ibm.websphere.jsp.ConnectionProperties
-         */
+    }
+
+    /**
+     * This method was created in VisualAge.
+     * 
+     * @return com.ibm.websphere.jsp.ConnectionProperties
+     */
     protected ConnectionProperties getConnProperties() {
         return connProperties;
     }
+
     /**
      * This method was created in VisualAge.
+     * 
      * @return java.lang.String
      */
     protected String getQueryString() {
         return queryString;
     }
+
     /**
      * This method was created in VisualAge.
+     * 
      * @return com.ibm.websphere.jsp.QueryResults
      */
     protected QueryResults getResults() {
@@ -149,6 +157,7 @@ public class Query {
 
     /**
      * This method was created in VisualAge.
+     * 
      * @param newValue int
      */
     public void setMaxRows(int newValue) {
@@ -158,15 +167,17 @@ public class Query {
 
     /**
      * This method was created in VisualAge.
+     * 
      * @return int
      */
     protected int getMaxRows() {
         return this.maxRows;
     }
 
-    /** Return a valid jdbc connection.
-     *  if jndiName is specified then assume that we need to use a datasource 
-     *    else use a drivermanager
+    /**
+     * Return a valid jdbc connection.
+     * if jndiName is specified then assume that we need to use a datasource
+     * else use a drivermanager
      */
     private Connection getJdbcConnection() throws JspCoreException, SQLException {
 
@@ -195,8 +206,7 @@ public class Query {
             DataSource ds;
             try {
                 ds = getSingleton(jndiName);
-            }
-            catch (Throwable th) {
+            } catch (Throwable th) {
                 //com.ibm.ws.ffdc.FFDCFilter.processException(th, "com.ibm.ws.webcontainer.jsp.tsx.db.Query.getJdbcConnection", "184", this);
                 throw new JspCoreException(JspConstants.DatasourceException + th.getMessage());
             }
@@ -206,10 +216,12 @@ public class Query {
         return conn;
     }
 
-    /*=========================================================================
-     *      Private Utility functions
+    /*
+     * =========================================================================
+     * Private Utility functions
      *
-     *======================================================================== */
+     * ========================================================================
+     */
 
     /** 
     */
@@ -236,8 +248,7 @@ public class Query {
         DataSource dataSource = null;
         try {
             dataSource = (DataSource) ic.lookup(datasourceName);
-        }
-        catch (Throwable th) {
+        } catch (Throwable th) {
             throw new JspCoreException("Error looking up DataSource " + dataSource + " " + th.getMessage());
         }
         datasources.put(datasourceName, dataSource);
@@ -254,45 +265,43 @@ public class Query {
         return ic;
     }
 
-    private static synchronized InitialContext getInitialContext() throws JspCoreException
-    {
+    private static synchronized InitialContext getInitialContext() throws JspCoreException {
         if (ic != null) {
             return ic;
         }
         InitialContext initialContext = null;
-//PQ84248 part 1 begin
+        //PQ84248 part 1 begin
         try {
-        	initialContext = new InitialContext();
-        }
-        catch (Throwable th) {
+            initialContext = new InitialContext();
+        } catch (Throwable th) {
         }
 
-	 if (initialContext == null) { 
-//PQ84248 part 1 end 
-        Properties p = new Properties();
-        p.put (Context.INITIAL_CONTEXT_FACTORY, icClass);
-        p.put (Context.PROVIDER_URL,            icProvider);
-        try {
-            initialContext = new InitialContext(p);
-            if (initialContext == null) {
-                throw new JspCoreException("null pointer returned for InitalContext");
+        if (initialContext == null) {
+            //PQ84248 part 1 end 
+            Properties p = new Properties();
+            p.put(Context.INITIAL_CONTEXT_FACTORY, icClass);
+            p.put(Context.PROVIDER_URL, icProvider);
+            try {
+                initialContext = new InitialContext(p);
+                if (initialContext == null) {
+                    throw new JspCoreException("null pointer returned for InitalContext");
+                }
+            } catch (Throwable th) {
+                com.ibm.ws.ffdc.FFDCFilter.processException(th, "com.ibm.ws.webcontainer.jsp.tsx.db.Query.getInitialContext", "266");
+                throw new JspCoreException("Error getting InitialContext, " + th.getMessage());
             }
+            //PQ84248 part 2 begin 
         }
-        catch (Throwable th) {
-        	com.ibm.ws.ffdc.FFDCFilter.processException(th, "com.ibm.ws.webcontainer.jsp.tsx.db.Query.getInitialContext", "266");
-            throw new JspCoreException("Error getting InitialContext, " + th.getMessage());
-        }
-       //PQ84248 part 2 begin 
-       }
-       //PQ84248 part 2 end
+        //PQ84248 part 2 end
         ic = initialContext;
         return ic;
     }
 
     /**
-    * This method was created in VisualAge.
-    * @param args java.lang.String[]
-    */
+     * This method was created in VisualAge.
+     * 
+     * @param args java.lang.String[]
+     */
     public static void main(String args[]) {
         String dbDriver = "COM.ibm.db2.jdbc.app.DB2Driver";
         String url = "jdbc:db2:sample";
@@ -309,25 +318,29 @@ public class Query {
                 String dept = qs.getValue("DEPTNAME", i);
                 System.out.println("Department:" + dept);
             }
-            /*Enumeration enum= qs.getRows();
-            while (enum.hasMoreElements())
-              {
-              QueryRow qr = (QueryRow)enum.nextElement();
-              String fn = qr.getValue("DEPT");
-              String ln = qr.getValue("DEPTNAME");
-            //  String bd = qr.getValue("BIRTHDATE");
-              //String sal = qr.getValue("SALARY");
-              System.out.println(fn + " " + ln);
-            
-              }*/ // while
+            /*
+             * Enumeration enum= qs.getRows();
+             * while (enum.hasMoreElements())
+             * {
+             * QueryRow qr = (QueryRow)enum.nextElement();
+             * String fn = qr.getValue("DEPT");
+             * String ln = qr.getValue("DEPTNAME");
+             * // String bd = qr.getValue("BIRTHDATE");
+             * //String sal = qr.getValue("SALARY");
+             * System.out.println(fn + " " + ln);
+             * 
+             * }
+             */ // while
         } // try
         catch (Exception e) {
             //com.ibm.ws.ffdc.FFDCFilter.processException(e, "com.ibm.ws.webcontainer.jsp.tsx.db.Query.main", "310");
             System.out.println("Exception:: " + e.getMessage());
         } //catch
     } //main
+
     /**
      * This method was created in VisualAge.
+     * 
      * @param args java.lang.String[]
      */
     public static void main2(String args[]) {
@@ -353,15 +366,16 @@ public class Query {
                 sal = qs.getValue("SALARY");
                 System.out.println(fn + " " + ln + " birthdate " + bd + " salary " + sal);
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             //com.ibm.ws.ffdc.FFDCFilter.processException(e, "com.ibm.ws.webcontainer.jsp.tsx.db.Query.main2", "348");
             System.out.println("Exception: " + e.getMessage());
         }
         System.out.println("All is Fine!");
     }
+
     /**
      * This method was created in VisualAge.
+     * 
      * @param args java.lang.String[]
      */
     public static void main3(String args[]) {
@@ -392,26 +406,26 @@ public class Query {
             } // while
 
             /*
-              while (qs.next())
-                {
-                fn = qs.getValue("FIRSTNME");
-                ln = qs.getValue("LASTNAME");
-                bd = qs.getValue("BIRTHDATE");
-                sal = qs.getValue("SALARY");
-                System.out.println(fn + " " + ln +
-                                   " birthdate " + bd +
-                                   " salary " + sal);
-                }
-                
-              qs.setCurrRow(5);
-              fn = qs.getValue("FIRSTNME");
-              ln = qs.getValue("LASTNAME");
-              bd = qs.getValue("BIRTHDATE");
-              sal = qs.getValue("SALARY");
-              System.out.println(fn + " " + ln +
-                                   " birthdate " + bd +
-                                   " salary " + sal);
-            */
+             * while (qs.next())
+             * {
+             * fn = qs.getValue("FIRSTNME");
+             * ln = qs.getValue("LASTNAME");
+             * bd = qs.getValue("BIRTHDATE");
+             * sal = qs.getValue("SALARY");
+             * System.out.println(fn + " " + ln +
+             * " birthdate " + bd +
+             * " salary " + sal);
+             * }
+             * 
+             * qs.setCurrRow(5);
+             * fn = qs.getValue("FIRSTNME");
+             * ln = qs.getValue("LASTNAME");
+             * bd = qs.getValue("BIRTHDATE");
+             * sal = qs.getValue("SALARY");
+             * System.out.println(fn + " " + ln +
+             * " birthdate " + bd +
+             * " salary " + sal);
+             */
 
         } // try
         catch (Exception e) {
@@ -420,8 +434,10 @@ public class Query {
         }
         System.out.println("All is Fine!!!!!");
     }
+
     /**
      * This method was created in VisualAge.
+     * 
      * @param args java.lang.String[]
      */
     public static void mainold(String args[]) {
@@ -451,15 +467,19 @@ public class Query {
             System.out.println("Exception:: " + e.getMessage());
         } //catch
     } //main
+
     /**
      * This method was created in VisualAge.
+     * 
      * @param newValue com.ibm.websphere.jsp.ConnectionProperties
      */
     public void setConnProperties(ConnectionProperties newValue) {
         this.connProperties = newValue;
     }
+
     /**
      * This method was created in VisualAge.
+     * 
      * @param newValue java.lang.String
      */
     protected void setQueryString(String newValue) throws JspCoreException {
@@ -482,13 +502,16 @@ public class Query {
         } // for
         this.queryString = buff.toString().trim();
     }
+
     /**
      * This method was created in VisualAge.
+     * 
      * @param newValue com.ibm.websphere.jsp.QueryResults
      */
     protected void setResults(QueryResults newValue) {
         this.results = newValue;
     }
+
     /**
      * This method was created in VisualAge.
      */

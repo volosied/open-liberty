@@ -74,6 +74,7 @@ import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.BodyContent;
 
 import com.ibm.wsspi.webcontainer.WCCustomProperties;
+
 /**
  * Write text to a character-output stream, buffering characters so as
  * to provide for the efficient writing of single characters, arrays,
@@ -86,17 +87,17 @@ import com.ibm.wsspi.webcontainer.WCCustomProperties;
  */
 public class BodyContentImpl extends BodyContent {
     static protected Logger logger;
-    private static final String CLASS_NAME="org.apache.jasper.runtime.BodyContentImpl";
+    private static final String CLASS_NAME = "org.apache.jasper.runtime.BodyContentImpl";
     static {
         logger = Logger.getLogger("com.ibm.ws.jsp");
     }
     public static final int DEFAULT_TAG_BUFFER_SIZE = 512;
 
-    private static final String LINE_SEPARATOR = (String)AccessController.doPrivileged(new PrivilegedAction() {
-                                                                                           public Object run() {
-                                                                                                return System.getProperty("line.separator");
-                                                                                           }
-                                                                                       });
+    private static final String LINE_SEPARATOR = (String) AccessController.doPrivileged(new PrivilegedAction() {
+        public Object run() {
+            return System.getProperty("line.separator");
+        }
+    });
 
     protected int bodyContentBuffSize = DEFAULT_TAG_BUFFER_SIZE; //PK04091 - new variable
     private StringBuffer strBuffer; // PK33136
@@ -109,14 +110,15 @@ public class BodyContentImpl extends BodyContent {
     // See comment in setWriter()
     private int bufferSizeSave;
 
-    private static boolean limitBuffer = WCCustomProperties.LIMIT_BUFFER;	//PK95332
+    private static boolean limitBuffer = WCCustomProperties.LIMIT_BUFFER; //PK95332
+
     /**
      * Constructor.
      */
     public BodyContentImpl(JspWriter enclosingWriter) {
         this(enclosingWriter, DEFAULT_TAG_BUFFER_SIZE);
-        if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE)){
-            logger.logp(Level.FINE, CLASS_NAME, "BodyContentImpl", "BodyContentImpl ctor 1 buffsize=["+DEFAULT_TAG_BUFFER_SIZE+"]  this=["+this+"]");
+        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
+            logger.logp(Level.FINE, CLASS_NAME, "BodyContentImpl", "BodyContentImpl ctor 1 buffsize=[" + DEFAULT_TAG_BUFFER_SIZE + "]  this=[" + this + "]");
         }
     }
 
@@ -125,14 +127,14 @@ public class BodyContentImpl extends BodyContent {
      */
     public BodyContentImpl(JspWriter enclosingWriter, int bodyContentBuffSize) {
         super(enclosingWriter);
-        this.bodyContentBuffSize=bodyContentBuffSize; //PK04091
+        this.bodyContentBuffSize = bodyContentBuffSize; //PK04091
         this.bufferSize = bodyContentBuffSize;
         this.bufferSizeSave = this.bufferSize;
         strBuffer = new StringBuffer(bufferSize); // PK33136
         nextChar = 0;
         closed = false;
-        if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE)){
-            logger.logp(Level.FINE, CLASS_NAME, "BodyContentImpl", "BodyContentImpl ctor 2 buffsize=["+this.bodyContentBuffSize+"]  this=["+this+"]");
+        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
+            logger.logp(Level.FINE, CLASS_NAME, "BodyContentImpl", "BodyContentImpl ctor 2 buffsize=[" + this.bodyContentBuffSize + "]  this=[" + this + "]");
         }
     }
 
@@ -140,15 +142,15 @@ public class BodyContentImpl extends BodyContent {
      * Write a single character.
      */
     public void write(int c) throws IOException {
-	    if (writer != null) {
-	        writer.write(c);
-	    } else {
-	        ensureOpen();
-	        //PK33136
-	        strBuffer.append((char)c);
-	        ++nextChar;
-			//PK33136
-	    }
+        if (writer != null) {
+            writer.write(c);
+        } else {
+            ensureOpen();
+            //PK33136
+            strBuffer.append((char) c);
+            ++nextChar;
+            //PK33136
+        }
     }
 
     /**
@@ -156,95 +158,95 @@ public class BodyContentImpl extends BodyContent {
      *
      * <p> Ordinarily this method stores characters from the given array into
      * this stream's buffer, flushing the buffer to the underlying stream as
-     * needed.  If the requested length is at least as large as the buffer,
+     * needed. If the requested length is at least as large as the buffer,
      * however, then this method will flush the buffer and write the characters
-     * directly to the underlying stream.  Thus redundant
+     * directly to the underlying stream. Thus redundant
      * <code>DiscardableBufferedWriter</code>s will not copy data
      * unnecessarily.
      *
      * @param cbuf A character array
-     * @param off Offset from which to start reading characters
-     * @param len Number of characters to write
+     * @param off  Offset from which to start reading characters
+     * @param len  Number of characters to write
      */
     public void write(char[] cbuf, int off, int len) throws IOException {
-	    if (writer != null) {
-	        writer.write(cbuf, off, len);
-	    } else {
-	        ensureOpen();
-	
-	        if ((off < 0) || (off > cbuf.length) || (len < 0) ||
-	        ((off + len) > cbuf.length) || ((off + len) < 0)) {
-	        	throw new IndexOutOfBoundsException();
-	        } else if (len == 0) {
-	        	return;
-	        }
-			//PK33136
-	        strBuffer.append(cbuf, off, len);
-	        nextChar+=len;
-	        //PK33136
-	    }
+        if (writer != null) {
+            writer.write(cbuf, off, len);
+        } else {
+            ensureOpen();
+
+            if ((off < 0) || (off > cbuf.length) || (len < 0) ||
+                ((off + len) > cbuf.length) || ((off + len) < 0)) {
+                throw new IndexOutOfBoundsException();
+            } else if (len == 0) {
+                return;
+            }
+            //PK33136
+            strBuffer.append(cbuf, off, len);
+            nextChar += len;
+            //PK33136
+        }
     }
 
     /**
-     * Write an array of characters.  This method cannot be inherited from the
+     * Write an array of characters. This method cannot be inherited from the
      * Writer class because it must suppress I/O exceptions.
      */
     public void write(char[] buf) throws IOException {
-	    if (writer != null) {
-	        writer.write(buf);
-	    } else {
-	        write(buf, 0, buf.length);
-	    }
+        if (writer != null) {
+            writer.write(buf);
+        } else {
+            write(buf, 0, buf.length);
+        }
     }
 
     /**
      * Write a portion of a String.
      *
-     * @param s String to be written
+     * @param s   String to be written
      * @param off Offset from which to start reading characters
      * @param len Number of characters to be written
      */
     public void write(String s, int off, int len) throws IOException {
-	    if (writer != null) {
-	        writer.write(s, off, len);
-	    } else {
-	        ensureOpen();
-	        //PK33136
-	        strBuffer.append(s.substring(off, off+len));
-	        nextChar += len;
-	        //PK33136
-	    }
+        if (writer != null) {
+            writer.write(s, off, len);
+        } else {
+            ensureOpen();
+            //PK33136
+            strBuffer.append(s.substring(off, off + len));
+            nextChar += len;
+            //PK33136
+        }
     }
 
     /**
-     * Write a string.  This method cannot be inherited from the Writer class
+     * Write a string. This method cannot be inherited from the Writer class
      * because it must suppress I/O exceptions.
      */
     public void write(String s) throws IOException {
-	    if (writer != null) {
-	        writer.write(s);
-	    } else {
-	        write(s, 0, s.length());
-	    }
+        if (writer != null) {
+            writer.write(s);
+        } else {
+            write(s, 0, s.length());
+        }
     }
 
     /**
-     * Write a line separator.  The line separator string is defined by the
+     * Write a line separator. The line separator string is defined by the
      * system property <tt>line.separator</tt>, and is not necessarily a single
      * newline ('\n') character.
      *
      * @throws IOException If an I/O error occurs
      */
     public void newLine() throws IOException {
-	    if (writer != null) {
-	        writer.write(LINE_SEPARATOR);
-	    } else {
-	        write(LINE_SEPARATOR);
-	    }
+        if (writer != null) {
+            writer.write(LINE_SEPARATOR);
+        } else {
+            write(LINE_SEPARATOR);
+        }
     }
 
     /**
-     * Print a boolean value.  The string produced by <code>{@link
+     * Print a boolean value. The string produced by <code>{@link
      * java.lang.String#valueOf(boolean)}</code> is translated into bytes
      * according to the platform's default character encoding, and these bytes
      * are written in exactly the manner of the <code>{@link
@@ -254,15 +256,15 @@ public class BodyContentImpl extends BodyContent {
      * @throws IOException
      */
     public void print(boolean b) throws IOException {
-	    if (writer != null) {
-	        writer.write(b ? "true" : "false");
-	    } else {
-	        write(b ? "true" : "false");
-	    }
+        if (writer != null) {
+            writer.write(b ? "true" : "false");
+        } else {
+            write(b ? "true" : "false");
+        }
     }
 
     /**
-     * Print a character.  The character is translated into one or more bytes
+     * Print a character. The character is translated into one or more bytes
      * according to the platform's default character encoding, and these bytes
      * are written in exactly the manner of the <code>{@link
      * #write(int)}</code> method.
@@ -271,15 +273,15 @@ public class BodyContentImpl extends BodyContent {
      * @throws IOException
      */
     public void print(char c) throws IOException {
-	    if (writer != null) {
-	        writer.write(String.valueOf(c));
-	    } else {
-	        write(String.valueOf(c));
-	    }
+        if (writer != null) {
+            writer.write(String.valueOf(c));
+        } else {
+            write(String.valueOf(c));
+        }
     }
 
     /**
-     * Print an integer.  The string produced by <code>{@link
+     * Print an integer. The string produced by <code>{@link
      * java.lang.String#valueOf(int)}</code> is translated into bytes according
      * to the platform's default character encoding, and these bytes are
      * written in exactly the manner of the <code>{@link #write(int)}</code>
@@ -289,15 +291,15 @@ public class BodyContentImpl extends BodyContent {
      * @throws IOException
      */
     public void print(int i) throws IOException {
-	    if (writer != null) {
-	        writer.write(String.valueOf(i));
-	    } else {
-	        write(String.valueOf(i));
-	    }
+        if (writer != null) {
+            writer.write(String.valueOf(i));
+        } else {
+            write(String.valueOf(i));
+        }
     }
 
     /**
-     * Print a long integer.  The string produced by <code>{@link
+     * Print a long integer. The string produced by <code>{@link
      * java.lang.String#valueOf(long)}</code> is translated into bytes
      * according to the platform's default character encoding, and these bytes
      * are written in exactly the manner of the
@@ -307,15 +309,15 @@ public class BodyContentImpl extends BodyContent {
      * @throws IOException
      */
     public void print(long l) throws IOException {
-	    if (writer != null) {
-	        writer.write(String.valueOf(l));
-	    } else {
-	        write(String.valueOf(l));
-	    }
+        if (writer != null) {
+            writer.write(String.valueOf(l));
+        } else {
+            write(String.valueOf(l));
+        }
     }
 
     /**
-     * Print a floating-point number.  The string produced by <code>{@link
+     * Print a floating-point number. The string produced by <code>{@link
      * java.lang.String#valueOf(float)}</code> is translated into bytes
      * according to the platform's default character encoding, and these bytes
      * are written in exactly the manner of the
@@ -325,15 +327,15 @@ public class BodyContentImpl extends BodyContent {
      * @throws IOException
      */
     public void print(float f) throws IOException {
-	    if (writer != null) {
-	        writer.write(String.valueOf(f));
-	    } else {
-	        write(String.valueOf(f));
-	    }
+        if (writer != null) {
+            writer.write(String.valueOf(f));
+        } else {
+            write(String.valueOf(f));
+        }
     }
 
     /**
-     * Print a double-precision floating-point number.  The string produced by
+     * Print a double-precision floating-point number. The string produced by
      * <code>{@link java.lang.String#valueOf(double)}</code> is translated into
      * bytes according to the platform's default character encoding, and these
      * bytes are written in exactly the manner of the <code>{@link
@@ -343,15 +345,15 @@ public class BodyContentImpl extends BodyContent {
      * @throws IOException
      */
     public void print(double d) throws IOException {
-	    if (writer != null) {
-	        writer.write(String.valueOf(d));
-	    } else {
-	        write(String.valueOf(d));
-	    }
+        if (writer != null) {
+            writer.write(String.valueOf(d));
+        } else {
+            write(String.valueOf(d));
+        }
     }
 
     /**
-     * Print an array of characters.  The characters are converted into bytes
+     * Print an array of characters. The characters are converted into bytes
      * according to the platform's default character encoding, and these bytes
      * are written in exactly the manner of the
      * <code>{@link #write(int)}</code> method.
@@ -362,16 +364,16 @@ public class BodyContentImpl extends BodyContent {
      * @throws IOException
      */
     public void print(char[] s) throws IOException {
-	    if (writer != null) {
-	        writer.write(s);
-	    } else {
-	        write(s);
-	    }
+        if (writer != null) {
+            writer.write(s);
+        } else {
+            write(s);
+        }
     }
 
     /**
-     * Print a string.  If the argument is <code>null</code> then the string
-     * <code>"null"</code> is printed.  Otherwise, the string's characters are
+     * Print a string. If the argument is <code>null</code> then the string
+     * <code>"null"</code> is printed. Otherwise, the string's characters are
      * converted into bytes according to the platform's default character
      * encoding, and these bytes are written in exactly the manner of the
      * <code>{@link #write(int)}</code> method.
@@ -380,16 +382,17 @@ public class BodyContentImpl extends BodyContent {
      * @throws IOException
      */
     public void print(String s) throws IOException {
-	    if (s == null) s = "null";
-	    if (writer != null) {
-	        writer.write(s);
-	    } else {
-	        write(s);
-	    }
+        if (s == null)
+            s = "null";
+        if (writer != null) {
+            writer.write(s);
+        } else {
+            write(s);
+        }
     }
 
     /**
-     * Print an object.  The string produced by the <code>{@link
+     * Print an object. The string produced by the <code>{@link
      * java.lang.String#valueOf(Object)}</code> method is translated into bytes
      * according to the platform's default character encoding, and these bytes
      * are written in exactly the manner of the
@@ -399,15 +402,15 @@ public class BodyContentImpl extends BodyContent {
      * @throws IOException
      */
     public void print(Object obj) throws IOException {
-	    if (writer != null) {
-	        writer.write(String.valueOf(obj));
-	    } else {
-	        write(String.valueOf(obj));
-	    }
+        if (writer != null) {
+            writer.write(String.valueOf(obj));
+        } else {
+            write(String.valueOf(obj));
+        }
     }
 
     /**
-     * Terminate the current line by writing the line separator string.  The
+     * Terminate the current line by writing the line separator string. The
      * line separator string is defined by the system property
      * <code>line.separator</code>, and is not necessarily a single newline
      * character (<code>'\n'</code>).
@@ -415,11 +418,11 @@ public class BodyContentImpl extends BodyContent {
      * @throws IOException
      */
     public void println() throws IOException {
-    	newLine();
+        newLine();
     }
 
     /**
-     * Print a boolean value and then terminate the line.  This method behaves
+     * Print a boolean value and then terminate the line. This method behaves
      * as though it invokes <code>{@link #print(boolean)}</code> and then
      * <code>{@link #println()}</code>.
      *
@@ -431,7 +434,7 @@ public class BodyContentImpl extends BodyContent {
     }
 
     /**
-     * Print a character and then terminate the line.  This method behaves as
+     * Print a character and then terminate the line. This method behaves as
      * though it invokes <code>{@link #print(char)}</code> and then
      * <code>{@link #println()}</code>.
      *
@@ -443,7 +446,7 @@ public class BodyContentImpl extends BodyContent {
     }
 
     /**
-     * Print an integer and then terminate the line.  This method behaves as
+     * Print an integer and then terminate the line. This method behaves as
      * though it invokes <code>{@link #print(int)}</code> and then
      * <code>{@link #println()}</code>.
      *
@@ -455,7 +458,7 @@ public class BodyContentImpl extends BodyContent {
     }
 
     /**
-     * Print a long integer and then terminate the line.  This method behaves
+     * Print a long integer and then terminate the line. This method behaves
      * as though it invokes <code>{@link #print(long)}</code> and then
      * <code>{@link #println()}</code>.
      *
@@ -467,7 +470,7 @@ public class BodyContentImpl extends BodyContent {
     }
 
     /**
-     * Print a floating-point number and then terminate the line.  This method
+     * Print a floating-point number and then terminate the line. This method
      * behaves as though it invokes <code>{@link #print(float)}</code> and then
      * <code>{@link #println()}</code>.
      *
@@ -480,18 +483,18 @@ public class BodyContentImpl extends BodyContent {
 
     /**
      * Print a double-precision floating-point number and then terminate the
-     * line.  This method behaves as though it invokes <code>{@link
+     * line. This method behaves as though it invokes <code>{@link
      * #print(double)}</code> and then <code>{@link #println()}</code>.
      *
      * @throws IOException
      */
-    public void println(double x) throws IOException{
+    public void println(double x) throws IOException {
         print(x);
         println();
     }
 
     /**
-     * Print an array of characters and then terminate the line.  This method
+     * Print an array of characters and then terminate the line. This method
      * behaves as though it invokes <code>{@link #print(char[])}</code> and
      * then <code>{@link #println()}</code>.
      *
@@ -503,7 +506,7 @@ public class BodyContentImpl extends BodyContent {
     }
 
     /**
-     * Print a String and then terminate the line.  This method behaves as
+     * Print a String and then terminate the line. This method behaves as
      * though it invokes <code>{@link #print(String)}</code> and then
      * <code>{@link #println()}</code>.
      *
@@ -515,7 +518,7 @@ public class BodyContentImpl extends BodyContent {
     }
 
     /**
-     * Print an Object and then terminate the line.  This method behaves as
+     * Print an Object and then terminate the line. This method behaves as
      * though it invokes <code>{@link #print(Object)}</code> and then
      * <code>{@link #println()}</code>.
      *
@@ -535,19 +538,19 @@ public class BodyContentImpl extends BodyContent {
      * @throws IOException If an I/O error occurs
      */
     public void clear() throws IOException {
-	    if (writer != null) {
-	        throw new IOException();
-	    } else {
-	    	nextChar = 0;
-	    	if (limitBuffer && (strBuffer.length() > this.bodyContentBuffSize)){         	//PK95332 - starts
-	    		if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE)){
-	    			logger.logp(Level.FINE, CLASS_NAME, "BodyContentImpl", "clear buffer, create new one with buffer size ["+ this.bodyContentBuffSize +"]");
-	    		}
-	    		strBuffer = new StringBuffer(this.bodyContentBuffSize);
-	    	} else if (strBuffer != null) { // PI24001															//PK95332 - ends
-	    		strBuffer.setLength(0); // PK33136
-	    	}																				//PK95332
-	    }
+        if (writer != null) {
+            throw new IOException();
+        } else {
+            nextChar = 0;
+            if (limitBuffer && (strBuffer.length() > this.bodyContentBuffSize)) { //PK95332 - starts
+                if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
+                    logger.logp(Level.FINE, CLASS_NAME, "BodyContentImpl", "clear buffer, create new one with buffer size [" + this.bodyContentBuffSize + "]");
+                }
+                strBuffer = new StringBuffer(this.bodyContentBuffSize);
+            } else if (strBuffer != null) { // PI24001															//PK95332 - ends
+                strBuffer.setLength(0); // PK33136
+            } //PK95332
+        }
     }
 
     /**
@@ -560,57 +563,57 @@ public class BodyContentImpl extends BodyContent {
      */
     public void clearBuffer() throws IOException {
         if (writer == null) {
-	        this.clear();
-	    }
+            this.clear();
+        }
     }
 
     /**
-     * Close the stream, flushing it first.  Once a stream has been closed,
+     * Close the stream, flushing it first. Once a stream has been closed,
      * further write() or flush() invocations will cause an IOException to be
-     * thrown.  Closing a previously-closed stream, however, has no effect.
+     * thrown. Closing a previously-closed stream, however, has no effect.
      *
      * @throws IOException If an I/O error occurs
      */
     public void close() throws IOException {
-    	if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE)){   	// PM12137
-    		logger.logp(Level.FINE, CLASS_NAME, "close", "this=["+this+"]");						// PM12137
-    	}																							// PM12137
+        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) { // PM12137
+            logger.logp(Level.FINE, CLASS_NAME, "close", "this=[" + this + "]"); // PM12137
+        } // PM12137
 
-    	if (writer != null) {
-    		writer.close();
-    	} else {
-    		//PK33136
-    		closed = true;
-    		strBuffer = null;
-    		//PK33136
-    	}
+        if (writer != null) {
+            writer.close();
+        } else {
+            //PK33136
+            closed = true;
+            strBuffer = null;
+            //PK33136
+        }
     }
 
     /**
      * @return the number of bytes unused in the buffer
      */
     public int getRemaining() {
-        return (writer == null) ? strBuffer.capacity()-strBuffer.length() : 0; // PK33136
+        return (writer == null) ? strBuffer.capacity() - strBuffer.length() : 0; // PK33136
     }
 
     /**
      * Return the value of this BodyJspWriter as a Reader.
-     * Note: this is after evaluation!!  There are no scriptlets,
+     * Note: this is after evaluation!! There are no scriptlets,
      * etc in this stream.
      *
      * @return the value of this BodyJspWriter as a Reader
      */
     public Reader getReader() {
         // PK33136
-        char[] charBuffer = new char[strBuffer.length()] ;
+        char[] charBuffer = new char[strBuffer.length()];
         strBuffer.getChars(0, strBuffer.length(), charBuffer, 0);
         //PK33136
-        return (writer == null) ? new CharArrayReader (charBuffer, 0, strBuffer.length()) : null;
+        return (writer == null) ? new CharArrayReader(charBuffer, 0, strBuffer.length()) : null;
     }
 
     /**
      * Return the value of the BodyJspWriter as a String.
-     * Note: this is after evaluation!!  There are no scriptlets,
+     * Note: this is after evaluation!! There are no scriptlets,
      * etc in this stream.
      *
      * @return the value of the BodyJspWriter as a String
@@ -625,69 +628,69 @@ public class BodyContentImpl extends BodyContent {
      * implementation so some things are extra efficient.
      *
      * @param out The writer into which to place the contents of this body
-     * evaluation
+     *                evaluation
      */
     public void writeOut(Writer out) throws IOException {
-	    if (writer == null) {
-	        out.write(strBuffer.toString()); // PK33136
-	        // Flush not called as the writer passed could be a BodyContent and
-	        // it doesn't allow to flush.
-	    }
+        if (writer == null) {
+            out.write(strBuffer.toString()); // PK33136
+            // Flush not called as the writer passed could be a BodyContent and
+            // it doesn't allow to flush.
+        }
     }
 
-    public static void main (String[] args) throws Exception {
-	    char[] buff = {'f','o','o','b','a','r','b','a','z','y'};
-	    BodyContentImpl bodyContent
-	        = new BodyContentImpl(new JspWriterImpl(null, 100, false));
-	    bodyContent.println (buff);
-	    System.out.println (bodyContent.getString ());
-	    bodyContent.writeOut (new PrintWriter (System.out));
+    public static void main(String[] args) throws Exception {
+        char[] buff = { 'f', 'o', 'o', 'b', 'a', 'r', 'b', 'a', 'z', 'y' };
+        BodyContentImpl bodyContent = new BodyContentImpl(new JspWriterImpl(null, 100, false));
+        bodyContent.println(buff);
+        System.out.println(bodyContent.getString());
+        bodyContent.writeOut(new PrintWriter(System.out));
     }
 
     /**
      * Sets the writer to which all output is written.
      */
     void setWriter(Writer writer) {
-    	// PM12137 - starts
-    	if (closed) {
-    		if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE)){
-                logger.logp(Level.FINE, CLASS_NAME, "setWriter", "resetting closed to false for this=["+this+"]");
+        // PM12137 - starts
+        if (closed) {
+            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
+                logger.logp(Level.FINE, CLASS_NAME, "setWriter", "resetting closed to false for this=[" + this + "]");
             }
-    		closed = false;
-    		strBuffer = new StringBuffer(this.bodyContentBuffSize);
-    	}
-    	// PM12137 - ends
-	    this.writer = writer;
-	    if (writer != null) {
-	        // According to the spec, the JspWriter returned by
-	        // JspContext.pushBody(java.io.Writer writer) must behave as
-	        // though it were unbuffered. This means that its getBufferSize()
-	        // must always return 0. The implementation of
-	        // JspWriter.getBufferSize() returns the value of JspWriter's
-	        // 'bufferSize' field, which is inherited by this class.
-	        // Therefore, we simply save the current 'bufferSize' (so we can
-	        // later restore it should this BodyContentImpl ever be reused by
-	        // a call to PageContext.pushBody()) before setting it to 0.
-	        if (bufferSize != 0) {
-	            if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE)){
-	                logger.logp(Level.FINE, CLASS_NAME, "setWriter", "BodyContentImpl setWriter A. bufferSize=["+bufferSize+"]  this=["+this+"]");
-	            }
-	            bufferSizeSave = bufferSize;
-	            bufferSize = 0;
-	        }
-	    } else {
-	        bufferSize = bufferSizeSave;
-	        if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE)){
-	            logger.logp(Level.FINE, CLASS_NAME, "setWriter", "BodyContentImpl setWriter B. bufferSize=["+bufferSize+"]  this=["+this+"]");
-	        }
-	        clearBody();
-	    }
+            closed = false;
+            strBuffer = new StringBuffer(this.bodyContentBuffSize);
+        }
+        // PM12137 - ends
+        this.writer = writer;
+        if (writer != null) {
+            // According to the spec, the JspWriter returned by
+            // JspContext.pushBody(java.io.Writer writer) must behave as
+            // though it were unbuffered. This means that its getBufferSize()
+            // must always return 0. The implementation of
+            // JspWriter.getBufferSize() returns the value of JspWriter's
+            // 'bufferSize' field, which is inherited by this class.
+            // Therefore, we simply save the current 'bufferSize' (so we can
+            // later restore it should this BodyContentImpl ever be reused by
+            // a call to PageContext.pushBody()) before setting it to 0.
+            if (bufferSize != 0) {
+                if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
+                    logger.logp(Level.FINE, CLASS_NAME, "setWriter", "BodyContentImpl setWriter A. bufferSize=[" + bufferSize + "]  this=[" + this + "]");
+                }
+                bufferSizeSave = bufferSize;
+                bufferSize = 0;
+            }
+        } else {
+            bufferSize = bufferSizeSave;
+            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
+                logger.logp(Level.FINE, CLASS_NAME, "setWriter", "BodyContentImpl setWriter B. bufferSize=[" + bufferSize + "]  this=[" + this + "]");
+            }
+            clearBody();
+        }
     }
 
     private void ensureOpen() throws IOException {
-    	if (closed) throw new IOException("Stream closed");
+        if (closed)
+            throw new IOException("Stream closed");
     }
-    
+
     //PI24001 starts
     /**
      * This method shall "reset" the internal state of a BodyContentImpl,

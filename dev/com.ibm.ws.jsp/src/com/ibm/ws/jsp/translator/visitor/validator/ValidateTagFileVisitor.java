@@ -39,10 +39,12 @@ public class ValidateTagFileVisitor extends ValidateVisitor {
     private static final String[] invokeAttrNames = { "fragment", "var", "varReader", "scope" };
     private static final String[] doBodyAttrNames = { "var", "varReader", "scope" };
 
-    private static final String[] tagDirectiveAttrNames =
-        { "display-name", "body-content", "dynamic-attributes", "small-icon", "large-icon", "description", "example", "language", "import", "pageEncoding", "isELIgnored", "trimDirectiveWhitespaces", "deferredSyntaxAllowedAsLiteral", "errorOnELNotFound" };  //jsp2.1work jsp2.1ELwork
+    private static final String[] tagDirectiveAttrNames = { "display-name", "body-content", "dynamic-attributes", "small-icon", "large-icon", "description", "example", "language",
+                                                            "import", "pageEncoding", "isELIgnored", "trimDirectiveWhitespaces", "deferredSyntaxAllowedAsLiteral",
+                                                            "errorOnELNotFound" }; //jsp2.1work jsp2.1ELwork
     private static final String[] attributeDirectiveAttrNames = { "name", "required", "fragment", "rtexprvalue", "type", "description" };
-    private static final String[] attributeDirectiveAttrNames21 = { "name", "required", "fragment", "rtexprvalue", "type", "description","deferredValue","deferredValueType","deferredMethod","deferredMethodSignature"};
+    private static final String[] attributeDirectiveAttrNames21 = { "name", "required", "fragment", "rtexprvalue", "type", "description", "deferredValue", "deferredValueType",
+                                                                    "deferredMethod", "deferredMethodSignature" };
     private static final String[] variableDirectiveAttrNames = { "name-given", "name-from-attribute", "alias", "variable-class", "declare", "scope", "description" };
 
     private static final String[] invokeRequiredAttrs = { "fragment" };
@@ -56,15 +58,14 @@ public class ValidateTagFileVisitor extends ValidateVisitor {
                                   JspConfiguration jspConfiguration,
                                   JspCoreContext context,
                                   HashMap resultMap,
-                                  JspVisitorInputMap inputMap)
-        throws JspCoreException {
+                                  JspVisitorInputMap inputMap) throws JspCoreException {
         super(visitorUsage, jspConfiguration, context, resultMap, inputMap);
         result = new ValidateTagFileResult(visitorUsage.getJspVisitorDefinition().getId());
 
         //PM08060
-        if(WCCustomProperties.ENABLE_DEFAULT_IS_EL_IGNORED_IN_TAG){
-        	result.setIsELIgnored(false);
-        	jspConfiguration.setElIgnored(false);
+        if (WCCustomProperties.ENABLE_DEFAULT_IS_EL_IGNORED_IN_TAG) {
+            result.setIsELIgnored(false);
+            jspConfiguration.setElIgnored(false);
         }
         //PM08060
     }
@@ -75,7 +76,7 @@ public class ValidateTagFileVisitor extends ValidateVisitor {
 
     protected void visitTagDirectiveStart(Element jspElement) throws JspCoreException {
         validateAttributes(jspElement, tagDirectiveAttrNames);
-        
+
         ValidateTagFileResult tagFileResult = (ValidateTagFileResult) result;
         NamedNodeMap attributes = jspElement.getAttributes();
         if (attributes != null) {
@@ -89,7 +90,8 @@ public class ValidateTagFileVisitor extends ValidateVisitor {
                     && (directiveName.equals("import") == false) // import can appear more than once in translation unit.
                     && (directiveName.equals("jsp:id") == false)) {
                     if (oldDirectiveValue.equals(directiveValue) == false) {
-                        throw new JspTranslationException(jspElement, "jsp.error.multiple.occurrences.tag.directive", new Object[] { directiveName, oldDirectiveValue, directiveValue });
+                        throw new JspTranslationException(jspElement, "jsp.error.multiple.occurrences.tag.directive", new Object[] { directiveName, oldDirectiveValue,
+                                                                                                                                     directiveValue });
                     }
                 }
 
@@ -97,129 +99,106 @@ public class ValidateTagFileVisitor extends ValidateVisitor {
                 if (directiveName.equals("language")) {
                     valid = true;
                     result.setLanguage(directiveValue);
-                }
-                else if (directiveName.equals("import")) {
+                } else if (directiveName.equals("import")) {
                     valid = true;
-                }
-                else if (directiveName.equals("pageEncoding")) {
+                } else if (directiveName.equals("pageEncoding")) {
                     valid = true;
                     result.setPageEncoding(directiveValue);
-                }
-                else if (directiveName.equals("isELIgnored")) {
+                } else if (directiveName.equals("isELIgnored")) {
                     valid = true;
                     if (directiveValue.equalsIgnoreCase("true")) {
                         result.setIsELIgnored(true);
                         jspConfiguration.setElIgnored(true);
                         jspConfiguration.setElIgnoredSetTrueInPage(true);
-                    }
-                    else if (directiveValue.equalsIgnoreCase("false")) {
+                    } else if (directiveValue.equalsIgnoreCase("false")) {
                         result.setIsELIgnored(false);
                         jspConfiguration.setElIgnored(false);
-                    }
-                    else
+                    } else
                         throw new JspTranslationException(jspElement, "jsp.error.page.invalid.iselignored");
-                }
-                else if (directiveName.equals("display-name")) {
+                } else if (directiveName.equals("display-name")) {
                     valid = true;
                     tagFileResult.setDisplayName(directiveValue);
-                }
-                else if (directiveName.equals("body-content")) {
+                } else if (directiveName.equals("body-content")) {
                     if (directiveValue.equals("scriptless") || directiveValue.equals("tagdependent") || directiveValue.equals("empty")) {
                         valid = true;
                         tagFileResult.setBodyContent(directiveValue);
-                    }
-                    else {
+                    } else {
                         throw new JspTranslationException(jspElement, "jsp.body-content.directive.value.invalid", new Object[] { directiveValue });
                     }
-                }
-                else if (directiveName.equals("dynamic-attributes")) {
+                } else if (directiveName.equals("dynamic-attributes")) {
                     valid = true;
                     tagFileResult.setDynamicAttributes(directiveValue);
-                }
-                else if (directiveName.equals("small-icon")) {
+                } else if (directiveName.equals("small-icon")) {
                     valid = true;
                     tagFileResult.setSmallIcon(directiveValue);
-                }
-                else if (directiveName.equals("large-icon")) {
+                } else if (directiveName.equals("large-icon")) {
                     valid = true;
                     tagFileResult.setLargeIcon(directiveValue);
-                }
-                else if (directiveName.equals("description")) {
+                } else if (directiveName.equals("description")) {
                     valid = true;
                     tagFileResult.setDescription(directiveValue);
-                }
-                else if (directiveName.equals("example")) {
+                } else if (directiveName.equals("example")) {
                     valid = true;
                     tagFileResult.setExample(directiveValue);
-                }
-                else if (directiveName.equals("jsp:id")) {
+                } else if (directiveName.equals("jsp:id")) {
                     valid = true;
-                }
-                else if (directiveName.startsWith("xmlns")) {
+                } else if (directiveName.startsWith("xmlns")) {
                     valid = true;
                 }
                 // jsp2.1work
                 else if (directiveName.equals("trimDirectiveWhitespaces")) {
                     valid = true;
                     if (jspConfiguration.getTrimDirectiveWhitespaces() == null) {
-	                    if (directiveValue.equalsIgnoreCase("true")) {
-	                        result.setTrimDirectiveWhitespaces(true);
-	                        jspConfiguration.setTrimDirectiveWhitespaces(true);
-	                    }
-	                    else if (directiveValue.equalsIgnoreCase("false")) {
-	                        result.setTrimDirectiveWhitespaces(false);
-	                        jspConfiguration.setTrimDirectiveWhitespaces(false);
-	                    }
-	                    else {
-	                        throw new JspTranslationException(jspElement, "jsp.error.page.invalid.trimdirectivewhitespaces");
-	                    }
-                    }
-                    else if (!jspConfiguration.getTrimDirectiveWhitespaces().equals(directiveValue)) {
-                    	 throw new JspTranslationException(jspElement, "jsp.error.page.conflict.trimdirectivewhitespaces", new Object[] {jspConfiguration.getTrimDirectiveWhitespaces(), directiveName });
+                        if (directiveValue.equalsIgnoreCase("true")) {
+                            result.setTrimDirectiveWhitespaces(true);
+                            jspConfiguration.setTrimDirectiveWhitespaces(true);
+                        } else if (directiveValue.equalsIgnoreCase("false")) {
+                            result.setTrimDirectiveWhitespaces(false);
+                            jspConfiguration.setTrimDirectiveWhitespaces(false);
+                        } else {
+                            throw new JspTranslationException(jspElement, "jsp.error.page.invalid.trimdirectivewhitespaces");
+                        }
+                    } else if (!jspConfiguration.getTrimDirectiveWhitespaces().equals(directiveValue)) {
+                        throw new JspTranslationException(jspElement, "jsp.error.page.conflict.trimdirectivewhitespaces", new Object[] { jspConfiguration.getTrimDirectiveWhitespaces(),
+                                                                                                                                         directiveName });
                     }
                 }
                 // jsp2.1ELwork
                 else if (directiveName.equals("deferredSyntaxAllowedAsLiteral")) {
                     valid = true;
                     if (jspConfiguration.getDeferredSyntaxAllowedAsLiteral() == null) {
-	                    if (directiveValue.equalsIgnoreCase("true")) {
-	                        result.setDeferredSyntaxAllowedAsLiteral(true);
-	                        jspConfiguration.setDeferredSyntaxAllowedAsLiteral(true);
-	                    }
-	                    else if (directiveValue.equalsIgnoreCase("false")) {
-	                        result.setDeferredSyntaxAllowedAsLiteral(false);
-	                        jspConfiguration.setDeferredSyntaxAllowedAsLiteral(false);
-	                    }
-	                    else {
-	                        throw new JspTranslationException(jspElement, "jsp.error.page.invalid.deferredsyntaxallowedasliteral");
-	                    }
-                    }
-                    else if (!jspConfiguration.getDeferredSyntaxAllowedAsLiteral().equals(directiveValue)) {
-	                        throw new JspTranslationException(jspElement, "jsp.error.page.conflict.deferredsyntaxallowedasliteral");
+                        if (directiveValue.equalsIgnoreCase("true")) {
+                            result.setDeferredSyntaxAllowedAsLiteral(true);
+                            jspConfiguration.setDeferredSyntaxAllowedAsLiteral(true);
+                        } else if (directiveValue.equalsIgnoreCase("false")) {
+                            result.setDeferredSyntaxAllowedAsLiteral(false);
+                            jspConfiguration.setDeferredSyntaxAllowedAsLiteral(false);
+                        } else {
+                            throw new JspTranslationException(jspElement, "jsp.error.page.invalid.deferredsyntaxallowedasliteral");
+                        }
+                    } else if (!jspConfiguration.getDeferredSyntaxAllowedAsLiteral().equals(directiveValue)) {
+                        throw new JspTranslationException(jspElement, "jsp.error.page.conflict.deferredsyntaxallowedasliteral");
                     }
                 }
-                if(PagesVersionHandler.isPages31OrHigherLoaded()){
-                  if (directiveName.equals("errorOnELNotFound")) {
-                      valid = true;
-                      if (directiveValue.equalsIgnoreCase("true")) {
-                          result.setErrorOnELNotFound(true);
-                          jspConfiguration.setErrorOnELNotFound(true);
-                          jspConfiguration.setElIgnoredSetTrueInPage(true);
-                      }
-                      else if (directiveValue.equalsIgnoreCase("false")) {
-                          result.setErrorOnELNotFound(false);
-                          jspConfiguration.setErrorOnELNotFound(false);
-                      }
-                      else
-                          throw new JspTranslationException(jspElement, "jsp.error.page.invalid.erroronelnotfound");
-                  }
+                if (PagesVersionHandler.isPages31OrHigherLoaded()) {
+                    if (directiveName.equals("errorOnELNotFound")) {
+                        valid = true;
+                        if (directiveValue.equalsIgnoreCase("true")) {
+                            result.setErrorOnELNotFound(true);
+                            jspConfiguration.setErrorOnELNotFound(true);
+                            jspConfiguration.setElIgnoredSetTrueInPage(true);
+                        } else if (directiveValue.equalsIgnoreCase("false")) {
+                            result.setErrorOnELNotFound(false);
+                            jspConfiguration.setErrorOnELNotFound(false);
+                        } else
+                            throw new JspTranslationException(jspElement, "jsp.error.page.invalid.erroronelnotfound");
+                    }
                 }
                 if (valid == false) {
                     throw new JspTranslationException(jspElement, "jsp.error.page.directive.unknown", new Object[] { directiveName });
                 }
             }
-        }
-        else {
+        } else {
             throw new JspTranslationException(jspElement, "jsp.error.page.directive.contains.no.attributes");
         }
     }
@@ -250,14 +229,11 @@ public class ValidateTagFileVisitor extends ValidateVisitor {
 
             if (scopeAttr.getValue().equals("page")) {
                 valid = true;
-            }
-            else if (scopeAttr.getValue().equals("request")) {
+            } else if (scopeAttr.getValue().equals("request")) {
                 valid = true;
-            }
-            else if (scopeAttr.getValue().equals("session")) {
+            } else if (scopeAttr.getValue().equals("session")) {
                 valid = true;
-            }
-            else if (scopeAttr.getValue().equals("application")) {
+            } else if (scopeAttr.getValue().equals("application")) {
                 valid = true;
             }
             if (valid == false) {
@@ -289,14 +265,11 @@ public class ValidateTagFileVisitor extends ValidateVisitor {
 
             if (scopeAttr.getValue().equals("page")) {
                 valid = true;
-            }
-            else if (scopeAttr.getValue().equals("request")) {
+            } else if (scopeAttr.getValue().equals("request")) {
                 valid = true;
-            }
-            else if (scopeAttr.getValue().equals("session")) {
+            } else if (scopeAttr.getValue().equals("session")) {
                 valid = true;
-            }
-            else if (scopeAttr.getValue().equals("application")) {
+            } else if (scopeAttr.getValue().equals("application")) {
                 valid = true;
             }
             if (valid == false) {
@@ -310,10 +283,10 @@ public class ValidateTagFileVisitor extends ValidateVisitor {
         validateRequiredAttributes(jspElement, specifiedStandardActionAttrs, attributeDirectiveRequiredAttrs);
 
         //if JSP 2.1 or later include deferred value and method attributes as valid.
-        if( Float.valueOf(jspConfiguration.getJspVersion()) >= JspConfiguration.twoPointOne){
-        	validateAttributes(specifiedStandardActionAttrs, jspElement, attributeDirectiveAttrNames21);
-        }else{	//JSP 2.0 or 1.2 thus deferred value and method attributes are not valid
-        	validateAttributes(specifiedStandardActionAttrs, jspElement, attributeDirectiveAttrNames);
+        if (Float.valueOf(jspConfiguration.getJspVersion()) >= JspConfiguration.twoPointOne) {
+            validateAttributes(specifiedStandardActionAttrs, jspElement, attributeDirectiveAttrNames21);
+        } else { //JSP 2.0 or 1.2 thus deferred value and method attributes are not valid
+            validateAttributes(specifiedStandardActionAttrs, jspElement, attributeDirectiveAttrNames);
         }
 
         Attr nameAttr = jspElement.getAttributeNode("name");

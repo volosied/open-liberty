@@ -45,9 +45,7 @@ import com.ibm.wsspi.webcontainer.util.ThreadContextHelper;
  *
  * @author Anil K. Vijendran
  */
-public abstract class HttpJspBase
-    extends HttpServlet
-    implements HttpJspPage
+public abstract class HttpJspBase extends HttpServlet implements HttpJspPage
 //Begin IBM Jasper Change
 //BKM TEMP               CacheableServlet
 //End IBM Jasper Change
@@ -62,39 +60,38 @@ public abstract class HttpJspBase
     private final static int MAX_POOLSIZE = 10;
     //private static TraceComponent tc = Tr.register(HttpJspBase.class.getName(), "JSP_Engine");
 
-//Begin IBM Jasper Change
+    //Begin IBM Jasper Change
     private static TagHandlerPool tagPool = new TagHandlerPool();
-    String servletName=null;
-//End IBM Jasper Change
+    String servletName = null;
+    //End IBM Jasper Change
 
     protected HttpJspBase() {
     }
 
-    public final void init(ServletConfig config)
-        throws ServletException
-    {
-    //    if (tc.isEntryEnabled())
-    //        Tr.entry(tc, "init");
+    public final void init(ServletConfig config) throws ServletException {
+        //    if (tc.isEntryEnabled())
+        //        Tr.entry(tc, "init");
         super.init(config);
         jspInit();
-    //    if (tc.isEntryEnabled())
-    //        Tr.exit(tc, "init");
+        //    if (tc.isEntryEnabled())
+        //        Tr.exit(tc, "init");
     }
 
     public String getServletInfo() {
         return JspCoreException.getMsg("jsp.engine.info");
     }
 
-	/* begin 137808 - remove setServletName() and getServletName()
-	//Begin IBM Jasper Change defect 112324
-    public void setServletName(String servletName) {
-    	this.servletName=servletName;
-    }
-    public String getServletName() {
-		return this.servletName;
-    }
-	//End IBM Jasper Change defect 112324
-	 */
+    /*
+     * begin 137808 - remove setServletName() and getServletName()
+     * //Begin IBM Jasper Change defect 112324
+     * public void setServletName(String servletName) {
+     * this.servletName=servletName;
+     * }
+     * public String getServletName() {
+     * return this.servletName;
+     * }
+     * //End IBM Jasper Change defect 112324
+     */
 
     public final void destroy() {
         jspDestroy();
@@ -103,9 +100,7 @@ public abstract class HttpJspBase
     /**
      * Entry point into service.
      */
-    public final void service(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException
-    {
+    public final void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         _jspService(request, response);
     }
 
@@ -116,10 +111,9 @@ public abstract class HttpJspBase
     }
 
     public abstract void _jspService(HttpServletRequest request,
-                                     HttpServletResponse response)
-        throws ServletException, IOException;
+                                     HttpServletResponse response) throws ServletException, IOException;
 
-//Begin IBM Jasper Change
+    //Begin IBM Jasper Change
     public String getId(HttpServletRequest request) {
         return null;
     }
@@ -135,44 +129,40 @@ public abstract class HttpJspBase
         //    Tr.debug(tc, "tagKey: " + tagKey +", tagClassName: "+tagClassName);
         Tag tag = null;
         HashMap pool = tagPool.getPool();
-        UnsynchronizedStack stack = (UnsynchronizedStack)pool.get(tagKey);
+        UnsynchronizedStack stack = (UnsynchronizedStack) pool.get(tagKey);
         if (stack == null) {
             stack = new UnsynchronizedStack(MAX_POOLSIZE);
             pool.put(tagKey, stack);
-	   //     if (tc.isDebugEnabled())
-	   //         Tr.debug(tc, "created new stack for tagKey: " + tagKey);
+            //     if (tc.isDebugEnabled())
+            //         Tr.debug(tc, "created new stack for tagKey: " + tagKey);
             try {
                 ClassLoader contextClassLoader = ThreadContextHelper.getContextClassLoader();
                 Class tagClass = Class.forName(tagClassName, true, contextClassLoader);
-                tag = (Tag)tagClass.newInstance();
-		        //if (tc.isDebugEnabled())
-		        //    Tr.debug(tc, "Created first new instance of tagKey: " + tagKey);
+                tag = (Tag) tagClass.newInstance();
+                //if (tc.isDebugEnabled())
+                //    Tr.debug(tc, "Created first new instance of tagKey: " + tagKey);
+            } catch (Exception e) {
+                //	com.ibm.ws.ffdc.FFDCFilter.processException(e, "com.ibm.ws.webcontainer.jsp.runtime.HttpJspBase.getTagHandler", "108", this);
+                //	if (tc.isDebugEnabled())
+                //	    Tr.debug(tc, "Error loading Tag Class " + tagClassName + " : " + e);
             }
-            catch (Exception e) {
-			//	com.ibm.ws.ffdc.FFDCFilter.processException(e, "com.ibm.ws.webcontainer.jsp.runtime.HttpJspBase.getTagHandler", "108", this);
-			//	if (tc.isDebugEnabled())
-			//	    Tr.debug(tc, "Error loading Tag Class " + tagClassName + " : " + e);
-            }
-        }
-        else {
-            tag = (Tag)stack.pop();
+        } else {
+            tag = (Tag) stack.pop();
             if (tag == null) {
                 try {
                     ClassLoader contextClassLoader = ThreadContextHelper.getContextClassLoader();
                     Class tagClass = Class.forName(tagClassName, true, contextClassLoader);
-                    tag = (Tag)tagClass.newInstance();
-			        //if (tc.isDebugEnabled())
-			        //    Tr.debug(tc, "Created new instance of tagKey: " + tagKey + " after pop() returned null");
+                    tag = (Tag) tagClass.newInstance();
+                    //if (tc.isDebugEnabled())
+                    //    Tr.debug(tc, "Created new instance of tagKey: " + tagKey + " after pop() returned null");
+                } catch (Exception e) {
+                    //	com.ibm.ws.ffdc.FFDCFilter.processException(e, "com.ibm.ws.webcontainer.jsp.runtime.HttpJspBase.getTagHandler", "121", this);
+                    //	if (tc.isDebugEnabled())
+                    //	    Tr.debug(tc, "Error loading Tag Class " + tagClassName + " : " + e);
                 }
-                catch (Exception e) {
-				//	com.ibm.ws.ffdc.FFDCFilter.processException(e, "com.ibm.ws.webcontainer.jsp.runtime.HttpJspBase.getTagHandler", "121", this);
-				//	if (tc.isDebugEnabled())
-				//	    Tr.debug(tc, "Error loading Tag Class " + tagClassName + " : " + e);
-                }
-            }
-            else {
-		    //    if (tc.isDebugEnabled())
-		    //        Tr.debug(tc, "successfully popped instance of tagKey: "  + tagKey);
+            } else {
+                //    if (tc.isDebugEnabled())
+                //        Tr.debug(tc, "successfully popped instance of tagKey: "  + tagKey);
             }
 
         }
@@ -186,17 +176,16 @@ public abstract class HttpJspBase
         //if (tc.isEntryEnabled())
         //    Tr.entry(tc, "putTagHandler");
         HashMap pool = tagPool.getPool();
-        UnsynchronizedStack stack = (UnsynchronizedStack)pool.get(tagKey);
+        UnsynchronizedStack stack = (UnsynchronizedStack) pool.get(tagKey);
         //if (tc.isDebugEnabled())
         //    Tr.debug(tc, "stacksize for " + tagKey + " is " + stack.size());
         if (stack.size() < MAX_POOLSIZE) {
             stack.push(tag);
-	        //if (tc.isDebugEnabled())
-	        //    Tr.debug(tc, "pushed instance of " + tagKey);
-        }
-        else {
-	        //if (tc.isDebugEnabled())
-	        //    Tr.debug(tc, "destroyed instance of " + tagKey);
+            //if (tc.isDebugEnabled())
+            //    Tr.debug(tc, "pushed instance of " + tagKey);
+        } else {
+            //if (tc.isDebugEnabled())
+            //    Tr.debug(tc, "destroyed instance of " + tagKey);
             tag.release();
             tag = null;
         }

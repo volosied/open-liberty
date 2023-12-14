@@ -28,8 +28,8 @@ import com.ibm.wsspi.jsp.resource.translation.JspResources;
 
 public class JspResourcesImpl extends ResourcesImpl implements JspResources {
     private static Logger logger;
-	private static final String CLASS_NAME="com.ibm.ws.jsp.translator.resource.JspResourcesImpl";
-    static{
+    private static final String CLASS_NAME = "com.ibm.ws.jsp.translator.resource.JspResourcesImpl";
+    static {
         logger = Logger.getLogger("com.ibm.ws.jsp");
     }
 
@@ -38,34 +38,31 @@ public class JspResourcesImpl extends ResourcesImpl implements JspResources {
         String jspUri = inputSource.getRelativeURL();
         if (inputSource.getAbsoluteURL().getProtocol().equals("file")) {
             sourceFile = new File(context.getRealPath(jspUri));
-        }
-        else {
+        } else {
             try {
                 sourceFile = File.createTempFile("jsp", NameMangler.mangleClassName(jspUri));
                 sourceFile.deleteOnExit();
-            }
-            catch (IOException e1) {
-                logger.logp(Level.WARNING, CLASS_NAME, "JspResourcesImpl", "Error creating temp file for jsp [" + jspUri +"]", e1);
+            } catch (IOException e1) {
+                logger.logp(Level.WARNING, CLASS_NAME, "JspResourcesImpl", "Error creating temp file for jsp [" + jspUri + "]", e1);
             }
         }
         try {
             URL outURL = options.getOutputDir().toURL();
             String outURI = outURL.toString();
             if (jspUri.charAt(0) != '/') {
-                jspUri = "/"+jspUri;
+                jspUri = "/" + jspUri;
             }
 
             File generatedSourceDir = null;
             String convertedName = null;
             String webinfClassFilePath = null;
-            if (options.isUseFullPackageNames()==false) {
-                packageName=Constants.JSP_FIXED_PACKAGE_NAME;
+            if (options.isUseFullPackageNames() == false) {
+                packageName = Constants.JSP_FIXED_PACKAGE_NAME;
                 String unmangledOutURI = outURI;
-                if (unmangledOutURI.endsWith("/") ) {
-                    unmangledOutURI = unmangledOutURI + jspUri.substring(1,jspUri.lastIndexOf("/")+1);
-                }
-                else {
-                    unmangledOutURI = unmangledOutURI + jspUri.substring(0,jspUri.lastIndexOf("/")+1);
+                if (unmangledOutURI.endsWith("/")) {
+                    unmangledOutURI = unmangledOutURI + jspUri.substring(1, jspUri.lastIndexOf("/") + 1);
+                } else {
+                    unmangledOutURI = unmangledOutURI + jspUri.substring(0, jspUri.lastIndexOf("/") + 1);
                 }
 
                 URL unmangledOutURL = new URL(unmangledOutURI);
@@ -75,24 +72,22 @@ public class JspResourcesImpl extends ResourcesImpl implements JspResources {
                 generatedSourceFile = new File(convertedName + ".java");
                 classFile = new File(convertedName + ".class");
 
-                webinfClassFilePath = context.getRealPath("/WEB-INF/classes") + jspUri.substring(0,jspUri.lastIndexOf("/")+1);
+                webinfClassFilePath = context.getRealPath("/WEB-INF/classes") + jspUri.substring(0, jspUri.lastIndexOf("/") + 1);
                 webinfClassFile = new File(webinfClassFilePath + File.separator + className + ".class");
-            }
-            else {
-                packageName=jspUri.substring(0,jspUri.lastIndexOf("/")+1);
-                if ( !packageName.equals("/") ) {
-                    packageName = NameMangler.handlePackageName (packageName);
-                    packageName=Constants.JSP_PACKAGE_PREFIX+"."+packageName.substring(0,packageName.length()-1);
+            } else {
+                packageName = jspUri.substring(0, jspUri.lastIndexOf("/") + 1);
+                if (!packageName.equals("/")) {
+                    packageName = NameMangler.handlePackageName(packageName);
+                    packageName = Constants.JSP_PACKAGE_PREFIX + "." + packageName.substring(0, packageName.length() - 1);
+                } else {
+                    packageName = Constants.JSP_PACKAGE_PREFIX;
                 }
-                else {
-                    packageName=Constants.JSP_PACKAGE_PREFIX;
-                }
-                String packageDir = packageName.replace('.','/');
+                String packageDir = packageName.replace('.', '/');
 
-                if (outURI.endsWith("/") )
+                if (outURI.endsWith("/"))
                     outURI = outURI + packageDir;
                 else
-                    outURI = outURI + "/"+packageDir;
+                    outURI = outURI + "/" + packageDir;
 
                 outURL = new URL(outURI);
                 generatedSourceDir = new File(outURL.getFile());
@@ -100,7 +95,7 @@ public class JspResourcesImpl extends ResourcesImpl implements JspResources {
                 convertedName = generatedSourceDir.getPath() + File.separator + className;
                 generatedSourceFile = new File(convertedName + ".java");
                 classFile = new File(convertedName + ".class");
-                webinfClassFilePath = context.getRealPath("/WEB-INF/classes") + "/"+packageDir;
+                webinfClassFilePath = context.getRealPath("/WEB-INF/classes") + "/" + packageDir;
                 webinfClassFile = new File(webinfClassFilePath + File.separator + className + ".class");
             }
 
@@ -113,10 +108,9 @@ public class JspResourcesImpl extends ResourcesImpl implements JspResources {
                     sourceFile.setLastModified(classFile.lastModified());
                 }
             }
-        }
-        catch (MalformedURLException e) {
-            com.ibm.ws.ffdc.FFDCFilter.processException( e, "com.ibm.ws.jsp.translator.utils.JspFilesImpl.init", "45", this);
-            logger.logp(Level.WARNING, CLASS_NAME, "JspResourcesImpl", "Error creating temp directory for jsp [" + jspUri +"]", e);
+        } catch (MalformedURLException e) {
+            com.ibm.ws.ffdc.FFDCFilter.processException(e, "com.ibm.ws.jsp.translator.utils.JspFilesImpl.init", "45", this);
+            logger.logp(Level.WARNING, CLASS_NAME, "JspResourcesImpl", "Error creating temp directory for jsp [" + jspUri + "]", e);
         }
     }
 }

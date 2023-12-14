@@ -14,7 +14,7 @@ package com.ibm.ws.jsp.translator.optimizedtag.impl;
 
 import com.ibm.ws.jsp.translator.optimizedtag.OptimizedTag;
 import com.ibm.ws.jsp.translator.optimizedtag.OptimizedTagContext;
-import com.ibm.ws.jsp.JspOptions;  //PK65013
+import com.ibm.ws.jsp.JspOptions; //PK65013
 import com.ibm.ws.jsp.Constants; //PK65013
 
 public class JSTLForEachOptimizedTag implements OptimizedTag {
@@ -23,39 +23,35 @@ public class JSTLForEachOptimizedTag implements OptimizedTag {
     private String step = null;
     private String begin = null;
     private String end = null;
-    
+
     String indexV = null, beginV = null, endV = null, stepV = null, iterV = null;
-    
+
     public void generateImports(OptimizedTagContext context) {
         context.writeImport("javaUtilImport", "import java.util.*;");
     }
-    
+
     public void generateDeclarations(OptimizedTagContext context) {
     }
-    
+
     public void setAttribute(String attrName, Object attrValue) {
         if (attrName.equals("items")) {
-            items = (String)attrValue;
-        }
-        else if (attrName.equals("var")) {
-            var = (String)attrValue;
-        }
-        else if (attrName.equals("step")) {
-            step = (String)attrValue;
-        }
-        else if (attrName.equals("begin")) {
-            begin = (String)attrValue;
-        }
-        else if (attrName.equals("end")) {
-            end = (String)attrValue;
+            items = (String) attrValue;
+        } else if (attrName.equals("var")) {
+            var = (String) attrValue;
+        } else if (attrName.equals("step")) {
+            step = (String) attrValue;
+        } else if (attrName.equals("begin")) {
+            begin = (String) attrValue;
+        } else if (attrName.equals("end")) {
+            end = (String) attrValue;
         }
     }
-    
+
     public void generateStart(OptimizedTagContext context) {
-    	//PK65013 - start
+        //PK65013 - start
         String pageContextVar = Constants.JSP_PAGE_CONTEXT_ORIG;
-        JspOptions jspOptions = context.getJspOptions(); 
-    	if (jspOptions != null) {
+        JspOptions jspOptions = context.getJspOptions();
+        if (jspOptions != null) {
             if (context.isTagFile() && jspOptions.isModifyPageContextVariable()) {
                 pageContextVar = Constants.JSP_PAGE_CONTEXT_NEW;
             }
@@ -64,7 +60,7 @@ public class JSTLForEachOptimizedTag implements OptimizedTag {
 
         if (context.hasAttribute("items")) {
             String itemsV = context.createTemporaryVariable();
-            context.writeSource("Object " + itemsV + " = " + items +";");
+            context.writeSource("Object " + itemsV + " = " + items + ";");
 
             if (context.hasAttribute("begin")) {
                 beginV = context.createTemporaryVariable();
@@ -82,7 +78,7 @@ public class JSTLForEachOptimizedTag implements OptimizedTag {
             }
 
             iterV = context.createTemporaryVariable();
-            context.writeSource("Iterator " + iterV + " = com.ibm.ws.jsp.translator.optimizedtag.impl.JSTLForEachIteratorSupport.createIterator("+itemsV+");");
+            context.writeSource("Iterator " + iterV + " = com.ibm.ws.jsp.translator.optimizedtag.impl.JSTLForEachIteratorSupport.createIterator(" + itemsV + ");");
 
             if (context.hasAttribute("begin")) {
                 String tV = context.createTemporaryVariable();
@@ -93,10 +89,9 @@ public class JSTLForEachOptimizedTag implements OptimizedTag {
             context.writeSource("while (" + iterV + ".hasNext()){");
             if (context.hasAttribute("var")) {
                 //PK65013 change pageContext variable to customizable one.
-                context.writeSource(pageContextVar+".setAttribute(" + var + ", " + iterV + ".next());");
+                context.writeSource(pageContextVar + ".setAttribute(" + var + ", " + iterV + ".next());");
             }
-        }
-        else {
+        } else {
             if (context.hasAttribute("begin")) {
                 beginV = context.createTemporaryVariable();
                 context.writeSource("int " + beginV + " = " + begin + ";");
@@ -112,19 +107,18 @@ public class JSTLForEachOptimizedTag implements OptimizedTag {
             String index = context.createTemporaryVariable();
             context.writeSource("for (int " + index + " = " + beginV + "; " + index + " <= " + endV);
             if (context.hasAttribute("step")) {
-                context.writeSource("; " + index + "+=" + stepV+ ") {");
-            }
-            else {
+                context.writeSource("; " + index + "+=" + stepV + ") {");
+            } else {
                 context.writeSource("; " + index + "++) {");
             }
 
             if (context.hasAttribute("var")) {
                 //PK65013 change pageContext variable to customizable one.
-                context.writeSource(pageContextVar+".setAttribute("+var+", String.valueOf(" + index + "));");
+                context.writeSource(pageContextVar + ".setAttribute(" + var + ", String.valueOf(" + index + "));");
             }
         }
     }
-    
+
     public void generateEnd(OptimizedTagContext context) {
         if (context.hasAttribute("items")) {
             if (context.hasAttribute("step")) {
@@ -135,14 +129,12 @@ public class JSTLForEachOptimizedTag implements OptimizedTag {
             if (context.hasAttribute("end")) {
                 if (context.hasAttribute("step")) {
                     context.writeSource(indexV + "+=" + stepV + ";");
-                }
-                else {
+                } else {
                     context.writeSource(indexV + "++;");
                 }
                 if (context.hasAttribute("begin")) {
                     context.writeSource("if(" + beginV + "+" + indexV + ">" + endV + ")");
-                }
-                else {
+                } else {
                     context.writeSource("if(" + indexV + ">" + endV + ")");
                 }
                 context.writeSource("break;");
@@ -150,32 +142,27 @@ public class JSTLForEachOptimizedTag implements OptimizedTag {
         }
         context.writeSource("}");
     }
-    
+
     public boolean doOptimization(OptimizedTagContext context) {
         boolean optimize = true;
-        
+
         if (context.hasAttribute("varStatus")) {
             optimize = false;
-        }
-        else if (context.isJspAttribute("var")) {
+        } else if (context.isJspAttribute("var")) {
             optimize = false;
-        }
-        else if (context.isJspAttribute("items")) {
+        } else if (context.isJspAttribute("items")) {
             optimize = false;
-        }
-        else if (context.isJspAttribute("step")) {
+        } else if (context.isJspAttribute("step")) {
             optimize = false;
-        }
-        else if (context.isJspAttribute("begin")) {
+        } else if (context.isJspAttribute("begin")) {
             optimize = false;
-        }
-        else if (context.isJspAttribute("end")) {
+        } else if (context.isJspAttribute("end")) {
             optimize = false;
         }
 
         return optimize;
     }
-    
+
     public boolean canGenTagInMethod(OptimizedTagContext context) {
         return true;
     }

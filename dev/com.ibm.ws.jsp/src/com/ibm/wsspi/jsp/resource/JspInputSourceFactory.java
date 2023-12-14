@@ -20,20 +20,22 @@ import java.net.URL;
 public interface JspInputSourceFactory {
     /**
      * Returns a JspInputSource object given a relative url
+     * 
      * @param relativeURL
      * @return JspInputSource
      */
     JspInputSource createJspInputSource(String relativeURL);
-    
+
     /**
-     * Returns a JspInputSource object given a relative URL and 
+     * Returns a JspInputSource object given a relative URL and
      * an alternative context URL
+     * 
      * @param contextURL
      * @param relativeURL
      * @return JspInputSource
      */
     JspInputSource createJspInputSource(URL contextURL, String relativeURL);
-    
+
     /**
      * Returns a new JspInputSource object that has it context information obtained
      * from the provided base input source. The relative URL is used to provide the

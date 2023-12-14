@@ -33,7 +33,7 @@ public class SDEInstaller {
     int genPos = 0;
 
     int sdeIndex;
-    
+
     static void install(File inOutClassFile, SmapGenerator smapGenerator) throws IOException {
         File tmpFile = new File(inOutClassFile.getPath() + "tmp");
         new SDEInstaller(inOutClassFile, smapGenerator, tmpFile);
@@ -99,8 +99,7 @@ public class SDEInstaller {
             if (verbose) {
                 System.out.println("SourceDebugExtension not found, installed at: " + sdeIndex);
             }
-        }
-        else {
+        } else {
             if (verbose) {
                 System.out.println("SourceDebugExtension found at: " + sdeIndex);
             }
@@ -159,8 +158,7 @@ public class SDEInstaller {
                 if (verbose) {
                     System.out.println("SDE attr found");
                 }
-            }
-            else {
+            } else {
                 writeU2(nameIndex); // name
                 int len = readU4();
                 writeU4(len);
@@ -243,34 +241,34 @@ public class SDEInstaller {
             int tag = readU1();
             writeU1(tag);
             switch (tag) {
-                case 7 : // Class
-                case 8 : // String
+                case 7: // Class
+                case 8: // String
                     if (verbose) {
                         System.out.println(i + " copying 2 bytes");
                     }
                     copy(2);
                     break;
-                case 9 : // Field
-                case 10 : // Method
-                case 11 : // InterfaceMethod
-                case 3 : // Integer
-                case 4 : // Float
-                case 12 : // NameAndType
-                case 18 : // InvokeDynamic PI89577
+                case 9: // Field
+                case 10: // Method
+                case 11: // InterfaceMethod
+                case 3: // Integer
+                case 4: // Float
+                case 12: // NameAndType
+                case 18: // InvokeDynamic PI89577
                     if (verbose) {
                         System.out.println(i + " copying 4 bytes");
                     }
                     copy(4);
                     break;
-                case 5 : // Long
-                case 6 : // Double
+                case 5: // Long
+                case 6: // Double
                     if (verbose) {
                         System.out.println(i + " copying 8 bytes");
                     }
                     copy(8);
                     i++;
                     break;
-                case 1 : // Utf8
+                case 1: // Utf8
                     int len = readU2();
                     writeU2(len);
                     byte[] utf8 = readBytes(len);
@@ -283,7 +281,7 @@ public class SDEInstaller {
                     }
                     writeBytes(utf8);
                     break;
-                default :
+                default:
                     throw new IOException("unexpected tag: " + tag);
             }
         }

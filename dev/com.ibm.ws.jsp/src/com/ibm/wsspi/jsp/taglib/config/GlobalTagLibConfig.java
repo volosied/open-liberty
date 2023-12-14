@@ -24,15 +24,15 @@ public class GlobalTagLibConfig {
     private URL jarURL = null;
     private ClassLoader classloader = null;
     private List tldPathList = null;
-    
+
     public GlobalTagLibConfig() {
         tldPathList = new ArrayList();
     }
-    
+
     /**
      * Returns a String containing the name of the jar
      * 
-     * @return String - the name of the jar 
+     * @return String - the name of the jar
      */
     public String getJarName() {
         return jarName;
@@ -41,12 +41,12 @@ public class GlobalTagLibConfig {
     /**
      * Returns a List of all the tlds to be parsed within this jar
      * 
-     * @return List - the tld files within the jar 
+     * @return List - the tld files within the jar
      */
     public List getTldPathList() {
         return tldPathList;
     }
-    
+
     /**
      * Sets the jar name for this global tag library
      * 
@@ -64,20 +64,20 @@ public class GlobalTagLibConfig {
     public void setJarURL(URL jarURL) {
         this.jarURL = jarURL;
     }
-    
+
     /**
      * Gets the jar url for this global tag library
      * 
-     * @return URL - the url for this global tag library 
+     * @return URL - the url for this global tag library
      */
     public URL getJarURL() {
         return jarURL;
     }
-    
+
     /**
      * Gets the classloader for this global tag library
      * 
-     * @return ClassLoader - the classloader for this global tag library 
+     * @return ClassLoader - the classloader for this global tag library
      */
     public ClassLoader getClassloader() {
         return classloader;
@@ -86,7 +86,7 @@ public class GlobalTagLibConfig {
     /**
      * Sets the classloader for this global tag library
      * 
-     * @param classloader ClassLoader - the classloader to be used for this global tag library 
+     * @param classloader ClassLoader - the classloader to be used for this global tag library
      */
     public void setClassloader(ClassLoader classloader) {
         this.classloader = classloader;

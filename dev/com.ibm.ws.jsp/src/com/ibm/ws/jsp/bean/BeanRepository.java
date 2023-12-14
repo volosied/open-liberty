@@ -117,8 +117,7 @@ public class BeanRepository {
         Class cls = null;
         try {
             cls = loader.loadClass((String) beanTypes.get(bean));
-        }
-        catch (ClassNotFoundException ex) {
+        } catch (ClassNotFoundException ex) {
             throw new JspTranslationException(element, ex.toString());
         }
         return cls;
@@ -127,8 +126,7 @@ public class BeanRepository {
     public void putBeanType(String bean, String type) throws JspCoreException {
         try {
             beanTypes.put(bean, type);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             throw new JspCoreException(ex.toString());
         }
     }

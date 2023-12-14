@@ -13,11 +13,12 @@
 package com.ibm.ws.jsp.webcontainerext.ws;
 
 import javax.servlet.http.HttpServletResponse;
+
 /**
  *
  */
 public interface PrepareJspServletResponse {
-        
+
     public HttpServletResponse getHttpServletResponse();
 
 }

@@ -21,7 +21,7 @@ import javax.servlet.descriptor.JspPropertyGroupDescriptor;
 import com.ibm.ws.javaee.dd.jsp.JSPPropertyGroup;
 import com.ibm.ws.jsp.configuration.JspConfigPropertyGroup;
 
-public class JspConfigPropertyGroupImpl implements JspPropertyGroupDescriptor, JspConfigPropertyGroup  {
+public class JspConfigPropertyGroupImpl implements JspPropertyGroupDescriptor, JspConfigPropertyGroup {
 
     private static final long serialVersionUID = 3257289123571511350L;
     protected List<String> urlPatterns = new ArrayList<String>();
@@ -48,7 +48,7 @@ public class JspConfigPropertyGroupImpl implements JspPropertyGroupDescriptor, J
 
     @Override
     public String getDeferredSyntaxAllowedAsLiteral() {
-        if(propertyGroup.isSetDeferredSyntaxAllowedAsLiteral()){
+        if (propertyGroup.isSetDeferredSyntaxAllowedAsLiteral()) {
             return Boolean.toString(propertyGroup.isDeferredSyntaxAllowedAsLiteral());
         } else {
             return null;
@@ -57,7 +57,7 @@ public class JspConfigPropertyGroupImpl implements JspPropertyGroupDescriptor, J
 
     @Override
     public String getElIgnored() {
-        if(propertyGroup.isSetElIgnored()){
+        if (propertyGroup.isSetElIgnored()) {
             return Boolean.toString(propertyGroup.isElIgnored());
         } else {
             return null;
@@ -66,7 +66,7 @@ public class JspConfigPropertyGroupImpl implements JspPropertyGroupDescriptor, J
 
     @Override
     public String getErrorOnELNotFound() {
-        if(propertyGroup.isSetErrorOnELNotFound()){
+        if (propertyGroup.isSetErrorOnELNotFound()) {
             return Boolean.toString(propertyGroup.isErrorOnELNotFound());
         } else {
             return null;
@@ -75,7 +75,7 @@ public class JspConfigPropertyGroupImpl implements JspPropertyGroupDescriptor, J
 
     @Override
     public String getErrorOnUndeclaredNamespace() {
-        if(propertyGroup.isSetErrorOnUndeclaredNamespace()){
+        if (propertyGroup.isSetErrorOnUndeclaredNamespace()) {
             return Boolean.toString(propertyGroup.isErrorOnUndeclaredNamespace());
         } else {
             return null;
@@ -94,7 +94,7 @@ public class JspConfigPropertyGroupImpl implements JspPropertyGroupDescriptor, J
 
     @Override
     public String getIsXml() {
-        if(propertyGroup.isSetIsXml()){
+        if (propertyGroup.isSetIsXml()) {
             return Boolean.toString(propertyGroup.isIsXml());
         } else {
             return null;
@@ -108,7 +108,7 @@ public class JspConfigPropertyGroupImpl implements JspPropertyGroupDescriptor, J
 
     @Override
     public String getScriptingInvalid() {
-        if(propertyGroup.isSetScriptingInvalid()){
+        if (propertyGroup.isSetScriptingInvalid()) {
             return Boolean.toString(propertyGroup.isScriptingInvalid());
         } else {
             return null;
@@ -117,7 +117,7 @@ public class JspConfigPropertyGroupImpl implements JspPropertyGroupDescriptor, J
 
     @Override
     public String getTrimDirectiveWhitespaces() {
-        if(propertyGroup.isSetTrimDirectiveWhitespaces()){
+        if (propertyGroup.isSetTrimDirectiveWhitespaces()) {
             return Boolean.toString(propertyGroup.isTrimDirectiveWhitespaces());
         } else {
             return null;

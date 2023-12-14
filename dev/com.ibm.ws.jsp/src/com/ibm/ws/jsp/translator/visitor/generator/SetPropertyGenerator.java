@@ -26,21 +26,23 @@ import com.ibm.ws.jsp.translator.utils.JspTranslatorUtil;
 
 public class SetPropertyGenerator extends PageTranslationTimeGenerator {
 
-	static private Logger logger;
-	private static final String CLASS_NAME="com.ibm.ws.jsp.translator.visitor.generator.SetPropertyGenerator";
-	static{
-		logger = Logger.getLogger("com.ibm.ws.jsp");
-	}
-    public SetPropertyGenerator() {
-        super(new String[] {"name", "property", "param"});
+    static private Logger logger;
+    private static final String CLASS_NAME = "com.ibm.ws.jsp.translator.visitor.generator.SetPropertyGenerator";
+    static {
+        logger = Logger.getLogger("com.ibm.ws.jsp");
     }
-    
-    public void startGeneration(int section, JavaCodeWriter writer) throws JspCoreException {}
 
-    public void endGeneration(int section, JavaCodeWriter writer)  throws JspCoreException {
-		if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINEST)){
-			logger.logp(Level.FINEST, CLASS_NAME, "endGeneration","section = ["+section+"]");
-		}
+    public SetPropertyGenerator() {
+        super(new String[] { "name", "property", "param" });
+    }
+
+    public void startGeneration(int section, JavaCodeWriter writer) throws JspCoreException {
+    }
+
+    public void endGeneration(int section, JavaCodeWriter writer) throws JspCoreException {
+        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINEST)) {
+            logger.logp(Level.FINEST, CLASS_NAME, "endGeneration", "section = [" + section + "]");
+        }
         //PK65013 start
         String pageContextVar = Constants.JSP_PAGE_CONTEXT_ORIG;
         if (isTagFile && jspOptions.isModifyPageContextVariable()) {
@@ -57,77 +59,73 @@ public class SetPropertyGenerator extends PageTranslationTimeGenerator {
                 value = valueAttr.getValue();
             }
             String expressionValue = null;
-    		if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINEST)){
-    			logger.logp(Level.FINEST, CLASS_NAME, "endGeneration","name = ["+name+"]");
-    			logger.logp(Level.FINEST, CLASS_NAME, "endGeneration","property = ["+property+"]");
-    			logger.logp(Level.FINEST, CLASS_NAME, "endGeneration","param = ["+param+"]");
-    			logger.logp(Level.FINEST, CLASS_NAME, "endGeneration","valueAttr = ["+valueAttr+"]");
-    			logger.logp(Level.FINEST, CLASS_NAME, "endGeneration","value = ["+value+"]");
-    		}
-            
+            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINEST)) {
+                logger.logp(Level.FINEST, CLASS_NAME, "endGeneration", "name = [" + name + "]");
+                logger.logp(Level.FINEST, CLASS_NAME, "endGeneration", "property = [" + property + "]");
+                logger.logp(Level.FINEST, CLASS_NAME, "endGeneration", "param = [" + param + "]");
+                logger.logp(Level.FINEST, CLASS_NAME, "endGeneration", "valueAttr = [" + valueAttr + "]");
+                logger.logp(Level.FINEST, CLASS_NAME, "endGeneration", "value = [" + value + "]");
+            }
+
             if (value == null) {
-                HashMap jspAttributes = (HashMap)persistentData.get("jspAttributes");
+                HashMap jspAttributes = (HashMap) persistentData.get("jspAttributes");
                 if (jspAttributes != null) {
-                    ArrayList jspAttributeList = (ArrayList)jspAttributes.get(element);
-            
+                    ArrayList jspAttributeList = (ArrayList) jspAttributes.get(element);
+
                     for (Iterator itr = jspAttributeList.iterator(); itr.hasNext();) {
-                        AttributeGenerator.JspAttribute jspAttribute = (AttributeGenerator.JspAttribute)itr.next();
+                        AttributeGenerator.JspAttribute jspAttribute = (AttributeGenerator.JspAttribute) itr.next();
                         if (jspAttribute.getName().equals("value")) {
                             value = expressionValue = jspAttribute.getVarName();
                         }
                     }
                 }
-            }
-            else {
+            } else {
                 expressionValue = GeneratorUtils.attributeValue(value, false, String.class, jspConfiguration, isTagFile, pageContextVar); //PK65013
-                if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINEST)){
-        			logger.logp(Level.FINEST, CLASS_NAME, "endGeneration","expressionValue = ["+expressionValue+"]");
-        		}
+                if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINEST)) {
+                    logger.logp(Level.FINEST, CLASS_NAME, "endGeneration", "expressionValue = [" + expressionValue + "]");
+                }
             }
 
-            writeDebugStartBegin(writer);            
+            writeDebugStartBegin(writer);
             if ("*".equals(property)) {
                 //PK65013
                 writer.println(
-                    "org.apache.jasper.runtime.JspRuntimeLibrary.introspect("
-                        + pageContextVar+".findAttribute("
-                        + "\""
-                        + name
-                        + "\"), request);");
-            }
-            else if (value == null) {
+                               "org.apache.jasper.runtime.JspRuntimeLibrary.introspect("
+                               + pageContextVar + ".findAttribute("
+                               + "\""
+                               + name
+                               + "\"), request);");
+            } else if (value == null) {
                 if (param == null)
                     param = property; // default to same as property
                 //PK65013 change pageContext variable to customizable one.
                 writer.println(
-                    "org.apache.jasper.runtime.JspRuntimeLibrary.introspecthelper("
-                        + pageContextVar+".findAttribute(\""
-                        + name
-                        + "\"), \""
-                        + property
-                        + "\", request.getParameter(\""
-                        + param
-                        + "\"), "
-                        + "request, \""
-                        + param
-                        + "\", false);");
-            }
-            else if (JspTranslatorUtil.isExpression(value)) {
+                               "org.apache.jasper.runtime.JspRuntimeLibrary.introspecthelper("
+                               + pageContextVar + ".findAttribute(\""
+                               + name
+                               + "\"), \""
+                               + property
+                               + "\", request.getParameter(\""
+                               + param
+                               + "\"), "
+                               + "request, \""
+                               + param
+                               + "\", false);");
+            } else if (JspTranslatorUtil.isExpression(value)) {
                 //PK65013 change pageContext variable to customizable one.
                 writer.println(
-                    "org.apache.jasper.runtime.JspRuntimeLibrary.handleSetProperty("
-                        + pageContextVar+".findAttribute(\""
-                        + name
-                        + "\"), \""
-                        + property
-                        + "\",");
+                               "org.apache.jasper.runtime.JspRuntimeLibrary.handleSetProperty("
+                               + pageContextVar + ".findAttribute(\""
+                               + name
+                               + "\"), \""
+                               + property
+                               + "\",");
                 writer.print(expressionValue);
                 writer.println(");");
-            }
-            else if (JspTranslatorUtil.isELInterpreterInput(value, jspConfiguration)) {
-        		if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINEST)){
-        			logger.logp(Level.FINEST, CLASS_NAME, "endGeneration","after call to isELInterpreterInput");
-        		}
+            } else if (JspTranslatorUtil.isELInterpreterInput(value, jspConfiguration)) {
+                if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINEST)) {
+                    logger.logp(Level.FINEST, CLASS_NAME, "endGeneration", "after call to isELInterpreterInput");
+                }
                 // We've got to resolve the very call to the interpreter
                 // at runtime since we don't know what type to expect
                 // in the general case; we thus can't hard-wire the call
@@ -141,37 +139,36 @@ public class SetPropertyGenerator extends PageTranslationTimeGenerator {
                 // - 'pageContext' is a VariableResolver.
                 // - 'this' (either the generated Servlet or the generated tag
                 //   handler for Tag files) is a FunctionMapper.
-                
+
                 //PK65013 change pageContext variable to customizable one.
-        		writer.println(
-                    "org.apache.jasper.runtime.JspRuntimeLibrary.handleSetPropertyExpression("
-                        + pageContextVar+".findAttribute(\""
-                        + name
-                        + "\"), \""
-                        + property
-                        + "\", "
-                        + GeneratorUtils.quote(value)
-                        + ", "
-                        + pageContextVar+", _jspx_fnmap);");
+                writer.println(
+                               "org.apache.jasper.runtime.JspRuntimeLibrary.handleSetPropertyExpression("
+                               + pageContextVar + ".findAttribute(\""
+                               + name
+                               + "\"), \""
+                               + property
+                               + "\", "
+                               + GeneratorUtils.quote(value)
+                               + ", "
+                               + pageContextVar + ", _jspx_fnmap);");
                 /*
-                                    + "(javax.servlet.jsp.el.VariableResolver) pageContext, "
-                                    + "(javax.servlet.jsp.el.FunctionMapper) this );");
-                */
-            }
-            else {
+                 * + "(javax.servlet.jsp.el.VariableResolver) pageContext, "
+                 * + "(javax.servlet.jsp.el.FunctionMapper) this );");
+                 */
+            } else {
                 //PK65013
                 writer.println(
-                    "org.apache.jasper.runtime.JspRuntimeLibrary.introspecthelper("
-                        + pageContextVar+".findAttribute(\""
-                        + name
-                        + "\"), \""
-                        + property
-                        + "\", "
-                        + expressionValue
-                        + ", null, null, false);");
+                               "org.apache.jasper.runtime.JspRuntimeLibrary.introspecthelper("
+                               + pageContextVar + ".findAttribute(\""
+                               + name
+                               + "\"), \""
+                               + property
+                               + "\", "
+                               + expressionValue
+                               + ", null, null, false);");
             }
-            writeDebugStartEnd(writer);            
+            writeDebugStartEnd(writer);
         }
-        
+
     }
 }

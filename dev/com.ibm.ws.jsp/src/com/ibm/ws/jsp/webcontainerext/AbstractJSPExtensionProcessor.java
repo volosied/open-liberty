@@ -138,9 +138,9 @@ public abstract class AbstractJSPExtensionProcessor extends com.ibm.ws.webcontai
     // defect 238792: begin list of JSP mapped servlets.
     protected HashMap jspFileMappings = new HashMap();
     // defect 238792: end list of JSP mapped servlets.
-    
-    public AbstractJSPExtensionProcessor(IServletContext webapp, 
-                                         JspXmlExtConfig webAppConfig, 
+
+    public AbstractJSPExtensionProcessor(IServletContext webapp,
+                                         JspXmlExtConfig webAppConfig,
                                          GlobalTagLibraryCache globalTagLibraryCache,
                                          JspClassloaderContext jspClassloaderContext) throws Exception {
         super(webapp);
@@ -154,27 +154,26 @@ public abstract class AbstractJSPExtensionProcessor extends com.ibm.ws.webcontai
         ContextListener contextListener = new ContextListener();
         contextListener.setIsUseThreadTagPool(jspOptions.isUseThreadTagPool());
         webapp.addLifecycleListener(contextListener);
-        
-        if (isAnyTraceEnabled&&logger.isLoggable (Level.FINER)){
-            logger.entering(CLASS_NAME,"JSPExtensionProcessor", " app contextPath --> "+ webapp.getContextPath());
-        }//d651265
+
+        if (isAnyTraceEnabled && logger.isLoggable(Level.FINER)) {
+            logger.entering(CLASS_NAME, "JSPExtensionProcessor", " app contextPath --> " + webapp.getContextPath());
+        } //d651265
 
         try {
-            String extDocumentRoot = null,preFragmentExtendedDocumentRoot = null;
+            String extDocumentRoot = null, preFragmentExtendedDocumentRoot = null;
             if (jspOptions != null) {
                 extDocumentRoot = jspOptions.getExtendedDocumentRoot();
                 preFragmentExtendedDocumentRoot = jspOptions.getPreFragmentExtendedDocumentRoot();
             }
             Map tagLibMap = webAppConfig.getTagLibMap();
-            jspConfigurationManager = new JspConfigurationManager(webAppConfig.getJspPropertyGroups(), webAppConfig.isServlet24(),
-                                                                  webAppConfig.isServlet24_or_higher(), webAppConfig.getJspFileExtensions(), webAppConfig.isJCDIEnabledForRuntimeCheck());
+            jspConfigurationManager = new JspConfigurationManager(webAppConfig.getJspPropertyGroups(), webAppConfig.isServlet24(), webAppConfig.isServlet24_or_higher(), webAppConfig.getJspFileExtensions(), webAppConfig.isJCDIEnabledForRuntimeCheck());
             this.jspClassloaderContext = jspClassloaderContext;
             //  defect jdkcompiler
             String docRoot = null; //call getRealPath later - if needed
             boolean docRootRealPathCalled = false;
             if (jspOptions.isUseJDKCompiler() && ToolProvider.getSystemJavaCompiler() == null) {
                 jspOptions.setUseJDKCompiler(false);
-                
+
                 /*
                  * Log a message containing information about this incident.
                  * If ToolProvider.getSystemJavaCompiler() is null, we won't be able to use the JDK compiler.
@@ -185,19 +184,18 @@ public abstract class AbstractJSPExtensionProcessor extends com.ibm.ws.webcontai
             }
             if (jspOptions.isUseJDKCompiler()) {
                 docRoot = webapp.getRealPath("/"); //needs to get the realPath for the jdk compiler
-                docRootRealPathCalled=true;
+                docRootRealPathCalled = true;
                 jspCompilerFactory = new JspCompilerFactoryImpl(docRoot, jspClassloaderContext, jspOptions);
-            }
-            else {
+            } else {
                 //DEFAULT CASE
-            	jspCompilerFactory = new JDTCompilerFactory(jspClassloaderContext.getClassLoader(), jspOptions);
+                jspCompilerFactory = new JDTCompilerFactory(jspClassloaderContext.getClassLoader(), jspOptions);
             }
 
-	        if (jspOptions.getTranslationContextClass() != null) {
-	            context = loadTranslationContext(jspOptions.getTranslationContextClass(), webapp, jspOptions.getOutputDir().getPath(), webapp.getContextPath());
-	        } else {
-	            context = new JSPExtensionContext(webapp, jspOptions, extDocumentRoot, preFragmentExtendedDocumentRoot, jspClassloaderContext, jspCompilerFactory);
-	        }
+            if (jspOptions.getTranslationContextClass() != null) {
+                context = loadTranslationContext(jspOptions.getTranslationContextClass(), webapp, jspOptions.getOutputDir().getPath(), webapp.getContextPath());
+            } else {
+                context = new JSPExtensionContext(webapp, jspOptions, extDocumentRoot, preFragmentExtendedDocumentRoot, jspClassloaderContext, jspCompilerFactory);
+            }
             List eventListenerList = new ArrayList();
             eventListenerList.addAll(globalTagLibraryCache.getEventListenerList());
 
@@ -214,65 +212,59 @@ public abstract class AbstractJSPExtensionProcessor extends com.ibm.ws.webcontai
             }
 
             long start = System.nanoTime();
-            tlc = new TagLibraryCache(context, 
-                                      tagLibMap, 
-                                      jspOptions, 
-                                      jspConfigurationManager, 
-                                      globalTagLibMap, 
-                                      globalTagLibraryCache.getImplicitTagLibPrefixMap(), 
-                                      globalTagLibraryCache.getOptimizedTagConfigMap(),
-                                      (WebAppConfiguration) webapp.getWebAppConfig());
+            tlc = new TagLibraryCache(context, tagLibMap, jspOptions, jspConfigurationManager, globalTagLibMap, globalTagLibraryCache.getImplicitTagLibPrefixMap(), globalTagLibraryCache.getOptimizedTagConfigMap(), (WebAppConfiguration) webapp.getWebAppConfig());
             long end = System.nanoTime();
-            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE)) {
+            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
                 logger.logp(Level.FINE, CLASS_NAME, "JSPExtensionProcessor", "TagLibraryCache created in " + ((end - start) / NANOS_IN_A_MILLISECONDS) + " ms");
             }
             eventListenerList.addAll(tlc.getEventListenerList());
-            
+
             // Begin LIDB4147-24
             // Collect the TLD event listener classes and make sure they're scanned for
             // annotations.
-            
-            AnnotationHandler annotationHandler = AnnotationHandler.getInstance (webapp);
+
+            AnnotationHandler annotationHandler = AnnotationHandler.getInstance(webapp);
             List<Class<?>> eventListenerClasses = new LinkedList<Class<?>>();
-            
+
             for (Iterator itr = eventListenerList.iterator(); itr.hasNext();) {
-                 String eventListenerClassName = (String) itr.next();
-                 try {
-                     eventListenerClasses.add (Class.forName(eventListenerClassName, true,
-                             context.getJspClassloaderContext().getClassLoader()));
-                 }
-                 
-                 catch (ClassNotFoundException e) {
-                      com.ibm.ws.ffdc.FFDCFilter.processException(e, "com.ibm.ws.jsp.webcontainerext.JspExtensionProcessor.init", "89", this);
-                      if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.WARNING)) {
-                          logger.logp(Level.WARNING, CLASS_NAME, "JSPExtensionProcessor", "jsp error failed to load event listener class = ["
-                                  + eventListenerClassName + "]", e);
-                      }
-                  }
+                String eventListenerClassName = (String) itr.next();
+                try {
+                    eventListenerClasses.add(Class.forName(eventListenerClassName, true,
+                                                           context.getJspClassloaderContext().getClassLoader()));
+                }
+
+                catch (ClassNotFoundException e) {
+                    com.ibm.ws.ffdc.FFDCFilter.processException(e, "com.ibm.ws.jsp.webcontainerext.JspExtensionProcessor.init", "89", this);
+                    if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.WARNING)) {
+                        logger.logp(Level.WARNING, CLASS_NAME, "JSPExtensionProcessor", "jsp error failed to load event listener class = ["
+                                                                                        + eventListenerClassName + "]",
+                                    e);
+                    }
+                }
             }
-            
+
             //annotationHandler.performScan (eventListenerClasses);
-            
+
             // End LIDB4147-24
-            
+
             for (Class<?> eventListenerClass : eventListenerClasses) {
                 //663071 moved loadListeners after this call for 661473... just add the listener to the list now 
                 webapp.getWebAppConfig().addListener(eventListenerClass.getName());
-                    if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE)) {
+                if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
                     logger.logp(Level.FINE, CLASS_NAME, "JSPExtensionProcessor", "Added Event Listener [{0}] to listeners list", eventListenerClass.getName());
                 }
             }
         } catch (JspCoreException e) {
             com.ibm.ws.ffdc.FFDCFilter.processException(e, "com.ibm.ws.jsp.webcontainerext.JSPExtensionProcessor.init", "97", this);
-            if (isAnyTraceEnabled&&logger.isLoggable (Level.FINER))
-                logger.exiting(CLASS_NAME,"JSPExtensionProcessor", "app contextPath --> "+ webapp.getContextPath()); //d651265
+            if (isAnyTraceEnabled && logger.isLoggable(Level.FINER))
+                logger.exiting(CLASS_NAME, "JSPExtensionProcessor", "app contextPath --> " + webapp.getContextPath()); //d651265
             if (e.getCause() != null)
                 throw new ServletException(e.getLocalizedMessage(), e.getCause());
             else
                 throw new ServletException(e.getLocalizedMessage());
         }
 
-        if (webapp.getModuleContainer()!=null) {
+        if (webapp.getModuleContainer() != null) {
             //I believe this is used to get the policy file in the app, this should be changed to pass in an Entry
             //this isn't in the alpha
             //TODO: uncomment this code and call real method
@@ -282,26 +274,25 @@ public abstract class AbstractJSPExtensionProcessor extends com.ibm.ws.webcontai
             Iterator<URL> it = map.iterator();
             if (it.hasNext()) {
                 URL url = it.next(); //only gets the first one...
-                if (url!=null) {
-                    codeSource = new CodeSource(url, (java.security.cert.Certificate[])null);
+                if (url != null) {
+                    codeSource = new CodeSource(url, (java.security.cert.Certificate[]) null);
                 }
             }
         } else {
             try {
                 String contextDir = context.getRealPath("/");
                 URL url = new URL("file:" + contextDir);
-                codeSource = new CodeSource(url, (java.security.cert.Certificate[])null);
+                codeSource = new CodeSource(url, (java.security.cert.Certificate[]) null);
             } catch (MalformedURLException e) {
                 com.ibm.ws.ffdc.FFDCFilter.processException(e, "com.ibm.ws.jsp.webcontainerext.JSPExtensionProcessor.init", "112", this);
-                if (isAnyTraceEnabled&&logger.isLoggable (Level.FINER))
-                    logger.exiting(CLASS_NAME,"JSPExtensionProcessor", "app contextPath --> "+ webapp.getContextPath()); //d651265
+                if (isAnyTraceEnabled && logger.isLoggable(Level.FINER))
+                    logger.exiting(CLASS_NAME, "JSPExtensionProcessor", "app contextPath --> " + webapp.getContextPath()); //d651265
                 throw new ServletException(e);
             }
-        }       
+        }
 
-
-        if (isAnyTraceEnabled&&logger.isLoggable(Level.FINER))
-            logger.exiting(CLASS_NAME,"JSPExtensionProcessor", "app contextPath --> "+ webapp.getContextPath()); //d651265
+        if (isAnyTraceEnabled && logger.isLoggable(Level.FINER))
+            logger.exiting(CLASS_NAME, "JSPExtensionProcessor", "app contextPath --> " + webapp.getContextPath()); //d651265
     }
 
     public IServletWrapper createServletWrapper(IServletConfig config) throws Exception {
@@ -309,12 +300,7 @@ public abstract class AbstractJSPExtensionProcessor extends com.ibm.ws.webcontai
         if (isAnyTraceEnabled && logger.isLoggable(Level.FINER)) {
             logger.entering(CLASS_NAME, "createServletWrapper");
         }
-        JSPExtensionServletWrapper jspServletWrapper = new JSPExtensionServletWrapper(extensionContext,
-                                                                                      jspOptions,
-                                                                                      jspConfigurationManager,
-                                                                                      tlc,
-                                                                                      context,
-                                                                                      codeSource);
+        JSPExtensionServletWrapper jspServletWrapper = new JSPExtensionServletWrapper(extensionContext, jspOptions, jspConfigurationManager, tlc, context, codeSource);
         jspServletWrapper.initialize(config);
         if (isAnyTraceEnabled && logger.isLoggable(Level.FINER))
             logger.exiting(CLASS_NAME, "createServletWrapper"); //d651265
@@ -361,7 +347,7 @@ public abstract class AbstractJSPExtensionProcessor extends com.ibm.ws.webcontai
                 }
                 //log it only if JSPG0077E
                 if (e.getMessage().contains("JSPG0077E")) {
-                   logger.logp(Level.SEVERE, CLASS_NAME, "getServletWrapper", rootCause.getLocalizedMessage());
+                    logger.logp(Level.SEVERE, CLASS_NAME, "getServletWrapper", rootCause.getLocalizedMessage());
                 }
                 // Defect 211450
                 JSPErrorReport jser = new JSPErrorReport(rootCause.getLocalizedMessage(), rootCause);
@@ -431,13 +417,13 @@ public abstract class AbstractJSPExtensionProcessor extends com.ibm.ws.webcontai
         //PK87901 added check for PrepareJsp requests which occur during startup.
         if ((httpReq.getAttribute(Constants.INC_REQUEST_URI) != null)
             || (httpReq.getAttribute(Constants.FORWARD_REQUEST_URI) != null)
-            || (httpReq.getAttribute(Constants.ASYNC_REQUEST_URI)!=null)
+            || (httpReq.getAttribute(Constants.ASYNC_REQUEST_URI) != null)
             || ((jspOptions.isPrepareJSPsSet()) && (httpReq.getClass().getName().equals("com.ibm.ws.jsp.webcontainerext.ws.PrepareJspServletRequest")))) {
             checkWEBINF = false;
         }
         //PK81387 end
 
-        if (jspOptions.isDisableJspRuntimeCompilation() == false && jspOptions.getTranslationContextClass() == null) { 
+        if (jspOptions.isDisableJspRuntimeCompilation() == false && jspOptions.getTranslationContextClass() == null) {
             success = handleCaseSensitivityCheck(filename, checkWEBINF); //PK81387 - added checkWEBINF param
         }
         if (success == false) { // case sensitivity match failed
@@ -486,8 +472,7 @@ public abstract class AbstractJSPExtensionProcessor extends com.ibm.ws.webcontai
                             }
                         });
                     } catch (PrivilegedActionException pae) {
-                        com.ibm.ws.ffdc.FFDCFilter
-                                        .processException(pae, "com.ibm.ws.jsp.webcontainerext.AbstractJSPExtensionProcessor.findWrapper", "445", this);
+                        com.ibm.ws.ffdc.FFDCFilter.processException(pae, "com.ibm.ws.jsp.webcontainerext.AbstractJSPExtensionProcessor.findWrapper", "445", this);
                         throw (JspCoreException) pae.getException();
                     }
                 } else {
@@ -520,11 +505,11 @@ public abstract class AbstractJSPExtensionProcessor extends com.ibm.ws.webcontai
         return jspServletWrapper;
     }
 
-/*
- * public List getPatternList() {
- * return jspConfigurationManager.getJspExtensionList();
- * }
- */
+    /*
+     * public List getPatternList() {
+     * return jspConfigurationManager.getJspExtensionList();
+     * }
+     */
     // PM07560 - Start
     public List getPatternList() {
         List mappings = jspConfigurationManager.getJspExtensionList();
@@ -635,8 +620,8 @@ public abstract class AbstractJSPExtensionProcessor extends com.ibm.ws.webcontai
         Object token = ThreadIdentityManager.runAsServer();
         try {
             if (!isValidFilePath(path)) {
-                if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable (Level.FINE))
-                        logger.exiting(CLASS_NAME,"_handleCaseSensitivityCheck","Forbidden-invalid file path");
+                if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE))
+                    logger.exiting(CLASS_NAME, "_handleCaseSensitivityCheck", "Forbidden-invalid file path");
                 return false;
             }
             Container adaptableContainer = webapp.getModuleContainer();
@@ -740,13 +725,13 @@ public abstract class AbstractJSPExtensionProcessor extends com.ibm.ws.webcontai
             }
         }
         jspUri = com.ibm.ws.util.WSUtil.resolveURI(jspUri);
-        
+
         WebAppConfig webAppConfig = webapp.getWebAppConfig();
         IServletConfig sconfig = webAppConfig.getServletInfo(jspUri);
-        
+
         if (sconfig != null) //PI87565: If ServletConfig exists, return it. Otherwise, create a new one.
             return sconfig;
-        
+
         sconfig = createConfig(jspUri);
         sconfig.setServletName(jspUri);
         sconfig.setDisplayName(jspUri);
@@ -763,8 +748,8 @@ public abstract class AbstractJSPExtensionProcessor extends com.ibm.ws.webcontai
         return sconfig;
     }
 
-    protected JspTranslationContext loadTranslationContext(String translationContextClass, ServletContext servletContext, String outputDir, String contextRoot)
-                    throws JspCoreException {
+    protected JspTranslationContext loadTranslationContext(String translationContextClass, ServletContext servletContext, String outputDir,
+                                                           String contextRoot) throws JspCoreException {
         JspTranslationContext ctxt = null;
 
         if (System.getSecurityManager() != null) {
@@ -778,14 +763,12 @@ public abstract class AbstractJSPExtensionProcessor extends com.ibm.ws.webcontai
                         try {
                             String docRoot = finalServletContext.getRealPath("/");
                             URL contextURL = new File(docRoot).toURL();
-                            JspInputSourceFactory jspInputSourceFactory = new JspInputSourceFactoryImpl(docRoot, contextURL, null, false, webapp.getModuleContainer(), jspClassloaderContext
-                                            .getClassLoader(), finalServletContext);
+                            JspInputSourceFactory jspInputSourceFactory = new JspInputSourceFactoryImpl(docRoot, contextURL, null, false, webapp.getModuleContainer(), jspClassloaderContext.getClassLoader(), finalServletContext);
                             Class contextClass = Class.forName(finalTranslationContextClass, true, extensionContext.getClassLoader());
                             Constructor constructor = contextClass.getConstructor(new Class[] { ServletContext.class });
                             JspTranslationContext ctxt = (JspTranslationContext) constructor.newInstance(new Object[] { finalServletContext });
                             JspResourcesFactoryImpl tempFactory = new JspResourcesFactoryImpl(jspOptions, ctxt, webapp.getModuleContainer());
-                            JspTranslationEnvironmentImpl jspEnvironment = new JspTranslationEnvironmentImpl(finalOutputDir, finalContextRoot,
-                                            jspInputSourceFactory, tempFactory, jspClassloaderContext, jspCompilerFactory);
+                            JspTranslationEnvironmentImpl jspEnvironment = new JspTranslationEnvironmentImpl(finalOutputDir, finalContextRoot, jspInputSourceFactory, tempFactory, jspClassloaderContext, jspCompilerFactory);
                             ctxt.setJspTranslationEnviroment(jspEnvironment);
                             return ctxt;
                         } catch (Exception e) {
@@ -805,8 +788,7 @@ public abstract class AbstractJSPExtensionProcessor extends com.ibm.ws.webcontai
                 Constructor constructor = contextClass.getConstructor(new Class[] { ServletContext.class });
                 ctxt = (JspTranslationContext) constructor.newInstance(new Object[] { servletContext });
                 JspResourcesFactoryImpl tempFactory = new JspResourcesFactoryImpl(jspOptions, ctxt, webapp.getModuleContainer());
-                JspTranslationEnvironmentImpl jspEnvironment = new JspTranslationEnvironmentImpl(outputDir, contextRoot, jspInputSourceFactory,
-                                                                                                 tempFactory, jspClassloaderContext, jspCompilerFactory);
+                JspTranslationEnvironmentImpl jspEnvironment = new JspTranslationEnvironmentImpl(outputDir, contextRoot, jspInputSourceFactory, tempFactory, jspClassloaderContext, jspCompilerFactory);
                 ctxt.setJspTranslationEnviroment(jspEnvironment);
             } catch (Exception e) {
                 throw new JspCoreException("jsp.error.failed.load.context.class", new Object[] { translationContextClass }, e);
@@ -913,20 +895,19 @@ public abstract class AbstractJSPExtensionProcessor extends com.ibm.ws.webcontai
     void startPreTouch(final PrepareJspHelperFactory prepareJspHelperFactory) {
         // @BLB Begin Pretouch
         if (this.jspOptions.isPrepareJSPsSet()) {
-            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE)) {
+            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
                 logger.logp(Level.FINE, CLASS_NAME, "JSPExtensionProcessor", "PrepareJSPs attribute is: " + this.jspOptions.getPrepareJSPs());
             }
 
             try {
-                if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE)) {
+                if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
                     logger.logp(Level.FINE, CLASS_NAME, "JSPExtensionProcessor", "Starting the Pretouch Thread ");
                 }
-                PreTouchThreadStarter preTouchThread = 
-                                new PreTouchThreadStarter(prepareJspHelperFactory.createPrepareJspHelper(this, webapp, jspOptions));
+                PreTouchThreadStarter preTouchThread = new PreTouchThreadStarter(prepareJspHelperFactory.createPrepareJspHelper(this, webapp, jspOptions));
                 AccessController.doPrivileged(preTouchThread);
-                
+
             } catch (Exception ex) {
-                if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE)) {
+                if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
                     logger.logp(Level.FINE, CLASS_NAME, "JSPExtensionProcessor", "Pretouch threw an unexpected exception: ", ex);
                 }
             }
@@ -937,11 +918,14 @@ public abstract class AbstractJSPExtensionProcessor extends com.ibm.ws.webcontai
     private static class PreTouchThreadStarter implements PrivilegedExceptionAction<Object> {
 
         private final PrepareJspHelper pretouchHelper;
-        
+
         PreTouchThreadStarter(PrepareJspHelper pretouchHelper) {
             this.pretouchHelper = pretouchHelper;
         }
-        /* (non-Javadoc)
+
+        /*
+         * (non-Javadoc)
+         * 
          * @see java.security.PrivilegedExceptionAction#run()
          */
         @Override
@@ -951,6 +935,6 @@ public abstract class AbstractJSPExtensionProcessor extends com.ibm.ws.webcontai
             preloadThread.start();
             return null;
         }
-        
+
     }
 }

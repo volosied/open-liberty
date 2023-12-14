@@ -30,84 +30,71 @@ import com.ibm.bsf.BSFManager;
 import com.ibm.bsf.util.IOUtils;
 import com.ibm.ws.ffdc.FFDCFilter;
 
-
-public class CallTag extends TagSupport implements Tag
-{
+public class CallTag extends TagSupport implements Tag {
     /**
-	 * Comment for <code>serialVersionUID</code>
-	 */
-	private static final long serialVersionUID = 3256446884846449968L;
-	String source;
+     * Comment for <code>serialVersionUID</code>
+     */
+    private static final long serialVersionUID = 3256446884846449968L;
+    String source;
     String function;
     Vector arguments;
 
-    public void setSource(String s)
-    {
+    public void setSource(String s) {
         source = s;
     }
 
-    public String getSource()
-    {
+    public String getSource() {
         return source;
     }
 
-    public void setFunction(String f)
-    {
+    public void setFunction(String f) {
         function = f;
     }
 
-    public String getFunction()
-    {
+    public String getFunction() {
         return function;
     }
 
-    public Vector getArguments()
-    {
+    public Vector getArguments() {
         return arguments;
     }
 
     /**
      * @see TagSupport#doStartTag()
      */
-    public int doStartTag() throws JspException 
-    {
-        arguments = new Vector();       
+    public int doStartTag() throws JspException {
+        arguments = new Vector();
         return EVAL_BODY_INCLUDE;
     }
 
     /**
      * @see TagSupport#doEndTag()
      */
-    public int doEndTag() throws JspException 
-    {
-        try
-        {
-            BSFManager mgr = new BSFManager();  
+    public int doEndTag() throws JspException {
+        try {
+            BSFManager mgr = new BSFManager();
             mgr.declareBean("context", pageContext.getServletContext(), ServletContext.class);
             mgr.declareBean("config", pageContext.getServletConfig(), ServletConfig.class);
             mgr.declareBean("request", pageContext.getRequest(), HttpServletRequest.class);
             mgr.declareBean("response", pageContext.getResponse(), HttpServletResponse.class);
-            mgr.declareBean("session", pageContext.getSession(), HttpSession.class);                        
+            mgr.declareBean("session", pageContext.getSession(), HttpSession.class);
             mgr.declareBean("pageContext", pageContext, PageContext.class);
 
             String fileName = pageContext.getServletContext().getRealPath(source);
             //PM21451 Start
             BSFEngine engine = null;
-            if(fileName != null) {
+            if (fileName != null) {
                 engine = mgr.loadScriptingEngine(mgr.getLangFromFilename(fileName));
                 engine.exec(fileName, 0, 0, IOUtils.getStringFromReader(new FileReader(fileName)));
             } else {
-                throw new Exception("source not found -->"+ source); 
+                throw new Exception("source not found -->" + source);
             }
             //PM21451 End
 
             Object rc = null;
-            if (arguments.isEmpty())
-            {
-                rc = engine.call(null, function, new Object[]{});
-            }
-            else
-            {
+            if (arguments.isEmpty()) {
+                rc = engine.call(null, function, new Object[] {});
+            } else {
                 Object[] args = new Object[arguments.size()];
                 arguments.copyInto(args);
                 rc = engine.call(null, function, args);
@@ -115,21 +102,18 @@ public class CallTag extends TagSupport implements Tag
             if (getId() != null)
                 pageContext.setAttribute(getId(), rc);
 
-//			System.out.println(source + "::" + function + "--> " + rc);				
+            //			System.out.println(source + "::" + function + "--> " + rc);				
+        } catch (Exception e) {
+            FFDCFilter.processException(e, "com.ibm.ws.jsp.jsx.tags.CallTags.doEndTag", "106", new Object[] { pageContext, arguments });
         }
-        catch (Exception e)
-        {
-            FFDCFilter.processException(e, "com.ibm.ws.jsp.jsx.tags.CallTags.doEndTag", "106", new Object[] {pageContext, arguments});
-        }
-        
+
         return EVAL_PAGE;
     }
 
     /**
      * @see TagSupport#release()
      */
-    public void release() 
-    {
+    public void release() {
         arguments.clear();
         arguments = null;
         source = null;

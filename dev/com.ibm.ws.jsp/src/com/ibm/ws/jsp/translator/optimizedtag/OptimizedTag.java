@@ -14,10 +14,16 @@ package com.ibm.ws.jsp.translator.optimizedtag;
 
 public interface OptimizedTag {
     void generateImports(OptimizedTagContext context);
+
     void generateDeclarations(OptimizedTagContext context);
+
     void setAttribute(String attrName, Object attrValue);
+
     void generateStart(OptimizedTagContext context);
+
     void generateEnd(OptimizedTagContext context);
+
     boolean doOptimization(OptimizedTagContext context);
+
     boolean canGenTagInMethod(OptimizedTagContext context);
 }

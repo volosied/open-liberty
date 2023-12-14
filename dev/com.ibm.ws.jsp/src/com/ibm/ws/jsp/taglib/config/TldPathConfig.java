@@ -19,17 +19,17 @@ public class TldPathConfig {
     private String tldPath = null;
     private String uri = null;
     private boolean containsListenerDefs = false;
-    private List availabilityConditionList = null;    
-    
+    private List availabilityConditionList = null;
+
     public TldPathConfig(String tldPath, String uri, String strContainsListenerDefs) {
         this.tldPath = tldPath;
         this.uri = uri;
         if (strContainsListenerDefs != null && strContainsListenerDefs.equalsIgnoreCase("true")) {
-            containsListenerDefs = true;    
+            containsListenerDefs = true;
         }
         availabilityConditionList = new ArrayList();
     }
-    
+
     public List getAvailabilityConditionList() {
         return availabilityConditionList;
     }
@@ -37,7 +37,7 @@ public class TldPathConfig {
     public String getTldPath() {
         return tldPath;
     }
-    
+
     public String getUri() {
         return uri;
     }
@@ -45,7 +45,7 @@ public class TldPathConfig {
     public void setUri(String string) {
         uri = string;
     }
-    
+
     public boolean containsListenerDefs() {
         return containsListenerDefs;
     }

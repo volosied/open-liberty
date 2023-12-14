@@ -28,11 +28,11 @@ import com.ibm.ws.jsp.taglib.TagLibraryInfoImpl;
 import com.ibm.ws.jsp.translator.JspTranslationException;
 
 class FVVisitor extends ELNode.Visitor {
-	static private Logger logger;
-	private static final String CLASS_NAME="com.ibm.ws.jsp.translator.visitor.validator.ELValidator";
-	static{
-		logger = Logger.getLogger("com.ibm.ws.jsp");
-	}
+    static private Logger logger;
+    private static final String CLASS_NAME = "com.ibm.ws.jsp.translator.visitor.validator.ELValidator";
+    static {
+        logger = Logger.getLogger("com.ibm.ws.jsp");
+    }
 
     ValidateResult result;
     Element jspElement;
@@ -40,7 +40,7 @@ class FVVisitor extends ELNode.Visitor {
 
     FVVisitor(Element jspElement, ValidateResult result, HashMap prefixToUriMap) {
         this.jspElement = jspElement;
-        this.result=result;
+        this.result = result;
         this.prefixToUriMap = prefixToUriMap;
     }
 
@@ -49,26 +49,26 @@ class FVVisitor extends ELNode.Visitor {
         String function = func.getName();
         String uri = null;
 
-        if (prefix!=null && prefixToUriMap!=null) {                 
+        if (prefix != null && prefixToUriMap != null) {
             uri = (String) prefixToUriMap.get(prefix);
             if (uri == null) {
-                uri = jspElement.getNamespaceURI();  // 245645.1
+                uri = jspElement.getNamespaceURI(); // 245645.1
             }
 
             if (uri == null) {
                 if (prefix == null) {
-                    throw new JspTranslationException("jsp.error.noFunctionPrefix " + function);					
+                    throw new JspTranslationException("jsp.error.noFunctionPrefix " + function);
                 } else {
-                    throw new JspTranslationException("jsp.error.attribute.invalidPrefix " + prefix);					
+                    throw new JspTranslationException("jsp.error.attribute.invalidPrefix " + prefix);
                 }
             }
             TagLibraryInfoImpl taglib = (TagLibraryInfoImpl) result.getTagLibMap().get(uri);
-            if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINER)){
-                logger.logp(Level.FINER, CLASS_NAME, "FVVisitor.visit","uri= ["+uri+"]");
-                logger.logp(Level.FINER, CLASS_NAME, "FVVisitor.visit","taglib= ["+taglib+"]");
+            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINER)) {
+                logger.logp(Level.FINER, CLASS_NAME, "FVVisitor.visit", "uri= [" + uri + "]");
+                logger.logp(Level.FINER, CLASS_NAME, "FVVisitor.visit", "taglib= [" + taglib + "]");
             }
-            if (taglib == null)  // 245645.1
-                throw new JspTranslationException("jsp.error.el.function.not.found", new Object[] { function, uri });  // 245645.1
+            if (taglib == null) // 245645.1
+                throw new JspTranslationException("jsp.error.el.function.not.found", new Object[] { function, uri }); // 245645.1
             FunctionInfo funcInfo = null;
             funcInfo = taglib.getFunction(function);
             if (funcInfo == null) {
@@ -80,11 +80,12 @@ class FVVisitor extends ELNode.Visitor {
             processSignature(func);
         }
     }
-    private void processSignature(ELNode.Function func)
-    	throws JspTranslationException {
-		func.setMethodName(getMethod(func));
-		func.setParameters(getParameters(func));
-	}
+
+    private void processSignature(ELNode.Function func) throws JspTranslationException {
+        func.setMethodName(getMethod(func));
+        func.setParameters(getParameters(func));
+    }
+
     /**
      * Get the method name from the signature.
      */
@@ -94,11 +95,11 @@ class FVVisitor extends ELNode.Visitor {
 
         int start = signature.indexOf(' ');
         if (start < 0) {
-            throw new JspTranslationException("jsp.error.tld.fn.invalid.signature " + func.getPrefix()+" "+ func.getName());					
+            throw new JspTranslationException("jsp.error.tld.fn.invalid.signature " + func.getPrefix() + " " + func.getName());
         }
         int end = signature.indexOf('(');
         if (end < 0) {
-            throw new JspTranslationException("jsp.error.tld.fn.invalid.signature.parenexpected " + func.getPrefix()+" "+ func.getName());					
+            throw new JspTranslationException("jsp.error.tld.fn.invalid.signature.parenexpected " + func.getPrefix() + " " + func.getName());
         }
         return signature.substring(start + 1, end).trim();
     }
@@ -108,8 +109,7 @@ class FVVisitor extends ELNode.Visitor {
      * 
      * @return An array of parameter class names
      */
-    private String[] getParameters(ELNode.Function func)
-            throws JspTranslationException {
+    private String[] getParameters(ELNode.Function func) throws JspTranslationException {
         FunctionInfo funcInfo = func.getFunctionInfo();
         String signature = funcInfo.getFunctionSignature();
         ArrayList params = new ArrayList();
@@ -123,7 +123,7 @@ class FVVisitor extends ELNode.Visitor {
             if (p < 0) {
                 p = signature.indexOf(')', start);
                 if (p < 0) {
-	                throw new JspTranslationException("jsp.error.tld.fn.invalid.signature " + func.getPrefix()+" "+ func.getName());					
+                    throw new JspTranslationException("jsp.error.tld.fn.invalid.signature " + func.getPrefix() + " " + func.getName());
                 }
                 lastArg = true;
             }

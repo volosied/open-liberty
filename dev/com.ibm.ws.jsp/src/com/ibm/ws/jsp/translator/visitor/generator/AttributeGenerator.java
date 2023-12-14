@@ -28,32 +28,32 @@ import com.ibm.ws.jsp.translator.utils.JspTranslatorUtil;
 public class AttributeGenerator extends CodeGeneratorBase {
     private JspAttribute jspAttribute = null;
     private boolean trim = true;
-    private String omit=null;
-    private boolean omitSet=false;
+    private String omit = null;
+    private boolean omitSet = false;
     private boolean isLiteral = false;
 
-	static private Logger logger;
-	private static final String CLASS_NAME="com.ibm.ws.jsp.translator.visitor.generator.AttributeGenerator";
-	static{
-		logger = Logger.getLogger("com.ibm.ws.jsp");
-	}
-    
+    static private Logger logger;
+    private static final String CLASS_NAME = "com.ibm.ws.jsp.translator.visitor.generator.AttributeGenerator";
+    static {
+        logger = Logger.getLogger("com.ibm.ws.jsp");
+    }
+
     public void startGeneration(int section, JavaCodeWriter writer) throws JspCoreException {
         // 232157.1
         if (section == CodeGenerationPhase.CLASS_SECTION) {
             if (element.getAttribute("omit").equals("") == false) {
-            	omitSet = true;
-            	omit = element.getAttribute("omit");
+                omitSet = true;
+                omit = element.getAttribute("omit");
             }
             if (element.getAttribute("trim").equals("") == false) {
                 trim = Boolean.valueOf(element.getAttribute("trim")).booleanValue();
             }
-            HashMap jspAttributes = (HashMap)persistentData.get("jspAttributes");
+            HashMap jspAttributes = (HashMap) persistentData.get("jspAttributes");
             if (jspAttributes == null) {
                 jspAttributes = new HashMap();
                 persistentData.put("jspAttributes", jspAttributes);
             }
-            ArrayList jspAttributeList = (ArrayList)jspAttributes.get(element.getParentNode());
+            ArrayList jspAttributeList = (ArrayList) jspAttributes.get(element.getParentNode());
             if (jspAttributeList == null) {
                 jspAttributeList = new ArrayList();
                 jspAttributes.put(element.getParentNode(), jspAttributeList);
@@ -69,19 +69,16 @@ public class AttributeGenerator extends CodeGeneratorBase {
 
             jspAttribute = new JspAttribute(name, prefix, null, element, isLiteral, trim, omit, omitSet);
             jspAttributeList.add(jspAttribute);
-        }
-        else if (section == CodeGenerationPhase.METHOD_SECTION) {
+        } else if (section == CodeGenerationPhase.METHOD_SECTION) {
             String varName = null; // 232157.1
             if (writer instanceof FragmentHelperClassWriter.FragmentWriter) {
                 //No need to do anything as the parent element is a Custom Tag and this attribute is flagged as a Fragment
-            }
-            else if (writer instanceof NamedAttributeWriter) {
-                NamedAttributeWriter attributeWriter = (NamedAttributeWriter)writer;
+            } else if (writer instanceof NamedAttributeWriter) {
+                NamedAttributeWriter attributeWriter = (NamedAttributeWriter) writer;
                 varName = attributeWriter.getVarName();
                 jspAttribute.setVarName(varName);
                 generateAttributeStart(attributeWriter, varName);
-            }
-            else {
+            } else {
                 varName = GeneratorUtils.nextTemporaryVariableName(persistentData);
                 jspAttribute.setVarName(varName);
                 generateAttributeStart(writer, varName);
@@ -91,26 +88,24 @@ public class AttributeGenerator extends CodeGeneratorBase {
         }
     }
 
-    public void endGeneration(int section, JavaCodeWriter writer)  throws JspCoreException {
+    public void endGeneration(int section, JavaCodeWriter writer) throws JspCoreException {
         if (section == CodeGenerationPhase.METHOD_SECTION) {
             if (writer instanceof FragmentHelperClassWriter.FragmentWriter) {
-                FragmentHelperClassWriter.FragmentWriter fragmentWriter = (FragmentHelperClassWriter.FragmentWriter)writer;
+                FragmentHelperClassWriter.FragmentWriter fragmentWriter = (FragmentHelperClassWriter.FragmentWriter) writer;
                 if (persistentData.get("methodNesting") == null) {
                     persistentData.put("methodNesting", new Integer(0));
                 }
-                int methodNesting =  ((Integer)persistentData.get("methodNesting")).intValue();
+                int methodNesting = ((Integer) persistentData.get("methodNesting")).intValue();
                 fragmentHelperClassWriter.closeFragment(fragmentWriter, methodNesting);
-            }
-            else if (writer instanceof NamedAttributeWriter) {
-                NamedAttributeWriter attributeWriter = (NamedAttributeWriter)writer;
+            } else if (writer instanceof NamedAttributeWriter) {
+                NamedAttributeWriter attributeWriter = (NamedAttributeWriter) writer;
                 generateAttributeEnd(attributeWriter, attributeWriter.getVarName());
-            }
-            else {
+            } else {
                 generateAttributeEnd(writer, jspAttribute.getVarName());
             }
         }
     }
-    
+
     private void generateAttributeStart(JavaCodeWriter writer, String varName) {
         //PK65013 start
         String pageContextVar = Constants.JSP_PAGE_CONTEXT_ORIG;
@@ -120,70 +115,65 @@ public class AttributeGenerator extends CodeGeneratorBase {
             }
         }
         //PK65013 end
-        if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINEST)){
-			logger.logp(Level.FINEST, CLASS_NAME, "generateAttributeStart","writer =[" + writer +"]");
-			logger.logp(Level.FINEST, CLASS_NAME, "generateAttributeStart","varName =[" + varName +"]");
-            logger.logp(Level.FINEST, CLASS_NAME, "generateAttributeStart","pageContextVar =[" + pageContextVar +"]");
-		}
+        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINEST)) {
+            logger.logp(Level.FINEST, CLASS_NAME, "generateAttributeStart", "writer =[" + writer + "]");
+            logger.logp(Level.FINEST, CLASS_NAME, "generateAttributeStart", "varName =[" + varName + "]");
+            logger.logp(Level.FINEST, CLASS_NAME, "generateAttributeStart", "pageContextVar =[" + pageContextVar + "]");
+        }
         writeDebugStartBegin(writer);
         if (element.hasChildNodes()) {
             Node attrChildNode = element.getFirstChild();
-            if (element.getChildNodes().getLength() == 1) { 
+            if (element.getChildNodes().getLength() == 1) {
                 CDATASection cdata = null;
                 if (attrChildNode.getNodeType() == Node.CDATA_SECTION_NODE) {
-                    cdata = (CDATASection)attrChildNode;
-                }
-                else if (attrChildNode instanceof Element && 
-                         attrChildNode.getNamespaceURI().equals(Constants.JSP_NAMESPACE) &&
-                         attrChildNode.getLocalName().equals(Constants.JSP_TEXT_TYPE)) {
-                    Element jspElement = (Element)attrChildNode;                            
+                    cdata = (CDATASection) attrChildNode;
+                } else if (attrChildNode instanceof Element &&
+                           attrChildNode.getNamespaceURI().equals(Constants.JSP_NAMESPACE) &&
+                           attrChildNode.getLocalName().equals(Constants.JSP_TEXT_TYPE)) {
+                    Element jspElement = (Element) attrChildNode;
                     cdata = (CDATASection) jspElement.getFirstChild();
-                }
-                else {
+                } else {
                     /* throw exception or should this be handled by validator ? */
                 }
-                
-                if(cdata != null) { //PK34107
-	                String value = cdata.getData();
-	        		if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINEST)){
-	        			logger.logp(Level.FINEST, CLASS_NAME, "generateAttributeStart","about to call isELInterpreterInput value =[" + value +"]");
-	        		}
-	                if (JspTranslatorUtil.isELInterpreterInput(value, jspConfiguration) == false) {
-	                    isLiteral = true;
-	            		if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINEST)){
-	            			logger.logp(Level.FINEST, CLASS_NAME, "generateAttributeStart","after call to isELInterpreterInput isLiteral =[" + isLiteral +"]");
-	            		}
+
+                if (cdata != null) { //PK34107
+                    String value = cdata.getData();
+                    if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINEST)) {
+                        logger.logp(Level.FINEST, CLASS_NAME, "generateAttributeStart", "about to call isELInterpreterInput value =[" + value + "]");
+                    }
+                    if (JspTranslatorUtil.isELInterpreterInput(value, jspConfiguration) == false) {
+                        isLiteral = true;
+                        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINEST)) {
+                            logger.logp(Level.FINEST, CLASS_NAME, "generateAttributeStart", "after call to isELInterpreterInput isLiteral =[" + isLiteral + "]");
+                        }
                         //PK68493 start
                         // example:  <jsp:attribute name="test">    </jsp:attribute>
                         if (trim && value != null && value.trim().equals("")) {
-                            writer.println("String " + varName + " = \"\";");                       
+                            writer.println("String " + varName + " = \"\";");
                         }
                         //PK68493 end
-	                }
-	                else {
+                    } else {
                         //PK65013 change pageContext variable to customizable one.
-                        writer.println("out = "+pageContextVar+".pushBody();");
-	            		if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINEST)){
-	            			logger.logp(Level.FINEST, CLASS_NAME, "generateAttributeStart","after call to isELInterpreterInput wrote pushBody() line.");
-	            		}
-	                }                    
-				}//PK34107
-				else {
+                        writer.println("out = " + pageContextVar + ".pushBody();");
+                        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINEST)) {
+                            logger.logp(Level.FINEST, CLASS_NAME, "generateAttributeStart", "after call to isELInterpreterInput wrote pushBody() line.");
+                        }
+                    }
+                } //PK34107
+                else {
                     //PK65013 change pageContext variable to customizable one.
-                    writer.println("out = "+pageContextVar+".pushBody();");
-				} //PK34107
-            }
-            else {
+                    writer.println("out = " + pageContextVar + ".pushBody();");
+                } //PK34107
+            } else {
                 //PK65013 change pageContext variable to customizable one.
-                writer.println("out = "+pageContextVar+".pushBody();");
+                writer.println("out = " + pageContextVar + ".pushBody();");
             }
-        }
-        else {
+        } else {
             writer.println("String " + varName + " = \"\";");
         }
         writeDebugStartEnd(writer);
     }
-    
+
     private void generateAttributeEnd(JavaCodeWriter writer, String varName) {
         //PK65013 start
         String pageContextVar = Constants.JSP_PAGE_CONTEXT_ORIG;
@@ -195,14 +185,14 @@ public class AttributeGenerator extends CodeGeneratorBase {
         //PK65013 end
         if (element.hasChildNodes()) {
             if (isLiteral == false) {
-                writeDebugEndBegin(writer);                    
+                writeDebugEndBegin(writer);
                 writer.println("String " + varName + " = " + "((javax.servlet.jsp.tagext.BodyContent)" + "out).getString();");
-                writer.println("out = "+pageContextVar+".popBody();"); //PK65013
+                writer.println("out = " + pageContextVar + ".popBody();"); //PK65013
                 writeDebugEndEnd(writer);
             }
         }
     }
-    
+
     public class JspAttribute {
         private String name = null;
         private String prefix = null;
@@ -212,7 +202,7 @@ public class AttributeGenerator extends CodeGeneratorBase {
         private boolean trim = true;
         private String omit = null;
         private boolean omitSet = false;
-        
+
         public JspAttribute(String name, String prefix, String varName, Element jspAttrElement, boolean isLiteral, boolean trim, String omit, boolean omitSet) {
             this.name = name;
             this.prefix = prefix;
@@ -255,7 +245,7 @@ public class AttributeGenerator extends CodeGeneratorBase {
         public void setJspAttrElement(Element jspAttrElement) {
             this.jspAttrElement = jspAttrElement;
         }
-        
+
         public boolean isLiteral() {
             return isLiteral;
         }
@@ -271,15 +261,15 @@ public class AttributeGenerator extends CodeGeneratorBase {
         public void setTrim(boolean trim) {
             this.trim = trim;
         }
-        
+
         public String getOmit() {
             return omit;
         }
-        
+
         public void setOmit(String omit) {
             this.omit = omit;
         }
-        
+
         public boolean isOmitSet() {
             return omitSet;
         }

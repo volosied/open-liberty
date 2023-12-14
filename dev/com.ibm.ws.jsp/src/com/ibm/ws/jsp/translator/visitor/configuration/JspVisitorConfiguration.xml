@@ -10,7 +10,7 @@
  -->
 
 <jsp-visitor-configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                           xsi:schemaLocation="http://www.ibm.com/xml/ns/JspVisitorConfiguration.xsd">
+	xsi:schemaLocation="http://www.ibm.com/xml/ns/JspVisitorConfiguration.xsd">
 	<jsp-visitor-definition id="JspValidate">
 		<class-name>com.ibm.ws.jsp.translator.visitor.validator.ValidateJspVisitor</class-name>
 		<result-type>com.ibm.ws.jsp.translator.visitor.validator.ValidateJspResult</result-type>
@@ -23,10 +23,10 @@
 		<class-name>com.ibm.ws.jsp.translator.visitor.tagfiledep.TagFileDependencyVisitor</class-name>
 		<result-type>com.ibm.ws.jsp.translator.visitor.tagfiledep.TagFileDependencyResult</result-type>
 	</jsp-visitor-definition>
-    <jsp-visitor-definition id="TagFileScan">
-        <class-name>com.ibm.ws.jsp.translator.visitor.tagfilescan.TagFileScanVisitor</class-name>
-        <result-type>com.ibm.ws.jsp.translator.visitor.tagfilescan.TagFileScanResult</result-type>
-    </jsp-visitor-definition>
+	<jsp-visitor-definition id="TagFileScan">
+		<class-name>com.ibm.ws.jsp.translator.visitor.tagfilescan.TagFileScanVisitor</class-name>
+		<result-type>com.ibm.ws.jsp.translator.visitor.tagfilescan.TagFileScanResult</result-type>
+	</jsp-visitor-definition>
 	<jsp-visitor-definition id="TagFileValidate">
 		<class-name>com.ibm.ws.jsp.translator.visitor.validator.ValidateTagFileVisitor</class-name>
 		<result-type>com.ibm.ws.jsp.translator.visitor.validator.ValidateTagFileResult</result-type>
@@ -43,35 +43,35 @@
 		<class-name>com.ibm.ws.jsp.translator.visitor.validator.TagCountVisitor</class-name>
 		<result-type>com.ibm.ws.jsp.translator.visitor.validator.TagCountResult</result-type>
 	</jsp-visitor-definition>
-	
+
 	<jsp-visitor-collection id="JspTranslation">
-		<jsp-visitor id="TagFileDependencyCheck" order="1" visits="1"/>
-		<jsp-visitor id="TagCount" order="2" visits="1"/>
-		<jsp-visitor id="JspValidate" order="3" visits="1"/>
-		<jsp-visitor id="JspGenerate" order="4" visits="7"/>
+		<jsp-visitor id="TagFileDependencyCheck" order="1" visits="1" />
+		<jsp-visitor id="TagCount" order="2" visits="1" />
+		<jsp-visitor id="JspValidate" order="3" visits="1" />
+		<jsp-visitor id="JspGenerate" order="4" visits="7" />
 	</jsp-visitor-collection>
 	<jsp-visitor-collection id="DebugJspTranslation">
-		<jsp-visitor id="TagFileDependencyCheck" order="1" visits="1"/>
-		<jsp-visitor id="TagCount" order="2" visits="1"/>
-		<jsp-visitor id="JspValidate" order="3" visits="1"/>
-		<jsp-visitor id="JspGenerate" order="4" visits="7"/>
-		<jsp-visitor id="Smap" order="5" visits="1"/>
+		<jsp-visitor id="TagFileDependencyCheck" order="1" visits="1" />
+		<jsp-visitor id="TagCount" order="2" visits="1" />
+		<jsp-visitor id="JspValidate" order="3" visits="1" />
+		<jsp-visitor id="JspGenerate" order="4" visits="7" />
+		<jsp-visitor id="Smap" order="5" visits="1" />
 	</jsp-visitor-collection>
 	<jsp-visitor-collection id="TagFileTranslation">
-		<jsp-visitor id="TagCount" order="1" visits="1"/>
-		<jsp-visitor id="TagFileValidate" order="2" visits="1"/>
-		<jsp-visitor id="TagFileGenerate" order="3" visits="7"/>
+		<jsp-visitor id="TagCount" order="1" visits="1" />
+		<jsp-visitor id="TagFileValidate" order="2" visits="1" />
+		<jsp-visitor id="TagFileGenerate" order="3" visits="7" />
 	</jsp-visitor-collection>
 	<jsp-visitor-collection id="DebugTagFileTranslation">
-		<jsp-visitor id="TagCount" order="1" visits="1"/>
-		<jsp-visitor id="TagFileValidate" order="2" visits="1"/>
-		<jsp-visitor id="TagFileGenerate" order="3" visits="7"/>
-		<jsp-visitor id="Smap" order="4" visits="1"/>
+		<jsp-visitor id="TagCount" order="1" visits="1" />
+		<jsp-visitor id="TagFileValidate" order="2" visits="1" />
+		<jsp-visitor id="TagFileGenerate" order="3" visits="7" />
+		<jsp-visitor id="Smap" order="4" visits="1" />
 	</jsp-visitor-collection>
 	<jsp-visitor-collection id="TagFileDependency">
-		<jsp-visitor id="TagFileDependencyCheck" order="1" visits="1"/>
+		<jsp-visitor id="TagFileDependencyCheck" order="1" visits="1" />
 	</jsp-visitor-collection>
 	<jsp-visitor-collection id="TagFileScan">
-    	<jsp-visitor id="TagFileScan" order="1" visits="1"/>
+		<jsp-visitor id="TagFileScan" order="1" visits="1" />
 	</jsp-visitor-collection>
 </jsp-visitor-configuration>

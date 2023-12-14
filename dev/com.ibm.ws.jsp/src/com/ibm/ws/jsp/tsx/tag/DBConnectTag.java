@@ -24,17 +24,18 @@ import com.ibm.ws.jsp.tsx.db.ConnectionProperties;
 
 public class DBConnectTag extends BodyTagSupport {
     /**
-	 * Comment for <code>serialVersionUID</code>
-	 */
-	private static final long serialVersionUID = 3257849891597268275L;
-	private String id = "";
+     * Comment for <code>serialVersionUID</code>
+     */
+    private static final long serialVersionUID = 3257849891597268275L;
+    private String id = "";
     private String userid = "";
     private String passwd = "";
     private String url = "";
     private String driver = "";
     private String jndiname = "";
 
-    public DBConnectTag() {}
+    public DBConnectTag() {
+    }
 
     public String getId() {
         return (id);
@@ -103,12 +104,10 @@ public class DBConnectTag extends BodyTagSupport {
 
         if (id == null || id.equals("")) {
             id = indexMgr.getNextIndex();
-        }
-        else {
+        } else {
             if (indexMgr.exists(id) == true) {
                 throw new JspException("Index specified in <tsx:dbconnect> tag has already been defined.");
-            }
-            else {
+            } else {
                 indexMgr.addIndex(id);
             }
         }
@@ -119,13 +118,11 @@ public class DBConnectTag extends BodyTagSupport {
         try {
             if (jndiname == null || jndiname.equals("")) {
                 conn = new ConnectionProperties(driver, url, userid, passwd);
-            }
-            else {
+            } else {
                 conn = new ConnectionProperties(jndiname);
             }
             connectionLookup.put(id, conn);
-        }
-        catch (JspCoreException e) {
+        } catch (JspCoreException e) {
             //com.ibm.ws.ffdc.FFDCFilter.processException(e, "com.ibm.ws.webcontainer.jsp.tsx.tag.DBConnectTag.doStartTag", "114", this);
             throw new JspException("JasperException caught : " + e.toString());
         }

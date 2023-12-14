@@ -33,34 +33,27 @@ public class FunctionSignature {
 
             do {
                 this.methodName = sigTokenizer.nextToken();
-            }
-            while (ws.indexOf(this.methodName) != -1);
+            } while (ws.indexOf(this.methodName) != -1);
 
             String paren;
             do {
                 paren = sigTokenizer.nextToken();
-            }
-            while (ws.indexOf(paren) != -1);
+            } while (ws.indexOf(paren) != -1);
 
             if (!paren.equals("(")) {
-                throw new JspCoreException(
-                    "jsp.error.tld.fn.invalid.signature.parenexpected",
-                    new Object[] { tagLibraryName, this.methodName });
+                throw new JspCoreException("jsp.error.tld.fn.invalid.signature.parenexpected", new Object[] { tagLibraryName, this.methodName });
             }
 
             String argType;
             do {
                 argType = sigTokenizer.nextToken();
-            }
-            while (ws.indexOf(argType) != -1);
+            } while (ws.indexOf(argType) != -1);
 
             if (!argType.equals(")")) {
                 ArrayList parameterTypes = new ArrayList();
                 do {
                     if (",(".indexOf(argType) != -1) {
-                        throw new JspCoreException(
-                            "jsp.error.tld.fn.invalid.signature",
-                            new Object[] { tagLibraryName, this.methodName });
+                        throw new JspCoreException("jsp.error.tld.fn.invalid.signature", new Object[] { tagLibraryName, this.methodName });
                     }
 
                     parameterTypes.add(JspTranslatorUtil.toClass(argType, loader));
@@ -68,37 +61,26 @@ public class FunctionSignature {
                     String comma;
                     do {
                         comma = sigTokenizer.nextToken();
-                    }
-                    while (ws.indexOf(comma) != -1);
+                    } while (ws.indexOf(comma) != -1);
 
                     if (comma.equals(")")) {
                         break;
                     }
                     if (!comma.equals(",")) {
-                        throw new JspCoreException(
-                            "jsp.error.tld.fn.invalid.signature.commaexpected",
-                            new Object[] { tagLibraryName, this.methodName });
+                        throw new JspCoreException("jsp.error.tld.fn.invalid.signature.commaexpected", new Object[] { tagLibraryName, this.methodName });
                     }
 
                     // <arg-type>
                     do {
                         argType = sigTokenizer.nextToken();
-                    }
-                    while (ws.indexOf(argType) != -1);
-                }
-                while (true);
+                    } while (ws.indexOf(argType) != -1);
+                } while (true);
                 this.parameterTypes = (Class[]) parameterTypes.toArray(new Class[parameterTypes.size()]);
             }
-        }
-        catch (NoSuchElementException e) {
-            throw new JspCoreException(
-                "jsp.error.tld.fn.invalid.signature",
-                new Object[] { tagLibraryName, this.methodName });
-        }
-        catch (ClassNotFoundException e) {
-            throw new JspCoreException(
-                "jsp.error.tld.fn.invalid.signature.classnotfound",
-                new Object[] { e.getMessage(), tagLibraryName, this.methodName });
+        } catch (NoSuchElementException e) {
+            throw new JspCoreException("jsp.error.tld.fn.invalid.signature", new Object[] { tagLibraryName, this.methodName });
+        } catch (ClassNotFoundException e) {
+            throw new JspCoreException("jsp.error.tld.fn.invalid.signature.classnotfound", new Object[] { e.getMessage(), tagLibraryName, this.methodName });
         }
     }
 
@@ -113,7 +95,7 @@ public class FunctionSignature {
     public Class[] getParameterTypes() {
         return this.parameterTypes;
     }
-    
+
     public String getFunctionClassName() {
         return this.className;
     }

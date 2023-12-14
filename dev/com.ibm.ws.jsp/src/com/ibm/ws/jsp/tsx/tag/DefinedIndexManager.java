@@ -12,8 +12,6 @@
  *******************************************************************************/
 package com.ibm.ws.jsp.tsx.tag;
 
-
-
 import java.util.Vector;
 
 /**
@@ -29,6 +27,7 @@ public class DefinedIndexManager {
         indexNames = new Vector();
         lastIndexIndex = 0;
     }
+
     // add a user defined index to the vector
     public void addIndex(String newIndex) {
         indexNames.addElement(newIndex);
@@ -56,6 +55,7 @@ public class DefinedIndexManager {
 
         return exists;
     }
+
     // return an index that does not already exist in the vector
     // we default to tsx# as an index if the user doesn't specify one
     public String getNextIndex() {
@@ -64,8 +64,7 @@ public class DefinedIndexManager {
         do {
             newIndex = "tsx" + String.valueOf(lastIndexIndex);
             lastIndexIndex++;
-        }
-        while (exists(newIndex) == true);
+        } while (exists(newIndex) == true);
 
         addIndex(newIndex);
 

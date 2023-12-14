@@ -17,12 +17,12 @@ import java.util.EventListener;
 import javax.servlet.jsp.tagext.JspTag;
 
 public class DefaultAnnotationHandler extends AnnotationHandler {
-     public void doPostConstructAction (JspTag tag) {
+     public void doPostConstructAction(JspTag tag) {
      }
-     
-     public void doPostConstructAction (EventListener listener) {
+
+     public void doPostConstructAction(EventListener listener) {
      }
-     
-     public void doPreDestroyAction (JspTag tag) {
+
+     public void doPreDestroyAction(JspTag tag) {
      }
 }

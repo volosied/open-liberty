@@ -26,35 +26,30 @@ public class JSTLOutOptimizedTag implements OptimizedTag {
 
     public boolean doOptimization(OptimizedTagContext context) {
         boolean optimize = true;
-        
+
         if (context.hasBody() || context.hasJspBody()) {
             optimize = false;
-        }
-        else if (context.isJspAttribute("value")) {
+        } else if (context.isJspAttribute("value")) {
+            optimize = false;
+        } else if (context.isJspAttribute("escapeXml")) {
+            optimize = false;
+        } else if (context.isJspAttribute("defaultValue")) {
             optimize = false;
         }
-        else if (context.isJspAttribute("escapeXml")) {
-            optimize = false;
-        }
-        else if (context.isJspAttribute("defaultValue")) {
-            optimize = false;
-        }
-        
+
         return optimize;
     }
 
     public void setAttribute(String attrName, Object attrValue) {
         if (attrName.equals("value")) {
-            value = (String)attrValue;
-        }
-        else if (attrName.equals("escapeXml")) {
-            escapeXml = (String)attrValue;
-        }
-        else if (attrName.equals("default")) {
-            defaultValue = (String)attrValue;
+            value = (String) attrValue;
+        } else if (attrName.equals("escapeXml")) {
+            escapeXml = (String) attrValue;
+        } else if (attrName.equals("default")) {
+            defaultValue = (String) attrValue;
         }
     }
-    
+
     public void generateImports(OptimizedTagContext context) {
     }
 
@@ -62,35 +57,32 @@ public class JSTLOutOptimizedTag implements OptimizedTag {
     }
 
     public void generateStart(OptimizedTagContext context) {
-        
+
         if (context.hasAttribute("escapeXml")) {
             if (escapeXml.equalsIgnoreCase("true")) {
                 context.writeSource("boolean escapeXml = true;");
-            }
-            else if (escapeXml.equalsIgnoreCase("false")) {
+            } else if (escapeXml.equalsIgnoreCase("false")) {
                 context.writeSource("boolean escapeXml = false;");
+            } else {
+                context.writeSource("boolean escapeXml = " + escapeXml + ";");
             }
-            else {
-                context.writeSource("boolean escapeXml = "+escapeXml+";");
-            }
-        }
-        else {
+        } else {
             context.writeSource("boolean escapeXml = true;");
         }
-        
+
         String valueV = context.createTemporaryVariable();
         context.writeSource("Object " + valueV + " = " + value + ";");
         String defaultValueV = context.createTemporaryVariable();
         context.writeSource("Object " + defaultValueV + " = " + defaultValue + ";");
-        context.writeSource("if ("+valueV+" != null) {");
-        context.writeSource("   com.ibm.ws.jsp.translator.optimizedtag.impl.JSTLOutUtil.writeOut(out, "+valueV+", escapeXml);");
-        context.writeSource("} else if ("+defaultValueV+" != null) {");
-        context.writeSource("   com.ibm.ws.jsp.translator.optimizedtag.impl.JSTLOutUtil.writeOut(out, "+defaultValueV+", escapeXml);");
+        context.writeSource("if (" + valueV + " != null) {");
+        context.writeSource("   com.ibm.ws.jsp.translator.optimizedtag.impl.JSTLOutUtil.writeOut(out, " + valueV + ", escapeXml);");
+        context.writeSource("} else if (" + defaultValueV + " != null) {");
+        context.writeSource("   com.ibm.ws.jsp.translator.optimizedtag.impl.JSTLOutUtil.writeOut(out, " + defaultValueV + ", escapeXml);");
         context.writeSource("} else {");
         context.writeSource("   out.write(\"\");");
         context.writeSource("}");
     }
-    
+
     public void generateEnd(OptimizedTagContext context) {
     }
 

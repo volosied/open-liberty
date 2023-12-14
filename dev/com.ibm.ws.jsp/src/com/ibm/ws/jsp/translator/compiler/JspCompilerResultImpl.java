@@ -18,24 +18,23 @@ package com.ibm.ws.jsp.translator.compiler;
 import com.ibm.wsspi.jsp.compiler.JspCompilerResult;
 import java.util.List; //PK72039
 
-
 /**
  */
 public class JspCompilerResultImpl implements JspCompilerResult {
-    private int compilerReturnValue=-1;
-    private String compilerMessage=null;
-    private List compilerFailureFileNames=null; //PK72039
+    private int compilerReturnValue = -1;
+    private String compilerMessage = null;
+    private List compilerFailureFileNames = null; //PK72039
 
-    public JspCompilerResultImpl(int compilerRetVal, String compilerMsg){
-        this.compilerReturnValue=compilerRetVal;
-        this.compilerMessage=compilerMsg;
+    public JspCompilerResultImpl(int compilerRetVal, String compilerMsg) {
+        this.compilerReturnValue = compilerRetVal;
+        this.compilerMessage = compilerMsg;
     }
 
     //PK72039 start
-    public JspCompilerResultImpl(int compilerRetVal, String compilerMsg, List compilerFailureFN){
-        this.compilerReturnValue=compilerRetVal;
-        this.compilerMessage=compilerMsg;
-        this.compilerFailureFileNames=compilerFailureFN;
+    public JspCompilerResultImpl(int compilerRetVal, String compilerMsg, List compilerFailureFN) {
+        this.compilerReturnValue = compilerRetVal;
+        this.compilerMessage = compilerMsg;
+        this.compilerFailureFileNames = compilerFailureFN;
     }
     //PK72039 start
 

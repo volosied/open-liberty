@@ -32,45 +32,46 @@ import com.ibm.wsspi.jsp.resource.JspInputSource;
  *
  */
 public class ParsedTagFileElement {
-    
+
     String path;
     String tagFileName;
-    
+
     static final protected Logger logger = Logger.getLogger("com.ibm.ws.jsp");
     static final protected Level logLevel = Level.FINEST;
-    private static final String CLASS_NAME="com.ibm.ws.jsp.taglib.ParsedTagFileElement";
-        
+    private static final String CLASS_NAME = "com.ibm.ws.jsp.taglib.ParsedTagFileElement";
+
     public ParsedTagFileElement(String path, String tagFileName) {
         this.path = path;
         this.tagFileName = tagFileName;
     }
-    
-    @FFDCIgnore({JspCoreException.class})
-    public TagFileInfo createTagFileObject(TagLibraryInfoImpl tli, JspTranslationContext ctxt, JspInputSource tagFileInputSource, JspOptions jspOptions, JspConfigurationManager configManager) {
-        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINEST)) {
-            logger.logp(Level.FINEST, CLASS_NAME, "createTagFileObject", "about to do createTagFileObject for = ["+path+" "+tagFileName+"]");
+
+    @FFDCIgnore({ JspCoreException.class })
+    public TagFileInfo createTagFileObject(TagLibraryInfoImpl tli, JspTranslationContext ctxt, JspInputSource tagFileInputSource, JspOptions jspOptions,
+                                           JspConfigurationManager configManager) {
+        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINEST)) {
+            logger.logp(Level.FINEST, CLASS_NAME, "createTagFileObject", "about to do createTagFileObject for = [" + path + " " + tagFileName + "]");
         }
         JspTranslator jspTranslator;
         TagFileInfo tfi = null;
         try {
-            jspTranslator = JspTranslatorFactory.getFactory().createTranslator(TagLibraryCache.TAGFILE_SCAN_ID, 
-                                                                                             tagFileInputSource, 
-                                                                                             ctxt, 
-                                                                                             configManager.createJspConfiguration(),
-                                                                                             jspOptions, // 396002
-                                                                                             new HashMap());
-            JspVisitorInputMap  inputMap = new JspVisitorInputMap();
+            jspTranslator = JspTranslatorFactory.getFactory().createTranslator(TagLibraryCache.TAGFILE_SCAN_ID,
+                                                                               tagFileInputSource,
+                                                                               ctxt,
+                                                                               configManager.createJspConfiguration(),
+                                                                               jspOptions, // 396002
+                                                                               new HashMap());
+            JspVisitorInputMap inputMap = new JspVisitorInputMap();
             inputMap.put("TagLibraryInfo", tli);
             inputMap.put("TagFileName", tagFileName);
             inputMap.put("TagFilePath", path);
             HashMap results = jspTranslator.processVisitors(inputMap);
-            TagFileScanResult result = (TagFileScanResult)results.get("TagFileScan");
+            TagFileScanResult result = (TagFileScanResult) results.get("TagFileScan");
             tfi = new TagFileInfo(tagFileName, path, result.getTagInfo());
-            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(logLevel)) {
-                logger.logp(logLevel, CLASS_NAME, "createTagFileObject", "Finished createTagFileObject for  = ["+path+" "+tagFileName+"]  TagFileInfo tfi= ["+tfi+"]");
+            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(logLevel)) {
+                logger.logp(logLevel, CLASS_NAME, "createTagFileObject", "Finished createTagFileObject for  = [" + path + " " + tagFileName + "]  TagFileInfo tfi= [" + tfi + "]");
             }
         } catch (JspCoreException e) {
-            if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE)){
+            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
                 logger.logp(Level.FINE, CLASS_NAME, "createTagFileObject", "exception creating a tag-file object", e);
             }
         }

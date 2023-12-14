@@ -4,7 +4,8 @@
   <tlibversion>1.0</tlibversion>
   <jspversion>1.1</jspversion>
   <shortname>jsxFunction</shortname>
-  <info>The JavaScript Function Tag Library provides a mechanism to call functions in a script library from a simple JSP tag</info>
+  <info>The JavaScript Function Tag Library provides a mechanism to call functions in a script
+    library from a simple JSP tag</info>
   <tag>
     <name>call</name>
     <tagclass>com.ibm.ws.jsp.jsx.tags.CallTag</tagclass>
@@ -40,5 +41,3 @@
 
 
        
-
-

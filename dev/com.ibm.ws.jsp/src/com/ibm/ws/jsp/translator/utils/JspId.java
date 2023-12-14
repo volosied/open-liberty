@@ -31,22 +31,21 @@ public class JspId {
     protected int startGeneratedLineCount = 0;
     protected int endGeneratedLineNum = 0;
     protected int endGeneratedLineCount = 0;
-    
+
     public JspId(String jspIdString) {
         StringTokenizer st = null;
         String id = jspIdString;
         if (jspIdString.indexOf('{') != -1 && jspIdString.indexOf('}') != -1) {
-            String attrNames = jspIdString.substring(jspIdString.indexOf('{')+1, jspIdString.indexOf('}'));
+            String attrNames = jspIdString.substring(jspIdString.indexOf('{') + 1, jspIdString.indexOf('}'));
             st = new StringTokenizer(attrNames, "~");
             while (st.hasMoreTokens()) {
-                attrNameList.add(st.nextToken());    
+                attrNameList.add(st.nextToken());
             }
-            id = jspIdString.substring(jspIdString.indexOf('}')+1);
+            id = jspIdString.substring(jspIdString.indexOf('}') + 1);
         }
         try {
             filePath = URLDecoder.decode(id.substring(0, id.indexOf('[')), "UTF-8");
-        }
-        catch (UnsupportedEncodingException e) {
+        } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
         fileName = filePath.substring(filePath.lastIndexOf('/') + 1);
@@ -54,45 +53,44 @@ public class JspId {
         String sourceInfo = null;
         if (mappingInfo.indexOf(':') != -1) {
             sourceInfo = mappingInfo.substring(0, mappingInfo.indexOf(':'));
-            String generatedInfo = mappingInfo.substring(mappingInfo.indexOf(':')+1);
-            
+            String generatedInfo = mappingInfo.substring(mappingInfo.indexOf(':') + 1);
+
             if (generatedInfo.indexOf('[') != generatedInfo.lastIndexOf('[')) {
-				st = new StringTokenizer(generatedInfo.substring(1, generatedInfo.indexOf(']')), ",");
+                st = new StringTokenizer(generatedInfo.substring(1, generatedInfo.indexOf(']')), ",");
+            } else {
+                st = new StringTokenizer(generatedInfo.substring(1, generatedInfo.length() - 1), ",");
             }
-            else {
-                st = new StringTokenizer(generatedInfo.substring(1, generatedInfo.length()-1), ",");
-            }
-            
+
             startGeneratedLineNum = Integer.valueOf(st.nextToken()).intValue();
             startGeneratedLineCount = Integer.valueOf(st.nextToken()).intValue();
-            
+
             if (generatedInfo.indexOf('[') != generatedInfo.lastIndexOf('[')) {
-                st = new StringTokenizer(generatedInfo.substring(generatedInfo.lastIndexOf('[')+1, generatedInfo.lastIndexOf(']')), ",");
+                st = new StringTokenizer(generatedInfo.substring(generatedInfo.lastIndexOf('[') + 1, generatedInfo.lastIndexOf(']')), ",");
                 endGeneratedLineNum = Integer.valueOf(st.nextToken()).intValue();
                 endGeneratedLineCount = Integer.valueOf(st.nextToken()).intValue();
             }
+        } else {
+            sourceInfo = mappingInfo.substring(0, mappingInfo.indexOf(']') + 1);
         }
-        else {
-            sourceInfo = mappingInfo.substring(0, mappingInfo.indexOf(']')+1);
-        }
-        if (sourceInfo.indexOf('[') != sourceInfo.lastIndexOf('[')) 
+        if (sourceInfo.indexOf('[') != sourceInfo.lastIndexOf('['))
             st = new StringTokenizer(sourceInfo.substring(1, sourceInfo.indexOf(']')), ",");
-        else 
-            st = new StringTokenizer(sourceInfo.substring(1, sourceInfo.length()-1), ",");
-        
+        else
+            st = new StringTokenizer(sourceInfo.substring(1, sourceInfo.length() - 1), ",");
+
         startSourceLineNum = Integer.valueOf(st.nextToken()).intValue();
         startSourceColNum = Integer.valueOf(st.nextToken()).intValue();
         sourceLineCount = Integer.valueOf(st.nextToken()).intValue();
-            
+
         if (sourceInfo.indexOf('[') != sourceInfo.lastIndexOf('[')) {
-            st = new StringTokenizer(sourceInfo.substring(sourceInfo.lastIndexOf('[')+1, sourceInfo.lastIndexOf(']')), ",");
+            st = new StringTokenizer(sourceInfo.substring(sourceInfo.lastIndexOf('[') + 1, sourceInfo.lastIndexOf(']')), ",");
             endSourceLineNum = Integer.valueOf(st.nextToken()).intValue();
             endSourceColNum = Integer.valueOf(st.nextToken()).intValue();
         }
     }
-    
+
     /**
      * Returns the endGeneratedLineCount.
+     * 
      * @return int
      */
     public int getEndGeneratedLineCount() {
@@ -101,6 +99,7 @@ public class JspId {
 
     /**
      * Returns the endGeneratedLineNum.
+     * 
      * @return int
      */
     public int getEndGeneratedLineNum() {
@@ -109,6 +108,7 @@ public class JspId {
 
     /**
      * Returns the endSourceColNum.
+     * 
      * @return int
      */
     public int getEndSourceColNum() {
@@ -117,6 +117,7 @@ public class JspId {
 
     /**
      * Returns the endSourceLineNum.
+     * 
      * @return int
      */
     public int getEndSourceLineNum() {
@@ -125,6 +126,7 @@ public class JspId {
 
     /**
      * Returns the fileName.
+     * 
      * @return String
      */
     public String getFileName() {
@@ -133,6 +135,7 @@ public class JspId {
 
     /**
      * Returns the filePath.
+     * 
      * @return String
      */
     public String getFilePath() {
@@ -141,6 +144,7 @@ public class JspId {
 
     /**
      * Returns the sourceLineCount.
+     * 
      * @return int
      */
     public int getSourceLineCount() {
@@ -149,6 +153,7 @@ public class JspId {
 
     /**
      * Returns the startGeneratedLineCount.
+     * 
      * @return int
      */
     public int getStartGeneratedLineCount() {
@@ -157,6 +162,7 @@ public class JspId {
 
     /**
      * Returns the startGeneratedLineNum.
+     * 
      * @return int
      */
     public int getStartGeneratedLineNum() {
@@ -165,6 +171,7 @@ public class JspId {
 
     /**
      * Returns the startSourceColNum.
+     * 
      * @return int
      */
     public int getStartSourceColNum() {
@@ -173,12 +180,13 @@ public class JspId {
 
     /**
      * Returns the startSourceLineNum.
+     * 
      * @return int
      */
     public int getStartSourceLineNum() {
         return startSourceLineNum;
     }
-    
+
     public List getAttrNameList() {
         return attrNameList;
     }

@@ -28,14 +28,13 @@ import javax.servlet.ServletContext;
 
 import com.ibm.ws.webcontainer.util.DocumentRootUtils;
 
-
 public class JspURLStreamHandler extends URLStreamHandler {
-    static protected Logger logger;
-	private static final String CLASS_NAME="com.ibm.ws.jsp.inputsource.JspUrlStreamHandler";
-    static{
-        logger = Logger.getLogger("com.ibm.ws.jsp");
-    }
-	
+	static protected Logger logger;
+	private static final String CLASS_NAME = "com.ibm.ws.jsp.inputsource.JspUrlStreamHandler";
+	static {
+		logger = Logger.getLogger("com.ibm.ws.jsp");
+	}
+
 	private String relativeUrl = null;
 	private DocumentRootUtils dru = null;
 	private boolean searchOnClasspath = false;
@@ -43,11 +42,11 @@ public class JspURLStreamHandler extends URLStreamHandler {
 	private String docRoot;
 	private ServletContext servletContext;
 
-	public JspURLStreamHandler(String docRoot, String relativeUrl,
-			DocumentRootUtils dru,
-			boolean searchOnClasspath,
-			ClassLoader classloader,
-			ServletContext servletContext) {
+	public JspURLStreamHandler(	String docRoot, String relativeUrl,
+								DocumentRootUtils dru,
+								boolean searchOnClasspath,
+								ClassLoader classloader,
+								ServletContext servletContext) {
 		this.docRoot = docRoot;
 		this.relativeUrl = relativeUrl;
 		this.dru = dru;
@@ -57,15 +56,15 @@ public class JspURLStreamHandler extends URLStreamHandler {
 	}
 
 	protected URLConnection openConnection(URL url) throws IOException {
-		return new JspURLConnection(docRoot, url, relativeUrl, dru, searchOnClasspath, classloader,servletContext);
+		return new JspURLConnection(docRoot, url, relativeUrl, dru, searchOnClasspath, classloader, servletContext);
 	}
 
 	protected void parseURL(URL u, String spec, int start, int limit) {
 		String encodedChars = replaceEncodedChars(spec);
-		if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINEST)){
-			if(spec.equals(encodedChars) == false){
-				logger.logp(Level.FINEST, CLASS_NAME, "parseURL", "parseURL spec ["+ spec +"]");
-				logger.logp(Level.FINEST, CLASS_NAME, "parseURL", "parseURL spec encoded ["+ encodedChars +"]");
+		if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINEST)) {
+			if (spec.equals(encodedChars) == false) {
+				logger.logp(Level.FINEST, CLASS_NAME, "parseURL", "parseURL spec [" + spec + "]");
+				logger.logp(Level.FINEST, CLASS_NAME, "parseURL", "parseURL spec encoded [" + encodedChars + "]");
 			}
 		}
 		int length = encodedChars.length(); // new encoded length limit
@@ -79,7 +78,7 @@ public class JspURLStreamHandler extends URLStreamHandler {
 	static {
 		StringBuffer tmpBuffer = new StringBuffer();
 		String reservedCharacterString = "!\"#$%&'()*+,:;<=>?@[]^`{|}~"; // list of punctuation characters obtained from http://java.sun.com/j2se/1.4.2/docs/api/java/util/regex/Pattern.html
-																		// removed _ - . / \ since these do not need to be encoded.
+																			// removed _ - . / \ since these do not need to be encoded.
 		char reservedCharacters[] = reservedCharacterString.toCharArray();
 		for (int i = 0; i < reservedCharacters.length; i++) {
 			String reservedChar = String.valueOf(reservedCharacters[i]);
@@ -92,7 +91,7 @@ public class JspURLStreamHandler extends URLStreamHandler {
 				ENCODED_CHARACTER_MAP.put(reservedChar, encoded);
 			} catch (Exception e) {
 				// should not happen
-				logger.logp(Level.FINER, CLASS_NAME, "staticInit", "failed	to add encoding "+ reservedChar, e);
+				logger.logp(Level.FINER, CLASS_NAME, "staticInit", "failed	to add encoding " + reservedChar, e);
 			}
 		}
 		CHARS_REQUIRING_ENCODING = Pattern.compile(tmpBuffer.toString());
@@ -104,8 +103,7 @@ public class JspURLStreamHandler extends URLStreamHandler {
 		boolean matchFound = false;
 		while (m.find()) {
 			matchFound = true;
-			m.appendReplacement(sb, (String) ENCODED_CHARACTER_MAP.get(m
-					.group()));
+			m.appendReplacement(sb, (String) ENCODED_CHARACTER_MAP.get(m.group()));
 		}
 		if (matchFound) {
 			sb = m.appendTail(sb);

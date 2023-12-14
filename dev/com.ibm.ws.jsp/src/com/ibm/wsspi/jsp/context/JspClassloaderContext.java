@@ -21,18 +21,22 @@ public interface JspClassloaderContext {
      * @return ClassLoader The ClassLoader to be used to load JSP dependent classes.
      */
     ClassLoader getClassLoader();
+
     /**
      * @return String The classpath to be used to compile the generated servlet.
      */
     String getClassPath();
+
     /**
      * @return String The Optional Optimized classpath to be used to compile the generated servlet.
      */
     String getOptimizedClassPath();
+
     /**
      * @return boolean Indicates whether this classloader supports predefining classes.
      */
     boolean isPredefineClassEnabled();
+
     /**
      * @return byte[] Returns the predefined class bytes.
      */

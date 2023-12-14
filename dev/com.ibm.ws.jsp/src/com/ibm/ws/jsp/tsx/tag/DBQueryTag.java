@@ -26,14 +26,15 @@ import com.ibm.ws.jsp.tsx.db.QueryResults;
 
 public class DBQueryTag extends BodyTagSupport {
     /**
-	 * Comment for <code>serialVersionUID</code>
-	 */
-	private static final long serialVersionUID = 4121409614048015410L;
-	private String id = "";
+     * Comment for <code>serialVersionUID</code>
+     */
+    private static final long serialVersionUID = 4121409614048015410L;
+    private String id = "";
     private String connection = "";
     private int limit = 0;
 
-    public DBQueryTag() {}
+    public DBQueryTag() {
+    }
 
     public String getId() {
         return (id);
@@ -72,12 +73,10 @@ public class DBQueryTag extends BodyTagSupport {
 
         if (id == null || id.equals("")) {
             id = indexMgr.getNextIndex();
-        }
-        else {
+        } else {
             if (indexMgr.exists(id) == true) {
                 throw new JspException("Index specified in <tsx:dbconnect> tag has already been defined.");
-            }
-            else {
+            } else {
                 indexMgr.addIndex(id);
             }
         }
@@ -93,12 +92,10 @@ public class DBQueryTag extends BodyTagSupport {
             }
             qr = query.execute();
             pageContext.setAttribute(id, qr, PageContext.PAGE_SCOPE);
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             //com.ibm.ws.ffdc.FFDCFilter.processException(e, "com.ibm.ws.webcontainer.jsp.tsx.tag.DBQueryTag.doEndTag", "83", this);
             throw new JspException("SQLException: " + e.toString());
-        }
-        catch (JspCoreException e) {
+        } catch (JspCoreException e) {
             //com.ibm.ws.ffdc.FFDCFilter.processException(e, "com.ibm.ws.webcontainer.jsp.tsx.tag.DBQueryTag.doEndTag", "87", this);
             throw new JspException("JasperException: " + e.toString());
         }

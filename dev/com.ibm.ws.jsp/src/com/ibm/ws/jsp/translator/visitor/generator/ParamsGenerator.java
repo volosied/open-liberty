@@ -24,18 +24,18 @@ public class ParamsGenerator extends CodeGeneratorBase {
     public void startGeneration(int section, JavaCodeWriter writer) throws JspCoreException {
     }
 
-    public void endGeneration(int section, JavaCodeWriter writer)  throws JspCoreException {
+    public void endGeneration(int section, JavaCodeWriter writer) throws JspCoreException {
         if (section == CodeGenerationPhase.METHOD_SECTION) {
-            HashMap jspParams = (HashMap)persistentData.get("jspParams");
+            HashMap jspParams = (HashMap) persistentData.get("jspParams");
             if (jspParams != null) {
-                ArrayList jspParamList = (ArrayList)jspParams.get(element);
+                ArrayList jspParamList = (ArrayList) jspParams.get(element);
                 if (jspParamList != null) {
                     Node parent = element.getParentNode();
                     if (parent.getNodeType() == Node.ELEMENT_NODE &&
                         parent.getNamespaceURI() != null &&
                         parent.getNamespaceURI().equals(Constants.JSP_NAMESPACE) &&
                         parent.getLocalName().equals(Constants.JSP_BODY_TYPE)) {
-                        parent = parent.getParentNode();    
+                        parent = parent.getParentNode();
                     }
                     jspParams.remove(element);
                     jspParams.put(parent, jspParamList);

@@ -26,9 +26,10 @@ public class JspConfiguratorHelperFactory implements ServletConfiguratorHelperFa
     }
 
     protected void activate(ComponentContext context) {
-        
+
     }
+
     protected void deactivate(ComponentContext context) {
-        
+
     }
 }

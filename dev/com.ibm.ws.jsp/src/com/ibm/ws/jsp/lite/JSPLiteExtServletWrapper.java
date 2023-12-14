@@ -22,24 +22,24 @@ import com.ibm.wsspi.webcontainer.servlet.GenericServletWrapper;
 import com.ibm.wsspi.webcontainer.servlet.IServletContext;
 
 public class JSPLiteExtServletWrapper extends GenericServletWrapper {
-    public JSPLiteExtServletWrapper(IServletContext parent) throws Exception
-    {
+    public JSPLiteExtServletWrapper(IServletContext parent) throws Exception {
         super(parent);
     }
-    
+
     public void handleRequest(ServletRequest req, ServletResponse res) throws Exception {
         if (req instanceof HttpServletRequest) {
-            HttpServletRequest hreq = (HttpServletRequest)req;
+            HttpServletRequest hreq = (HttpServletRequest) req;
             if (preCompile(hreq))
                 return;
             super.handleRequest(req, res);
         }
     }
 
-    /* A request to a JSP page that has a request parameter with name jsp_precompile
-     * is a precompilation request. This method determines if it is this type of request.*/
-    boolean preCompile(HttpServletRequest request) throws ServletException 
-    {
+    /*
+     * A request to a JSP page that has a request parameter with name jsp_precompile
+     * is a precompilation request. This method determines if it is this type of request.
+     */
+    boolean preCompile(HttpServletRequest request) throws ServletException {
         String queryString = request.getQueryString();
         if (queryString == null)
             return (false);
@@ -65,7 +65,7 @@ public class JSPLiteExtServletWrapper extends GenericServletWrapper {
             return (true); // ?jsp_precompile=false
         else
             throw new ServletException("Cannot have request parameter " + Constants.PRECOMPILE + " set to " + value);
-                    
+
     }
-    
+
 }

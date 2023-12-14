@@ -39,14 +39,13 @@ public class ParsedTagElement {
     String largeIcon;
     TagVariableInfo[] tagVariables;
     boolean dynamicAttributes;
-    
-    
+
     static final protected Logger logger = Logger.getLogger("com.ibm.ws.jsp");;
     static final protected Level logLevel = Level.FINEST;
-    private static final String CLASS_NAME="com.ibm.ws.jsp.taglib.ParsedTagElement";
+    private static final String CLASS_NAME = "com.ibm.ws.jsp.taglib.ParsedTagElement";
 
-    public ParsedTagElement(String tldLocation, String tagName, String tagClassName, String bodyContent, String tagDescription, TagLibraryInfoImpl tli, 
-                            String teiClassName, TagAttributeInfo[] tagAttributes, String displayName, String smallIcon, 
+    public ParsedTagElement(String tldLocation, String tagName, String tagClassName, String bodyContent, String tagDescription, TagLibraryInfoImpl tli,
+                            String teiClassName, TagAttributeInfo[] tagAttributes, String displayName, String smallIcon,
                             String largeIcon, TagVariableInfo[] tagVariables, boolean dynamicAttributes) {
         this.tldLocation = tldLocation;
         this.tagName = tagName;
@@ -62,45 +61,32 @@ public class ParsedTagElement {
         this.tagVariables = tagVariables;
         this.dynamicAttributes = dynamicAttributes;
     }
-    
+
     public String getTagClassName() {
         return tagClassName;
     }
-    
+
     public TagInfo createTagObject(ClassLoader classloader) {
         TagExtraInfo tei = null;
         if (teiClassName != null) {
             // begin  221334: check if user specified empty tag for tei-class and log warning.
-            if(teiClassName.trim().equals("")){
-                logger.logp(Level.WARNING, CLASS_NAME, "endElement", "TagExtraInfo specified in tld without a value.  tld=[" + tldLocation +"]");
-            }
-            else{
+            if (teiClassName.trim().equals("")) {
+                logger.logp(Level.WARNING, CLASS_NAME, "endElement", "TagExtraInfo specified in tld without a value.  tld=[" + tldLocation + "]");
+            } else {
                 // end  221334: check if user specified empty tag for tei-class and log warning.        
                 try {
-                    tei = (TagExtraInfo)classloader.loadClass(teiClassName).newInstance();
-                }
-                catch (Exception e) {
+                    tei = (TagExtraInfo) classloader.loadClass(teiClassName).newInstance();
+                } catch (Exception e) {
                     //      begin  221334: improve error being logged for this error.
-                    String message = JspCoreException.getMsg("jsp.error.failed.load.tei.class", new Object[]{teiClassName});
-                    message+=" from "+tldLocation;
-                    logger.logp(Level.WARNING, CLASS_NAME, "endElement", message);   //PK27099
+                    String message = JspCoreException.getMsg("jsp.error.failed.load.tei.class", new Object[] { teiClassName });
+                    message += " from " + tldLocation;
+                    logger.logp(Level.WARNING, CLASS_NAME, "endElement", message); //PK27099
                     //throw new SAXException(message);                               //PK27099
                     //      end  221334: improve error being logged for this error.                     
                 }
             }
         }
-        TagInfo tag = new TagInfo(tagName,
-                          tagClassName,
-                          bodyContent,
-                          tagDescription,
-                          tli,
-                          tei,
-                          tagAttributes,
-                          displayName,
-                          smallIcon,
-                          largeIcon,
-                          tagVariables,
-                          dynamicAttributes);
+        TagInfo tag = new TagInfo(tagName, tagClassName, bodyContent, tagDescription, tli, tei, tagAttributes, displayName, smallIcon, largeIcon, tagVariables, dynamicAttributes);
         return tag;
     }
 }

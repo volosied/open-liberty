@@ -18,24 +18,27 @@ import java.util.Map;
 import com.ibm.ws.jsp.translator.visitor.JspVisitorResult;
 
 public class GenerateJspResult extends JspVisitorResult {
-    private Map customTagMethodJspIdMap = new HashMap(); //232818
-    private int serviceMethodLineNumber=0;
-    public GenerateJspResult(String jspVisitorId) {
-        super(jspVisitorId);
-    }
-    
+	private Map customTagMethodJspIdMap = new HashMap(); //232818
+	private int serviceMethodLineNumber = 0;
+
+	public GenerateJspResult(String jspVisitorId) {
+		super(jspVisitorId);
+	}
+
 	/**
 	 * @return Returns the serviceMethodLineNumber.
 	 */
 	public int getServiceMethodLineNumber() {
 		return serviceMethodLineNumber;
 	}
+
 	/**
 	 * @param serviceMethodLineNumber The serviceMethodLineNumber to set.
 	 */
 	public void setServiceMethodLineNumber(int serviceMethodLineNumber) {
 		this.serviceMethodLineNumber = serviceMethodLineNumber;
 	}
+
 	/**
 	 * @return Returns the customTagMethodJspIdMap.
 	 */

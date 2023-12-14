@@ -54,11 +54,11 @@ public class SmapStratum {
         }
 
         /**
-             * Sets lineFileID.  Should be called only when different from
-             * that of prior LineInfo object (in any given context) or 0
-             * if the current LineInfo has no (logical) predecessor.
-             * <tt>LineInfo</tt> will print this file number no matter what.
-             */
+         * Sets lineFileID. Should be called only when different from
+         * that of prior LineInfo object (in any given context) or 0
+         * if the current LineInfo has no (logical) predecessor.
+         * <tt>LineInfo</tt> will print this file number no matter what.
+         */
         public void setLineFileID(int lineFileID) {
             if (lineFileID < 0)
                 throw new IllegalArgumentException("" + lineFileID);
@@ -145,12 +145,12 @@ public class SmapStratum {
     }
 
     /**
-     * Adds record of a new file, by filename and path.  The path
+     * Adds record of a new file, by filename and path. The path
      * may be relative to a source compilation path.
      *
      * @param fileName the filename to add, unqualified by path
      * @param filePath the path for the filename, potentially relative
-     *                 to a source compilation path
+     *                     to a source compilation path
      */
     public synchronized void addFile(String filename, String filePath) {
         // fix this to check if duplicate name exists.
@@ -162,34 +162,34 @@ public class SmapStratum {
     }
 
     /**
-     * Adds complete information about a simple line mapping.  Specify
+     * Adds complete information about a simple line mapping. Specify
      * all the fields in this method; the back-end machinery takes care
      * of printing only those that are necessary in the final SMAP.
      * (My view is that fields are optional primarily for spatial efficiency,
-     * not for programmer convenience.  Could always add utility methods
+     * not for programmer convenience. Could always add utility methods
      * later.)
      *
-     * @param inputStartLine starting line in the source file
-     *        (SMAP <tt>InputStartLine</tt>)
-     * @param inputFileName the filepath (or name) from which the input comes
-     *        (yields SMAP <tt>LineFileID</tt>)  Use unqualified names
-     *        carefully, and only when they uniquely identify a file.
-     * @param inputLineCount the number of lines in the input to map
-     *        (SMAP <tt>LineFileCount</tt>)
-     * @param outputStartLine starting line in the output file 
-     *        (SMAP <tt>OutputStartLine</tt>)
+     * @param inputStartLine      starting line in the source file
+     *                                (SMAP <tt>InputStartLine</tt>)
+     * @param inputFileName       the filepath (or name) from which the input comes
+     *                                (yields SMAP <tt>LineFileID</tt>) Use unqualified names
+     *                                carefully, and only when they uniquely identify a file.
+     * @param inputLineCount      the number of lines in the input to map
+     *                                (SMAP <tt>LineFileCount</tt>)
+     * @param outputStartLine     starting line in the output file
+     *                                (SMAP <tt>OutputStartLine</tt>)
      * @param outputLineIncrement number of output lines to map to each
-     *        input line (SMAP <tt>OutputLineIncrement</tt>).  <i>Given the
-     *        fact that the name starts with "output", I continuously have
-     *        the subconscious urge to call this field
-     *        <tt>OutputLineExcrement</tt>.</i>
+     *                                input line (SMAP <tt>OutputLineIncrement</tt>). <i>Given the
+     *                                fact that the name starts with "output", I continuously have
+     *                                the subconscious urge to call this field
+     *                                <tt>OutputLineExcrement</tt>.</i>
      */
     public synchronized void addLineData(
-        int inputStartLine,
-        String inputFileName,
-        int inputLineCount,
-        int outputStartLine,
-        int outputLineIncrement) {
+                                         int inputStartLine,
+                                         String inputFileName,
+                                         int inputLineCount,
+                                         int outputStartLine,
+                                         int outputLineIncrement) {
         // check the input - what are you doing here??
         //	int fileIndex = filePathList.indexOf(inputFileName);
         //	if (fileIndex == -1)
@@ -223,7 +223,7 @@ public class SmapStratum {
     }
 
     /**
-     * Returns the given stratum as a String:  a StratumSection,
+     * Returns the given stratum as a String: a StratumSection,
      * followed by at least one FileSection and at least one LineSection.
      */
     public synchronized String getString() {
@@ -242,8 +242,7 @@ public class SmapStratum {
             if (filePathList.get(i) != null) {
                 out.append("+ " + i + " " + fileNameList.get(i) + "\n");
                 out.append(filePathList.get(i) + "\n");
-            }
-            else {
+            } else {
                 out.append(i + " " + fileNameList.get(i) + "\n");
             }
         }

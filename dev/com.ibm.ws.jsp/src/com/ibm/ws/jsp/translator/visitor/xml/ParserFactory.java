@@ -37,71 +37,65 @@ public class ParserFactory {
     private static DocumentBuilderFactory documentBuilderFactory = null;
     private static DocumentBuilder documentBuilder = null;
     private static SAXParserFactory saxParserFactory = null;
-    
-	public static synchronized SAXParser newSAXParser(boolean setNamespaceAware, boolean setValidating) throws ParserConfigurationException, SAXException {
-		ClassLoader oldLoader = ThreadContextHelper.getContextClassLoader();
+
+    public static synchronized SAXParser newSAXParser(boolean setNamespaceAware, boolean setValidating) throws ParserConfigurationException, SAXException {
+        ClassLoader oldLoader = ThreadContextHelper.getContextClassLoader();
         ThreadContextHelper.setClassLoader(ParserFactory.class.getClassLoader());
-		try {
+        try {
             if (saxParserFactory != null) {
                 if (saxParserFactory.isNamespaceAware() == setNamespaceAware &&
                     saxParserFactory.isValidating() == setValidating) {
-                    return saxParserFactory.newSAXParser();                    
+                    return saxParserFactory.newSAXParser();
                 }
             }
-            saxParserFactory =  SAXParserFactory.newInstance();
+            saxParserFactory = SAXParserFactory.newInstance();
             saxParserFactory.setValidating(setValidating);
             saxParserFactory.setNamespaceAware(setNamespaceAware);
-            return saxParserFactory.newSAXParser();                    
-		}
-        finally {
+            return saxParserFactory.newSAXParser();
+        } finally {
             ThreadContextHelper.setClassLoader(oldLoader);
-		}
-	}
-	
-	public static synchronized Document newDocument(boolean setNamespaceAware, boolean setValidating) throws ParserConfigurationException{
-		ClassLoader oldLoader = ThreadContextHelper.getContextClassLoader();
+        }
+    }
+
+    public static synchronized Document newDocument(boolean setNamespaceAware, boolean setValidating) throws ParserConfigurationException {
+        ClassLoader oldLoader = ThreadContextHelper.getContextClassLoader();
         ThreadContextHelper.setClassLoader(ParserFactory.class.getClassLoader());
-		try {
+        try {
             if (documentBuilderFactory != null) {
                 if (documentBuilderFactory.isNamespaceAware() == setNamespaceAware &&
                     documentBuilderFactory.isValidating() == setValidating) {
-                    return documentBuilder.newDocument();                    
+                    return documentBuilder.newDocument();
                 }
             }
             documentBuilderFactory = DocumentBuilderFactory.newInstance();
             documentBuilderFactory.setNamespaceAware(setNamespaceAware);
             documentBuilderFactory.setValidating(setValidating);
             documentBuilder = documentBuilderFactory.newDocumentBuilder();
-            return documentBuilder.newDocument();                    
-		} 
-        finally {
+            return documentBuilder.newDocument();
+        } finally {
             ThreadContextHelper.setClassLoader(oldLoader);
-		}
-	}
-    
-	public static void parseDocument(SAXParser parser, InputSource is, DefaultHandler dh) throws IOException, SAXException {
-		ClassLoader oldLoader = ThreadContextHelper.getContextClassLoader();
-        ThreadContextHelper.setClassLoader(ParserFactory.class.getClassLoader());
-		
-		try {
-			parser.parse(is, dh);
-		}
-		finally {
-            ThreadContextHelper.setClassLoader(oldLoader);
-		}
-	}
+        }
+    }
 
-	public static void parseDocument(SAXParser parser, InputStream is, DefaultHandler dh) throws IOException, SAXException {
-		ClassLoader oldLoader = ThreadContextHelper.getContextClassLoader();
+    public static void parseDocument(SAXParser parser, InputSource is, DefaultHandler dh) throws IOException, SAXException {
+        ClassLoader oldLoader = ThreadContextHelper.getContextClassLoader();
         ThreadContextHelper.setClassLoader(ParserFactory.class.getClassLoader());
-		try {
-			parser.parse(is, dh);
-		}
-		finally {
-            ThreadContextHelper.setClassLoader(oldLoader);
-		}
-	}
 
-    
-    
+        try {
+            parser.parse(is, dh);
+        } finally {
+            ThreadContextHelper.setClassLoader(oldLoader);
+        }
+    }
+
+    public static void parseDocument(SAXParser parser, InputStream is, DefaultHandler dh) throws IOException, SAXException {
+        ClassLoader oldLoader = ThreadContextHelper.getContextClassLoader();
+        ThreadContextHelper.setClassLoader(ParserFactory.class.getClassLoader());
+        try {
+            parser.parse(is, dh);
+        } finally {
+            ThreadContextHelper.setClassLoader(oldLoader);
+        }
+    }
+
 }

@@ -29,7 +29,7 @@ public class JavaFileWriter extends JavaCodeWriter {
     private static final int TAB_WIDTH = 2;
     private static final int NUMBER_OF_SPACES = 128;
     private char[] spaces = null;
-    
+
     private int indent = 0;
     private int lineNum = 1;
     private int lineCount = 0;
@@ -49,6 +49,7 @@ public class JavaFileWriter extends JavaCodeWriter {
             spaces[i] = ' ';
         }
     }
+
     public JavaFileWriter(PrintWriter writer, Map jspElementMap, Map cdataJspIdMap, Map customTagMethodJspIdMap) throws IOException { //232818
         super(writer);
         this.jspElementMap = jspElementMap;
@@ -69,56 +70,49 @@ public class JavaFileWriter extends JavaCodeWriter {
             index++;
         }
         if (line.indexOf("/* ElementId[") != -1) {
-            Integer elementId = Integer.valueOf(line.substring(line.indexOf("/* ElementId[")+13, line.indexOf("]")));
-            Element e = (Element)jspElementMap.get(elementId);
+            Integer elementId = Integer.valueOf(line.substring(line.indexOf("/* ElementId[") + 13, line.indexOf("]")));
+            Element e = (Element) jspElementMap.get(elementId);
             String jspId = e.getAttributeNS(Constants.JSP_NAMESPACE, "id");
             if (line.indexOf("sb") != -1) {
                 lineCount = 0;
                 syntaxLineNum = lineNum;
-            }
-            else if (line.indexOf("se") != -1) {
-                jspId = jspId + ":["+ syntaxLineNum + "," + lineCount + "]";
+            } else if (line.indexOf("se") != -1) {
+                jspId = jspId + ":[" + syntaxLineNum + "," + lineCount + "]";
                 e.setAttributeNS(Constants.JSP_NAMESPACE, "jsp:id", jspId);
-            }
-            else if (line.indexOf("eb") != -1) {
+            } else if (line.indexOf("eb") != -1) {
                 lineCount = 0;
                 syntaxLineNum = lineNum;
-            }
-            else if (line.indexOf("ee") != -1) {
-                jspId = jspId + "["+ syntaxLineNum + "," + lineCount + "]";
+            } else if (line.indexOf("ee") != -1) {
+                jspId = jspId + "[" + syntaxLineNum + "," + lineCount + "]";
                 e.setAttributeNS(Constants.JSP_NAMESPACE, "jsp:id", jspId);
             } //232818 Start
             else if (line.indexOf("ctmb") != -1) {
                 lineCount = 0;
                 syntaxLineNum = lineNum;
-            }
-            else if (line.indexOf("ctme") != -1) {
-            	customTagMethodJspIdMap.put(e, syntaxLineNum + "," + lineCount);
+            } else if (line.indexOf("ctme") != -1) {
+                customTagMethodJspIdMap.put(e, syntaxLineNum + "," + lineCount);
             } //232818 End
-        }
-        else if (line.indexOf("/* CDATAId[") != -1) {
-            Integer cdataId = Integer.valueOf(line.substring(line.indexOf("/* CDATAId[")+11, line.indexOf("]")));
-            String jspId = (String)cdataJspIdMap.get(cdataId);
+        } else if (line.indexOf("/* CDATAId[") != -1) {
+            Integer cdataId = Integer.valueOf(line.substring(line.indexOf("/* CDATAId[") + 11, line.indexOf("]")));
+            String jspId = (String) cdataJspIdMap.get(cdataId);
             if (jspId != null) {
                 if (line.indexOf("sb") != -1) {
                     lineCount = 0;
                     syntaxLineNum = lineNum;
-                }
-                else if (line.indexOf("se") != -1) {
-                    jspId = jspId + ":["+syntaxLineNum + "," + lineCount + "]";
+                } else if (line.indexOf("se") != -1) {
+                    jspId = jspId + ":[" + syntaxLineNum + "," + lineCount + "]";
                     cdataJspIdMap.put(cdataId, jspId);
                 }
             }
-        }
-        else {
+        } else {
             lineCount++;
             lineNum++;
             int charCount = 0;
-             
+
             if ((charCount = lookFor('}', line)) > 0) {
                 indent = indent - charCount;
             }
-            
+
             int numberOfSpaces = indent * TAB_WIDTH;
             if (numberOfSpaces > 0) {
                 if (numberOfSpaces > spaces.length) {
@@ -127,7 +121,7 @@ public class JavaFileWriter extends JavaCodeWriter {
                 write(spaces, 0, numberOfSpaces);
             }
             super.println(line);
-            
+
             if ((charCount = lookFor('{', line)) > 0) {
                 indent = indent + charCount;
             }
@@ -154,7 +148,7 @@ public class JavaFileWriter extends JavaCodeWriter {
         }
 
         int charCount = 0;
-             
+
         if ((charCount = lookFor('}', s)) > 0) {
             indent = indent - charCount;
         }
@@ -178,42 +172,40 @@ public class JavaFileWriter extends JavaCodeWriter {
         // Try to be smart (i.e. indent properly) at generating the code:
         BufferedReader reader = new BufferedReader(new StringReader(multiline));
         try {
-            for (String line = null;(line = reader.readLine()) != null;) {
+            for (String line = null; (line = reader.readLine()) != null;) {
                 //      println(SPACES.substring(0, indent)+line);
                 this.println(line);
             }
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             // Unlikely to happen, since we're acting on strings
         }
     }
-    
+
     private int lookFor(char character, String s) {
         int count = 0;
         boolean inQuotes = false;
-        
-        if (s!=null) {
+
+        if (s != null) {
             for (int i = 0; i < s.length(); i++) {
                 char ch = s.charAt(i);
                 if (ch == '\"') {
                     if (inQuotes)
                         inQuotes = false;
-                    else 
-                        inQuotes = true;                    
-                }
-                else if (ch == character && !inQuotes) {
+                    else
+                        inQuotes = true;
+                } else if (ch == character && !inQuotes) {
                     count++;
                 }
             }
         }
-        
+
         return count;
     }
 
     public int getCurrentLineNumber() {
-    	return lineNum;
+        return lineNum;
     }
-    
+
     private void reallocateSpaces() {
         int newSize = spaces.length + NUMBER_OF_SPACES;
         spaces = new char[newSize];

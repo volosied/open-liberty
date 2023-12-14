@@ -23,8 +23,9 @@ import com.ibm.ws.jsp.translator.JspTranslationException;
  *
  */
 public interface ElValidatorExt {
-    
-    public void validateElFunction(ELNode.Nodes el,Element jspElement,String expression, ValidateResult result, ClassLoader loader, JspConfiguration jspConfiguration) throws JspCoreException;
 
-    public void prepareExpression(ELNode.Nodes el,String expression, ValidateResult result, ClassLoader loader, JspConfiguration jspConfiguration) throws  JspTranslationException;
+    public void validateElFunction(ELNode.Nodes el, Element jspElement, String expression, ValidateResult result, ClassLoader loader,
+                                   JspConfiguration jspConfiguration) throws JspCoreException;
+
+    public void prepareExpression(ELNode.Nodes el, String expression, ValidateResult result, ClassLoader loader, JspConfiguration jspConfiguration) throws JspTranslationException;
 }

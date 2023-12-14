@@ -45,13 +45,13 @@ import com.ibm.ws.jsp.translator.visitor.JspVisitorResult;
 import com.ibm.ws.jsp.translator.visitor.configuration.JspVisitorUsage;
 import com.ibm.wsspi.jsp.context.JspCoreContext;
 
-public class TagFileScanVisitor extends JspVisitor {  
+public class TagFileScanVisitor extends JspVisitor {
 
-	static private Logger logger;
-	private static final String CLASS_NAME="com.ibm.ws.jsp.translator.visitor.tagfilescan.TagFileScanVisitor";
-	static{
-		logger = Logger.getLogger("com.ibm.ws.jsp");
-	}
+    static private Logger logger;
+    private static final String CLASS_NAME = "com.ibm.ws.jsp.translator.visitor.tagfilescan.TagFileScanVisitor";
+    static {
+        logger = Logger.getLogger("com.ibm.ws.jsp");
+    }
     private TagLibraryInfoImpl tli = null;
     private String tagFilePath = null;
 
@@ -64,7 +64,7 @@ public class TagFileScanVisitor extends JspVisitor {
     private String smallIcon = null;
     private String largeIcon = null;
     private String dynamicAttributes = null;
-    private boolean bodyContentIsDefault = true;	//516829
+    private boolean bodyContentIsDefault = true; //516829
 
     private ArrayList attributes = new ArrayList();
     private ArrayList variables = new ArrayList();
@@ -72,12 +72,11 @@ public class TagFileScanVisitor extends JspVisitor {
     private HashMap tagFileUniqueNameFromAttributeVariableNames = new HashMap(19);
 
     public TagFileScanVisitor(
-        JspVisitorUsage visitorUsage,
-        JspConfiguration jspConfiguration,
-        JspCoreContext context,
-        HashMap resultMap,
-        JspVisitorInputMap inputMap)
-        throws JspCoreException {
+                              JspVisitorUsage visitorUsage,
+                              JspConfiguration jspConfiguration,
+                              JspCoreContext context,
+                              HashMap resultMap,
+                              JspVisitorInputMap inputMap) throws JspCoreException {
         super(visitorUsage, jspConfiguration, context, resultMap, inputMap);
         name = (String) inputMap.get("TagFileName");
         displayName = name;
@@ -94,7 +93,7 @@ public class TagFileScanVisitor extends JspVisitor {
         } else if (dirName.startsWith("/META-INF/tags")) {
             dirName = dirName.substring(dirName.indexOf("/META-INF/tags") + 14);
         }
-        
+
         //PM70267 start
         if (dirName.indexOf("-") > -1) {
             dirName = NameMangler.handlePackageName(dirName);
@@ -110,46 +109,40 @@ public class TagFileScanVisitor extends JspVisitor {
 
     public JspVisitorResult getResult() throws JspCoreException {
         // defect 301032 begin
-    	// Check that var.name-from-attributes has valid values.
+        // Check that var.name-from-attributes has valid values.
         Iterator iter = tagFileUniqueNameFromAttributeVariableNames.keySet().iterator();
         while (iter.hasNext()) {
             String nameFrom = (String) iter.next();
             Element nameEntry = (Element) tagFileUniqueNameGivenVariableNames.get(nameFrom);
             Element nameFromEntry = (Element) tagFileUniqueNameFromAttributeVariableNames.get(nameFrom);
             if (nameEntry == null) {
-                throw new JspTranslationException(
-                                nameFromEntry,
-                                "jsp.error.tagfile.nameFrom.noAttribute",
-                                new Object[] { nameFrom});
+                throw new JspTranslationException(nameFromEntry, "jsp.error.tagfile.nameFrom.noAttribute", new Object[] { nameFrom });
             } else {
                 Attr typeAttr = nameEntry.getAttributeNode("type");
                 String type = "java.lang.String";
-                if (typeAttr!=null) 
-                	type = typeAttr.getValue();
+                if (typeAttr != null)
+                    type = typeAttr.getValue();
                 Attr requiredAttr = nameEntry.getAttributeNode("required");
                 boolean required = false;
-                if (requiredAttr!=null)
-                	required = JspTranslatorUtil.booleanValue(requiredAttr.getValue());
+                if (requiredAttr != null)
+                    required = JspTranslatorUtil.booleanValue(requiredAttr.getValue());
                 Attr rtexprvalueAttr = nameEntry.getAttributeNode("rtexprvalue");
                 boolean rtexprvalue = true;
-                if (rtexprvalueAttr!=null)
-                	rtexprvalue = JspTranslatorUtil.booleanValue(rtexprvalueAttr.getValue());
-                if (! "java.lang.String".equals(type)
-                        || ! required
-                        || rtexprvalue){
+                if (rtexprvalueAttr != null)
+                    rtexprvalue = JspTranslatorUtil.booleanValue(rtexprvalueAttr.getValue());
+                if (!"java.lang.String".equals(type)
+                    || !required
+                    || rtexprvalue) {
                     String jspIdString = nameEntry.getAttributeNS(Constants.JSP_NAMESPACE, "id");
                     JspId jspId = null;
-                    String lineNum="unknown";
-                    if (jspIdString.equals("") == false) { 
+                    String lineNum = "unknown";
+                    if (jspIdString.equals("") == false) {
                         jspId = new JspId(jspIdString);
                         lineNum = String.valueOf(jspId.getStartSourceLineNum());
                     }
-                	
-                    throw new JspTranslationException(
-                            nameFromEntry,
-                            "jsp.error.tagfile.nameFrom.badAttribute",
-                            new Object[] { lineNum ,nameFrom});
-                 }
+
+                    throw new JspTranslationException(nameFromEntry, "jsp.error.tagfile.nameFrom.badAttribute", new Object[] { lineNum, nameFrom });
+                }
             }
         }
         // defect 301032 end
@@ -160,24 +153,11 @@ public class TagFileScanVisitor extends JspVisitor {
         TagAttributeInfo[] tagAttributeInfo = new TagAttributeInfo[attributes.size()];
         tagAttributeInfo = (TagAttributeInfo[]) attributes.toArray(tagAttributeInfo);
 
-        TagInfo ti =
-            new TagFileTagInfo(
-                name,
-                tagclass,
-                bodycontent,
-                description,
-                tli,
-                tei,
-                tagAttributeInfo,
-                displayName,
-                smallIcon,
-                largeIcon,
-                tagVariableInfos,
-                dynamicAttributes);
+        TagInfo ti = new TagFileTagInfo(name, tagclass, bodycontent, description, tli, tei, tagAttributeInfo, displayName, smallIcon, largeIcon, tagVariableInfos, dynamicAttributes);
 
-        if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINEST)){
-			logger.logp(Level.FINEST, CLASS_NAME, "getResult","About to call setTagInfo(ti), ti =[\n" + ti +"]");
-		}
+        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINEST)) {
+            logger.logp(Level.FINEST, CLASS_NAME, "getResult", "About to call setTagInfo(ti), ti =[\n" + ti + "]");
+        }
 
         TagFileScanResult result = new TagFileScanResult(visitorUsage.getJspVisitorDefinition().getId());
         result.setTagInfo(ti);
@@ -185,31 +165,28 @@ public class TagFileScanVisitor extends JspVisitor {
     }
 
     protected void visitTagDirectiveStart(Element jspElement) throws JspCoreException {
-    	// jsp2.1ELwork
-    	//516829 - if body-content was set to default, check for conflicts with a null value instead of the default
-    	if(bodyContentIsDefault){
-    		String newbodycontent = checkConflict(jspElement, null, "body-content");
-    		if (newbodycontent!=null){
-    			bodycontent = newbodycontent;
-    			bodyContentIsDefault = false;
-    		}
-    	}else{	// if bodyContent is not set to default, check for conflicting values per usual
-    		bodycontent = checkConflict(jspElement, bodycontent, "body-content");	
-    	}
-        
+        // jsp2.1ELwork
+        //516829 - if body-content was set to default, check for conflicts with a null value instead of the default
+        if (bodyContentIsDefault) {
+            String newbodycontent = checkConflict(jspElement, null, "body-content");
+            if (newbodycontent != null) {
+                bodycontent = newbodycontent;
+                bodyContentIsDefault = false;
+            }
+        } else { // if bodyContent is not set to default, check for conflicting values per usual
+            bodycontent = checkConflict(jspElement, bodycontent, "body-content");
+        }
+
         // added back in with servlet version check to ensure we don't break old apps
-        if (bodycontent != null 
-        		&& jspConfiguration.getServletVersion().equals("2.5")
-                && !bodycontent.equalsIgnoreCase(TagInfo.BODY_CONTENT_EMPTY)
-                && !bodycontent.equalsIgnoreCase(TagInfo.BODY_CONTENT_TAG_DEPENDENT)
-                && !bodycontent.equalsIgnoreCase(TagInfo.BODY_CONTENT_SCRIPTLESS)) {
-            throw new JspTranslationException(
-            		jspElement,
-                    "jsp.error.tagdirective.badbodycontent",
-                    new Object[] { bodycontent });
+        if (bodycontent != null
+            && jspConfiguration.getServletVersion().equals("2.5")
+            && !bodycontent.equalsIgnoreCase(TagInfo.BODY_CONTENT_EMPTY)
+            && !bodycontent.equalsIgnoreCase(TagInfo.BODY_CONTENT_TAG_DEPENDENT)
+            && !bodycontent.equalsIgnoreCase(TagInfo.BODY_CONTENT_SCRIPTLESS)) {
+            throw new JspTranslationException(jspElement, "jsp.error.tagdirective.badbodycontent", new Object[] { bodycontent });
         }
         //end 516829
-        
+
         //PK93886 - start
         // do not need to checkConflict because you can have a different display-name than the tag name.
         Attr displayNameAttr = jspElement.getAttributeNode("display-name");
@@ -223,34 +200,30 @@ public class TagFileScanVisitor extends JspVisitor {
         description = checkConflict(jspElement, description, "description");
     }
 
-	// new method for jsp2.1ELwork
-    private String checkConflict(Element elem, String oldAttrValue, String attr)
-			throws JspCoreException {
+    // new method for jsp2.1ELwork
+    private String checkConflict(Element elem, String oldAttrValue, String attr) throws JspCoreException {
 
-		String result = oldAttrValue;
-		String attrValue = null; 
-		if (elem.getAttributeNode(attr) != null ) {
-			attrValue = elem.getAttributeNode(attr).getValue();
-		}
-		if (attrValue != null) {
-			if (oldAttrValue != null && !oldAttrValue.equals(attrValue)) {
-	            throw new JspTranslationException(
-	                    elem,
-	                    "jsp.error.tag.conflict.attr",
-	                    new Object[] { attr, oldAttrValue, attrValue });
-			}
-			result = attrValue;
-		}
-		return result;
-	}
-    
+        String result = oldAttrValue;
+        String attrValue = null;
+        if (elem.getAttributeNode(attr) != null) {
+            attrValue = elem.getAttributeNode(attr).getValue();
+        }
+        if (attrValue != null) {
+            if (oldAttrValue != null && !oldAttrValue.equals(attrValue)) {
+                throw new JspTranslationException(elem, "jsp.error.tag.conflict.attr", new Object[] { attr, oldAttrValue, attrValue });
+            }
+            result = attrValue;
+        }
+        return result;
+    }
+
     protected void visitAttributeDirectiveStart(Element jspElement) throws JspCoreException {
         Attr nameAttr = jspElement.getAttributeNode("name");
         Attr requiredAttr = jspElement.getAttributeNode("required");
         Attr fragmentAttr = jspElement.getAttributeNode("fragment");
         Attr rtexprvalueAttr = jspElement.getAttributeNode("rtexprvalue");
         Attr typeAttr = jspElement.getAttributeNode("type");
-        Attr deferredValueAttr = jspElement.getAttributeNode("deferredValue");  // jsp2.1ELwork 
+        Attr deferredValueAttr = jspElement.getAttributeNode("deferredValue"); // jsp2.1ELwork 
         Attr deferredValueTypeAttr = jspElement.getAttributeNode("deferredValueType"); // jsp2.1ELwork 
         Attr deferredMethodAttr = jspElement.getAttributeNode("deferredMethod"); // jsp2.1ELwork 
         Attr deferredMethodSignatureAttr = jspElement.getAttributeNode("deferredMethodSignature"); // jsp2.1ELwork 
@@ -265,9 +238,9 @@ public class TagFileScanVisitor extends JspVisitor {
         // handle deferredValue and deferredValueType
         boolean deferredValue = false;
         boolean deferredValueSpecified = false;
-        String deferredValueString = null; 
-        if (deferredValueAttr != null ){
-        	deferredValueString = deferredValueAttr.getValue();
+        String deferredValueString = null;
+        if (deferredValueAttr != null) {
+            deferredValueString = deferredValueAttr.getValue();
         }
         if (deferredValueString != null) {
             deferredValueSpecified = true;
@@ -275,12 +248,11 @@ public class TagFileScanVisitor extends JspVisitor {
         }
         String deferredValueType = null;
         if (deferredValueTypeAttr != null) {
-        	deferredValueType = deferredValueTypeAttr.getValue();
+            deferredValueType = deferredValueTypeAttr.getValue();
         }
         if (deferredValueType != null) {
             if (deferredValueSpecified && !deferredValue) {
-	            throw new JspTranslationException(jspElement,
-	                    "jsp.error.deferredvaluetypewithoutdeferredvalue");
+                throw new JspTranslationException(jspElement, "jsp.error.deferredvaluetypewithoutdeferredvalue");
             } else {
                 deferredValue = true;
             }
@@ -296,20 +268,19 @@ public class TagFileScanVisitor extends JspVisitor {
         boolean deferredMethodSpecified = false;
         String deferredMethodString = null;
         if (deferredMethodAttr != null) {
-        	deferredMethodString = deferredMethodAttr.getValue();
+            deferredMethodString = deferredMethodAttr.getValue();
         }
         if (deferredMethodString != null) {
             deferredMethodSpecified = true;
             deferredMethod = JspTranslatorUtil.booleanValue(deferredMethodString);
         }
         String deferredMethodSignature = null;
-        if (deferredMethodSignatureAttr != null ){
-        	deferredMethodSignature = deferredMethodSignatureAttr.getValue();
+        if (deferredMethodSignatureAttr != null) {
+            deferredMethodSignature = deferredMethodSignatureAttr.getValue();
         }
         if (deferredMethodSignature != null) {
             if (deferredMethodSpecified && !deferredMethod) {
-	            throw new JspTranslationException(jspElement, 
-	            		"jsp.error.deferredmethodsignaturewithoutdeferredmethod");
+                throw new JspTranslationException(jspElement, "jsp.error.deferredmethodsignaturewithoutdeferredmethod");
             } else {
                 deferredMethod = true;
             }
@@ -320,56 +291,50 @@ public class TagFileScanVisitor extends JspVisitor {
         if (deferredMethod && deferredValue) {
             throw new JspTranslationException(jspElement, "jsp.error.deferredmethodandvalue");
         }
-        
-        
+
         if (nameAttr != null)
             name = nameAttr.getValue();
 
         if (requiredAttr != null)
-        	required = JspTranslatorUtil.booleanValue(requiredAttr.getValue());
+            required = JspTranslatorUtil.booleanValue(requiredAttr.getValue());
 
         if (fragmentAttr != null)
-        	fragment = JspTranslatorUtil.booleanValue(fragmentAttr.getValue());
+            fragment = JspTranslatorUtil.booleanValue(fragmentAttr.getValue());
 
-        if (typeAttr != null){
-        	type = typeAttr.getValue();
+        if (typeAttr != null) {
+            type = typeAttr.getValue();
         }
-        if (rtexprvalueAttr != null){
-        	rtexprvalue = JspTranslatorUtil.booleanValue(rtexprvalueAttr.getValue());
+        if (rtexprvalueAttr != null) {
+            rtexprvalue = JspTranslatorUtil.booleanValue(rtexprvalueAttr.getValue());
         }
         if (fragment) {
             // type is fixed to "JspFragment" and a translation error
             // must occur if specified.
             if (type != null) {
-				throw new JspTranslationException(jspElement,"jsp.error.illegal.fragment.and.type", new Object []{ typeAttr.getValue()});
+                throw new JspTranslationException(jspElement, "jsp.error.illegal.fragment.and.type", new Object[] { typeAttr.getValue() });
             }
             // rtexprvalue is fixed to "true" and a translation error
             // must occur if specified.
             rtexprvalue = true;
-            if (rtexprvalueAttr != null){
-           		throw new JspTranslationException(jspElement,"jsp.error.illegal.fragment.and.rtexprvalue", new Object[]{rtexprvalueAttr.getValue()});
+            if (rtexprvalueAttr != null) {
+                throw new JspTranslationException(jspElement, "jsp.error.illegal.fragment.and.rtexprvalue", new Object[] { rtexprvalueAttr.getValue() });
             }
-            	
+
         } else {
             if (type == null) {
-				type = "java.lang.String";
-			} else {
-				try {
-					if (isPrimitive(type)) {
-						throw new JspTranslationException(jspElement,
-								"jsp.error.illegal.type.primitive",
-								new Object[] { type });
-					}
-					Class typeAttrClass = JspTranslatorUtil.toClass(type, context.getJspClassloaderContext().getClassLoader()); //PI18025                                       
-					
-				} catch (ClassNotFoundException cnfe) {
-					throw new JspTranslationException(
-							jspElement,
-							"jsp.error.tagfile.cannot.locate.class.to.validate.primitive",
-							new Object[] { type }, cnfe);
-				}            	
-            }            	
-            
+                type = "java.lang.String";
+            } else {
+                try {
+                    if (isPrimitive(type)) {
+                        throw new JspTranslationException(jspElement, "jsp.error.illegal.type.primitive", new Object[] { type });
+                    }
+                    Class typeAttrClass = JspTranslatorUtil.toClass(type, context.getJspClassloaderContext().getClassLoader()); //PI18025                                       
+
+                } catch (ClassNotFoundException cnfe) {
+                    throw new JspTranslationException(jspElement, "jsp.error.tagfile.cannot.locate.class.to.validate.primitive", new Object[] { type }, cnfe);
+                }
+            }
+
             if (deferredValue) {
                 type = ValueExpression.class.getName();
             } else if (deferredMethod) {
@@ -378,27 +343,26 @@ public class TagFileScanVisitor extends JspVisitor {
         }
 
         if (("2.0".equals(tli.getRequiredVersion()) || "1.2".equals(tli.getRequiredVersion())) // defect 409810
-                && (deferredMethodSpecified || deferredMethod
-                        || deferredValueSpecified || deferredValue)) {
-			throw new JspTranslationException(jspElement,"jsp.error.invalid.version", new Object []{ tagFilePath});
+            && (deferredMethodSpecified || deferredMethod
+                || deferredValueSpecified || deferredValue)) {
+            throw new JspTranslationException(jspElement, "jsp.error.invalid.version", new Object[] { tagFilePath });
         }
-        
-        TagAttributeInfo tai = new TagAttributeInfo(name, required, type, rtexprvalue, fragment, null, deferredValue,
-                deferredMethod, deferredValueType, deferredMethodSignature);
+
+        TagAttributeInfo tai = new TagAttributeInfo(name, required, type, rtexprvalue, fragment, null, deferredValue, deferredMethod, deferredValueType, deferredMethodSignature);
         attributes.add(tai);
         checkValidTagName(jspElement, tagFileUniqueNameGivenVariableNames, name);
     }
-    
-    private boolean isPrimitive(String classType){
-    	classType = classType.trim();
- 		boolean primitive = false;
- 		String[] primitiveList = {"boolean", "byte", "char", "short", "int", "long", "float", "double"};
- 		for (int i=0; i < primitiveList.length; i++){
- 			if(classType.equals(primitiveList[i])){
- 				return true;
- 			}
-    	} 		
- 		return primitive;
+
+    private boolean isPrimitive(String classType) {
+        classType = classType.trim();
+        boolean primitive = false;
+        String[] primitiveList = { "boolean", "byte", "char", "short", "int", "long", "float", "double" };
+        for (int i = 0; i < primitiveList.length; i++) {
+            if (classType.equals(primitiveList[i])) {
+                return true;
+            }
+        }
+        return primitive;
     }
 
     protected void visitVariableDirectiveStart(Element jspElement) throws JspCoreException {
@@ -424,32 +388,22 @@ public class TagFileScanVisitor extends JspVisitor {
         }
 
         if (nameGivenAttr != null && nameFromAttributeAttr != null) {
-            throw new JspTranslationException(
-                jspElement,
-                "variable.attribute.nameGiven.nameFromAttribute.not.both",
-                new Object[] { jspElement.getTagName(), nameGiven, nameFromAttribute });
+            throw new JspTranslationException(jspElement, "variable.attribute.nameGiven.nameFromAttribute.not.both", new Object[] { jspElement.getTagName(), nameGiven,
+                                                                                                                                    nameFromAttribute });
         } else if (nameGivenAttr == null && nameFromAttributeAttr == null) {
-            throw new JspTranslationException(
-                jspElement,
-                "missing.required.variable.attribute.nameGiven.nameFromAttribute",
-                new Object[] { jspElement.getTagName()});
+            throw new JspTranslationException(jspElement, "missing.required.variable.attribute.nameGiven.nameFromAttribute", new Object[] { jspElement.getTagName() });
         } else if (nameFromAttributeAttr != null && aliasAttr == null) {
-            throw new JspTranslationException(
-                jspElement,
-                "required.attribute.alias.required.if.nameFromAttribute.specified",
-                new Object[] { jspElement.getTagName(), nameFromAttribute });
+            throw new JspTranslationException(jspElement, "required.attribute.alias.required.if.nameFromAttribute.specified", new Object[] { jspElement.getTagName(),
+                                                                                                                                             nameFromAttribute });
         } else if (nameGivenAttr != null && aliasAttr != null) {
-            throw new JspTranslationException(
-                jspElement,
-                "attribute.alias.not.permitted.if.namegiven.specified",
-                new Object[] { jspElement.getTagName(), nameGiven, aliasAttr.getValue()});
+            throw new JspTranslationException(jspElement, "attribute.alias.not.permitted.if.namegiven.specified", new Object[] { jspElement.getTagName(), nameGiven,
+                                                                                                                                 aliasAttr.getValue() });
         }
 
         if (variableClassAttr != null)
             variableClass = variableClassAttr.getValue();
         if (declareAttr != null)
-        	declare = JspTranslatorUtil.booleanValue(declareAttr.getValue());
-
+            declare = JspTranslatorUtil.booleanValue(declareAttr.getValue());
 
         if (scopeAttr != null)
             scope = convertScopeToInt(jspElement, scopeAttr.getValue());
@@ -472,10 +426,7 @@ public class TagFileScanVisitor extends JspVisitor {
         Object priorElementObj = map.put(name, jspElement);
         if (priorElementObj != null) {
             Element priorElement = (Element) priorElementObj;
-            throw new JspTranslationException(
-                jspElement,
-                "multiple.occurences.attribute.tagfile.name",
-                new Object[] { jspElement.getTagName(), priorElement.getTagName(), name });
+            throw new JspTranslationException(jspElement, "multiple.occurences.attribute.tagfile.name", new Object[] { jspElement.getTagName(), priorElement.getTagName(), name });
         }
     }
 
@@ -487,120 +438,168 @@ public class TagFileScanVisitor extends JspVisitor {
         else if (scope.equals("AT_END"))
             return VariableInfo.AT_END;
         else
-            throw new JspTranslationException(
-                jspElement,
-                "invalid.value.for.variable.directive.attribute.scope",
-                new Object[] { jspElement.getTagName(), scope });
+            throw new JspTranslationException(jspElement, "invalid.value.for.variable.directive.attribute.scope", new Object[] { jspElement.getTagName(), scope });
     }
 
     protected void visitJspRootStart(Element jspElement) throws JspCoreException {
     }
+
     protected void visitJspRootEnd(Element jspElement) throws JspCoreException {
     }
+
     protected void visitJspTextStart(Element jspElement) throws JspCoreException {
     }
+
     protected void visitJspTextEnd(Element jspElement) throws JspCoreException {
     }
+
     protected void visitIncludeDirectiveStart(Element jspElement) throws JspCoreException {
     }
+
     protected void visitIncludeDirectiveEnd(Element jspElement) throws JspCoreException {
     }
+
     protected void visitPageDirectiveStart(Element jspElement) throws JspCoreException {
     }
+
     protected void visitPageDirectiveEnd(Element jspElement) throws JspCoreException {
     }
+
     protected void visitTagDirectiveEnd(Element jspElement) throws JspCoreException {
     }
+
     protected void visitAttributeDirectiveEnd(Element jspElement) throws JspCoreException {
     }
+
     protected void visitVariableDirectiveEnd(Element jspElement) throws JspCoreException {
     }
+
     protected void visitJspDeclarationStart(Element jspElement) throws JspCoreException {
     }
+
     protected void visitJspDeclarationEnd(Element jspElement) throws JspCoreException {
     }
+
     protected void visitJspExpressionStart(Element jspElement) throws JspCoreException {
     }
+
     protected void visitJspExpressionEnd(Element jspElement) throws JspCoreException {
     }
+
     protected void visitJspScriptletStart(Element jspElement) throws JspCoreException {
     }
+
     protected void visitJspScriptletEnd(Element jspElement) throws JspCoreException {
     }
+
     protected void visitJspParamStart(Element jspElement) throws JspCoreException {
     }
+
     protected void visitJspParamEnd(Element jspElement) throws JspCoreException {
     }
+
     protected void visitJspParamsStart(Element jspElement) throws JspCoreException {
     }
+
     protected void visitJspParamsEnd(Element jspElement) throws JspCoreException {
     }
+
     protected void visitJspFallbackStart(Element jspElement) throws JspCoreException {
     }
+
     protected void visitJspFallbackEnd(Element jspElement) throws JspCoreException {
     }
+
     protected void visitJspIncludeStart(Element jspElement) throws JspCoreException {
     }
+
     protected void visitJspIncludeEnd(Element jspElement) throws JspCoreException {
     }
+
     protected void visitJspForwardStart(Element jspElement) throws JspCoreException {
     }
+
     protected void visitJspForwardEnd(Element jspElement) throws JspCoreException {
     }
+
     protected void visitJspUseBeanStart(Element jspElement) throws JspCoreException {
     }
+
     protected void visitJspUseBeanEnd(Element jspElement) throws JspCoreException {
     }
+
     protected void visitJspGetPropertyStart(Element jspElement) throws JspCoreException {
     }
+
     protected void visitJspGetPropertyEnd(Element jspElement) throws JspCoreException {
     }
+
     protected void visitJspSetPropertyStart(Element jspElement) throws JspCoreException {
     }
+
     protected void visitJspSetPropertyEnd(Element jspElement) throws JspCoreException {
     }
+
     protected void visitJspPluginStart(Element jspElement) throws JspCoreException {
     }
+
     protected void visitJspPluginEnd(Element jspElement) throws JspCoreException {
     }
+
     protected void visitCustomTagStart(Element jspElement) throws JspCoreException {
     }
+
     protected void visitCustomTagEnd(Element jspElement) throws JspCoreException {
     }
+
     protected void visitJspAttributeStart(Element jspElement) throws JspCoreException {
     }
+
     protected void visitJspAttributeEnd(Element jspElement) throws JspCoreException {
     }
+
     protected void visitJspElementStart(Element jspElement) throws JspCoreException {
     }
+
     protected void visitJspElementEnd(Element jspElement) throws JspCoreException {
     }
+
     protected void visitJspBodyStart(Element jspElement) throws JspCoreException {
     }
+
     protected void visitJspBodyEnd(Element jspElement) throws JspCoreException {
     }
+
     protected void visitJspInvokeStart(Element jspElement) throws JspCoreException {
     }
+
     protected void visitJspInvokeEnd(Element jspElement) throws JspCoreException {
     }
+
     protected void visitJspDoBodyStart(Element jspElement) throws JspCoreException {
     }
+
     protected void visitJspDoBodyEnd(Element jspElement) throws JspCoreException {
     }
+
     protected void visitJspOutputStart(Element jspElement) throws JspCoreException {
     }
+
     protected void visitJspOutputEnd(Element jspElement) throws JspCoreException {
     }
+
     protected void visitUninterpretedTagStart(Element jspElement) throws JspCoreException {
-		if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINEST)){
-			logger.logp(Level.FINEST, CLASS_NAME, "visitUninterpretedTagStart","jspElement =[" + jspElement +"]");
-		}
+        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINEST)) {
+            logger.logp(Level.FINEST, CLASS_NAME, "visitUninterpretedTagStart", "jspElement =[" + jspElement + "]");
+        }
     }
+
     protected void visitUninterpretedTagEnd(Element jspElement) throws JspCoreException {
-		if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINEST)){
-			logger.logp(Level.FINEST, CLASS_NAME, "visitUninterpretedTagEnd","jspElement =[" + jspElement +"]");
-		}
+        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINEST)) {
+            logger.logp(Level.FINEST, CLASS_NAME, "visitUninterpretedTagEnd", "jspElement =[" + jspElement + "]");
+        }
     }
-    
-    protected void visitCDataTag(CDATASection cdata) throws JspCoreException {}
+
+    protected void visitCDataTag(CDATASection cdata) throws JspCoreException {
+    }
 }

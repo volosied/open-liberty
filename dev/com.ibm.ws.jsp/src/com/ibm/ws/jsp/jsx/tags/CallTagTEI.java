@@ -22,8 +22,7 @@ public class CallTagTEI extends TagExtraInfo {
             VariableInfo info1 = new VariableInfo(data.getAttributeString("id"), "String", true, VariableInfo.AT_END);
             VariableInfo[] info = { info1 };
             return info;
-        }
-        else {
+        } else {
             VariableInfo[] info = {};
             return info;
         }

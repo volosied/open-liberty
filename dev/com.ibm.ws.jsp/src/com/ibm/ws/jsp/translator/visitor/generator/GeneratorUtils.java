@@ -597,9 +597,9 @@ public class GeneratorUtils {
 
     public static void generate_tagPostConstruct_method(JavaCodeWriter writer) {
         writer.println("public void _jsp_tagPostConstruct(Object tag, java.util.ArrayList tagList, com.ibm.ws.managedobject.ManagedObject mo) {");
-        writer.println( "if(tagList != null) {");
-        writer.println( "tagList.add(tag);");
-         writer.println("}");
+        writer.println("if(tagList != null) {");
+        writer.println("tagList.add(tag);");
+        writer.println("}");
         writer.println("_jspx_iaHelper.doPostConstruct(tag);");
         writer.println("_jspx_iaHelper.addTagHandlerToCdiMap(tag, mo);");
         writer.println("}");
@@ -607,7 +607,7 @@ public class GeneratorUtils {
 
     public static void generate_tagCleanUp_methods(JavaCodeWriter writer, boolean resourceInjectionEnabled) {
         writer.println("public void _jsp_cleanUpTag(Object tag, java.util.ArrayList tagList) {");
-        if(resourceInjectionEnabled) { // if not disabled, then the _jspx_iaHelper is not available
+        if (resourceInjectionEnabled) { // if not disabled, then the _jspx_iaHelper is not available
             writer.println("  _jspx_iaHelper.doPreDestroy(tag);");
             writer.println("  _jspx_iaHelper.cleanUpTagHandlerFromCdiMap(tag);");
         }

@@ -19,10 +19,10 @@ import javax.servlet.jsp.tagext.VariableInfo;
 /**
  * @author todd
  *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ *         To change this generated comment edit the template variable "typecomment":
+ *         Window>Preferences>Java>Templates.
+ *         To enable and disable the creation of type comments go to
+ *         Window>Preferences>Java>Code Generation.
  */
 public class DBQueryTagExtraInfo extends TagExtraInfo {
 
@@ -35,9 +35,8 @@ public class DBQueryTagExtraInfo extends TagExtraInfo {
 
     public VariableInfo[] getVariableInfo(TagData data) {
         if (data.getAttributeString("id") != null) {
-            return (new VariableInfo[] { new VariableInfo(data.getAttributeString("id"), "com.ibm.ws.jsp.tsx.db.QueryResults", true, VariableInfo.AT_END)});
-        }
-        else {
+            return (new VariableInfo[] { new VariableInfo(data.getAttributeString("id"), "com.ibm.ws.jsp.tsx.db.QueryResults", true, VariableInfo.AT_END) });
+        } else {
             return null;
         }
     }

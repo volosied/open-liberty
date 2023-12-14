@@ -33,22 +33,21 @@ public class JspInputSourceFactoryImpl implements JspInputSourceFactory {
     private String docRoot;
     private ServletContext servletContext;
     private Container container;
-    
 
-    public JspInputSourceFactoryImpl(String docRoot, URL contextURL, 
+    public JspInputSourceFactoryImpl(String docRoot, URL contextURL,
                                      DocumentRootUtils dru,
-                                     boolean searchClasspathForResources, 
+                                     boolean searchClasspathForResources,
                                      Container container,
                                      ClassLoader classloader) {
         this(docRoot, contextURL, dru, searchClasspathForResources, container, classloader, null);
     }
-    
-    public JspInputSourceFactoryImpl(String docRoot, URL contextURL, 
-            DocumentRootUtils dru,
-            boolean searchClasspathForResources, 
-            Container container,
-            ClassLoader classloader,
-            ServletContext servletContext) {
+
+    public JspInputSourceFactoryImpl(String docRoot, URL contextURL,
+                                     DocumentRootUtils dru,
+                                     boolean searchClasspathForResources,
+                                     Container container,
+                                     ClassLoader classloader,
+                                     ServletContext servletContext) {
         this.docRoot = docRoot;
         this.contextURL = contextURL;
         this.dru = dru;
@@ -57,128 +56,99 @@ public class JspInputSourceFactoryImpl implements JspInputSourceFactory {
         this.classloader = classloader;
         this.servletContext = servletContext;
     }
+
     @FFDCIgnore(ClassCastException.class)
     public JspInputSource copyJspInputSource(JspInputSource base, String relativeURL) {
         JspInputSource jspInputSource = null;
         Container localContainer = container;
-        if(container != null){ //If container is null, we won't ever have a JspInputSourceContainerImpl. No container logic
+        if (container != null) { //If container is null, we won't ever have a JspInputSourceContainerImpl. No container logic
             try {
-                localContainer = ((JspInputSourceContainerImpl)base).getContainer(); //Look for the file in the given container. If not, just use the primary (probably the war)
-            } catch(ClassCastException cce) {
+                localContainer = ((JspInputSourceContainerImpl) base).getContainer(); //Look for the file in the given container. If not, just use the primary (probably the war)
+            } catch (ClassCastException cce) {
                 //FFDCIgnore. Just use the primary container
             }
         }
         if (System.getSecurityManager() != null) {
-            final String finalJspRelativeUrl = relativeURL; 
+            final String finalJspRelativeUrl = relativeURL;
             final JspInputSource finalBase = base;
             final ServletContext finalServletContext = servletContext;
             final Container finalLocalContainer = localContainer;
-            jspInputSource = (JspInputSource)AccessController.doPrivileged(new PrivilegedAction() {
+            jspInputSource = (JspInputSource) AccessController.doPrivileged(new PrivilegedAction() {
                 public Object run() {
                     URLStreamHandler urlStreamHandler = null;
-                    if (finalLocalContainer==null) {
-                        urlStreamHandler = new JspURLStreamHandler(docRoot,finalJspRelativeUrl, 
-                                                                                dru, 
-                                                                                searchClasspathForResources, 
-                                                                                classloader,
-                                                                                finalServletContext);
-                        return new JspInputSourceImpl((JspInputSourceImpl)finalBase, finalJspRelativeUrl, urlStreamHandler);
+                    if (finalLocalContainer == null) {
+                        urlStreamHandler = new JspURLStreamHandler(docRoot, finalJspRelativeUrl, dru, searchClasspathForResources, classloader, finalServletContext);
+                        return new JspInputSourceImpl((JspInputSourceImpl) finalBase, finalJspRelativeUrl, urlStreamHandler);
                     } else {
                         return new JspInputSourceContainerImpl(finalLocalContainer, finalJspRelativeUrl, urlStreamHandler, dru);
                     }
                 }
             });
-        }
-        else {
+        } else {
             URLStreamHandler urlStreamHandler = null;
-            if (container==null) {
-                urlStreamHandler = new JspURLStreamHandler(docRoot,
-                                                           relativeURL, 
-                                                           dru,
-                                                           searchClasspathForResources, 
-                                                           classloader,
-                                                           servletContext);
-                jspInputSource = new JspInputSourceImpl((JspInputSourceImpl)base, relativeURL, urlStreamHandler);
+            if (container == null) {
+                urlStreamHandler = new JspURLStreamHandler(docRoot, relativeURL, dru, searchClasspathForResources, classloader, servletContext);
+                jspInputSource = new JspInputSourceImpl((JspInputSourceImpl) base, relativeURL, urlStreamHandler);
             } else {
                 jspInputSource = new JspInputSourceContainerImpl(localContainer, relativeURL, urlStreamHandler, dru);
             }
         }
-            
-        return jspInputSource; 
+
+        return jspInputSource;
     }
 
     public JspInputSource createJspInputSource(String relativeURL) {
         JspInputSource jspInputSource = null;
-        
+
         if (System.getSecurityManager() != null) {
-            final String finalJspRelativeUrl = relativeURL; 
+            final String finalJspRelativeUrl = relativeURL;
             final ServletContext finalServletContext = servletContext;
-            jspInputSource = (JspInputSource)AccessController.doPrivileged(new PrivilegedAction() {
+            jspInputSource = (JspInputSource) AccessController.doPrivileged(new PrivilegedAction() {
                 public Object run() {
                     URLStreamHandler urlStreamHandler = null;
-                    if (container==null) {
-                        urlStreamHandler = new JspURLStreamHandler(docRoot,finalJspRelativeUrl, 
-                                                                                dru, 
-                                                                                searchClasspathForResources, 
-                                                                                classloader,
-                                                                                finalServletContext);
+                    if (container == null) {
+                        urlStreamHandler = new JspURLStreamHandler(docRoot, finalJspRelativeUrl, dru, searchClasspathForResources, classloader, finalServletContext);
                         return new JspInputSourceImpl(contextURL, finalJspRelativeUrl, urlStreamHandler);
                     } else {
                         return new JspInputSourceContainerImpl(container, finalJspRelativeUrl, urlStreamHandler, dru);
                     }
                 }
             });
-        }
-        else {
+        } else {
             URLStreamHandler urlStreamHandler = null;
-            if (container==null) {
-                urlStreamHandler = new JspURLStreamHandler(docRoot,relativeURL, 
-                                                                        dru,
-                                                                        searchClasspathForResources, 
-                                                                        classloader,
-                                                                        servletContext);
+            if (container == null) {
+                urlStreamHandler = new JspURLStreamHandler(docRoot, relativeURL, dru, searchClasspathForResources, classloader, servletContext);
                 jspInputSource = new JspInputSourceImpl(contextURL, relativeURL, urlStreamHandler);
             } else {
                 jspInputSource = new JspInputSourceContainerImpl(container, relativeURL, urlStreamHandler, dru);
             }
         }
-            
-        return jspInputSource; 
+
+        return jspInputSource;
     }
 
     public JspInputSource createJspInputSource(URL contextURL, String relativeURL) {
-        if (container!=null) {
+        if (container != null) {
             return createJspInputSource(relativeURL);
         }
         JspInputSource jspInputSource = null;
-        
+
         if (System.getSecurityManager() != null) {
-            final String finalJspRelativeUrl = relativeURL; 
+            final String finalJspRelativeUrl = relativeURL;
             final URL finalContextURL = contextURL;
             final ServletContext finalServletContext = servletContext;
-            jspInputSource = (JspInputSource)AccessController.doPrivileged(new PrivilegedAction() {
+            jspInputSource = (JspInputSource) AccessController.doPrivileged(new PrivilegedAction() {
                 public Object run() {
-                    URLStreamHandler urlStreamHandler = new JspURLStreamHandler(docRoot,
-                                                                                finalJspRelativeUrl, 
-                                                                                dru, 
-                                                                                searchClasspathForResources, 
-                                                                                classloader,
-                                                                                finalServletContext);
+                    URLStreamHandler urlStreamHandler = new JspURLStreamHandler(docRoot, finalJspRelativeUrl, dru, searchClasspathForResources, classloader, finalServletContext);
                     return new JspInputSourceImpl(finalContextURL, finalJspRelativeUrl, urlStreamHandler);
                 }
             });
-        }
-        else {
-            URLStreamHandler urlStreamHandler = new JspURLStreamHandler(docRoot,
-                                                                        relativeURL, 
-                                                                        dru,
-                                                                        searchClasspathForResources, 
-                                                                        classloader,
-                                                                        servletContext);
+        } else {
+            URLStreamHandler urlStreamHandler = new JspURLStreamHandler(docRoot, relativeURL, dru, searchClasspathForResources, classloader, servletContext);
             jspInputSource = new JspInputSourceImpl(contextURL, relativeURL, urlStreamHandler);
         }
-            
-        return jspInputSource; 
+
+        return jspInputSource;
     }
 
 }

@@ -29,6 +29,7 @@ public class QueryResults implements com.ibm.ws.jsp.tsx.TsxDynamicPropertyBeanIn
     // just a reference to be filled in in the constructor
     private int currRow = -1;
     private QueryRow currRowRef = null;
+
     /**
      * This method was created in VisualAge.
      */
@@ -36,8 +37,10 @@ public class QueryResults implements com.ibm.ws.jsp.tsx.TsxDynamicPropertyBeanIn
 
         // do nothing
     }
+
     /**
      * This method was created in VisualAge.
+     * 
      * @param rs java.sql.ResultSet
      */
     protected void compute(java.sql.ResultSet rs) throws SQLException {
@@ -61,7 +64,7 @@ public class QueryResults implements com.ibm.ws.jsp.tsx.TsxDynamicPropertyBeanIn
                 qr.put(colName, colVal);
 
             } // for
-            // put Hashtable reference into Vector
+              // put Hashtable reference into Vector
             rows.addElement(qr);
         } // while
         rows.trimToSize();
@@ -71,10 +74,12 @@ public class QueryResults implements com.ibm.ws.jsp.tsx.TsxDynamicPropertyBeanIn
         //  setCurrRowRef((QueryRow)rows.elementAt(this.currRow));
         //  }
     } // compute
+
     /**
      * This method was created in VisualAge.
      * Will return -1 if the the current row is not set
      * next() will set the current row to the next available row
+     * 
      * @return int returns a row index
      * 
      * 
@@ -82,8 +87,10 @@ public class QueryResults implements com.ibm.ws.jsp.tsx.TsxDynamicPropertyBeanIn
     public int getCurrRow() {
         return this.currRow;
     }
+
     /**
      * This method was created in VisualAge.
+     * 
      * @return QueryRow
      */
     protected QueryRow getCurrRowRef() throws JspCoreException {
@@ -92,15 +99,19 @@ public class QueryResults implements com.ibm.ws.jsp.tsx.TsxDynamicPropertyBeanIn
         }
         return currRowRef;
     }
+
     /**
      * This returns an enumeration of QueryRows
+     * 
      * @return java.util.Enumeration
      */
     public Enumeration getRows() {
         return rows.elements();
     }
+
     /**
      * This method was created in VisualAge.
+     * 
      * @return java.lang.String
      * @param propertyName java.lang.String
      */
@@ -111,8 +122,10 @@ public class QueryResults implements com.ibm.ws.jsp.tsx.TsxDynamicPropertyBeanIn
 
         return (getCurrRowRef().getValue(propertyName));
     }
+
     /**
      * This method was created in VisualAge.
+     * 
      * @return java.lang.String
      * @param propertyName java.lang.String
      */
@@ -120,19 +133,22 @@ public class QueryResults implements com.ibm.ws.jsp.tsx.TsxDynamicPropertyBeanIn
         if (rows.size() > index) {
             QueryRow qr = (QueryRow) rows.elementAt(index);
             return (qr.getValue(propertyName));
-        }
-        else
+        } else
             return (null);
     }
+
     /**
      * This method was created in VisualAge.
+     * 
      * @return boolean
      */
     public boolean isEmpty() {
         return (size() == 0);
     }
+
     /**
      * This method was created in VisualAge.
+     * 
      * @return boolean
      */
     public boolean next() throws JspCoreException {
@@ -143,8 +159,10 @@ public class QueryResults implements com.ibm.ws.jsp.tsx.TsxDynamicPropertyBeanIn
         setCurrRow(getCurrRow() + 1);
         return true;
     }
+
     /**
      * This method was created in VisualAge.
+     * 
      * @param newValue int is a 0 relative row index
      */
     public void setCurrRow(int newValue) throws JspCoreException {
@@ -155,8 +173,10 @@ public class QueryResults implements com.ibm.ws.jsp.tsx.TsxDynamicPropertyBeanIn
         this.currRow = newValue;
         this.currRowRef = (QueryRow) rows.elementAt(newValue);
     }
+
     /**
      * This method was created in VisualAge.
+     * 
      * @param newValue java.util.Hashtable
      */
     protected void setCurrRowRef(QueryRow qr) throws JspCoreException {
@@ -165,8 +185,10 @@ public class QueryResults implements com.ibm.ws.jsp.tsx.TsxDynamicPropertyBeanIn
         }
         this.currRowRef = qr;
     }
+
     /**
      * This method was created in VisualAge.
+     * 
      * @return int
      */
     public int size() {

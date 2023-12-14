@@ -23,29 +23,31 @@ import com.ibm.ws.jsp.JspOptions;
 /**
  * @author Scott Johnson
  *
- * API for retrieving JSP configuration elements from both web.xml and the extensions document
+ *         API for retrieving JSP configuration elements from both web.xml and the extensions document
  */
-public interface JspXmlExtConfig
-{
+public interface JspXmlExtConfig {
     public Map getTagLibMap();
-    
+
     public List getJspPropertyGroups();
-    
+
     public boolean isServlet24();
-    public boolean isServlet24_or_higher();    
+
+    public boolean isServlet24_or_higher();
+
     public JspOptions getJspOptions();
-    
+
     public List getJspFileExtensions();
-    
+
     public boolean containsServletClassName(String servletClassName);
-    
+
     //defect 400645
     public void setWebContainerProperties(Properties webConProperties);
-    
+
     public Properties getWebContainerProperties();
     //defect 400645
-    
+
     //only used during runtime when JCDI will use this to determine whether to wrap the ExpressionFactory
     public void setJCDIEnabledForRuntimeCheck(boolean b);
+
     public boolean isJCDIEnabledForRuntimeCheck();
 }

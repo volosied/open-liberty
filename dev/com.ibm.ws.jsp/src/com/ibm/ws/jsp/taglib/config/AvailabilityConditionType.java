@@ -16,11 +16,11 @@ public class AvailabilityConditionType {
     private final static int WEBINF_FILE = 0;
     private final static int SERVLET_CLASSNAME = 1;
 
-    public final static AvailabilityConditionType webinfFileType=new AvailabilityConditionType(WEBINF_FILE);
-    public final static AvailabilityConditionType servletClassNameType=new AvailabilityConditionType(SERVLET_CLASSNAME);
-    
-    private int key=0;
-    
+    public final static AvailabilityConditionType webinfFileType = new AvailabilityConditionType(WEBINF_FILE);
+    public final static AvailabilityConditionType servletClassNameType = new AvailabilityConditionType(SERVLET_CLASSNAME);
+
+    private int key = 0;
+
     private AvailabilityConditionType(int key) {
         this.key = key;
     }

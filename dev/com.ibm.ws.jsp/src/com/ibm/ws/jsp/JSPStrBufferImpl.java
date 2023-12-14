@@ -16,13 +16,16 @@
 
 package com.ibm.ws.jsp;
 
-public class JSPStrBufferImpl implements  JSPStrBuffer {
-	private final int MAX_JSP_STR_BUFFER_SIZE_AFTER_CLEAR = 512;			//PM19500
+public class JSPStrBufferImpl implements JSPStrBuffer {
+	private final int MAX_JSP_STR_BUFFER_SIZE_AFTER_CLEAR = 512; //PM19500
 	StringBuffer sb = new StringBuffer();
 
-	public JSPStrBufferImpl(){
+	public JSPStrBufferImpl() {
 	}
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ibm.ws.jsp.JSPStrBuffer#append(boolean)
 	 */
 	public JSPStrBuffer append(boolean value) {
@@ -30,7 +33,9 @@ public class JSPStrBufferImpl implements  JSPStrBuffer {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ibm.ws.jsp.JSPStrBuffer#append(char)
 	 */
 	public JSPStrBuffer append(char ch) {
@@ -38,7 +43,9 @@ public class JSPStrBufferImpl implements  JSPStrBuffer {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ibm.ws.jsp.JSPStrBuffer#append(char[], int, int)
 	 */
 	public JSPStrBuffer append(char[] chars, int start, int length) {
@@ -46,7 +53,9 @@ public class JSPStrBufferImpl implements  JSPStrBuffer {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ibm.ws.jsp.JSPStrBuffer#append(char[])
 	 */
 	public JSPStrBuffer append(char[] chars) {
@@ -54,7 +63,9 @@ public class JSPStrBufferImpl implements  JSPStrBuffer {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ibm.ws.jsp.JSPStrBuffer#append(java.lang.CharSequence)
 	 */
 	public JSPStrBuffer append(CharSequence sequence) {
@@ -62,7 +73,9 @@ public class JSPStrBufferImpl implements  JSPStrBuffer {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ibm.ws.jsp.JSPStrBuffer#append(double)
 	 */
 	public JSPStrBuffer append(double value) {
@@ -70,7 +83,9 @@ public class JSPStrBufferImpl implements  JSPStrBuffer {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ibm.ws.jsp.JSPStrBuffer#append(float)
 	 */
 	public JSPStrBuffer append(float value) {
@@ -78,7 +93,9 @@ public class JSPStrBufferImpl implements  JSPStrBuffer {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ibm.ws.jsp.JSPStrBuffer#append(int)
 	 */
 	public JSPStrBuffer append(int value) {
@@ -86,7 +103,9 @@ public class JSPStrBufferImpl implements  JSPStrBuffer {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ibm.ws.jsp.JSPStrBuffer#append(long)
 	 */
 	public JSPStrBuffer append(long value) {
@@ -94,7 +113,9 @@ public class JSPStrBufferImpl implements  JSPStrBuffer {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ibm.ws.jsp.JSPStrBuffer#append(java.lang.Object)
 	 */
 	public JSPStrBuffer append(Object value) {
@@ -102,7 +123,9 @@ public class JSPStrBufferImpl implements  JSPStrBuffer {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ibm.ws.jsp.JSPStrBuffer#append(java.lang.String)
 	 */
 	public JSPStrBuffer append(String string) {
@@ -110,7 +133,9 @@ public class JSPStrBufferImpl implements  JSPStrBuffer {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ibm.ws.jsp.JSPStrBuffer#append(java.lang.JSPStrBuffer)
 	 */
 	public JSPStrBuffer append(JSPStrBuffer sbuffer) {
@@ -118,21 +143,27 @@ public class JSPStrBufferImpl implements  JSPStrBuffer {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ibm.ws.jsp.JSPStrBuffer#capacity()
 	 */
 	public int capacity() {
 		return sb.capacity();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ibm.ws.jsp.JSPStrBuffer#charAt(int)
 	 */
 	public char charAt(int index) {
 		return sb.charAt(index);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ibm.ws.jsp.JSPStrBuffer#delete(int, int)
 	 */
 	public JSPStrBuffer delete(int start, int end) {
@@ -140,7 +171,9 @@ public class JSPStrBufferImpl implements  JSPStrBuffer {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ibm.ws.jsp.JSPStrBuffer#deleteCharAt(int)
 	 */
 	public JSPStrBuffer deleteCharAt(int location) {
@@ -148,49 +181,63 @@ public class JSPStrBufferImpl implements  JSPStrBuffer {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ibm.ws.jsp.JSPStrBuffer#ensureCapacity(int)
 	 */
 	public void ensureCapacity(int min) {
 		sb.ensureCapacity(min);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ibm.ws.jsp.JSPStrBuffer#equals(java.lang.Object)
 	 */
 	public boolean equals(Object o) {
 		return sb.equals(o);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ibm.ws.jsp.JSPStrBuffer#getChars(int, int, char[], int)
 	 */
 	public void getChars(int start, int end, char[] buffer, int index) {
 		sb.getChars(start, end, buffer, index);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ibm.ws.jsp.JSPStrBuffer#hashCode()
 	 */
 	public int hashCode() {
 		return sb.hashCode();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ibm.ws.jsp.JSPStrBuffer#indexOf(java.lang.String, int)
 	 */
 	public int indexOf(String subString, int start) {
 		return sb.indexOf(subString, start);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ibm.ws.jsp.JSPStrBuffer#indexOf(java.lang.String)
 	 */
 	public int indexOf(String string) {
 		return sb.indexOf(string);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ibm.ws.jsp.JSPStrBuffer#insert(int, boolean)
 	 */
 	public JSPStrBuffer insert(int index, boolean value) {
@@ -198,7 +245,9 @@ public class JSPStrBufferImpl implements  JSPStrBuffer {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ibm.ws.jsp.JSPStrBuffer#insert(int, char)
 	 */
 	public JSPStrBuffer insert(int index, char ch) {
@@ -206,7 +255,9 @@ public class JSPStrBufferImpl implements  JSPStrBuffer {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ibm.ws.jsp.JSPStrBuffer#insert(int, char[], int, int)
 	 */
 	public JSPStrBuffer insert(int index, char[] chars, int start, int length) {
@@ -214,7 +265,9 @@ public class JSPStrBufferImpl implements  JSPStrBuffer {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ibm.ws.jsp.JSPStrBuffer#insert(int, char[])
 	 */
 	public JSPStrBuffer insert(int index, char[] chars) {
@@ -222,7 +275,9 @@ public class JSPStrBufferImpl implements  JSPStrBuffer {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ibm.ws.jsp.JSPStrBuffer#insert(int, java.lang.CharSequence)
 	 */
 	public JSPStrBuffer insert(int index, CharSequence sequence) {
@@ -230,7 +285,9 @@ public class JSPStrBufferImpl implements  JSPStrBuffer {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ibm.ws.jsp.JSPStrBuffer#insert(int, double)
 	 */
 	public JSPStrBuffer insert(int index, double value) {
@@ -238,7 +295,9 @@ public class JSPStrBufferImpl implements  JSPStrBuffer {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ibm.ws.jsp.JSPStrBuffer#insert(int, float)
 	 */
 	public JSPStrBuffer insert(int index, float value) {
@@ -246,7 +305,9 @@ public class JSPStrBufferImpl implements  JSPStrBuffer {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ibm.ws.jsp.JSPStrBuffer#insert(int, int)
 	 */
 	public JSPStrBuffer insert(int index, int value) {
@@ -254,7 +315,9 @@ public class JSPStrBufferImpl implements  JSPStrBuffer {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ibm.ws.jsp.JSPStrBuffer#insert(int, long)
 	 */
 	public JSPStrBuffer insert(int index, long value) {
@@ -262,7 +325,9 @@ public class JSPStrBufferImpl implements  JSPStrBuffer {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ibm.ws.jsp.JSPStrBuffer#insert(int, java.lang.Object)
 	 */
 	public JSPStrBuffer insert(int index, Object value) {
@@ -270,7 +335,9 @@ public class JSPStrBufferImpl implements  JSPStrBuffer {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ibm.ws.jsp.JSPStrBuffer#insert(int, java.lang.String)
 	 */
 	public JSPStrBuffer insert(int index, String string) {
@@ -278,28 +345,36 @@ public class JSPStrBufferImpl implements  JSPStrBuffer {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ibm.ws.jsp.JSPStrBuffer#lastIndexOf(java.lang.String, int)
 	 */
 	public int lastIndexOf(String subString, int start) {
 		return sb.lastIndexOf(subString, start);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ibm.ws.jsp.JSPStrBuffer#lastIndexOf(java.lang.String)
 	 */
 	public int lastIndexOf(String string) {
 		return sb.lastIndexOf(string);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ibm.ws.jsp.JSPStrBuffer#length()
 	 */
 	public int length() {
 		return sb.length();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ibm.ws.jsp.JSPStrBuffer#replace(int, int, java.lang.String)
 	 */
 	public JSPStrBuffer replace(int start, int end, String string) {
@@ -307,7 +382,9 @@ public class JSPStrBufferImpl implements  JSPStrBuffer {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ibm.ws.jsp.JSPStrBuffer#reverse()
 	 */
 	public JSPStrBuffer reverse() {
@@ -315,51 +392,63 @@ public class JSPStrBufferImpl implements  JSPStrBuffer {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ibm.ws.jsp.JSPStrBuffer#setCharAt(int, char)
 	 */
 	public void setCharAt(int index, char ch) {
 		sb.setCharAt(index, ch);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ibm.ws.jsp.JSPStrBuffer#setLength(int)
 	 */
 	public void setLength(int length) {
 		sb.setLength(length);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ibm.ws.jsp.JSPStrBuffer#subSequence(int, int)
 	 */
 	public CharSequence subSequence(int start, int end) {
 		return sb.subSequence(start, end);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ibm.ws.jsp.JSPStrBuffer#substring(int, int)
 	 */
 	public String substring(int start, int end) {
 		return sb.substring(start, end);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ibm.ws.jsp.JSPStrBuffer#substring(int)
 	 */
 	public String substring(int start) {
 		return sb.substring(start);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ibm.ws.jsp.JSPStrBuffer#toString()
 	 */
 	public String toString() {
 		return sb.toString();
 	}
-	
+
 	//PM19500
-	public void clear(){
-		if (sb.capacity() > this.MAX_JSP_STR_BUFFER_SIZE_AFTER_CLEAR){
+	public void clear() {
+		if (sb.capacity() > this.MAX_JSP_STR_BUFFER_SIZE_AFTER_CLEAR) {
 			sb = new StringBuffer(this.MAX_JSP_STR_BUFFER_SIZE_AFTER_CLEAR);
 		}
 	}

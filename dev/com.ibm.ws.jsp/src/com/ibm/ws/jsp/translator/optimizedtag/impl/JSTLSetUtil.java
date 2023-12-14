@@ -31,11 +31,10 @@ public class JSTLSetUtil {
     public static void setProperty(PageContext pageContext, Object target, Object result, String property) throws JspException {
         if (target instanceof Map) {
             if (result == null)
-                 ((Map) target).remove(property);
+                ((Map) target).remove(property);
             else
-                 ((Map) target).put(property, result);
-        }
-        else {
+                ((Map) target).put(property, result);
+        } else {
             try {
                 PropertyDescriptor pd[] = Introspector.getBeanInfo(target.getClass()).getPropertyDescriptors();
                 boolean succeeded = false;
@@ -47,13 +46,11 @@ public class JSTLSetUtil {
                         }
                         if (result != null) {
                             try {
-                                m.invoke(target, new Object[] { convertToExpectedType(pageContext, result, m.getParameterTypes()[0])});
-                            }
-                            catch (javax.servlet.jsp.el.ELException ex) {
+                                m.invoke(target, new Object[] { convertToExpectedType(pageContext, result, m.getParameterTypes()[0]) });
+                            } catch (javax.servlet.jsp.el.ELException ex) {
                                 throw new JspTagException(ex);
                             }
-                        }
-                        else {
+                        } else {
                             m.invoke(target, new Object[] { null });
                         }
                         succeeded = true;
@@ -62,29 +59,24 @@ public class JSTLSetUtil {
                 if (!succeeded) {
                     throw new JspTagException("");
                 }
-            }
-            catch (IllegalAccessException ex) {
+            } catch (IllegalAccessException ex) {
                 throw new JspException(ex);
-            }
-            catch (IntrospectionException ex) {
+            } catch (IntrospectionException ex) {
                 throw new JspException(ex);
-            }
-            catch (InvocationTargetException ex) {
+            } catch (InvocationTargetException ex) {
                 throw new JspException(ex);
             }
         }
     }
-    
-    private static Object convertToExpectedType(PageContext pageContext, final Object value, Class expectedType )
-    throws javax.servlet.jsp.el.ELException {
+
+    private static Object convertToExpectedType(PageContext pageContext, final Object value, Class expectedType) throws javax.servlet.jsp.el.ELException {
         ExpressionEvaluator evaluator = pageContext.getExpressionEvaluator();
-        return evaluator.evaluate( "${result}", expectedType,
-        new VariableResolver() {
-            public Object resolveVariable( String pName )
-            throws ELException {
-                return value;
-            }
-        }, null );
+        return evaluator.evaluate("${result}", expectedType,
+                                  new VariableResolver() {
+                                      public Object resolveVariable(String pName) throws ELException {
+                                          return value;
+                                      }
+                                  }, null);
     }
-    
+
 }

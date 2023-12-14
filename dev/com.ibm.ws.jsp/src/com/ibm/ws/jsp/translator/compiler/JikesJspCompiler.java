@@ -35,8 +35,8 @@ import com.ibm.wsspi.jsp.resource.translation.JspResources;
 
 public class JikesJspCompiler implements JspCompiler {
     static protected Logger logger;
-	private static final String CLASS_NAME="com.ibm.ws.jsp.translator.compiler.JikesJspCompiler";
-    private static String separatorString = System.getProperty("line.separator");  // Defect 211450
+    private static final String CLASS_NAME = "com.ibm.ws.jsp.translator.compiler.JikesJspCompiler";
+    private static String separatorString = System.getProperty("line.separator"); // Defect 211450
     static {
         logger = Logger.getLogger("com.ibm.ws.jsp");
     }
@@ -67,56 +67,54 @@ public class JikesJspCompiler implements JspCompiler {
         this.isClassDebugInfo = options.isClassDebugInfo();
         this.isDebugEnabled = options.isDebugEnabled();
         this.isVerbose = options.isVerbose();
-        this.isDeprecation =  options.isDeprecation();
-        jdkSourceLevel =  options.getJdkSourceLevel();
+        this.isDeprecation = options.isDeprecation();
+        jdkSourceLevel = options.getJdkSourceLevel();
         out = new CharArrayWriter();
 
     }
 
     public JspCompilerResult compile(JspResources[] jspResources, JspResources[] dependencyResources, Collection jspLineIds, List compilerOptions) {
-    	return compile(jspResources[0].getGeneratedSourceFile().getPath(), jspLineIds, compilerOptions);
+        return compile(jspResources[0].getGeneratedSourceFile().getPath(), jspLineIds, compilerOptions);
     }
-    
+
     public JspCompilerResult compile(String source, Collection jspLineIds, List compilerOptions) {
         out.reset();
         int rc = 0;
 
-        String javaHomePath= null;
+        String javaHomePath = null;
         try {
             javaHomePath = new File(System.getProperty("java.home")).getCanonicalPath();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             out.write(e.toString(), 0, e.toString().length());
             JspCompilerResult result = new JspCompilerResultImpl(1, out.toString());
             return (result);
         }
 
-        fullClasspath = classloaderContext.getClassPath()+ File.pathSeparatorChar + options.getOutputDir().getPath();
-        fullClasspath = createJikesClasspath(fullClasspath,javaHomePath);
-        optimizedClasspath = createJikesClasspath(optimizedClasspath,javaHomePath);
+        fullClasspath = classloaderContext.getClassPath() + File.pathSeparatorChar + options.getOutputDir().getPath();
+        fullClasspath = createJikesClasspath(fullClasspath, javaHomePath);
+        optimizedClasspath = createJikesClasspath(optimizedClasspath, javaHomePath);
 
         String cp = null;
-        boolean directoryCompile = (source.charAt(0)=='@');
+        boolean directoryCompile = (source.charAt(0) == '@');
         if (!directoryCompile) {
-            source="\""+source+"\"";
+            source = "\"" + source + "\"";
         }
 
         if (directoryCompile && !useOptimizedClasspath) {
             cp = fullClasspath;
-        }
-        else {
+        } else {
             cp = optimizedClasspath;
         }
         rc = runCompile(source, compilerOptions, cp);
 
-        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE)) {
+        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
             logger.logp(Level.FINE, CLASS_NAME, "compile", "rc = " + rc + " directoryCompile = " + directoryCompile + " useOptimizedClasspath = " + useOptimizedClasspath);
         }
 
         if (rc != 0 && directoryCompile == false && useOptimizedClasspath == false) {
-        	// Defect 211450 - change log level to FINE from WARNING
-            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE)) {
-                logger.logp(Level.FINE, CLASS_NAME, "compile", "Warning: failed to compile " + source + " with optimized classpath ["+cp+"]");
+            // Defect 211450 - change log level to FINE from WARNING
+            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
+                logger.logp(Level.FINE, CLASS_NAME, "compile", "Warning: failed to compile " + source + " with optimized classpath [" + cp + "]");
             }
 
             out.reset();
@@ -124,9 +122,9 @@ public class JikesJspCompiler implements JspCompiler {
         }
         String output = null;
 
-        if (rc != 0 || (rc==0 && (isVerbose || isDeprecation))) {
+        if (rc != 0 || (rc == 0 && (isVerbose || isDeprecation))) {
             output = out.toString();
-            if (rc!=0) {
+            if (rc != 0) {
                 output = getJspLineErrors(output, jspLineIds);
             }
         }
@@ -139,9 +137,9 @@ public class JikesJspCompiler implements JspCompiler {
 
         List argList = buildArgList(source, compilerOptions, cp);
         String[] argsArray = new String[argList.size()];
-        argsArray = (String[])argList.toArray(argsArray);
-        StringBuffer argsbuffer=new StringBuffer();
-        for (int i=0; i<argsArray.length;i++) {
+        argsArray = (String[]) argList.toArray(argsArray);
+        StringBuffer argsbuffer = new StringBuffer();
+        for (int i = 0; i < argsArray.length; i++) {
             argsbuffer.append(argsArray[i]);
             argsbuffer.append(" ");
         }
@@ -151,35 +149,34 @@ public class JikesJspCompiler implements JspCompiler {
         long start = System.nanoTime();
 
         try {
-            Process process = Runtime.getRuntime().exec(args, null, new File(absouluteContextRoot));            
+            Process process = Runtime.getRuntime().exec(args, null, new File(absouluteContextRoot));
             BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
             String line = br.readLine();
-            while (line !=null) {
-                out.write(line+separatorString);  // Defect 211450
+            while (line != null) {
+                out.write(line + separatorString); // Defect 211450
                 line = br.readLine();
             }
             process.waitFor();
             rc = process.exitValue();
-        }
-        catch (InterruptedException e) {
+        } catch (InterruptedException e) {
             out.write(e.toString(), 0, e.toString().length());
             rc = 1;
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             out.write(e.toString(), 0, e.toString().length());
             rc = 1;
         }
 
-        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE)) {
+        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
             logger.logp(Level.FINE, CLASS_NAME, "runCompile", "compiling " + source);
-            logger.logp(Level.FINE, CLASS_NAME, "runCompile", "classpath [" + cp+ "]");
+            logger.logp(Level.FINE, CLASS_NAME, "runCompile", "classpath [" + cp + "]");
         }
 
         long end = System.nanoTime();
 
-        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINE)) {
-            logger.logp(Level.FINE, CLASS_NAME, "runCompile", "compile complete for " + source + " time = " + ((end - start) / NANOS_IN_A_MILLISECOND) + " Milliseconds rc = " + rc);
+        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
+            logger.logp(Level.FINE, CLASS_NAME, "runCompile",
+                        "compile complete for " + source + " time = " + ((end - start) / NANOS_IN_A_MILLISECOND) + " Milliseconds rc = " + rc);
         }
         return rc;
     }
@@ -204,8 +201,7 @@ public class JikesJspCompiler implements JspCompiler {
         argList.add("-source");
         if (jdkSourceLevel == 14) {
             argList.add("1.4");
-        }
-        else if (jdkSourceLevel == 15) {
+        } else if (jdkSourceLevel == 15) {
             argList.add("1.5");
         }
         // PM04610 start
@@ -229,11 +225,11 @@ public class JikesJspCompiler implements JspCompiler {
         argList.add(sourcepath);
         argList.add("-classpath");
         argList.add(classpath);
-        argList.add("-Xstdout");        
+        argList.add("-Xstdout");
 
-        if (compilerOptions!=null) {
-            for (int i=0;i<compilerOptions.size();i++) {
-                String compilerOption = (String)compilerOptions.get(i);
+        if (compilerOptions != null) {
+            for (int i = 0; i < compilerOptions.size(); i++) {
+                String compilerOption = (String) compilerOptions.get(i);
                 if (compilerOption.equals("-verbose")) {
                     isVerbose = true;
                 }
@@ -275,60 +271,57 @@ public class JikesJspCompiler implements JspCompiler {
             while (line != null) {
 
                 // Get .java file name
-                int javaNameEnd = line.indexOf(".java"+"\":");
+                int javaNameEnd = line.indexOf(".java" + "\":");
                 if (javaNameEnd > 0) {
                     // file name begins after first "
                     int firstQuote = line.indexOf("\"");
-                    if (firstQuote>0) {
-                        javaName = line.substring(firstQuote+1, javaNameEnd + 5);
+                    if (firstQuote > 0) {
+                        javaName = line.substring(firstQuote + 1, javaNameEnd + 5);
                         // path separator consistent for platform
-                        javaName = javaName.replace ('\\', '/');
+                        javaName = javaName.replace('\\', '/');
                         javaName = javaName.replace('/', File.separatorChar);
                     }
                 }
                 warningIndex = line.indexOf("*** Semantic Warning:");
 
                 if (!(javaName == null
-                    || line.startsWith("[read ")
-                    || line.startsWith("] ")
-                    || warningIndex >=0 )){
+                      || line.startsWith("[read ")
+                      || line.startsWith("] ")
+                      || warningIndex >= 0)) {
 
                     try {
                         // line number is from beginning of line to first period (.).
                         int firstDot = line.indexOf('.');
-                        if (firstDot>0){
+                        if (firstDot > 0) {
                             String nr = line.substring(0, firstDot);
-                            String lineNumber="";
-                            for (int i=0;i<nr.length();i++) {
-                                if (nr.charAt(i)>='0' && nr.charAt(i)<='9')
-                                    lineNumber+=nr.charAt(i);
+                            String lineNumber = "";
+                            for (int i = 0; i < nr.length(); i++) {
+                                if (nr.charAt(i) >= '0' && nr.charAt(i) <= '9')
+                                    lineNumber += nr.charAt(i);
                             }
                             int lineNr = Integer.parseInt(lineNumber);
 
                             // Now do the mapping
                             String mapping = findMapping(jspLineIds, lineNr, javaName);
                             if (mapping == null) {
-                                errorMsg.append(separatorString);  // Defect 211450
-                            }
-                            else {
+                                errorMsg.append(separatorString); // Defect 211450
+                            } else {
                                 errorMsg.append(mapping);
                             }
                         }
-                    }
-                    catch (NumberFormatException ex) {
+                    } catch (NumberFormatException ex) {
                         // If for some reason our guess at the location of the line
                         // number failed, time to give up.
                     }
                 }
-                errorMsg.append (line);
-                errorMsg.append(separatorString);  // Defect 211450
+                errorMsg.append(line);
+                errorMsg.append(separatorString); // Defect 211450
                 line = br.readLine();
             }
             br.close();
             //map.clear();
-        }
-        catch (IOException e) {
-			logger.logp(Level.WARNING, CLASS_NAME, "getJspLineErrors", "Failed to find line number mappings for compiler errors", e);
+        } catch (IOException e) {
+            logger.logp(Level.WARNING, CLASS_NAME, "getJspLineErrors", "Failed to find line number mappings for compiler errors", e);
         }
         return errorMsg.toString();
     }
@@ -336,15 +329,14 @@ public class JikesJspCompiler implements JspCompiler {
     private String findMapping(Collection jspLineIds, int lineNr, String javaName) {
         String errorMsg = null;
         for (Iterator itr = jspLineIds.iterator(); itr.hasNext();) {
-            JspLineId lineId = (JspLineId)itr.next();
+            JspLineId lineId = (JspLineId) itr.next();
             if (lineId.getGeneratedFilePath().equals(javaName)) {
                 if (lineId.getStartGeneratedLineCount() <= 1 && lineId.getStartGeneratedLineNum() == lineNr) {
-                    errorMsg =  createErrorMsg(lineId, lineNr);
+                    errorMsg = createErrorMsg(lineId, lineNr);
                     break;
-                }
-                else if (lineId.getStartGeneratedLineNum() <= lineNr &&
-                         (lineId.getStartGeneratedLineNum() + lineId.getStartGeneratedLineCount() - 1) >= lineNr) {
-                    errorMsg =  createErrorMsg(lineId, lineNr);
+                } else if (lineId.getStartGeneratedLineNum() <= lineNr &&
+                           (lineId.getStartGeneratedLineNum() + lineId.getStartGeneratedLineCount() - 1) >= lineNr) {
+                    errorMsg = createErrorMsg(lineId, lineNr);
                     break;
                 }
             }
@@ -356,57 +348,52 @@ public class JikesJspCompiler implements JspCompiler {
     /**
      * Create error message including the jsp line numbers and file name
      */
-	//	defect 203009 - add logic to 1. narrow down error to single line in JSP, if possible, 2) improve
-	// 					error messages to indicate when a file is statically included, and give
-	//					name of parent file 
+    //	defect 203009 - add logic to 1. narrow down error to single line in JSP, if possible, 2) improve
+    // 					error messages to indicate when a file is statically included, and give
+    //					name of parent file 
     private String createErrorMsg(JspLineId jspLineId, int errorLineNr) {
         StringBuffer compilerOutput = new StringBuffer();
 
         if (jspLineId.getSourceLineCount() <= 1) {
-			Object[] objArray = new Object[] { new Integer(jspLineId.getStartSourceLineNum()), jspLineId.getFilePath()};
-			if (jspLineId.getFilePath().equals(jspLineId.getParentFile())) {
-				compilerOutput.append(separatorString+JspCoreException.getMsg("jsp.error.single.line.number", objArray));  // Defect 211450
-			}
-			else {
-				compilerOutput.append(separatorString+JspCoreException.getMsg("jsp.error.single.line.number.included.file", objArray));  // Defect 211450
-			}
-        }
-        else {
-			// compute exact JSP line number 
-			int actualLineNum=jspLineId.getStartSourceLineNum()+(errorLineNr-jspLineId.getStartGeneratedLineNum());
-			if (actualLineNum>=jspLineId.getStartSourceLineNum() && actualLineNum <=(jspLineId.getStartSourceLineNum() + jspLineId.getSourceLineCount() - 1)) {
-				Object[] objArray = new Object[] { new Integer(actualLineNum), jspLineId.getFilePath()};
-				if (jspLineId.getFilePath().equals(jspLineId.getParentFile())) {
-					compilerOutput.append(separatorString+JspCoreException.getMsg("jsp.error.single.line.number", objArray));  // Defect 211450
-				}
-				else {
-					compilerOutput.append(separatorString+JspCoreException.getMsg("jsp.error.single.line.number.included.file", objArray));  // Defect 211450
-				}
-			}
-			else {
-				Object[] objArray = new Object[] {
-					new Integer(jspLineId.getStartSourceLineNum()),
-					new Integer((jspLineId.getStartSourceLineNum()) + jspLineId.getSourceLineCount() - 1),
-					jspLineId.getFilePath()};
-				if (jspLineId.getFilePath().equals(jspLineId.getParentFile())) {
-					compilerOutput.append(separatorString+  // Defect 211450
-						JspCoreException.getMsg(
-							"jsp.error.multiple.line.number", objArray));
-				}
-				else {
-					compilerOutput.append(separatorString+  // Defect 211450
-						JspCoreException.getMsg(
-							"jsp.error.multiple.line.number.included.file",objArray));
-				}
-			}
+            Object[] objArray = new Object[] { new Integer(jspLineId.getStartSourceLineNum()), jspLineId.getFilePath() };
+            if (jspLineId.getFilePath().equals(jspLineId.getParentFile())) {
+                compilerOutput.append(separatorString + JspCoreException.getMsg("jsp.error.single.line.number", objArray)); // Defect 211450
+            } else {
+                compilerOutput.append(separatorString + JspCoreException.getMsg("jsp.error.single.line.number.included.file", objArray)); // Defect 211450
+            }
+        } else {
+            // compute exact JSP line number 
+            int actualLineNum = jspLineId.getStartSourceLineNum() + (errorLineNr - jspLineId.getStartGeneratedLineNum());
+            if (actualLineNum >= jspLineId.getStartSourceLineNum() && actualLineNum <= (jspLineId.getStartSourceLineNum() + jspLineId.getSourceLineCount() - 1)) {
+                Object[] objArray = new Object[] { new Integer(actualLineNum), jspLineId.getFilePath() };
+                if (jspLineId.getFilePath().equals(jspLineId.getParentFile())) {
+                    compilerOutput.append(separatorString + JspCoreException.getMsg("jsp.error.single.line.number", objArray)); // Defect 211450
+                } else {
+                    compilerOutput.append(separatorString + JspCoreException.getMsg("jsp.error.single.line.number.included.file", objArray)); // Defect 211450
+                }
+            } else {
+                Object[] objArray = new Object[] {
+                                                   new Integer(jspLineId.getStartSourceLineNum()),
+                                                   new Integer((jspLineId.getStartSourceLineNum()) + jspLineId.getSourceLineCount() - 1),
+                                                   jspLineId.getFilePath() };
+                if (jspLineId.getFilePath().equals(jspLineId.getParentFile())) {
+                    compilerOutput.append(separatorString + // Defect 211450
+                                          JspCoreException.getMsg(
+                                                                  "jsp.error.multiple.line.number", objArray));
+                } else {
+                    compilerOutput.append(separatorString + // Defect 211450
+                                          JspCoreException.getMsg(
+                                                                  "jsp.error.multiple.line.number.included.file", objArray));
+                }
+            }
         }
 
-		compilerOutput.append(separatorString+JspCoreException.getMsg("jsp.error.corresponding.servlet",new Object[] { jspLineId.getParentFile()}));  // Defect 211450
-		    //152470 starts
-	        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINER)) {
-	            logger.logp(Level.FINER, CLASS_NAME, "createErrorMsg", "The value of the JSP attribute jdkSourceLevel is ["+ jdkSourceLevel +"]");
-	        }
-	        //152470 ends
+        compilerOutput.append(separatorString + JspCoreException.getMsg("jsp.error.corresponding.servlet", new Object[] { jspLineId.getParentFile() })); // Defect 211450
+        //152470 starts
+        if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINER)) {
+            logger.logp(Level.FINER, CLASS_NAME, "createErrorMsg", "The value of the JSP attribute jdkSourceLevel is [" + jdkSourceLevel + "]");
+        }
+        //152470 ends
         return compilerOutput.toString();
     }
 }

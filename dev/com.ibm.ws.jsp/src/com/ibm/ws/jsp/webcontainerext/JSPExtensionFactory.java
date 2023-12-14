@@ -81,12 +81,12 @@ import com.ibm.wsspi.webcontainer.servlet.IServletContext;
 import com.ibm.wsspi.webcontainer.webapp.WebAppConfig;
 import io.openliberty.el.internal.cdi.ELFactoryWrapperForCDI;
 
-@Component(configurationPid="com.ibm.ws.jsp.2.2",
-   configurationPolicy=ConfigurationPolicy.REQUIRE,
-   property="service.vendor=IBM")
+@Component(configurationPid = "com.ibm.ws.jsp.2.2",
+           configurationPolicy = ConfigurationPolicy.REQUIRE,
+           property = "service.vendor=IBM")
 public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements ExtensionFactory {
     static protected Logger logger;
-    private static final String CLASS_NAME="com.ibm.ws.jsp.webcontainerext.JSPExtensionFactory";
+    private static final String CLASS_NAME = "com.ibm.ws.jsp.webcontainerext.JSPExtensionFactory";
     static {
         logger = Logger.getLogger("com.ibm.ws.jsp");
     }
@@ -106,7 +106,6 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
     @Reference
     private GeneratorUtilsExtFactory generatorUtilsExtFactory;
 
-
     @Reference
     private ClassLoadingService classLoadingService;
     private BundleContext bundleContext;
@@ -121,9 +120,9 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
      * Inject an <code>WrapperExpressionFactory</code> service instance.
      *
      * @param expressionFactoryService
-     *            an expressionFactory service to wrap the default ExpressionFactory
+     *                                     an expressionFactory service to wrap the default ExpressionFactory
      */
-    @Reference(cardinality=ReferenceCardinality.OPTIONAL, policyOption=ReferencePolicyOption.GREEDY, policy=ReferencePolicy.DYNAMIC)
+    @Reference(cardinality = ReferenceCardinality.OPTIONAL, policyOption = ReferencePolicyOption.GREEDY, policy = ReferencePolicy.DYNAMIC)
     protected void setExpressionFactoryService(ServiceReference<ELFactoryWrapperForCDI> expressionFactoryService) {
         this.expressionFactoryService.setReference(expressionFactoryService);
     }
@@ -132,7 +131,7 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
      * Remove the <code>WrapperExpressionFactory</code> service instance.
      *
      * @param expressionFactoryService
-     *            an expressionFactory service to wrap the default ExpressionFactory
+     *                                     an expressionFactory service to wrap the default ExpressionFactory
      */
     protected void unsetExpressionFactoryService(ServiceReference<ELFactoryWrapperForCDI> expressionFactoryService) {
         this.expressionFactoryService.unsetReference(expressionFactoryService);
@@ -142,7 +141,7 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
         JSPExtensionFactory thisService = instance.get();
         if (thisService != null) {
             ELFactoryWrapperForCDI wrapperExpressionFactory = thisService.expressionFactoryService.getService();
-            if (wrapperExpressionFactory!=null) {
+            if (wrapperExpressionFactory != null) {
                 wrapperExpressionFactory.setExpressionFactory(ExpressionFactory.newInstance());
             }
             return wrapperExpressionFactory;
@@ -172,9 +171,9 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
     @Modified
     protected void modified(Map<Object, Object> properties) {
         Boolean osgiAppsCanProvideJSTL = (Boolean) properties.get("osgiAppsCanProvideJSTL");
-        this.osgiAppsCanProvideJSTL = osgiAppsCanProvideJSTL == null? false: osgiAppsCanProvideJSTL;
+        this.osgiAppsCanProvideJSTL = osgiAppsCanProvideJSTL == null ? false : osgiAppsCanProvideJSTL;
         defaultProperties = new Properties();
-        for(Map.Entry<Object, Object> entry : properties.entrySet()) {
+        for (Map.Entry<Object, Object> entry : properties.entrySet()) {
             Object keyObj = entry.getKey();
             String key = (keyObj == null) ? null : getOrigPropName(String.valueOf(keyObj));
             Object valueObj = entry.getValue();
@@ -192,7 +191,7 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
 
     private String getOrigPropName(String newKey) {
         String s = JSPExtensionFactory.FullyQualifiedPropertiesMap.get(newKey);
-        if (s==null) {
+        if (s == null) {
             return newKey;
         } else {
             return s;
@@ -214,13 +213,13 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
             Properties propsFromWebXml = null;
 
             WebExt webExt = adaptableContainer.adapt(WebExt.class);
-            if (webExt!=null) {
+            if (webExt != null) {
                 List<Attribute> jspAttributeInWebExt = webExt.getJspAttributes();
 
-                if (jspAttributeInWebExt!=null) {
+                if (jspAttributeInWebExt != null) {
                     propsFromWebXml = new Properties();
                     propsFromWebXml.putAll(defaultProperties);
-                    for (Attribute a:jspAttributeInWebExt) {
+                    for (Attribute a : jspAttributeInWebExt) {
                         propsFromWebXml.put(a.getName(), a.getValue());
                     }
                 }
@@ -257,35 +256,30 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
 
             //PK93292: ALLOW THE USE OF WEBSPHERE VARIABLES IN EXTENDEDDOCUMENTROOT JSP ATTRIBUTE.
             String extendedDocumentRoot = jspExtConfig.getJspOptions().getExtendedDocumentRoot();
-            if(extendedDocumentRoot!=null){
+            if (extendedDocumentRoot != null) {
                 String expanded = extendedDocumentRoot;
-                try{
+                try {
                     expanded = resolveString(extendedDocumentRoot);
                     jspExtConfig.getJspOptions().setExtendedDocumentRoot(expanded);
-                }catch (Exception e){
+                } catch (Exception e) {
                     // TODO: This should probably be a warning, with an nls.
                     logger.logp(Level.FINE, CLASS_NAME, "createConfig", "varaible expansion failed for extendedDocumentRoot", e);
                 }
             }
 
-
-
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             FFDCFilter.processException(e, "com.ibm.ws.jsp.webcontainerext.JSPExtensionFactory.createConfig", "299");
-        }
-        catch (UnableToAdaptException e) {
+        } catch (UnableToAdaptException e) {
             FFDCFilter.processException(e, "com.ibm.ws.jsp.webcontainerext.JSPExtensionFactory.createConfig", "303");
         }
         return jspExtConfig;
 
     }
+
     // begin PK31450
     public String getTempDirectory(IServletContext webapp) {
         return getTempDirectory(webapp, true);
     }
-
-
 
     public String getTempDirectory(IServletContext webapp, boolean checkZOSFlag) {
         // LIBERTY specific code
@@ -298,10 +292,11 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
 
         return getTempDirectory(sr, webapp, false, checkZOSFlag);
     }
+
     public String getTempDirectory(String dirRoot, IServletContext webapp, boolean override, boolean checkZOSFlag) {
         if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINEST)) {
             logger.logp(Level.FINEST, CLASS_NAME, "getTempDirectory", "dirRoot-->" + dirRoot + " override --> " + override + " checkZOSFlag --> "
-                    + checkZOSFlag);
+                                                                      + checkZOSFlag);
         }
         WebAppConfig config = webapp.getWebAppConfig();
         StringBuilder dir = new StringBuilder(dirRoot);
@@ -315,14 +310,15 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
             // END PK31450
             // Begin 257796, part 1
             dir.append(getNodeName()).append(java.io.File.separator).append(getServerName().replace(' ', '_')).append(
-                    "_" + WebContainer.getWebContainer().getPlatformHelper().getServerID());
+                                                                                                                      "_"
+                                                                                                                      + WebContainer.getWebContainer().getPlatformHelper().getServerID());
             if (WebContainer.getTempDir() == null) {
                 WebContainer.setTempDir(dir.toString());
                 if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE))
                     logger.logp(Level.FINE, CLASS_NAME, "getTempDirectory", "ZOS temp dir is:" + WebContainer.getTempDir());
             }
             dir.append(java.io.File.separator).append(getApplicationName(webapp).replace(' ', '_')).append(java.io.File.separator).append(
-                    config.getModuleName().replace(' ', '_'));
+                                                                                                                                          config.getModuleName().replace(' ', '_'));
             // End 257796, part 1
         } else
             dir.append(getTempDirChildren(webapp));
@@ -351,7 +347,7 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
                         if (process.exitValue() != 0) {
                             // pk435011
                             logger.logp(Level.SEVERE, CLASS_NAME, "getTempDirectory", "chown.failed", new Object[] { cmd,
-                                    Integer.valueOf(process.exitValue()).toString() });
+                                                                                                                     Integer.valueOf(process.exitValue()).toString() });
                         }
                     } catch (Exception e) {
                         com.ibm.wsspi.webcontainer.util.FFDCWrapper.processException(e, CLASS_NAME + ".getTempDirectory", "991", this);
@@ -370,11 +366,11 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
             if (override) {
                 // pk435011
                 logger.logp(Level.SEVERE, CLASS_NAME, "getTempDirectory", "unable.to.use.specified.temp.directory", new Object[] { tmpDir.toString(),
-                        tmpDir.canRead(), tmpDir.canWrite() });
+                                                                                                                                   tmpDir.canRead(), tmpDir.canWrite() });
             } else {
                 // pk435011
                 logger.logp(Level.SEVERE, CLASS_NAME, "getTempDirectory", "unable.to.use.default.temp.directory", new Object[] { tmpDir.toString(),
-                        tmpDir.canRead(), tmpDir.canWrite() });
+                                                                                                                                 tmpDir.canRead(), tmpDir.canWrite() });
             }
         }
         if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINE)) {
@@ -387,10 +383,9 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
      * @param webapp
      * @return
      */
-    public String getServerName()
-    {
-      // TODO Auto-generated method stub
-      return "SMF WebContainer";
+    public String getServerName() {
+        // TODO Auto-generated method stub
+        return "SMF WebContainer";
     }
 
     /**
@@ -418,7 +413,9 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
         // defect 113620 - replace spaces with underscores starting with
         // servername
         dir.append(getNodeName()).append(java.io.File.separator).append(getServerName().replace(' ', '_')).append(java.io.File.separator).append(
-                getApplicationName(webapp).replace(' ', '_')).append(java.io.File.separator).append(webapp.getWebAppConfig().getModuleName().replace(' ', '_'));
+                                                                                                                                                 getApplicationName(webapp).replace(' ',
+                                                                                                                                                                                    '_')).append(java.io.File.separator).append(webapp.getWebAppConfig().getModuleName().replace(' ',
+                                                                                                                                                                                                                                                                                 '_'));
 
         return dir.toString();
     }
@@ -447,27 +444,29 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
             loader = appLoader;
         }
         Container adaptableContainer = webapp.getModuleContainer();
-        StringBuilder classPath=new StringBuilder();
-        if (adaptableContainer!=null) {
+        StringBuilder classPath = new StringBuilder();
+        if (adaptableContainer != null) {
             //retrieve it from the webapp
             Entry libDirEntry = adaptableContainer.getEntry("/WEB-INF/lib");
             Entry classPathEntry = adaptableContainer.getEntry("/WEB-INF/classes");
-            if (classPathEntry!=null) {
+            if (classPathEntry != null) {
             }
             //classPath.append(classPathEntry.getRealPath());
-            if (libDirEntry!=null) { //it exists - must be a directory
+            if (libDirEntry != null) { //it exists - must be a directory
                 try {
                     Container libDirContainer = libDirEntry.adapt(Container.class);
-                    /*Iterator<Entry> libEntries = libDirContainer.iterator();
-                    while (libEntries.hasNext()) {
-                        Entry libEntry = libEntries.next();
-                        if (libEntry.getPath().endsWith(".jar")) {
-                            //TODO: not sure what to do here ... not sure if we even need to generate the classPath
-                        }
-                    }*/
+                    /*
+                     * Iterator<Entry> libEntries = libDirContainer.iterator();
+                     * while (libEntries.hasNext()) {
+                     * Entry libEntry = libEntries.next();
+                     * if (libEntry.getPath().endsWith(".jar")) {
+                     * //TODO: not sure what to do here ... not sure if we even need to generate the classPath
+                     * }
+                     * }
+                     */
                     Collection<URL> libUrls = libDirContainer.getURLs();
-                    for (URL libC:libUrls) {
-                        if (libC.getPath()!=null && libC.getPath().endsWith(".jar")) {
+                    for (URL libC : libUrls) {
+                        if (libC.getPath() != null && libC.getPath().endsWith(".jar")) {
                             //TODO: what about a directory ending in .jar?
                             //classPath.append(libC.getPath());
                         }
@@ -496,17 +495,33 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
         }
         final String cp = classPath.toString();
         return new JspClassloaderContext() {
-            public ClassLoader getClassLoader() { return loader;}
-            public String getClassPath() { return cp;}
-            public String getOptimizedClassPath() { return getClassPath();};
-            public boolean isPredefineClassEnabled() {return false;}
-            public byte[] predefineClass(String className, byte[] classData) {return classData;}
+            public ClassLoader getClassLoader() {
+                return loader;
+            }
+
+            public String getClassPath() {
+                return cp;
+            }
+
+            public String getOptimizedClassPath() {
+                return getClassPath();
+            };
+
+            public boolean isPredefineClassEnabled() {
+                return false;
+            }
+
+            public byte[] predefineClass(String className, byte[] classData) {
+                return classData;
+            }
         };
     }
 
     private static class RequirementImpl implements Requirement {
 
-        /* (non-Javadoc)
+        /*
+         * (non-Javadoc)
+         * 
          * @see org.osgi.resource.Requirement#getNamespace()
          */
         @Override
@@ -514,7 +529,9 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
             return "com.ibm.ws.jsp.jstl.facade";
         }
 
-        /* (non-Javadoc)
+        /*
+         * (non-Javadoc)
+         * 
          * @see org.osgi.resource.Requirement#getDirectives()
          */
         @Override
@@ -522,7 +539,9 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
             return Collections.emptyMap();
         }
 
-        /* (non-Javadoc)
+        /*
+         * (non-Javadoc)
+         * 
          * @see org.osgi.resource.Requirement#getAttributes()
          */
         @Override
@@ -530,7 +549,9 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
             return Collections.emptyMap();
         }
 
-        /* (non-Javadoc)
+        /*
+         * (non-Javadoc)
+         * 
          * @see org.osgi.resource.Requirement#getResource()
          */
         @Override
@@ -540,15 +561,15 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
 
         @Override
         public boolean equals(Object o) {
-                if (o == this)
-                        return true;
-                if (!(o instanceof Requirement))
-                        return false;
-                Requirement c = (Requirement)o;
-                return c.getNamespace().equals(getNamespace())
-                                && c.getAttributes().isEmpty()
-                                && c.getDirectives().isEmpty()
-                                && c.getResource() == null;
+            if (o == this)
+                return true;
+            if (!(o instanceof Requirement))
+                return false;
+            Requirement c = (Requirement) o;
+            return c.getNamespace().equals(getNamespace())
+                   && c.getAttributes().isEmpty()
+                   && c.getDirectives().isEmpty()
+                   && c.getResource() == null;
         }
 
         @Override
@@ -576,7 +597,7 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
     /**
      * DS method for setting (providing) a global tag lib config
      */
-    @Reference(cardinality=ReferenceCardinality.MULTIPLE, policy=ReferencePolicy.DYNAMIC)
+    @Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
     protected void setGlobalTagLibConfig(GlobalTagLibConfig globalTagLibConfig) {
         getGlobalTagLibraryCache().addGlobalTagLibConfig(globalTagLibConfig);
     }
@@ -589,12 +610,12 @@ public class JSPExtensionFactory extends AbstractJSPExtensionFactory implements 
 
     public static ElValidatorExtFactory getElValidatorExtFactory() {
         JSPExtensionFactory inst = instance.get();
-        return inst == null? null: inst.elValidatorExtFactory;
+        return inst == null ? null : inst.elValidatorExtFactory;
     }
 
     public static GeneratorUtilsExtFactory getGeneratorUtilsExtFactory() {
         JSPExtensionFactory inst = instance.get();
-        return inst == null? null: inst.generatorUtilsExtFactory;
+        return inst == null ? null : inst.generatorUtilsExtFactory;
     }
 
     public String resolveString(String x) {

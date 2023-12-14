@@ -14,16 +14,17 @@ package com.ibm.ws.jsp.runtime;
 
 public class UnsynchronizedStack extends java.util.ArrayList {
     /**
-	 * Comment for <code>serialVersionUID</code>
-	 */
-	private static final long serialVersionUID = 3257291318249140273L;
+     * Comment for <code>serialVersionUID</code>
+     */
+    private static final long serialVersionUID = 3257291318249140273L;
 
-	public UnsynchronizedStack() {}
-        
-    public UnsynchronizedStack(int initialSize) {
-    	super(initialSize);
+    public UnsynchronizedStack() {
     }
-    
+
+    public UnsynchronizedStack(int initialSize) {
+        super(initialSize);
+    }
+
     public Object push(Object item) {
         add(item);
         return item;
@@ -37,4 +38,3 @@ public class UnsynchronizedStack extends java.util.ArrayList {
         return obj;
     }
 }
-

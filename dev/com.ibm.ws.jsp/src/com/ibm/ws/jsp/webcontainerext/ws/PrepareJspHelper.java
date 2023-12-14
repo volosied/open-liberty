@@ -362,7 +362,8 @@ public class PrepareJspHelper implements Runnable {
             rv = true;
         } catch (Exception _ex) {
             logger.logp(Level.WARNING, CLASS_NAME, "compileJsp", "PrepareJspHelper: Exception while compiling JSP with pretouch. JSP: [" + httpservletrequest.getServletPath()
-                                                                 + "]", _ex);
+                                                                 + "]",
+                        _ex);
         }
 
         if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINER)) {
@@ -370,12 +371,12 @@ public class PrepareJspHelper implements Runnable {
         }
         return rv;
     }
-    
+
     protected PrepareJspServletRequest newPrepareJspServletRequest() {
         DummyRequest dummyRequest = new DummyRequest();
         return new PrepareJspServletRequestImpl(dummyRequest);
     }
-    
+
     protected PrepareJspServletResponse newPrepareJspServletResponse() {
         DummyResponse dummyResponse = new DummyResponse();
         return new PrepareJspServletResponseImpl(dummyResponse);
@@ -523,13 +524,17 @@ class PrepareJspServletResponseImpl extends HttpServletResponseWrapper implement
 
     private PrintWriter writer = new PrintWriter(new ByteArrayOutputStream());
 
-    public void addCookie(Cookie cookie) {}
+    public void addCookie(Cookie cookie) {
+    }
 
-    public void addDateHeader(String name, long date) {}
+    public void addDateHeader(String name, long date) {
+    }
 
-    public void addHeader(String name, String value) {}
+    public void addHeader(String name, String value) {
+    }
 
-    public void addIntHeader(String name, int value) {}
+    public void addIntHeader(String name, int value) {
+    }
 
     public boolean containsHeader(String name) {
         return false;
@@ -551,23 +556,32 @@ class PrepareJspServletResponseImpl extends HttpServletResponseWrapper implement
         return encodeRedirectUrl(url);
     }
 
-    public void sendError(int code) {}
+    public void sendError(int code) {
+    }
 
-    public void sendError(int code, String message) {}
+    public void sendError(int code, String message) {
+    }
 
-    public void sendRedirect(String location) {}
+    public void sendRedirect(String location) {
+    }
 
-    public void setDateHeader(String name, long date) {}
+    public void setDateHeader(String name, long date) {
+    }
 
-    public void setHeader(String name, String value) {}
+    public void setHeader(String name, String value) {
+    }
 
-    public void setIntHeader(String name, int value) {}
+    public void setIntHeader(String name, int value) {
+    }
 
-    public void setStatus(int sc) {}
+    public void setStatus(int sc) {
+    }
 
-    public void setStatus(int sc, String sm) {}
+    public void setStatus(int sc, String sm) {
+    }
 
-    public void flushBuffer() {}
+    public void flushBuffer() {
+    }
 
     public int getBufferSize() {
         return 1024;
@@ -597,24 +611,31 @@ class PrepareJspServletResponseImpl extends HttpServletResponseWrapper implement
         return false;
     }
 
-    public void reset() {}
+    public void reset() {
+    }
 
-    public void resetBuffer() {}
+    public void resetBuffer() {
+    }
 
-    public void setBufferSize(int size) {}
+    public void setBufferSize(int size) {
+    }
 
-    public void setCharacterEncoding(String encoding) {}
+    public void setCharacterEncoding(String encoding) {
+    }
 
-    public void setContentLength(int length) {}
+    public void setContentLength(int length) {
+    }
 
-    public void setContentType(String type) {}
+    public void setContentType(String type) {
+    }
 
-    public void setLocale(Locale loc) {}
-    
+    public void setLocale(Locale loc) {
+    }
+
     public HttpServletResponse getHttpServletResponse() {
         return this;
     }
- }
+}
 
 class PrepareJspServletRequestImpl extends HttpServletRequestWrapper implements PrepareJspServletRequest {
 
@@ -755,7 +776,8 @@ class PrepareJspServletRequestImpl extends HttpServletRequestWrapper implements 
         return null;
     }
 
-    public void setCharacterEncoding(String arg0) throws UnsupportedEncodingException {}
+    public void setCharacterEncoding(String arg0) throws UnsupportedEncodingException {
+    }
 
     public int getContentLength() {
         return 0;
@@ -813,9 +835,11 @@ class PrepareJspServletRequestImpl extends HttpServletRequestWrapper implements 
         return null;
     }
 
-    public void setAttribute(String arg0, Object arg1) {}
+    public void setAttribute(String arg0, Object arg1) {
+    }
 
-    public void removeAttribute(String arg0) {}
+    public void removeAttribute(String arg0) {
+    }
 
     public Locale getLocale() {
         return null;
@@ -880,7 +904,7 @@ class PrepareJspServletRequestImpl extends HttpServletRequestWrapper implements 
     public void setServletPath(String string) {
         servletPath = string;
     }
-    
+
     public HttpServletRequest getHttpServletRequest() {
         return this;
     }

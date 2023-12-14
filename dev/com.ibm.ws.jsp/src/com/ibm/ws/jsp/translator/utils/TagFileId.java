@@ -16,15 +16,16 @@ public class TagFileId {
     private String prefix = null;
     private String uri = null;
     private String tagName = null;
-    
+
     public TagFileId(String prefix, String uri, String tagName) {
         this.prefix = prefix;
         this.uri = uri;
         this.tagName = tagName;
     }
-    
+
     /**
      * Returns the prefix.
+     * 
      * @return String
      */
     public String getPrefix() {
@@ -33,6 +34,7 @@ public class TagFileId {
 
     /**
      * Returns the tagName.
+     * 
      * @return String
      */
     public String getTagName() {
@@ -41,6 +43,7 @@ public class TagFileId {
 
     /**
      * Returns the uri.
+     * 
      * @return String
      */
     public String getUri() {
@@ -49,6 +52,7 @@ public class TagFileId {
 
     /**
      * Sets the prefix.
+     * 
      * @param prefix The prefix to set
      */
     public void setPrefix(String prefix) {
@@ -57,6 +61,7 @@ public class TagFileId {
 
     /**
      * Sets the tagName.
+     * 
      * @param tagName The tagName to set
      */
     public void setTagName(String tagName) {
@@ -65,25 +70,26 @@ public class TagFileId {
 
     /**
      * Sets the uri.
+     * 
      * @param uri The uri to set
      */
     public void setUri(String uri) {
         this.uri = uri;
     }
-    
+
     public boolean equals(Object o) {
         boolean isEqual = false;
-        
+
         if (o instanceof TagFileId) {
-            TagFileId id = (TagFileId)o;
-            if (id.getUri().equals(uri) && id.getTagName().equals(tagName)) 
+            TagFileId id = (TagFileId) o;
+            if (id.getUri().equals(uri) && id.getTagName().equals(tagName))
                 isEqual = true;
         }
-            
+
         return (isEqual);
     }
-    
+
     public String toString() {
-        return "[" + getTagName() + " " + getUri() + " " + getPrefix()+"]";
+        return "[" + getTagName() + " " + getUri() + " " + getPrefix() + "]";
     }
 }

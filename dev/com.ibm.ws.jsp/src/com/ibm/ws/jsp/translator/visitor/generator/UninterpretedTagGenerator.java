@@ -25,50 +25,50 @@ import com.ibm.ws.jsp.translator.utils.JspTranslatorUtil;
 public class UninterpretedTagGenerator extends CodeGeneratorBase {
     private static final String SINGLE_QUOTE = "'";
     private static final String DOUBLE_QUOTE = "\\\"";
-	static private Logger logger;
-	private static final String CLASS_NAME="com.ibm.ws.jsp.translator.visitor.generator.UninterpretedTagGenerator";
-	static{
-		logger = Logger.getLogger("com.ibm.ws.jsp");
-	}
-    
+    static private Logger logger;
+    private static final String CLASS_NAME = "com.ibm.ws.jsp.translator.visitor.generator.UninterpretedTagGenerator";
+    static {
+        logger = Logger.getLogger("com.ibm.ws.jsp");
+    }
+
     public void startGeneration(int section, JavaCodeWriter writer) throws JspCoreException {
         if (section == CodeGenerationPhase.METHOD_SECTION) {
-    		if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINEST)){
-    			logger.logp(Level.FINEST, CLASS_NAME, "startGeneration","section = ["+section+"]");
-    		}
+            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINEST)) {
+                logger.logp(Level.FINEST, CLASS_NAME, "startGeneration", "section = [" + section + "]");
+            }
             writeDebugStartBegin(writer);
             writer.print("out.write(\"<");
             writer.print(element.getTagName());
-    		if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINEST)){
-    			logger.logp(Level.FINEST, CLASS_NAME, "startGeneration","element.getTagName() = ["+element.getTagName()+"]");
-    		}
+            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINEST)) {
+                logger.logp(Level.FINEST, CLASS_NAME, "startGeneration", "element.getTagName() = [" + element.getTagName() + "]");
+            }
             NamedNodeMap nodeAttrs = element.getAttributes();
-    		if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINEST)){
-    			logger.logp(Level.FINEST, CLASS_NAME, "startGeneration","nodeAttrs = ["+nodeAttrs+"]");
-    			logger.logp(Level.FINEST, CLASS_NAME, "startGeneration","nodeAttrs.getLength() = ["+nodeAttrs.getLength()+"]");
-    		}
+            if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINEST)) {
+                logger.logp(Level.FINEST, CLASS_NAME, "startGeneration", "nodeAttrs = [" + nodeAttrs + "]");
+                logger.logp(Level.FINEST, CLASS_NAME, "startGeneration", "nodeAttrs.getLength() = [" + nodeAttrs.getLength() + "]");
+            }
             for (int i = 0; i < nodeAttrs.getLength(); i++) {
-                Attr attr = (Attr)nodeAttrs.item(i);
-        		if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINEST)){
-        			logger.logp(Level.FINEST, CLASS_NAME, "startGeneration","nodeAttrs attr = ["+attr+"]");
-        		}
+                Attr attr = (Attr) nodeAttrs.item(i);
+                if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINEST)) {
+                    logger.logp(Level.FINEST, CLASS_NAME, "startGeneration", "nodeAttrs attr = [" + attr + "]");
+                }
 
                 //PM41476 start -  added if statement
-                if (jspOptions.isRemoveXmlnsFromOutput() && attr.getName().startsWith("xmlns:") == true ) {
+                if (jspOptions.isRemoveXmlnsFromOutput() && attr.getName().startsWith("xmlns:") == true) {
                     continue;
                 }
                 //PM41476 end
 
-                if (attr.getName().equals("jsp:id") == false && 
+                if (attr.getName().equals("jsp:id") == false &&
                     attr.getName().equals("xmlns:jsp") == false) {
                     String quote = DOUBLE_QUOTE;
                     writer.print(" ");
                     writer.print(attr.getName());
                     writer.print("=");
                     String value = attr.getValue();
-            		if(com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable(Level.FINEST)){
-            			logger.logp(Level.FINEST, CLASS_NAME, "startGeneration","about to call isELInterpreterInput. value = ["+value+"]");
-            		}
+                    if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled() && logger.isLoggable(Level.FINEST)) {
+                        logger.logp(Level.FINEST, CLASS_NAME, "startGeneration", "about to call isELInterpreterInput. value = [" + value + "]");
+                    }
                     if (JspTranslatorUtil.isELInterpreterInput(value, jspConfiguration)) {
                         //PK65013 - start
                         String pageContextVar = Constants.JSP_PAGE_CONTEXT_ORIG;
@@ -80,8 +80,7 @@ public class UninterpretedTagGenerator extends CodeGeneratorBase {
                         writer.print("\\\"\" + ");
                         writer.print(value);
                         writer.print(" + \"\\\"");
-                    }
-                    else {
+                    } else {
                         if (value.indexOf('"') != -1) {
                             quote = SINGLE_QUOTE;
                         }
@@ -89,29 +88,28 @@ public class UninterpretedTagGenerator extends CodeGeneratorBase {
                         writer.print(value);
                         writer.print(quote);
                     }
-                }                
+                }
             }
-            
+
             if (element.hasChildNodes()) {
                 writer.print(">\");");
-                writer.println();     
-            } 
-            else {
+                writer.println();
+            } else {
                 writer.print("/>\");");
-                writer.println();     
+                writer.println();
             }
             writeDebugStartEnd(writer);
         }
     }
 
-    public void endGeneration(int section, JavaCodeWriter writer)  throws JspCoreException {
+    public void endGeneration(int section, JavaCodeWriter writer) throws JspCoreException {
         if (section == CodeGenerationPhase.METHOD_SECTION) {
             if (element.hasChildNodes()) {
                 writeDebugEndBegin(writer);
                 writer.print("out.write(\"</");
                 writer.print(element.getTagName());
                 writer.print(">\");");
-                writer.println();     
+                writer.println();
                 writeDebugEndEnd(writer);
             }
         }

@@ -21,16 +21,15 @@ public class TagArray {
     private Tag[] tags;
 
     private int next = -1;
-    
+
     private AnnotationHandler tagAnnotationHandler;
-    
+
     public TagArray(int size, ServletContext context) {
         tags = new Tag[size];
-        
+
         // LIDB4147-24
-        
-        this.tagAnnotationHandler = AnnotationHandler.getInstance
-             (context);
+
+        this.tagAnnotationHandler = AnnotationHandler.getInstance(context);
     }
 
     public Tag get() {
@@ -46,24 +45,24 @@ public class TagArray {
             tags[++next] = tag;
             return;
         }
-        
-        this.tagAnnotationHandler.doPreDestroyAction (tag);   // LIDB4147-24
-        
+
+        this.tagAnnotationHandler.doPreDestroyAction(tag); // LIDB4147-24
+
         tag.release();
     }
 
     public void releaseTags() {
         for (int i = 0; i < tags.length; i++) {
             if (tags[i] != null) {
-                this.tagAnnotationHandler.doPreDestroyAction (tags[i]);   // LIDB4147-24
-                 
+                this.tagAnnotationHandler.doPreDestroyAction(tags[i]); // LIDB4147-24
+
                 tags[i].release();
                 tags[i] = null;
             }
         }
     }
-    
+
     public int numberInUse() {
-        return next+1;
+        return next + 1;
     }
 }

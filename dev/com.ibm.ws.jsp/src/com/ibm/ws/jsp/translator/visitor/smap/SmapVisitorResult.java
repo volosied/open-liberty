@@ -17,12 +17,12 @@ import com.ibm.ws.jsp.translator.visitor.JspVisitorResult;
 
 public class SmapVisitorResult extends JspVisitorResult {
     protected SmapGenerator smapGenerator = null;
-    
+
     public SmapVisitorResult(String jspVisitorId, SmapGenerator smapGenerator) {
         super(jspVisitorId);
         this.smapGenerator = smapGenerator;
     }
-    
+
     public SmapGenerator getSmapGenerator() {
         return (smapGenerator);
     }

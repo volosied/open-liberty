@@ -16,13 +16,13 @@ public class ImplicitTagLibConfig {
     private String uri = null;
     private String prefix = null;
     private String location = null;
-    
+
     public ImplicitTagLibConfig(String uri, String prefix, String location) {
         this.uri = uri;
         this.prefix = prefix;
-        this.location = location;    
+        this.location = location;
     }
-    
+
     public String getLocation() {
         return location;
     }

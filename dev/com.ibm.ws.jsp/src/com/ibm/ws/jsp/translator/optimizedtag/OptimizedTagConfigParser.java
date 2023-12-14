@@ -32,7 +32,7 @@ import com.ibm.wsspi.jsp.context.JspCoreContext;
 public class OptimizedTagConfigParser extends DefaultHandler {
     public static final String DTD_PUBLIC_ID = "http://www.ibm.com/xml/ns/OptimizedTag.xsd";
     public static final String DTD_RESOURCE_PATH = "/com/ibm/ws/jsp/translator/optimizedtag/OptimizedTag.xsd";
-    
+
     protected SAXParser saxParser = null;
     protected JspCoreContext ctxt = null;
 
@@ -43,98 +43,86 @@ public class OptimizedTagConfigParser extends DefaultHandler {
     protected String uri = null;
     protected String version = null;
     protected String shortName = null;
-    
+
     public OptimizedTagConfigParser(JspCoreContext ctxt) throws JspCoreException {
         this.ctxt = ctxt;
         try {
             saxParser = ParserFactory.newSAXParser(false, true);
-        }
-        catch (ParserConfigurationException e) {
+        } catch (ParserConfigurationException e) {
             throw new JspCoreException(e);
-        }
-        catch (SAXException e) {
+        } catch (SAXException e) {
             throw new JspCoreException(e);
         }
     }
-    
+
     public Map parse(InputStream is) throws JspCoreException {
         optimizedTagConfigMap.clear();
         try {
- 			ParserFactory.parseDocument(saxParser, is, this);
-        }
-        catch (SAXException e) {
+            ParserFactory.parseDocument(saxParser, is, this);
+        } catch (SAXException e) {
             if (e.getCause() != null)
                 throw new JspCoreException(e.getCause());
             else
                 throw new JspCoreException(e);
-                
-        }
-        catch (IOException e) {
+
+        } catch (IOException e) {
             throw new JspCoreException(e);
-        }
-        finally {
+        } finally {
             try {
                 is.close();
-            } catch (IOException e) {}
+            } catch (IOException e) {
+            }
         }
         Map m = new HashMap();
         m.putAll(optimizedTagConfigMap);
         return (m);
     }
-    
-    public void startElement(String namespaceURI, 
+
+    public void startElement(String namespaceURI,
                              String localName,
-                             String elementName, 
-                             Attributes attrs) 
-        throws SAXException {
+                             String elementName,
+                             Attributes attrs) throws SAXException {
         chars = new StringBuffer();
         if (elementName.equals("optimized-tag")) {
             optimizedTagConfig = new OptimizedTagConfig();
         }
     }
-    
+
     public void characters(char[] ch, int start, int length) throws SAXException {
         for (int i = 0; i < length; i++) {
             if (chars != null)
-                chars.append(ch[start+i]);
+                chars.append(ch[start + i]);
         }
     }
-    
+
     public void endElement(String namespaceURI,
                            String localName,
-                           String elementName)
-        throws SAXException {
+                           String elementName) throws SAXException {
         if (elementName.equals("class-name")) {
             className = chars.toString().trim();
-        }
-        else if (elementName.equals("short-name")) {
+        } else if (elementName.equals("short-name")) {
             shortName = chars.toString().trim();
-        }
-        else if (elementName.equals("taglib-uri")) {
+        } else if (elementName.equals("taglib-uri")) {
             uri = chars.toString().trim();
-        }
-        else if (elementName.equals("tlib-version")) {
+        } else if (elementName.equals("tlib-version")) {
             version = chars.toString().trim();
-        }
-        else if (elementName.equals("optimized-tag")) {
+        } else if (elementName.equals("optimized-tag")) {
             try {
-                Class optClass = Class.forName(className, true, ctxt.getJspClassloaderContext().getClassLoader()); 
+                Class optClass = Class.forName(className, true, ctxt.getJspClassloaderContext().getClassLoader());
                 optimizedTagConfig.setOptClass(optClass);
                 optimizedTagConfig.setShortName(shortName);
                 optimizedTagConfig.setTlibUri(uri);
                 optimizedTagConfig.setTlibversion(version);
-                optimizedTagConfigMap.put(uri+version+shortName, optimizedTagConfig);                
-            }
-            catch (ClassNotFoundException e) {
+                optimizedTagConfigMap.put(uri + version + shortName, optimizedTagConfig);
+            } catch (ClassNotFoundException e) {
                 throw new SAXException(e);
-            }                           
+            }
         }
     }
 
-    public InputSource resolveEntity(String publicId, String systemId)
-        throws SAXException {
+    public InputSource resolveEntity(String publicId, String systemId) throws SAXException {
         InputSource isrc = null;
-        String resourcePath = null;            
+        String resourcePath = null;
         if (publicId.equals(DTD_PUBLIC_ID)) {
             resourcePath = DTD_RESOURCE_PATH;
         }

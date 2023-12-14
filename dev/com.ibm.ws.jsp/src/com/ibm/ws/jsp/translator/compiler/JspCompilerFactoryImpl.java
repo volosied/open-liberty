@@ -24,46 +24,44 @@ import com.ibm.wsspi.jsp.context.JspClassloaderContext;
 
 public class JspCompilerFactoryImpl implements JspCompilerFactory {
     static protected Logger logger;
-	private static final String CLASS_NAME="com.ibm.ws.jsp.translator.compiler.JspCompilerFactoryImpl";
+    private static final String CLASS_NAME = "com.ibm.ws.jsp.translator.compiler.JspCompilerFactoryImpl";
     static {
         logger = Logger.getLogger("com.ibm.ws.jsp");
     }
     private static final String WAS_ROOT_BASE = System.getProperty("was.install.root");
-    
+
     private String absouluteContextRoot;
     private JspClassloaderContext classloaderContext;
     private JspOptions options;
-    
+
     private String classpath = null;
-	boolean useOptimizedClasspath = false;
-    
+    boolean useOptimizedClasspath = false;
+
     public JspCompilerFactoryImpl(String absouluteContextRoot, JspClassloaderContext classloaderContext, JspOptions options) {
         this.absouluteContextRoot = absouluteContextRoot;
         this.classloaderContext = classloaderContext;
         this.options = options;
-        
-        logger.logp(Level.FINE, CLASS_NAME, "JspCompilerFactoryImpl", "jspCompileClasspath: "+options.getJspCompileClasspath());
-        
+
+        logger.logp(Level.FINE, CLASS_NAME, "JspCompilerFactoryImpl", "jspCompileClasspath: " + options.getJspCompileClasspath());
+
         // WAS_ROOT_BASE will be null during WAS build complilations - since there is no WAS installation
-        if (WAS_ROOT_BASE!=null) {
+        if (WAS_ROOT_BASE != null) {
             classpath = classloaderContext.getOptimizedClassPath();
             if (options.getJspCompileClasspath() != null) {
                 useOptimizedClasspath = true;
             }
-        }
-        else {
+        } else {
             // if WAS_ROOT_BASE is null, set classpath to the full classpath and force flag to true.  This
             // will tell the compiler to NOT retry a failed, single-file compilation.
-            classpath = classloaderContext.getClassPath()+ File.pathSeparatorChar + options.getOutputDir().getPath();
-            useOptimizedClasspath=true;
+            classpath = classloaderContext.getClassPath() + File.pathSeparatorChar + options.getOutputDir().getPath();
+            useOptimizedClasspath = true;
         }
     }
-    
+
     public JspCompiler createJspCompiler() {
         if (options.isUseJikes()) {
             return new JikesJspCompiler(absouluteContextRoot, classloaderContext, options, classpath, useOptimizedClasspath);
-        }
-        else {
+        } else {
             return new StandardJspCompiler(classloaderContext, options, classpath, useOptimizedClasspath);
         }
     }

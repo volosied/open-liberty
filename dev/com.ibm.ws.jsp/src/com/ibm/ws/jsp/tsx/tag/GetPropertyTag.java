@@ -23,13 +23,14 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
 
 public class GetPropertyTag extends BodyTagSupport {
     /**
-	 * Comment for <code>serialVersionUID</code>
-	 */
-	private static final long serialVersionUID = 3257844389760742707L;
-	private String name = "";
+     * Comment for <code>serialVersionUID</code>
+     */
+    private static final long serialVersionUID = 3257844389760742707L;
+    private String name = "";
     private String property = "";
 
-    public GetPropertyTag() {}
+    public GetPropertyTag() {
+    }
 
     public String getName() {
         return (name);
@@ -67,8 +68,7 @@ public class GetPropertyTag extends BodyTagSupport {
         if (name.equals("request")) {
             String methodName = "request" + ".get" + property.substring(0, 1).toUpperCase() + property.substring(1);
             outputString.append("out.println (JspRuntimeLibrary.toString(" + methodName + "()));\n");
-        }
-        else {
+        } else {
             Object bean = pageContext.findAttribute(name);
             if (bean == null)
                 throw new JspException("Bean instance [" + name + "] not found");
@@ -94,14 +94,12 @@ public class GetPropertyTag extends BodyTagSupport {
                         outputString.append("");
                         pageContext.setAttribute("TSXBreakRepeat", new Boolean(true), PageContext.REQUEST_SCOPE);
                     }
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     //com.ibm.ws.ffdc.FFDCFilter.processException(e, "com.ibm.ws.webcontainer.jsp.tsx.tag.GetPropertyTag.doStartTag", "86", this);
                     throw new JspException("Exceptiomn e : " + e.toString());
                 }
 
-            }
-            else {
+            } else {
                 try {
                     char chars[] = property.toCharArray();
                     chars[0] = Character.toUpperCase(chars[0]);
@@ -114,8 +112,7 @@ public class GetPropertyTag extends BodyTagSupport {
                         outputString.append(value);
                     else
                         outputString.append("");
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     //com.ibm.ws.ffdc.FFDCFilter.processException(e, "com.ibm.ws.webcontainer.jsp.tsx.tag.GetPropertyTag.doStartTag", "106", this);
                     throw new JspException("Exceptiomn e : " + e.toString());
                 }
@@ -125,8 +122,7 @@ public class GetPropertyTag extends BodyTagSupport {
         JspWriter writer = pageContext.getOut();
         try {
             writer.print(outputString.toString());
-        }
-        catch (java.io.IOException e) {
+        } catch (java.io.IOException e) {
             //com.ibm.ws.ffdc.FFDCFilter.processException(e, "com.ibm.ws.webcontainer.jsp.tsx.tag.GetPropertyTag.doStartTag", "117", this);
             throw new JspException("IOException writing tag : " + e.toString());
         }

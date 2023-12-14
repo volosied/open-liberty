@@ -18,19 +18,25 @@ import com.ibm.ws.jsp.JspCoreException;
 
 public class QueryRow {
     Hashtable row = null;
+
     /**
      * This method was created in VisualAge.
      */
-    public QueryRow() {}
+    public QueryRow() {
+    }
+
     /**
      * This method was created in VisualAge.
+     * 
      * @param colCount int
      */
     protected QueryRow(int colCount) {
         row = new Hashtable(colCount);
     }
+
     /**
      * This method was created in VisualAge.
+     * 
      * @return java.lang.String
      * @param propertyName java.lang.String
      */
@@ -39,25 +45,28 @@ public class QueryRow {
         // get the value from hashtable and give it. Return null if property
         // not found ?? should we throw an error here ??
         String val = (String) row.get(propertyName);
-        /*      if(val == null)
-              {// invalid attribute
-                 throw new JasperException((JspConstants.InvalidAttrName)+propertyName);
-              }
-              else
-              {*/
+        /*
+         * if(val == null)
+         * {// invalid attribute
+         * throw new JasperException((JspConstants.InvalidAttrName)+propertyName);
+         * }
+         * else
+         * {
+         */
         return val;
         //}
     }
+
     /**
      * This method was created in VisualAge.
+     * 
      * @param name java.lang.String
-     * @param val java.lang.String
+     * @param val  java.lang.String
      */
     protected void put(String name, String val) {
         if (val == null) {
             row.put(name, "");
-        }
-        else {
+        } else {
             row.put(name, val);
         }
     }

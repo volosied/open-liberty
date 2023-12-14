@@ -15,12 +15,12 @@ package com.ibm.ws.jsp.taglib.config;
 public class AvailabilityCondition {
     private AvailabilityConditionType type = null;
     private String value = null;
-    
+
     public AvailabilityCondition(AvailabilityConditionType type, String value) {
         this.type = type;
         this.value = value;
     }
-    
+
     public AvailabilityConditionType getType() {
         return type;
     }

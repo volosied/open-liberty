@@ -22,7 +22,7 @@ public class ImplicitTagLibraryInfoImpl extends TagLibraryInfoImpl {
             shortname = shortname.substring(9);
         }
         if (shortname.endsWith("/")) {
-            shortname = shortname.substring(0, shortname.lastIndexOf('/')-1);
+            shortname = shortname.substring(0, shortname.lastIndexOf('/') - 1);
         }
         shortname = shortname.replaceAll("/", "-");
         this.tlibversion = "1.0";

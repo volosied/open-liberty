@@ -15,17 +15,17 @@ package com.ibm.ws.jsp.translator.visitor.generator;
 public class NamedAttributeWriter extends MethodWriter {
     private String attributeName = null;
     private String varName = null;
-    
+
     public NamedAttributeWriter(String attributeName, String varName) {
         super();
         this.attributeName = attributeName;
         this.varName = varName;
     }
-    
+
     public String getVarName() {
         return varName;
     }
-    
+
     public String getAttributeName() {
         return attributeName;
     }

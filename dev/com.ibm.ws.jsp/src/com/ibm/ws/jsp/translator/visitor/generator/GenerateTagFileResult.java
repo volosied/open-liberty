@@ -19,17 +19,19 @@ import com.ibm.ws.jsp.translator.visitor.JspVisitorResult;
 
 public class GenerateTagFileResult extends JspVisitorResult {
     private Map customTagMethodJspIdMap = new HashMap(); //232818
-    private int tagMethodLineNumber=0; //PM12658
+    private int tagMethodLineNumber = 0; //PM12658
+
     public GenerateTagFileResult(String jspVisitorId) {
         super(jspVisitorId);
     }
+
     /**
      * @return Returns the customTagMethodJspIdMap.
      */
     public Map getCustomTagMethodJspIdMap() { //232818
         return customTagMethodJspIdMap; //232818
     }
-    
+
     //PM12658 start
     /**
      * @return Returns the tagMethodLineNumber.
@@ -37,7 +39,7 @@ public class GenerateTagFileResult extends JspVisitorResult {
     public int getTagMethodLineNumber() {
         return tagMethodLineNumber;
     }
-	
+
     /**
      * @param tagMethodLineNumber The tagMethodLineNumber to set.
      */

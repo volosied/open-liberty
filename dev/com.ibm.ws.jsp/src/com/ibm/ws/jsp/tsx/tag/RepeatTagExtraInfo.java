@@ -17,29 +17,28 @@ import javax.servlet.jsp.tagext.TagExtraInfo;
 import javax.servlet.jsp.tagext.VariableInfo;
 
 /**
-* @author todd
-*
-* To change this generated comment edit the template variable "typecomment":
-* Window>Preferences>Java>Templates.
-* To enable and disable the creation of type comments go to
-* Window>Preferences>Java>Code Generation.
-*/
+ * @author todd
+ *
+ *         To change this generated comment edit the template variable "typecomment":
+ *         Window>Preferences>Java>Templates.
+ *         To enable and disable the creation of type comments go to
+ *         Window>Preferences>Java>Code Generation.
+ */
 public class RepeatTagExtraInfo extends TagExtraInfo {
 
-/**
- * Constructor for RepeatTagExtraInfo.
- */
-public RepeatTagExtraInfo() {
-    super();
-}
+    /**
+     * Constructor for RepeatTagExtraInfo.
+     */
+    public RepeatTagExtraInfo() {
+        super();
+    }
 
-public VariableInfo[] getVariableInfo(TagData data) {
-    if (data.getAttributeString("index") != null) {
-        return (new VariableInfo[] { new VariableInfo(data.getAttributeString("index"),"java.lang.Integer" , true, VariableInfo.NESTED)});
+    public VariableInfo[] getVariableInfo(TagData data) {
+        if (data.getAttributeString("index") != null) {
+            return (new VariableInfo[] { new VariableInfo(data.getAttributeString("index"), "java.lang.Integer", true, VariableInfo.NESTED) });
+        } else {
+            return null;
+        }
     }
-    else {
-        return null;
-    }
-}
 
 }

@@ -18,14 +18,14 @@ public class BodyGenerator extends CodeGeneratorBase {
     public void startGeneration(int section, JavaCodeWriter writer) throws JspCoreException {
     }
 
-    public void endGeneration(int section, JavaCodeWriter writer)  throws JspCoreException {
+    public void endGeneration(int section, JavaCodeWriter writer) throws JspCoreException {
         if (section == CodeGenerationPhase.METHOD_SECTION) {
             if (writer instanceof FragmentHelperClassWriter.FragmentWriter) {
-                FragmentHelperClassWriter.FragmentWriter fragmentWriter = (FragmentHelperClassWriter.FragmentWriter)writer;
+                FragmentHelperClassWriter.FragmentWriter fragmentWriter = (FragmentHelperClassWriter.FragmentWriter) writer;
                 if (persistentData.get("methodNesting") == null) {
                     persistentData.put("methodNesting", new Integer(0));
                 }
-                int methodNesting =  ((Integer)persistentData.get("methodNesting")).intValue();
+                int methodNesting = ((Integer) persistentData.get("methodNesting")).intValue();
                 fragmentHelperClassWriter.closeFragment(fragmentWriter, methodNesting);
             }
         }

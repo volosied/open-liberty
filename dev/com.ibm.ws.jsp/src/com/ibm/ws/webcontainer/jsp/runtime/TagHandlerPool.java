@@ -19,26 +19,20 @@ import javax.servlet.jsp.tagext.Tag;
 
 import com.ibm.ws.jsp.runtime.UnsynchronizedStack;
 
-public class TagHandlerPool extends ThreadLocal
-{
-	protected Object initialValue()
-	{
-		return new HashMap()
-		{
+public class TagHandlerPool extends ThreadLocal {
+	protected Object initialValue() {
+		return new HashMap() {
 			/**
 			 * Comment for <code>serialVersionUID</code>
 			 */
 			private static final long serialVersionUID = 3545240228030787633L;
 
-			protected void finalize() throws Throwable
-			{
+			protected void finalize() throws Throwable {
 				Iterator i = values().iterator();
-				while (i.hasNext())
-				{
+				while (i.hasNext()) {
 					UnsynchronizedStack stack = (UnsynchronizedStack) i.next();
 					Iterator j = stack.iterator();
-					while (j.hasNext())
-					{
+					while (j.hasNext()) {
 						Tag tag = (Tag) j.next();
 						tag.release();
 						tag = null;
@@ -51,8 +45,8 @@ public class TagHandlerPool extends ThreadLocal
 			}
 		};
 	}
-	public HashMap getPool()
-	{
+
+	public HashMap getPool() {
 		return ((HashMap) get());
 	}
 }

@@ -18,6 +18,6 @@ public class FallBackGenerator extends CodeGeneratorBase {
     public void startGeneration(int section, JavaCodeWriter writer) throws JspCoreException {
     }
 
-    public void endGeneration(int section, JavaCodeWriter writer)  throws JspCoreException {
+    public void endGeneration(int section, JavaCodeWriter writer) throws JspCoreException {
     }
 }

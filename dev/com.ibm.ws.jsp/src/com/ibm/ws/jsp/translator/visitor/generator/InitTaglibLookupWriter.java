@@ -13,18 +13,17 @@
 package com.ibm.ws.jsp.translator.visitor.generator;
 
 public class InitTaglibLookupWriter extends MethodWriter {
-    
-	public InitTaglibLookupWriter(boolean isThreadTagPooling) {
+
+    public InitTaglibLookupWriter(boolean isThreadTagPooling) {
         println();
         if (isThreadTagPooling) {
-        	println("private java.util.HashMap initTaglibLookup(HttpServletRequest request) {");
-        }
-        else {
+            println("private java.util.HashMap initTaglibLookup(HttpServletRequest request) {");
+        } else {
             println("private java.util.HashMap initTaglibLookup() {");
         }
         println("java.util.HashMap _jspx_TagLookup = new java.util.HashMap();");
     }
-    
+
     public void complete() {
         println("return _jspx_TagLookup;");
         println("}");

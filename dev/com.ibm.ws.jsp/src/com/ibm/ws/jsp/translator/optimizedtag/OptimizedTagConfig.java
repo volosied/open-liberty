@@ -17,9 +17,10 @@ public class OptimizedTagConfig {
     protected String tlibversion = null;
     protected String shortName = null;
     protected Class optClass = null;
-    
-    public OptimizedTagConfig() {}
-      
+
+    public OptimizedTagConfig() {
+    }
+
     public String getShortName() {
         return shortName;
     }
@@ -43,7 +44,7 @@ public class OptimizedTagConfig {
     public void setTlibversion(String string) {
         tlibversion = string;
     }
-    
+
     public Class getOptClass() {
         return optClass;
     }

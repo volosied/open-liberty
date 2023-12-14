@@ -16,13 +16,13 @@ import com.ibm.ws.jsp.Constants;
 import com.ibm.ws.jsp.JspCoreException;
 
 public class InvokeGenerator extends PageTranslationTimeGenerator {
-    
+
     public InvokeGenerator() {
-        super(new String[] {"fragment", "varReader", "var", "scope"});
+        super(new String[] { "fragment", "varReader", "var", "scope" });
     }
-    
-    
-    public void startGeneration(int section, JavaCodeWriter writer) throws JspCoreException {}
+
+    public void startGeneration(int section, JavaCodeWriter writer) throws JspCoreException {
+    }
 
     public void endGeneration(int section, JavaCodeWriter writer) throws JspCoreException {
         //PK65013 - start
@@ -38,11 +38,10 @@ public class InvokeGenerator extends PageTranslationTimeGenerator {
             // Invoke fragment
             String varReaderAttr = getAttributeValue("varReader");
             String varAttr = getAttributeValue("var");
-            
+
             if (varReaderAttr != null || varAttr != null) {
                 writer.println("_jspx_sout = new java.io.StringWriter();");
-            }
-            else {
+            } else {
                 writer.println("_jspx_sout = null;");
             }
             writer.print("if (");
@@ -51,18 +50,17 @@ public class InvokeGenerator extends PageTranslationTimeGenerator {
             writer.print(GeneratorUtils.toGetterMethod(getAttributeValue("fragment")));
             writer.print(".invoke(_jspx_sout);");
             writer.println("}");
-            writer.println();     
+            writer.println();
 
             // Store varReader in appropriate scope
             if (varReaderAttr != null || varAttr != null) {
                 String scopeName = getAttributeValue("scope");
                 //PK65013 change pageContext variable to customizable one.
-                writer.print(pageContextVar+".setAttribute(");
+                writer.print(pageContextVar + ".setAttribute(");
                 if (varReaderAttr != null) {
                     writer.print(GeneratorUtils.quote(varReaderAttr));
                     writer.print(", new java.io.StringReader(_jspx_sout.toString())");
-                }
-                else {
+                } else {
                     writer.print(GeneratorUtils.quote(varAttr));
                     writer.print(", _jspx_sout.toString()");
                 }
@@ -74,7 +72,7 @@ public class InvokeGenerator extends PageTranslationTimeGenerator {
             }
             // Restore EL context
             writer.println("jspContext.getELContext().putContext(JspContext.class,getJspContext());"); // 393110
-            
+
             writeDebugStartEnd(writer);
         }
     }
@@ -84,11 +82,9 @@ public class InvokeGenerator extends PageTranslationTimeGenerator {
 
         if ("request".equals(scope)) {
             scopeName = "PageContext.REQUEST_SCOPE";
-        }
-        else if ("session".equals(scope)) {
+        } else if ("session".equals(scope)) {
             scopeName = "PageContext.SESSION_SCOPE";
-        }
-        else if ("application".equals(scope)) {
+        } else if ("application".equals(scope)) {
             scopeName = "PageContext.APPLICATION_SCOPE";
         }
 

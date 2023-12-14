@@ -33,28 +33,27 @@ public class JSPLiteExtFactory implements ExtensionFactory {
                 String basePackage = "org.apache.jasper.";
                 try {
                     factory.getClass().getClassLoader().loadClass(
-                        basePackage + "runtime.JspFactoryImpl$PrivilegedGetPageContext");
+                                                                  basePackage + "runtime.JspFactoryImpl$PrivilegedGetPageContext");
                     factory.getClass().getClassLoader().loadClass(
-                        basePackage + "runtime.JspFactoryImpl$PrivilegedReleasePageContext");
+                                                                  basePackage + "runtime.JspFactoryImpl$PrivilegedReleasePageContext");
                     factory.getClass().getClassLoader().loadClass(basePackage + "runtime.JspRuntimeLibrary");
                     factory.getClass().getClassLoader().loadClass(
-                        basePackage + "runtime.JspRuntimeLibrary$PrivilegedIntrospectHelper");
+                                                                  basePackage + "runtime.JspRuntimeLibrary$PrivilegedIntrospectHelper");
                     factory.getClass().getClassLoader().loadClass(
-                        basePackage + "runtime.ServletResponseWrapperInclude");
+                                                                  basePackage + "runtime.ServletResponseWrapperInclude");
                     //factory.getClass().getClassLoader().loadClass(basePackage + "servlet.JspServletWrapper");
-                }
-                catch (ClassNotFoundException ex) {
+                } catch (ClassNotFoundException ex) {
                     System.out.println("Jasper JspRuntimeContext preload of class failed: " + ex.getMessage());
                 }
             }
             JspFactory.setDefaultFactory(factory);
         }
     }
-    
+
     public ExtensionProcessor createExtensionProcessor(IServletContext webapp) throws Exception {
-         
+
         ExtensionProcessor extensionProcessor = null;
-        extensionProcessor = new JSPLiteExtProcessor(webapp); 
+        extensionProcessor = new JSPLiteExtProcessor(webapp);
 
         return extensionProcessor;
     }

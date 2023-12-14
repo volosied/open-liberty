@@ -32,8 +32,8 @@ import com.ibm.wsspi.jsp.resource.translation.JspResources;
 
 public class JspResourcesContainerImpl extends ResourcesImpl implements JspResources {
     private static Logger logger;
-	private static final String CLASS_NAME="com.ibm.ws.jsp.translator.resource.JspResourcesImpl";
-    static{
+    private static final String CLASS_NAME = "com.ibm.ws.jsp.translator.resource.JspResourcesImpl";
+    static {
         logger = Logger.getLogger("com.ibm.ws.jsp");
     }
 
@@ -44,40 +44,41 @@ public class JspResourcesContainerImpl extends ResourcesImpl implements JspResou
     private long sourceFileTimestamp;
 
     public JspResourcesContainerImpl(JspInputSource inputSource, JspOptions options, JspCoreContext context) {
-        this.inputSource = (JspInputSourceContainerImpl)inputSource;
+        this.inputSource = (JspInputSourceContainerImpl) inputSource;
         container = this.inputSource.getContainer();
         String jspUri = inputSource.getRelativeURL();
-        /*Entry sourceEntry = container.getEntry(jspUri);
-        if (inputSource.getAbsoluteURL().getProtocol().equals("file")) {
-            sourceFile = new File(context.getRealPath(jspUri));
-        }
-        else {
-            try {
-                sourceFile = File.createTempFile("jsp", NameMangler.mangleClassName(jspUri));
-                sourceFile.deleteOnExit();
-            }
-            catch (IOException e1) {
-                logger.logp(Level.WARNING, CLASS_NAME, "JspResourcesImpl", "Error creating temp file for jsp [" + jspUri +"]", e1);
-            }
-        }*/
+        /*
+         * Entry sourceEntry = container.getEntry(jspUri);
+         * if (inputSource.getAbsoluteURL().getProtocol().equals("file")) {
+         * sourceFile = new File(context.getRealPath(jspUri));
+         * }
+         * else {
+         * try {
+         * sourceFile = File.createTempFile("jsp", NameMangler.mangleClassName(jspUri));
+         * sourceFile.deleteOnExit();
+         * }
+         * catch (IOException e1) {
+         * logger.logp(Level.WARNING, CLASS_NAME, "JspResourcesImpl", "Error creating temp file for jsp [" + jspUri +"]", e1);
+         * }
+         * }
+         */
         try {
             URL outURL = options.getOutputDir().toURL();
             String outURI = outURL.toString();
             if (jspUri.charAt(0) != '/') {
-                jspUri = "/"+jspUri;
+                jspUri = "/" + jspUri;
             }
 
             File generatedSourceDir = null;
             String convertedName = null;
             String webinfClassFilePath = null;
-            if (options.isUseFullPackageNames()==false) {
-                packageName=Constants.JSP_FIXED_PACKAGE_NAME;
+            if (options.isUseFullPackageNames() == false) {
+                packageName = Constants.JSP_FIXED_PACKAGE_NAME;
                 String unmangledOutURI = outURI;
-                if (unmangledOutURI.endsWith("/") ) {
-                    unmangledOutURI = unmangledOutURI + jspUri.substring(1,jspUri.lastIndexOf("/")+1);
-                }
-                else {
-                    unmangledOutURI = unmangledOutURI + jspUri.substring(0,jspUri.lastIndexOf("/")+1);
+                if (unmangledOutURI.endsWith("/")) {
+                    unmangledOutURI = unmangledOutURI + jspUri.substring(1, jspUri.lastIndexOf("/") + 1);
+                } else {
+                    unmangledOutURI = unmangledOutURI + jspUri.substring(0, jspUri.lastIndexOf("/") + 1);
                 }
 
                 URL unmangledOutURL = new URL(unmangledOutURI);
@@ -89,24 +90,22 @@ public class JspResourcesContainerImpl extends ResourcesImpl implements JspResou
 
                 //webinfClassFilePath = context.getRealPath("/WEB-INF/classes") + jspUri.substring(0,jspUri.lastIndexOf("/")+1);
                 //webinfClassFile = new File(webinfClassFilePath + File.separator + className + ".class");
-                webinfClassRelativeUrl="/WEB-INF/classes"+jspUri.substring(0,jspUri.lastIndexOf("/")+1) + "/" + className + ".class";
-                
-            }
-            else {
-                packageName=jspUri.substring(0,jspUri.lastIndexOf("/")+1);
-                if ( !packageName.equals("/") ) {
-                    packageName = NameMangler.handlePackageName (packageName);
-                    packageName=Constants.JSP_PACKAGE_PREFIX+"."+packageName.substring(0,packageName.length()-1);
-                }
-                else {
-                    packageName=Constants.JSP_PACKAGE_PREFIX;
-                }
-                String packageDir = packageName.replace('.','/');
+                webinfClassRelativeUrl = "/WEB-INF/classes" + jspUri.substring(0, jspUri.lastIndexOf("/") + 1) + "/" + className + ".class";
 
-                if (outURI.endsWith("/") )
+            } else {
+                packageName = jspUri.substring(0, jspUri.lastIndexOf("/") + 1);
+                if (!packageName.equals("/")) {
+                    packageName = NameMangler.handlePackageName(packageName);
+                    packageName = Constants.JSP_PACKAGE_PREFIX + "." + packageName.substring(0, packageName.length() - 1);
+                } else {
+                    packageName = Constants.JSP_PACKAGE_PREFIX;
+                }
+                String packageDir = packageName.replace('.', '/');
+
+                if (outURI.endsWith("/"))
                     outURI = outURI + packageDir;
                 else
-                    outURI = outURI + "/"+packageDir;
+                    outURI = outURI + "/" + packageDir;
 
                 outURL = new URL(outURI);
                 generatedSourceDir = new File(outURL.getFile());
@@ -116,7 +115,7 @@ public class JspResourcesContainerImpl extends ResourcesImpl implements JspResou
                 classFile = new File(convertedName + ".class");
                 //webinfClassFilePath = context.getRealPath("/WEB-INF/classes") + "/"+packageDir;
                 //webinfClassFile = new File(webinfClassFilePath + File.separator + className + ".class");
-                webinfClassRelativeUrl = "/WEB-INF/classes/"+packageDir + "/" + className + ".class";
+                webinfClassRelativeUrl = "/WEB-INF/classes/" + packageDir + "/" + className + ".class";
             }
 
             keepgenerated = options.isKeepGenerated();
@@ -126,18 +125,21 @@ public class JspResourcesContainerImpl extends ResourcesImpl implements JspResou
 
             //TODO: is this the right behavior?
             //no, just check if the classFile timeStamp is >= the sourceFileTimestamp
-            /*if (classFile.exists()) {
-                classFile.setLastModified(sourceFileTimestamp);
-            }*/
-            /*if (inputSource.getAbsoluteURL().getProtocol().equals("file") == false) {
-                if (classFile.exists()) {
-                    sourceFile.setLastModified(classFile.lastModified());
-                }
-            }*/
-        }
-        catch (MalformedURLException e) {
-            com.ibm.ws.ffdc.FFDCFilter.processException( e, "com.ibm.ws.jsp.translator.utils.JspFilesImpl.init", "45", this);
-            logger.logp(Level.WARNING, CLASS_NAME, "JspResourcesImpl", "Error creating temp directory for jsp [" + jspUri +"]", e);
+            /*
+             * if (classFile.exists()) {
+             * classFile.setLastModified(sourceFileTimestamp);
+             * }
+             */
+            /*
+             * if (inputSource.getAbsoluteURL().getProtocol().equals("file") == false) {
+             * if (classFile.exists()) {
+             * sourceFile.setLastModified(classFile.lastModified());
+             * }
+             * }
+             */
+        } catch (MalformedURLException e) {
+            com.ibm.ws.ffdc.FFDCFilter.processException(e, "com.ibm.ws.jsp.translator.utils.JspFilesImpl.init", "45", this);
+            logger.logp(Level.WARNING, CLASS_NAME, "JspResourcesImpl", "Error creating temp directory for jsp [" + jspUri + "]", e);
         }
     }
 
@@ -177,9 +179,9 @@ public class JspResourcesContainerImpl extends ResourcesImpl implements JspResou
         File nullSourceFile = null;
         Entry containerEntry = inputSource.getInputSourceEntry();
         Entry webinfClassEntry = container.getEntry(webinfClassRelativeUrl);
-        
+
         //If the inputSource is not a container entry
-        if(containerEntry == null){
+        if (containerEntry == null) {
             long lastModified = inputSource.getLastModified();
             return ResourceUtil.isOutdated(lastModified, null, nullSourceFile, generatedSourceFile, classFile, webinfClassEntry, null);
         }
@@ -189,14 +191,14 @@ public class JspResourcesContainerImpl extends ResourcesImpl implements JspResou
     /** {@inheritDoc} */
     @Override
     public void setCurrentRequest(HttpServletRequest arg0) {
-        
+
     }
 
     /** {@inheritDoc} */
     @Override
     public void sync() {
         Entry e = container.getEntry(inputSource.getRelativeURL());
-        if (e!=null) {
+        if (e != null) {
             sourceFileTimestamp = e.getLastModified();
         }
         ResourceUtil.sync(sourceFileTimestamp, generatedSourceFile, classFile, className, keepgenerated, keepGeneratedclassfiles);

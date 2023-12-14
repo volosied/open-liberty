@@ -30,9 +30,10 @@ public class JspXmlExtConfigAdapter implements ContainerAdapter<JspXmlExtConfig>
     }
 
     protected void activate(ComponentContext context) {
-        
+
     }
+
     protected void deactivate(ComponentContext context) {
-        
+
     }
 }

@@ -32,7 +32,7 @@ public class TagFileTagInfo extends TagInfo {
     private String largeIcon = null;
     private TagVariableInfo[] tvi = null;
     private String mapName = null;
-    
+
     public TagFileTagInfo(String tagName,
                           String tagClassName,
                           String bodyContent,
@@ -45,32 +45,22 @@ public class TagFileTagInfo extends TagInfo {
                           String largeIcon,
                           TagVariableInfo[] tvi,
                           String mapName) {
-        super(tagName, 
-              tagClassName, 
-              bodyContent, 
-              infoString, 
-              taglib,
-              tagExtraInfo, 
-              attributeInfo, 
-              displayName, 
-              smallIcon, 
-              largeIcon,
-              tvi);                              
+        super(tagName, tagClassName, bodyContent, infoString, taglib, tagExtraInfo, attributeInfo, displayName, smallIcon, largeIcon, tvi);
         this.dynamicAttrsMapName = mapName;
-        this.tagName=tagName;
-        this.tagClassName=tagClassName;
-        this.bodyContent=bodyContent;
-        this.infoString=infoString;
-        this.taglib=taglib;
-        this.tagExtraInfo=tagExtraInfo;
-        this.attributeInfo=attributeInfo;
-        this.displayName=displayName;
-        this.smallIcon=smallIcon;
-        this.largeIcon=largeIcon;
-        this.tvi=tvi;
-        this.mapName=mapName;
+        this.tagName = tagName;
+        this.tagClassName = tagClassName;
+        this.bodyContent = bodyContent;
+        this.infoString = infoString;
+        this.taglib = taglib;
+        this.tagExtraInfo = tagExtraInfo;
+        this.attributeInfo = attributeInfo;
+        this.displayName = displayName;
+        this.smallIcon = smallIcon;
+        this.largeIcon = largeIcon;
+        this.tvi = tvi;
+        this.mapName = mapName;
     }
-    
+
     public String getDynamicAttributesMapName() {
         return dynamicAttrsMapName;
     }
@@ -78,7 +68,7 @@ public class TagFileTagInfo extends TagInfo {
     public boolean hasDynamicAttributes() {
         return dynamicAttrsMapName != null;
     }
-    
+
     public String toString() {
         StringBuffer sb = new StringBuffer();
         sb.append("TagLibraryInfo name [");
@@ -94,7 +84,7 @@ public class TagFileTagInfo extends TagInfo {
         if (taglib.getRequiredVersion() != null)
             sb.append(taglib.getRequiredVersion());
         sb.append("]\n");
-        
+
         sb.append("TagFileInfo tagName [");
         if (tagName != null)
             sb.append(tagName);
@@ -127,8 +117,8 @@ public class TagFileTagInfo extends TagInfo {
         }
         if (this.tvi != null) {
             TagLibraryInfoImpl.printTagVariableInfo(sb, tvi);
-        }        
-        
+        }
+
         return (sb.toString());
     }
 }

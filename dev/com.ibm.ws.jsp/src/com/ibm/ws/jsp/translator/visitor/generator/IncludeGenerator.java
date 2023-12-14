@@ -25,7 +25,8 @@ public class IncludeGenerator extends PageTranslationTimeGenerator {
         super(new String[] { "flush" });
     }
 
-    public void startGeneration(int section, JavaCodeWriter writer) throws JspCoreException {}
+    public void startGeneration(int section, JavaCodeWriter writer) throws JspCoreException {
+    }
 
     public void endGeneration(int section, JavaCodeWriter writer) throws JspCoreException {
         if (section == CodeGenerationPhase.METHOD_SECTION) {
@@ -59,12 +60,11 @@ public class IncludeGenerator extends PageTranslationTimeGenerator {
                         }
                     }
                 }
-            }
-            else {
+            } else {
                 //PK65013 - start
-            	String pageContextVar = Constants.JSP_PAGE_CONTEXT_ORIG;
+                String pageContextVar = Constants.JSP_PAGE_CONTEXT_ORIG;
                 if (isTagFile && jspOptions.isModifyPageContextVariable()) {
-                	pageContextVar = Constants.JSP_PAGE_CONTEXT_NEW;
+                    pageContextVar = Constants.JSP_PAGE_CONTEXT_NEW;
                 }
                 //PK65013 - end
                 page = GeneratorUtils.attributeValue(page, false, String.class, jspConfiguration, isTagFile, pageContextVar); //PK65013
@@ -72,33 +72,30 @@ public class IncludeGenerator extends PageTranslationTimeGenerator {
 
             writeDebugStartBegin(writer);
 
-			//PK20187
-			if( jspOptions.isUseStringCast() == true )
-			{
-				writer.print("org.apache.jasper.runtime.JspRuntimeLibrary.include(request, response, (String)" +page );
-			}
-			else
-			{
-				writer.print("org.apache.jasper.runtime.JspRuntimeLibrary.include(request, response, " + page);
-			}
-			//PK20187
+            //PK20187
+            if (jspOptions.isUseStringCast() == true) {
+                writer.print("org.apache.jasper.runtime.JspRuntimeLibrary.include(request, response, (String)" + page);
+            } else {
+                writer.print("org.apache.jasper.runtime.JspRuntimeLibrary.include(request, response, " + page);
+            }
+            //PK20187
 
             HashMap jspParams = (HashMap) persistentData.get("jspParams");
             if (jspParams != null) {
                 ArrayList jspParamList = (ArrayList) jspParams.get(element);
                 if (jspParamList != null) {
                     String separator;
-                    if (isLiteral){																	//PM01539
-                    	separator = page.indexOf('?') > 0 ? "\"&\"" : "\"?\"";
-                    }																				//PM01539
-                    else {																			//PM01539
-                    	if( jspOptions.isUseStringCast() ){											//PM01539
-                    		separator = "(((String) (" + page + ")).indexOf('?')>0? '&': '?')";    	//PM01539
-                    	}																			//PM01539
-                    	else {																		//PM01539
-                    		separator = "((" + page + ").indexOf('?')>0? '&': '?')";
-                    	}																			//PM01539
-                    }																				//PM01539
+                    if (isLiteral) { //PM01539
+                        separator = page.indexOf('?') > 0 ? "\"&\"" : "\"?\"";
+                    } //PM01539
+                    else { //PM01539
+                        if (jspOptions.isUseStringCast()) { //PM01539
+                            separator = "(((String) (" + page + ")).indexOf('?')>0? '&': '?')"; //PM01539
+                        } //PM01539
+                        else { //PM01539
+                            separator = "((" + page + ").indexOf('?')>0? '&': '?')";
+                        } //PM01539
+                    } //PM01539
                     for (Iterator itr = jspParamList.iterator(); itr.hasNext();) {
                         ParamGenerator.JspParam jspParam = (ParamGenerator.JspParam) itr.next();
                         writer.print(" + ");
@@ -112,7 +109,7 @@ public class IncludeGenerator extends PageTranslationTimeGenerator {
                 }
             }
             writer.print(", out, " + flush + ");");
-            writer.println();     
+            writer.println();
             writeDebugStartEnd(writer);
         }
     }

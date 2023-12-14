@@ -25,7 +25,7 @@ import com.ibm.ws.jsp.bean.BeanRepository;
 import com.ibm.ws.jsp.taglib.TagLibraryInfoImpl;
 import com.ibm.ws.jsp.translator.visitor.JspVisitorResult;
 
-public class ValidateResult extends JspVisitorResult { 
+public class ValidateResult extends JspVisitorResult {
     protected String language = "";
     protected String pageEncoding = "";
     protected boolean isELIgnored = false;
@@ -35,7 +35,7 @@ public class ValidateResult extends JspVisitorResult {
     protected boolean trimDirectiveWhitespaces = false; // jsp2.1work
     protected boolean deferredSyntaxAllowedAsLiteral = false; // jsp2.1ELwork
     protected BeanRepository beanRepository = null;
-    protected HashMap<String,TagLibraryInfoImpl> tagLibMap = new HashMap<String,TagLibraryInfoImpl>();
+    protected HashMap<String, TagLibraryInfoImpl> tagLibMap = new HashMap<String, TagLibraryInfoImpl>();
     protected ArrayList dependencyList = new ArrayList();
     protected HashMap collectedTagDataMap = new HashMap();
     protected ValidateFunctionMapper validateFunctionMapper = new ValidateFunctionMapper();
@@ -46,12 +46,13 @@ public class ValidateResult extends JspVisitorResult {
     private String doctypeSystem = null;
     // defect 393421 end    
 
-    
     protected ValidateResult(String jspVisitorId) {
         super(jspVisitorId);
     }
+
     /**
      * Returns the beanRepository.
+     * 
      * @return BeanRepository
      */
     public BeanRepository getBeanRepository() {
@@ -60,6 +61,7 @@ public class ValidateResult extends JspVisitorResult {
 
     /**
      * Returns the isELIgnored.
+     * 
      * @return boolean
      */
     public boolean isELIgnored() {
@@ -68,27 +70,28 @@ public class ValidateResult extends JspVisitorResult {
 
     /**
      * Returns the isELIgnored.
+     * 
      * @return boolean
      */
     public boolean isErrorOnELNotFound() {
         return isErrorOnELNotFound;
     }
-    
+
     // jsp2.1work
     public String getTrimDirectiveWhitespaces() {
         return (trimDirectiveWhitespacesValue);
     }
-    
+
     // jsp2.1ELwork
     public String getDeferredSyntaxAllowedAsLiteral() {
         return (deferredSyntaxAllowedAsLiteralValue);
     }
-    
+
     // jsp2.1work
     public boolean isTrimDirectiveWhitespaces() {
         return (trimDirectiveWhitespaces);
     }
-    
+
     // jsp2.1ELwork
     public boolean isDeferredSyntaxAllowedAsLiteral() {
         return (deferredSyntaxAllowedAsLiteral);
@@ -96,6 +99,7 @@ public class ValidateResult extends JspVisitorResult {
 
     /**
      * Returns the language.
+     * 
      * @return String
      */
     public String getLanguage() {
@@ -104,6 +108,7 @@ public class ValidateResult extends JspVisitorResult {
 
     /**
      * Returns the pageEncoding.
+     * 
      * @return String
      */
     public String getPageEncoding() {
@@ -112,14 +117,16 @@ public class ValidateResult extends JspVisitorResult {
 
     /**
      * Returns the tagPrefixUriMap.
+     * 
      * @return HashMap
      */
-    public HashMap<String,TagLibraryInfoImpl> getTagLibMap() {
+    public HashMap<String, TagLibraryInfoImpl> getTagLibMap() {
         return tagLibMap;
     }
 
     /**
      * Sets the beanRepository.
+     * 
      * @param beanRepository The beanRepository to set
      */
     public void setBeanRepository(BeanRepository beanRepository) {
@@ -128,6 +135,7 @@ public class ValidateResult extends JspVisitorResult {
 
     /**
      * Sets the isELIgnored.
+     * 
      * @param isELIgnored The isELIgnored to set
      */
     public void setIsELIgnored(boolean isELIgnored) {
@@ -136,6 +144,7 @@ public class ValidateResult extends JspVisitorResult {
 
     /**
      * Sets the isErrorOnELNotFound.
+     * 
      * @param isErrorOnELNotFound The isErrorOnELNotFound to set
      */
     public void setErrorOnELNotFound(boolean isErrorOnELNotFound) {
@@ -146,17 +155,17 @@ public class ValidateResult extends JspVisitorResult {
     public void setTrimDirectiveWhitespaces(String trimDirectiveWhitespaces) {
         this.trimDirectiveWhitespacesValue = trimDirectiveWhitespaces;
     }
-    
+
     // jsp2.1ELwork
     public void setDeferredSyntaxAllowedAsLiteral(boolean deferredSyntaxAllowedAsLiteral) {
         this.deferredSyntaxAllowedAsLiteral = deferredSyntaxAllowedAsLiteral;
     }
-    
+
     // jsp2.1work
     public void setTrimDirectiveWhitespaces(boolean trimDirectiveWhitespaces) {
         this.trimDirectiveWhitespaces = trimDirectiveWhitespaces;
     }
-    
+
     // jsp2.1ELwork
     public void setDeferredSyntaxAllowedAsLiteral(String deferredSyntaxAllowedAsLiteral) {
         this.deferredSyntaxAllowedAsLiteralValue = deferredSyntaxAllowedAsLiteral;
@@ -164,6 +173,7 @@ public class ValidateResult extends JspVisitorResult {
 
     /**
      * Sets the language.
+     * 
      * @param language The language to set
      */
     public void setLanguage(String language) {
@@ -172,6 +182,7 @@ public class ValidateResult extends JspVisitorResult {
 
     /**
      * Sets the pageEncoding.
+     * 
      * @param pageEncoding The pageEncoding to set
      */
     public void setPageEncoding(String pageEncoding) {
@@ -180,6 +191,7 @@ public class ValidateResult extends JspVisitorResult {
 
     /**
      * Sets the tagPrefixUriMap.
+     * 
      * @param tagPrefixUriMap The tagPrefixUriMap to set
      */
     public void setTagLibMap(HashMap tagLibMap) {
@@ -199,15 +211,16 @@ public class ValidateResult extends JspVisitorResult {
     public void setValidateFunctionMapper(ValidateFunctionMapper mapper) {
         validateFunctionMapper = mapper;
     }
-    
+
     /**
      * Returns the dependencyList.
+     * 
      * @return ArrayList
      */
     public ArrayList getDependencyList() {
         return dependencyList;
     }
-    
+
     public void addCollectTagData(Element tagElement,
                                   boolean isScriptless,
                                   boolean hasScriptingVars,
@@ -232,19 +245,19 @@ public class ValidateResult extends JspVisitorResult {
         collectedTagData.setVarNameSuffix(varNameSuffix);
         collectedTagDataMap.put(tagElement, collectedTagData);
     }
-    
+
     public CollectedTagData getCollectedTagData(Element tagElement) {
-        return ((CollectedTagData)collectedTagDataMap.get(tagElement));
+        return ((CollectedTagData) collectedTagDataMap.get(tagElement));
     }
-    
+
     private void rollupIsScriptlessFlag(Node n) {
         Node parent = n.getParentNode();
         if (parent != null) {
             if (parent.getNodeType() == Node.ELEMENT_NODE) {
-                Element parentElement = (Element)parent;
-                CollectedTagData collectedTagData = (CollectedTagData)collectedTagDataMap.get(parentElement);
+                Element parentElement = (Element) parent;
+                CollectedTagData collectedTagData = (CollectedTagData) collectedTagDataMap.get(parentElement);
                 if (collectedTagData != null)
-                    collectedTagData.setIsScriptless(false);                     
+                    collectedTagData.setIsScriptless(false);
             }
             rollupIsScriptlessFlag(parent);
         }
@@ -254,10 +267,10 @@ public class ValidateResult extends JspVisitorResult {
         Node parent = n.getParentNode();
         if (parent != null) {
             if (parent.getNodeType() == Node.ELEMENT_NODE) {
-                Element parentElement = (Element)parent;
-                CollectedTagData collectedTagData = (CollectedTagData)collectedTagDataMap.get(parentElement);
+                Element parentElement = (Element) parent;
+                CollectedTagData collectedTagData = (CollectedTagData) collectedTagDataMap.get(parentElement);
                 if (collectedTagData != null)
-                    collectedTagData.setHasScriptingVars(true);                     
+                    collectedTagData.setHasScriptingVars(true);
             }
             rollupHasScriptingVars(parent);
         }
@@ -265,12 +278,13 @@ public class ValidateResult extends JspVisitorResult {
 
     /**
      * Sets the dependencyList.
+     * 
      * @param dependencyList The dependencyList to set
      */
     public void setDependencyList(ArrayList dependencyList) {
         this.dependencyList = dependencyList;
     }
-    
+
     // defect 393421 begin 
     public String getOmitXmlDecl() {
         return omitXmlDecl;
@@ -304,8 +318,7 @@ public class ValidateResult extends JspVisitorResult {
         this.doctypePublic = doctypePublic;
     }
     // defect 393421 end 
-    
-    
+
     public class CollectedTagData {
         private boolean isScriptless = false;
         private boolean hasScriptingVars = false;
@@ -314,20 +327,22 @@ public class ValidateResult extends JspVisitorResult {
         private Vector nestedScriptingVars = null;
         private TagData tagData = null;
         private String varNameSuffix = null;
-        private Vector duplicateVars = null;   //PK29373
+        private Vector duplicateVars = null; //PK29373
 
         //PK29373
-		/**
-		 * Returns the atEndDuplicateVars.
-		 * @return Vector
-		 */
-		 public Vector getAtEndDuplicateVars() {
-			return duplicateVars;
-		 }
-		 //PK29373
-        
+        /**
+         * Returns the atEndDuplicateVars.
+         * 
+         * @return Vector
+         */
+        public Vector getAtEndDuplicateVars() {
+            return duplicateVars;
+        }
+        //PK29373
+
         /**
          * Returns the atBeginScriptingVars.
+         * 
          * @return Vector
          */
         public Vector getAtBeginScriptingVars() {
@@ -336,6 +351,7 @@ public class ValidateResult extends JspVisitorResult {
 
         /**
          * Returns the atEndScriptingVars.
+         * 
          * @return Vector
          */
         public Vector getAtEndScriptingVars() {
@@ -344,6 +360,7 @@ public class ValidateResult extends JspVisitorResult {
 
         /**
          * Returns the hasScriptingVars.
+         * 
          * @return boolean
          */
         public boolean hasScriptingVars() {
@@ -352,6 +369,7 @@ public class ValidateResult extends JspVisitorResult {
 
         /**
          * Returns the isScriptless.
+         * 
          * @return boolean
          */
         public boolean isScriptless() {
@@ -360,6 +378,7 @@ public class ValidateResult extends JspVisitorResult {
 
         /**
          * Returns the nestedScriptingVars.
+         * 
          * @return Vector
          */
         public Vector getNestedScriptingVars() {
@@ -367,17 +386,18 @@ public class ValidateResult extends JspVisitorResult {
         }
 
         //PK29373
-		/**
-		 * Would be called only when 'useScriptVarDupInit' attribute is set
-		 * Sets the atEndDuplicateVars
-		 */
-	    public void setAtEndDuplicateVars(Vector duplicateVars) {
-			this.duplicateVars = duplicateVars;
-		}
-		//PK29373
+        /**
+         * Would be called only when 'useScriptVarDupInit' attribute is set
+         * Sets the atEndDuplicateVars
+         */
+        public void setAtEndDuplicateVars(Vector duplicateVars) {
+            this.duplicateVars = duplicateVars;
+        }
+        //PK29373
 
         /**
          * Sets the atBeginScriptingVars.
+         * 
          * @param atBeginScriptingVars The atBeginScriptingVars to set
          */
         public void setAtBeginScriptingVars(Vector atBeginScriptingVars) {
@@ -386,6 +406,7 @@ public class ValidateResult extends JspVisitorResult {
 
         /**
          * Sets the atEndScriptingVars.
+         * 
          * @param atEndScriptingVars The atEndScriptingVars to set
          */
         public void setAtEndScriptingVars(Vector atEndScriptingVars) {
@@ -394,6 +415,7 @@ public class ValidateResult extends JspVisitorResult {
 
         /**
          * Sets the hasScriptingVars.
+         * 
          * @param hasScriptingVars The hasScriptingVars to set
          */
         public void setHasScriptingVars(boolean hasScriptingVars) {
@@ -402,6 +424,7 @@ public class ValidateResult extends JspVisitorResult {
 
         /**
          * Sets the isScriptless.
+         * 
          * @param isScriptless The isScriptless to set
          */
         public void setIsScriptless(boolean isScriptless) {
@@ -410,6 +433,7 @@ public class ValidateResult extends JspVisitorResult {
 
         /**
          * Sets the nestedScriptingVars.
+         * 
          * @param nestedScriptingVars The nestedScriptingVars to set
          */
         public void setNestedScriptingVars(Vector nestedScriptingVars) {
@@ -418,6 +442,7 @@ public class ValidateResult extends JspVisitorResult {
 
         /**
          * Returns the tagData.
+         * 
          * @return TagData
          */
         public TagData getTagData() {
@@ -426,12 +451,13 @@ public class ValidateResult extends JspVisitorResult {
 
         /**
          * Sets the tagData.
+         * 
          * @param tagData The tagData to set
          */
         public void setTagData(TagData tagData) {
             this.tagData = tagData;
         }
-        
+
         /**
          * @return
          */

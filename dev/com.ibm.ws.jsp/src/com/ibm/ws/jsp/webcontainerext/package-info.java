@@ -16,8 +16,7 @@
  */
 @org.osgi.annotation.versioning.Version("2.2.0")
 @TraceOptions(traceGroup = "jsp",
-                messageBundle = "com.ibm.ws.jsp.resources.messages")
+              messageBundle = "com.ibm.ws.jsp.resources.messages")
 package com.ibm.ws.jsp.webcontainerext;
 
 import com.ibm.websphere.ras.annotation.TraceOptions;
-

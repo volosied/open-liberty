@@ -78,9 +78,9 @@ public class SimpleTagGenerator extends BaseTagGenerator {
 
             if (genTagInMethod) {
                 tagStartWriter.println("try {");
-            } 
+            }
 
-            tagStartWriter.print("_jsp_tagPostConstruct(" +tagHandlerVar+ ", " + (!genTagInMethod ? "_jspTagList, " : "null, ") + tagHandlerVar + "_mo" + ");");
+            tagStartWriter.print("_jsp_tagPostConstruct(" + tagHandlerVar + ", " + (!genTagInMethod ? "_jspTagList, " : "null, ") + tagHandlerVar + "_mo" + ");");
 
         } else {
             // not using CDI
@@ -92,7 +92,7 @@ public class SimpleTagGenerator extends BaseTagGenerator {
             tagStartWriter.print(tagClassInfo.getTagClassName());
             tagStartWriter.println("();");
             if (!genTagInMethod) {
-                tagStartWriter.println ("_jspTagList.add("+ tagHandlerVar + ");");
+                tagStartWriter.println("_jspTagList.add(" + tagHandlerVar + ");");
             }
         }
 
@@ -129,16 +129,16 @@ public class SimpleTagGenerator extends BaseTagGenerator {
         tagEndWriter.print(tagHandlerVar);
         tagEndWriter.println(".doTag();");
 
-        if (!jspOptions.isDisableResourceInjection() && genTagInMethod){		//PM06063
-            tagEndWriter.println ("} finally { ");
-        	tagEndWriter.print ("_jspx_iaHelper.doPreDestroy(");
-        	tagEndWriter.print (tagHandlerVar);
-        	tagEndWriter.println (");");
-        	
-        	tagEndWriter.print ("_jspx_iaHelper.cleanUpTagHandlerFromCdiMap(");
-        	tagEndWriter.print (tagHandlerVar);
-        	tagEndWriter.println (");");
-            tagEndWriter.println ("}");
+        if (!jspOptions.isDisableResourceInjection() && genTagInMethod) { //PM06063
+            tagEndWriter.println("} finally { ");
+            tagEndWriter.print("_jspx_iaHelper.doPreDestroy(");
+            tagEndWriter.print(tagHandlerVar);
+            tagEndWriter.println(");");
+
+            tagEndWriter.print("_jspx_iaHelper.cleanUpTagHandlerFromCdiMap(");
+            tagEndWriter.print(tagHandlerVar);
+            tagEndWriter.println(");");
+            tagEndWriter.println("}");
         }
 
         restoreScriptingVars(tagEndWriter, VariableInfo.AT_BEGIN);

@@ -17,12 +17,12 @@
  * defect  388930 "Incorrect ELContext may be used"  2006/09/06  Scott Johnson
  * 
  */
- // CHANGE HISTORY
- // Defect       Date        Modified By         Description
- //--------------------------------------------------------------------------------------
- // PM05903	03/02/10    anupag		AddELResolver in servlet is allowed.
- // PI31922     12/19/14    hwibell             Allow multiple expression factories to be used on a server.
- //
+// CHANGE HISTORY
+// Defect       Date        Modified By         Description
+//--------------------------------------------------------------------------------------
+// PM05903	03/02/10    anupag		AddELResolver in servlet is allowed.
+// PI31922     12/19/14    hwibell             Allow multiple expression factories to be used on a server.
+//
 package org.apache.jasper.runtime;
 
 import java.util.ArrayList;
@@ -58,13 +58,13 @@ import com.ibm.wsspi.webcontainer.WCCustomProperties; //PM05903
  */
 public class JspApplicationContextImpl implements JspApplicationContext {
 
-	private final static String KEY = JspApplicationContextImpl.class.getName();  //388930
-        protected final static Logger logger = Logger.getLogger("com.ibm.ws.jsp");
+	private final static String KEY = JspApplicationContextImpl.class.getName(); //388930
+	protected final static Logger logger = Logger.getLogger("com.ibm.ws.jsp");
 
-        // PI31922 start
-        protected final ExpressionFactory expressionFactory;
-        private final static ExpressionFactory staticExpressionFactory = ExpressionFactory.newInstance();
-        // PI31922 end
+	// PI31922 start
+	protected final ExpressionFactory expressionFactory;
+	private final static ExpressionFactory staticExpressionFactory = ExpressionFactory.newInstance();
+	// PI31922 end
 
 	private final List<ELContextListener> contextListeners = new ArrayList<ELContextListener>();
 
@@ -76,25 +76,24 @@ public class JspApplicationContextImpl implements JspApplicationContext {
 	private ELResolver resolver;
 
 	public JspApplicationContextImpl() {
-            // PI31922 start
+		// PI31922 start
 
-            /*
-             * This fixes a problem when the expression factory is set only when the first application
-             * is loaded. This is not the desirable behavior as expressionFactory should be set for each
-             * application. expressionFactory will point to either expression factory based on the custom
-             * property 'com.ibm.ws.jsp.allowExpressionFactoryPerApp'.
-             *
-             * This issue was addressed by the Japser project bug 52998 (https://issues.apache.org/bugzilla/show_bug.cgi?id=52998).
-             */
-            if (!WCCustomProperties.ALLOW_EXPRESSION_FACTORY_PER_APP) {
-                    logger.logp(Level.FINE, KEY, "JspApplicationContextImpl", "Setting expressionFactory to the expression factory of the first loaded application.");
-                    expressionFactory = staticExpressionFactory;
-            }
-            else {
-                    logger.logp(Level.FINE, KEY, "JspApplicationContextImpl", "Setting expressionFactory to a new instance of ExpressionFactory.");
-                    expressionFactory = ExpressionFactory.newInstance();
-            }  
-            // PI31922 end
+		/*
+		 * This fixes a problem when the expression factory is set only when the first application
+		 * is loaded. This is not the desirable behavior as expressionFactory should be set for each
+		 * application. expressionFactory will point to either expression factory based on the custom
+		 * property 'com.ibm.ws.jsp.allowExpressionFactoryPerApp'.
+		 *
+		 * This issue was addressed by the Japser project bug 52998 (https://issues.apache.org/bugzilla/show_bug.cgi?id=52998).
+		 */
+		if (!WCCustomProperties.ALLOW_EXPRESSION_FACTORY_PER_APP) {
+			logger.logp(Level.FINE, KEY, "JspApplicationContextImpl", "Setting expressionFactory to the expression factory of the first loaded application.");
+			expressionFactory = staticExpressionFactory;
+		} else {
+			logger.logp(Level.FINE, KEY, "JspApplicationContextImpl", "Setting expressionFactory to a new instance of ExpressionFactory.");
+			expressionFactory = ExpressionFactory.newInstance();
+		}
+		// PI31922 end
 	}
 
 	public void addELContextListener(ELContextListener listener) {
@@ -114,10 +113,10 @@ public class JspApplicationContextImpl implements JspApplicationContext {
 			context.setAttribute(KEY, impl);
 		}
 		//PM05903 Start
-        	if ( WCCustomProperties.THROW_EXCEPTION_FOR_ADDELRESOLVER 
-        		&& context.getAttribute("com.ibm.ws.jsp.servletContextListeners.contextInitialized")!= null) {       	
-					impl.listenersContextInitialized = true;            
-        	}//PM05903 End
+		if (WCCustomProperties.THROW_EXCEPTION_FOR_ADDELRESOLVER
+			&& context.getAttribute("com.ibm.ws.jsp.servletContextListeners.contextInitialized") != null) {
+			impl.listenersContextInitialized = true;
+		} //PM05903 End
 
 		return impl;
 	}
@@ -152,7 +151,7 @@ public class JspApplicationContextImpl implements JspApplicationContext {
 			r.add(new MapELResolver());
 			r.add(new ResourceBundleELResolver());
 			r.add(new ListELResolver());
-			r.add(new ArrayELResolver());	
+			r.add(new ArrayELResolver());
 			r.add(new BeanELResolver());
 			r.add(new ScopedAttributeELResolver());
 			this.resolver = r;
@@ -165,8 +164,7 @@ public class JspApplicationContextImpl implements JspApplicationContext {
 			throw new IllegalArgumentException("ELResolver was null");
 		}
 		if (this.instantiated || this.listenersContextInitialized) { //PM05903
-			throw new IllegalStateException(
-					"cannot call addELResolver after the first request has been made");
+			throw new IllegalStateException("cannot call addELResolver after the first request has been made");
 		}
 		this.resolvers.add(resolver);
 	}

@@ -57,7 +57,7 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  *
- */ 
+ */
 //Change history:
 //Defect 312981 "PERF- JSPWriterImpl needs to be optimized to cut the pathlength"  2005/10/19 Scott Johnson
 //Defect 347278 "PERF- JspWriter Performance Optimization"  2006/02/14 Scott Johnson
@@ -79,44 +79,43 @@ import javax.servlet.jsp.JspWriter;
 
 import com.ibm.ws.jsp.JSPStrBuffer;
 import com.ibm.ws.jsp.JSPStrBufferFactory;
-import com.ibm.wsspi.webcontainer.WCCustomProperties;  //PK90190
-
+import com.ibm.wsspi.webcontainer.WCCustomProperties; //PK90190
 
 /**
  * Write text to a character-output stream, buffering characters so as
  * to provide for the efficient writing of single characters, arrays,
- * and strings. 
+ * and strings.
  *
- * Provide support for discarding for the output that has been 
- * buffered. 
+ * Provide support for discarding for the output that has been
+ * buffered.
  * 
  * This needs revisiting when the buffering problems in the JSP spec
- * are fixed -akv 
+ * are fixed -akv
  *
  * @author Anil K. Vijendran
  */
 public class JspWriterImpl extends JspWriter {
     private static final int K = 1024;
-    private static final int DEFAULT_BUFFER_SIZE = 8*K;
+    private static final int DEFAULT_BUFFER_SIZE = 8 * K;
 
     private Writer out;
-    private ServletResponse response;    
+    private ServletResponse response;
     private char cb[];
     private int nextChar;
     private boolean flushed = false;
     private boolean closed = false;
     private JSPStrBuffer converterBuffer = null; // defect 347278
-    
+
     public JspWriterImpl() {
-		super( DEFAULT_BUFFER_SIZE, true );
-		converterBuffer = JSPStrBufferFactory.getJSPStrBuffer();
+        super(DEFAULT_BUFFER_SIZE, true);
+        converterBuffer = JSPStrBufferFactory.getJSPStrBuffer();
     }
 
     /**
      * Create a buffered character-output stream that uses a default-sized
      * output buffer.
      *
-     * @param  response  A Servlet Response
+     * @param response A Servlet Response
      */
     public JspWriterImpl(ServletResponse response) {
         this(response, DEFAULT_BUFFER_SIZE, true);
@@ -126,53 +125,54 @@ public class JspWriterImpl extends JspWriter {
      * Create a new buffered character-output stream that uses an output
      * buffer of the given size.
      *
-     * @param  response A Servlet Response
-     * @param  sz   	Output-buffer size, a positive integer
+     * @param response A Servlet Response
+     * @param sz       Output-buffer size, a positive integer
      *
-     * @exception  IllegalArgumentException  If sz is <= 0
+     * @exception IllegalArgumentException If sz is <= 0
      */
-    public JspWriterImpl(ServletResponse response, int sz, 
+    public JspWriterImpl(ServletResponse response, int sz,
                          boolean autoFlush) {
         super(sz, autoFlush);
         if (sz < 0)
             throw new IllegalArgumentException("Buffer size <= 0");
-		this.response = response;
-	        cb = sz == 0 ? null : new char[sz];
-		nextChar = 0;
-		converterBuffer = JSPStrBufferFactory.getJSPStrBuffer();
+        this.response = response;
+        cb = sz == 0 ? null : new char[sz];
+        nextChar = 0;
+        converterBuffer = JSPStrBufferFactory.getJSPStrBuffer();
     }
 
-    void init( ServletResponse response, int sz, boolean autoFlush ) {
-		this.response= response;
-		if( sz > 0 && ( cb == null || sz > cb.length ) )
-		    cb=new char[sz];
-		nextChar = 0;
-		this.autoFlush=autoFlush;
-		this.bufferSize=sz;
+    void init(ServletResponse response, int sz, boolean autoFlush) {
+        this.response = response;
+        if (sz > 0 && (cb == null || sz > cb.length))
+            cb = new char[sz];
+        nextChar = 0;
+        this.autoFlush = autoFlush;
+        this.bufferSize = sz;
     }
 
-    /** Package-level access
+    /**
+     * Package-level access
      */
     void recycle() {
-    	flushed = false;
+        flushed = false;
         closed = false;
         out = null;
         nextChar = 0;
-        converterBuffer.clear();							//PM19500
-        response = null;									//PM23029
+        converterBuffer.clear(); //PM19500
+        response = null; //PM23029
     }
-    
+
     //PI24001 start
     /**
      * This will recycle JspWriterImpl no matter the value of recycleCb.
+     * 
      * @param recycleCb - true if <i>cb</i> should not be set to null, false otherwise.
      */
     void recycle(boolean recycleCb) {
         if (!recycleCb) {
             recycle();
             cb = null;
-        }
-        else {
+        } else {
             recycle();
         }
     }
@@ -180,7 +180,7 @@ public class JspWriterImpl extends JspWriter {
 
     /**
      * Flush the output buffer to the underlying character stream, without
-     * flushing the stream itself.  This method is non-private only so that it
+     * flushing the stream itself. This method is non-private only so that it
      * may be invoked by PrintStream.
      */
     protected final void flushBuffer() throws IOException {
@@ -189,8 +189,8 @@ public class JspWriterImpl extends JspWriter {
         flushed = true;
         // defect 312981 begin
         //ensureOpen();
-    	if (closed) {
-    	    throw new IOException("Stream closed");
+        if (closed) {
+            throw new IOException("Stream closed");
         }
         // defect 312981 end
 
@@ -210,15 +210,14 @@ public class JspWriterImpl extends JspWriter {
 
     private void initOut() throws IOException {
         if (out == null) {
-        	// defect 312981 begin
-        	if (response == null){
-        	    throw new IOException("ServletResponse object is null."); 
+            // defect 312981 begin
+            if (response == null) {
+                throw new IOException("ServletResponse object is null.");
             }
-        	// defect 312981 end
+            // defect 312981 end
             out = response.getWriter();
         }
     }
-	
 
     /**
      * Discard the output buffer.
@@ -226,13 +225,13 @@ public class JspWriterImpl extends JspWriter {
     public final void clear() throws IOException {
         if ((bufferSize == 0) && (out != null))
             // clear() is illegal after any unbuffered output (JSP.5.5)
-             throw new IllegalStateException("jsp.error.ise_on_clear");
+            throw new IllegalStateException("jsp.error.ise_on_clear");
         if (flushed)
             throw new IOException("jsp.error.attempt_to_clear_flushed_buffer");
         // defect 312981 begin
         //ensureOpen();
-    	if (closed) {
-    	    throw new IOException("Stream closed");
+        if (closed) {
+            throw new IOException("Stream closed");
         }
         // defect 312981 end
         nextChar = 0;
@@ -243,8 +242,8 @@ public class JspWriterImpl extends JspWriter {
             throw new IllegalStateException("jsp.error.ise_on_clear");
         // defect 312981 begin
         //ensureOpen();
-    	if (closed) {
-    	    throw new IOException("Stream closed");
+        if (closed) {
+            throw new IOException("Stream closed");
         }
         // defect 312981 end
         nextChar = 0;
@@ -258,7 +257,7 @@ public class JspWriterImpl extends JspWriter {
      * Flush the stream.
      *
      */
-    public void flush()  throws IOException {
+    public void flush() throws IOException {
         flushBuffer();
         if (out != null) {
             out.flush();
@@ -290,11 +289,10 @@ public class JspWriterImpl extends JspWriter {
 
     /** check to make sure that the stream has not been closed */
     // commented-out for defect 312981
-//    private void ensureOpen() throws IOException {
-//	if (response == null || closed)
-//	    throw new IOException("Stream closed");
-//    }
-
+    //    private void ensureOpen() throws IOException {
+    //	if (response == null || closed)
+    //	    throw new IOException("Stream closed");
+    //    }
 
     /**
      * Write a single character.
@@ -302,15 +300,14 @@ public class JspWriterImpl extends JspWriter {
     public void write(int c) throws IOException {
         // defect 312981 begin
         //ensureOpen();
-    	if (closed) {
-    	    throw new IOException("Stream closed");
+        if (closed) {
+            throw new IOException("Stream closed");
         }
         // defect 312981 end
         if (bufferSize == 0) {
             initOut();
             out.write(c);
-        }
-        else {
+        } else {
             if (nextChar >= bufferSize)
                 if (autoFlush)
                     flushBuffer();
@@ -325,8 +322,9 @@ public class JspWriterImpl extends JspWriter {
      * out of file descriptors and we're trying to print a stack trace.
      */
     private int min(int a, int b) {
-	if (a < b) return a;
-	return b;
+        if (a < b)
+            return a;
+        return b;
     }
 
     /**
@@ -334,22 +332,20 @@ public class JspWriterImpl extends JspWriter {
      *
      * <p> Ordinarily this method stores characters from the given array into
      * this stream's buffer, flushing the buffer to the underlying stream as
-     * needed.  If the requested length is at least as large as the buffer,
+     * needed. If the requested length is at least as large as the buffer,
      * however, then this method will flush the buffer and write the characters
-     * directly to the underlying stream.  Thus redundant
+     * directly to the underlying stream. Thus redundant
      * <code>DiscardableBufferedWriter</code>s will not copy data unnecessarily.
      *
-     * @param  cbuf  A character array
-     * @param  off   Offset from which to start reading characters
-     * @param  len   Number of characters to write
+     * @param cbuf A character array
+     * @param off  Offset from which to start reading characters
+     * @param len  Number of characters to write
      */
-    public void write(char cbuf[], int off, int len) 
-        throws IOException 
-    {
+    public void write(char cbuf[], int off, int len) throws IOException {
         // defect 312981 begin
         //ensureOpen();
-    	if (closed) {
-    	    throw new IOException("Stream closed");
+        if (closed) {
+            throw new IOException("Stream closed");
         }
         // defect 312981 end
 
@@ -364,12 +360,14 @@ public class JspWriterImpl extends JspWriter {
             throw new IndexOutOfBoundsException();
         } else if (len == 0) {
             return;
-        } 
+        }
 
         if (len >= bufferSize) {
-            /* If the request length exceeds the size of the output buffer,
-               flush the buffer and then write the data directly.  In this
-               way buffered streams will cascade harmlessly. */
+            /*
+             * If the request length exceeds the size of the output buffer,
+             * flush the buffer and then write the data directly. In this
+             * way buffered streams will cascade harmlessly.
+             */
             if (autoFlush)
                 flushBuffer();
             else
@@ -385,7 +383,7 @@ public class JspWriterImpl extends JspWriter {
             System.arraycopy(cbuf, b, cb, nextChar, d);
             b += d;
             nextChar += d;
-            if (nextChar >= bufferSize) 
+            if (nextChar >= bufferSize)
                 if (autoFlush)
                     flushBuffer();
                 else
@@ -395,25 +393,25 @@ public class JspWriterImpl extends JspWriter {
     }
 
     /**
-     * Write an array of characters.  This method cannot be inherited from the
+     * Write an array of characters. This method cannot be inherited from the
      * Writer class because it must suppress I/O exceptions.
      */
     public void write(char buf[]) throws IOException {
-	write(buf, 0, buf.length);
+        write(buf, 0, buf.length);
     }
 
     /**
      * Write a portion of a String.
      *
-     * @param  s     String to be written
-     * @param  off   Offset from which to start reading characters
-     * @param  len   Number of characters to be written
+     * @param s   String to be written
+     * @param off Offset from which to start reading characters
+     * @param len Number of characters to be written
      */
     public void write(String s, int off, int len) throws IOException {
         // defect 312981 begin
         //ensureOpen();
-    	if (closed) {
-    	    throw new IOException("Stream closed");
+        if (closed) {
+            throw new IOException("Stream closed");
         }
         // defect 312981 end
         if (bufferSize == 0) {
@@ -427,7 +425,7 @@ public class JspWriterImpl extends JspWriter {
             s.getChars(b, b + d, cb, nextChar);
             b += d;
             nextChar += d;
-            if (nextChar >= bufferSize) 
+            if (nextChar >= bufferSize)
                 if (autoFlush)
                     flushBuffer();
                 else
@@ -436,160 +434,157 @@ public class JspWriterImpl extends JspWriter {
     }
 
     /**
-     * Write a string.  This method cannot be inherited from the Writer class
+     * Write a string. This method cannot be inherited from the Writer class
      * because it must suppress I/O exceptions.
      */
     public void write(String s) throws IOException {
-	write(s, 0, s.length());
+        write(s, 0, s.length());
     }
 
-
-    static String lineSeparator = (String)AccessController.doPrivileged(new PrivilegedAction() {
-                                                                            public Object run() {
-                                                                                return System.getProperty("line.separator");
-                                                                            }
-                                                                        });
-
+    static String lineSeparator = (String) AccessController.doPrivileged(new PrivilegedAction() {
+        public Object run() {
+            return System.getProperty("line.separator");
+        }
+    });
 
     /**
-     * Write a line separator.  The line separator string is defined by the
+     * Write a line separator. The line separator string is defined by the
      * system property <tt>line.separator</tt>, and is not necessarily a single
      * newline ('\n') character.
      *
-     * @exception  IOException  If an I/O error occurs
+     * @exception IOException If an I/O error occurs
      */
-    
+
     public void newLine() throws IOException {
         write(lineSeparator);
     }
 
-
     /* Methods that do not terminate lines */
 
     /**
-     * Print a boolean value.  The string produced by <code>{@link
+     * Print a boolean value. The string produced by <code>{@link
      * java.lang.String#valueOf(boolean)}</code> is translated into bytes
      * according to the platform's default character encoding, and these bytes
      * are written in exactly the manner of the <code>{@link
      * #write(int)}</code> method.
      *
-     * @param      b   The <code>boolean</code> to be printed
+     * @param b The <code>boolean</code> to be printed
      */
     public void print(boolean b) throws IOException {
-	write(b ? "true" : "false");
+        write(b ? "true" : "false");
     }
 
     /**
-     * Print a character.  The character is translated into one or more bytes
+     * Print a character. The character is translated into one or more bytes
      * according to the platform's default character encoding, and these bytes
      * are written in exactly the manner of the <code>{@link
      * #write(int)}</code> method.
      *
-     * @param      c   The <code>char</code> to be printed
+     * @param c The <code>char</code> to be printed
      */
     public void print(char c) throws IOException {
-	//write(String.valueOf(c));
+        //write(String.valueOf(c));
         write(c);
     }
 
     /**
-     * Print an integer.  The string produced by <code>{@link
+     * Print an integer. The string produced by <code>{@link
      * java.lang.String#valueOf(int)}</code> is translated into bytes according
      * to the platform's default character encoding, and these bytes are
      * written in exactly the manner of the <code>{@link #write(int)}</code>
      * method.
      *
-     * @param      i   The <code>int</code> to be printed
+     * @param i The <code>int</code> to be printed
      */
     public void print(int integer) throws IOException {
-	//write(String.valueOf(i));
+        //write(String.valueOf(i));
         converterBuffer.append(integer);
         for (int i = 0; i < converterBuffer.length(); i++) {
-        	write(converterBuffer.charAt(i));
+            write(converterBuffer.charAt(i));
         }
         converterBuffer.delete(0, converterBuffer.length());
     }
 
     /**
-     * Print a long integer.  The string produced by <code>{@link
+     * Print a long integer. The string produced by <code>{@link
      * java.lang.String#valueOf(long)}</code> is translated into bytes
      * according to the platform's default character encoding, and these bytes
      * are written in exactly the manner of the <code>{@link #write(int)}</code>
      * method.
      *
-     * @param      l   The <code>long</code> to be printed
+     * @param l The <code>long</code> to be printed
      */
     public void print(long l) throws IOException {
-	//write(String.valueOf(l));
-    converterBuffer.append(l);
-    for (int i = 0; i < converterBuffer.length(); i++) {
-        write(converterBuffer.charAt(i));
-    }
-    converterBuffer.delete(0, converterBuffer.length());
+        //write(String.valueOf(l));
+        converterBuffer.append(l);
+        for (int i = 0; i < converterBuffer.length(); i++) {
+            write(converterBuffer.charAt(i));
+        }
+        converterBuffer.delete(0, converterBuffer.length());
     }
 
     /**
-     * Print a floating-point number.  The string produced by <code>{@link
+     * Print a floating-point number. The string produced by <code>{@link
      * java.lang.String#valueOf(float)}</code> is translated into bytes
      * according to the platform's default character encoding, and these bytes
      * are written in exactly the manner of the <code>{@link #write(int)}</code>
      * method.
      *
-     * @param      f   The <code>float</code> to be printed
+     * @param f The <code>float</code> to be printed
      */
     public void print(float f) throws IOException {
-	//write(String.valueOf(f));
-    converterBuffer.append(f);
-    for (int i = 0; i < converterBuffer.length(); i++) {
-        write(converterBuffer.charAt(i));
-    }
-    converterBuffer.delete(0, converterBuffer.length());
+        //write(String.valueOf(f));
+        converterBuffer.append(f);
+        for (int i = 0; i < converterBuffer.length(); i++) {
+            write(converterBuffer.charAt(i));
+        }
+        converterBuffer.delete(0, converterBuffer.length());
     }
 
     /**
-     * Print a double-precision floating-point number.  The string produced by
+     * Print a double-precision floating-point number. The string produced by
      * <code>{@link java.lang.String#valueOf(double)}</code> is translated into
      * bytes according to the platform's default character encoding, and these
      * bytes are written in exactly the manner of the <code>{@link
      * #write(int)}</code> method.
      *
-     * @param      d   The <code>double</code> to be printed
+     * @param d The <code>double</code> to be printed
      */
     public void print(double d) throws IOException {
-	//write(String.valueOf(d));
-    converterBuffer.append(d);
-    for (int i = 0; i < converterBuffer.length(); i++) {
-        write(converterBuffer.charAt(i));
-    }
-    converterBuffer.delete(0, converterBuffer.length());
+        //write(String.valueOf(d));
+        converterBuffer.append(d);
+        for (int i = 0; i < converterBuffer.length(); i++) {
+            write(converterBuffer.charAt(i));
+        }
+        converterBuffer.delete(0, converterBuffer.length());
     }
 
     /**
-     * Print an array of characters.  The characters are converted into bytes
+     * Print an array of characters. The characters are converted into bytes
      * according to the platform's default character encoding, and these bytes
      * are written in exactly the manner of the <code>{@link #write(int)}</code>
      * method.
      *
-     * @param      s   The array of chars to be printed
+     * @param s The array of chars to be printed
      *
-     * @throws  NullPointerException  If <code>s</code> is <code>null</code>
+     * @throws NullPointerException If <code>s</code> is <code>null</code>
      */
     public void print(char s[]) throws IOException {
-	write(s);
+        write(s);
     }
 
     /**
-     * Print a string.  If the argument is <code>null</code> then the string
-     * <code>"null"</code> is printed.  Otherwise, the string's characters are
+     * Print a string. If the argument is <code>null</code> then the string
+     * <code>"null"</code> is printed. Otherwise, the string's characters are
      * converted into bytes according to the platform's default character
      * encoding, and these bytes are written in exactly the manner of the
      * <code>{@link #write(int)}</code> method.
      *
-     * @param      s   The <code>String</code> to be printed
+     * @param s The <code>String</code> to be printed
      */
     public void print(String s) throws IOException {
-    	
-    	// PM47661 - Start 
+
+        // PM47661 - Start 
         if (s == null) {
             if (WCCustomProperties.EXPRESSION_RETURN_EMPTY_STRING) {
                 write("");
@@ -599,46 +594,46 @@ public class JspWriterImpl extends JspWriter {
         } else {
             write(s);
         }
-    	// PM47661 - End
- 
+        // PM47661 - End
+
     }
 
     /**
-     * Print an object.  The string produced by the <code>{@link
+     * Print an object. The string produced by the <code>{@link
      * java.lang.String#valueOf(Object)}</code> method is translated into bytes
      * according to the platform's default character encoding, and these bytes
      * are written in exactly the manner of the <code>{@link #write(int)}</code>
      * method.
      *
-     * @param      obj   The <code>Object</code> to be printed
+     * @param obj The <code>Object</code> to be printed
      */
     public void print(Object obj) throws IOException {
-	//write(String.valueOf(obj));
-    converterBuffer.append(obj);
-    for (int i = 0; i < converterBuffer.length(); i++) {
-        write(converterBuffer.charAt(i));
-    }
-    converterBuffer.delete(0, converterBuffer.length());
+        //write(String.valueOf(obj));
+        converterBuffer.append(obj);
+        for (int i = 0; i < converterBuffer.length(); i++) {
+            write(converterBuffer.charAt(i));
+        }
+        converterBuffer.delete(0, converterBuffer.length());
     }
 
     /* Methods that do terminate lines */
 
     /**
-     * Terminate the current line by writing the line separator string.  The
+     * Terminate the current line by writing the line separator string. The
      * line separator string is defined by the system property
      * <code>line.separator</code>, and is not necessarily a single newline
      * character (<code>'\n'</code>).
      *
      * Need to change this from PrintWriter because the default
-     * println() writes  to the sink directly instead of through the
-     * write method...  
+     * println() writes to the sink directly instead of through the
+     * write method...
      */
     public void println() throws IOException {
-	newLine();
+        newLine();
     }
 
     /**
-     * Print a boolean value and then terminate the line.  This method behaves
+     * Print a boolean value and then terminate the line. This method behaves
      * as though it invokes <code>{@link #print(boolean)}</code> and then
      * <code>{@link #println()}</code>.
      */
@@ -648,7 +643,7 @@ public class JspWriterImpl extends JspWriter {
     }
 
     /**
-     * Print a character and then terminate the line.  This method behaves as
+     * Print a character and then terminate the line. This method behaves as
      * though it invokes <code>{@link #print(char)}</code> and then <code>{@link
      * #println()}</code>.
      */
@@ -658,7 +653,7 @@ public class JspWriterImpl extends JspWriter {
     }
 
     /**
-     * Print an integer and then terminate the line.  This method behaves as
+     * Print an integer and then terminate the line. This method behaves as
      * though it invokes <code>{@link #print(int)}</code> and then <code>{@link
      * #println()}</code>.
      */
@@ -668,7 +663,7 @@ public class JspWriterImpl extends JspWriter {
     }
 
     /**
-     * Print a long integer and then terminate the line.  This method behaves
+     * Print a long integer and then terminate the line. This method behaves
      * as though it invokes <code>{@link #print(long)}</code> and then
      * <code>{@link #println()}</code>.
      */
@@ -678,7 +673,7 @@ public class JspWriterImpl extends JspWriter {
     }
 
     /**
-     * Print a floating-point number and then terminate the line.  This method
+     * Print a floating-point number and then terminate the line. This method
      * behaves as though it invokes <code>{@link #print(float)}</code> and then
      * <code>{@link #println()}</code>.
      */
@@ -689,7 +684,7 @@ public class JspWriterImpl extends JspWriter {
 
     /**
      * Print a double-precision floating-point number and then terminate the
-     * line.  This method behaves as though it invokes <code>{@link
+     * line. This method behaves as though it invokes <code>{@link
      * #print(double)}</code> and then <code>{@link #println()}</code>.
      */
     public void println(double x) throws IOException {
@@ -698,7 +693,7 @@ public class JspWriterImpl extends JspWriter {
     }
 
     /**
-     * Print an array of characters and then terminate the line.  This method
+     * Print an array of characters and then terminate the line. This method
      * behaves as though it invokes <code>{@link #print(char[])}</code> and then
      * <code>{@link #println()}</code>.
      */
@@ -708,7 +703,7 @@ public class JspWriterImpl extends JspWriter {
     }
 
     /**
-     * Print a String and then terminate the line.  This method behaves as
+     * Print a String and then terminate the line. This method behaves as
      * though it invokes <code>{@link #print(String)}</code> and then
      * <code>{@link #println()}</code>.
      */
@@ -718,7 +713,7 @@ public class JspWriterImpl extends JspWriter {
     }
 
     /**
-     * Print an Object and then terminate the line.  This method behaves as
+     * Print an Object and then terminate the line. This method behaves as
      * though it invokes <code>{@link #print(Object)}</code> and then
      * <code>{@link #println()}</code>.
      */
