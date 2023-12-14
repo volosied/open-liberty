@@ -22,7 +22,7 @@ Fragment-Host: io.openliberty.org.apache.myfaces.4.0;bundle-version=1.0
 
 Bundle-Name: Open Liberty Jakarta MyFaces Third Party API
 Bundle-SymbolicName: io.openliberty.faces.4.0.thirdparty
-Implementation-Version: 4.0.1
+Implementation-Version: 4.0.2
 
 #Don't export the org.apache.myfaces.buildtools package as that is only needed for compilation.  The jar that contains the
 # org.apache.myfaces.buildtools package is from myfaces-builder-annotations-1.0.9.jar
@@ -42,4 +42,4 @@ publish.wlp.jar.suffix: dev/api/third-party
 -fixupmessages.missingexport: "Used bundle version * for exported package";is:=ignore
 
 -buildpath: io.openliberty.org.apache.myfaces.4.0;version=project,\
-    ./myfaces-impl-4.0.2.jar;version=file
+    ./myfaces-impl-4.0.2-SNAPSHOT.jar;version=file
