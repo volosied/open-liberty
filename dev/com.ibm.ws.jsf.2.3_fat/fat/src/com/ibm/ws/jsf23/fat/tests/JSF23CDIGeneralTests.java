@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017, 2023 IBM Corporation and others.
+ * Copyright (c) 2017, 2023, 2024 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -18,8 +18,10 @@ import java.util.Arrays;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.AfterClass;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
@@ -72,10 +74,12 @@ public class JSF23CDIGeneralTests {
     @Server("jsf23CDIGeneralServer")
     public static LibertyServer server;
 
-    @Rule
-    public BrowserWebDriverContainer<?> chrome = new BrowserWebDriverContainer<>(FATSuite.getChromeImage()).withCapabilities(new ChromeOptions())
+    @ClassRule
+    public static BrowserWebDriverContainer<?> chrome = new BrowserWebDriverContainer<>(FATSuite.getChromeImage()).withCapabilities(new ChromeOptions())
                     .withAccessToHost(true)
                     .withLogConsumer(new SimpleLogConsumer(c, "selenium-driver"));
+
+    private static ExtendedWebDriver driver;
 
     @BeforeClass
     public static void setup() throws Exception {
@@ -102,6 +106,8 @@ public class JSF23CDIGeneralTests {
         server.startServer(c.getSimpleName() + ".log");
 
         Testcontainers.exposeHostPorts(server.getHttpDefaultPort(), server.getHttpDefaultSecurePort());
+
+        driver = new CustomDriver(new RemoteWebDriver(chrome.getSeleniumAddress(), new ChromeOptions().setAcceptInsecureCerts(true)));
     }
 
     @Before
@@ -117,6 +123,12 @@ public class JSF23CDIGeneralTests {
         if (server != null && server.isStarted()) {
             server.stopServer();
         }
+    }
+
+    @After
+    public void after()
+    {
+        driver.getRemoteWebDriver().manage().deleteAllCookies();
     }
 
     /**
@@ -268,8 +280,6 @@ public class JSF23CDIGeneralTests {
      */
     @Test
     public void testInjectableELImplicitObjects() throws Exception {
-        ExtendedWebDriver driver = new CustomDriver(new RemoteWebDriver(chrome.getSeleniumAddress(), new ChromeOptions().setAcceptInsecureCerts(true)));
-
         checkInjectableELImplicitObjects(driver);
         // restart the app and test again
         Assert.assertTrue("The ELImplicitObjectsViaCDI.war application was not restarted.", server.restartDropinsApplication("ELImplicitObjectsViaCDI.war"));
@@ -486,7 +496,7 @@ public class JSF23CDIGeneralTests {
      */
     @Test
     public void testFacesConverterBeanInjection() throws Exception {
-        ExtendedWebDriver driver = new CustomDriver(new RemoteWebDriver(chrome.getSeleniumAddress(), new ChromeOptions().setAcceptInsecureCerts(true)));
+
         String contextRoot = "ConverterValidatorBehaviorInjectionTarget";
         String url = JSFUtils.createSeleniumURLString(server, contextRoot, "index.xhtml");
         WebPage page = new WebPage(driver);
@@ -513,7 +523,7 @@ public class JSF23CDIGeneralTests {
      */
     @Test
     public void testFacesValidatorBeanInjection() throws Exception {
-        ExtendedWebDriver driver = new CustomDriver(new RemoteWebDriver(chrome.getSeleniumAddress(), new ChromeOptions().setAcceptInsecureCerts(true)));
+
         // Construct the URL for the test
         String contextRoot = "ConverterValidatorBehaviorInjectionTarget";
         String url = JSFUtils.createSeleniumURLString(server, contextRoot, "index.xhtml");
