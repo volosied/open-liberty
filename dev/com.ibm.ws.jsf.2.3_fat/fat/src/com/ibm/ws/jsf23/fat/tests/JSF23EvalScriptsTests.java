@@ -11,9 +11,10 @@ package com.ibm.ws.jsf23.fat.tests;
 
 import static org.junit.Assert.assertTrue;
 
+import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
@@ -55,12 +56,12 @@ public class JSF23EvalScriptsTests {
     @Server("jsf23EvalScriptsServer")
     public static LibertyServer server;
 
-    @Rule
-    public BrowserWebDriverContainer<?> chrome = new BrowserWebDriverContainer<>(FATSuite.getChromeImage()).withCapabilities(new ChromeOptions())
+    @ClassRule
+    public static BrowserWebDriverContainer<?> chrome = new BrowserWebDriverContainer<>(FATSuite.getChromeImage()).withCapabilities(new ChromeOptions())
                     .withAccessToHost(true)
                     .withLogConsumer(new SimpleLogConsumer(c, "selenium-driver"));
 
-    private ExtendedWebDriver driver;
+    private static ExtendedWebDriver driver;
 
     @BeforeClass
     public static void setup() throws Exception {
@@ -71,12 +72,16 @@ public class JSF23EvalScriptsTests {
         server.startServer(c.getSimpleName() + ".log");
 
         Testcontainers.exposeHostPorts(server.getHttpDefaultPort(), server.getHttpDefaultSecurePort());
-    }
 
-    @Before
-    public void setupPerTest() throws Exception {
         driver = new CustomDriver(new RemoteWebDriver(chrome.getSeleniumAddress(), new ChromeOptions().setAcceptInsecureCerts(true)));
     }
+
+    @After
+    public void clearCookies()
+    {
+        driver.getRemoteWebDriver().manage().deleteAllCookies();
+    }
+
 
     @AfterClass
     public static void tearDown() throws Exception {
