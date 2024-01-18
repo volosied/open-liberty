@@ -59,7 +59,7 @@ public class JSF23WebSocketTests {
     private String contextRoot = "WebSocket";
 
     @ClassRule
-    public BrowserWebDriverContainer<?> chrome = new BrowserWebDriverContainer<>(FATSuite.getChromeImage()).withCapabilities(new ChromeOptions())
+    public static BrowserWebDriverContainer<?> chrome = new BrowserWebDriverContainer<>(FATSuite.getChromeImage()).withCapabilities(new ChromeOptions())
                     .withAccessToHost(true);
 
     private static ExtendedWebDriver driver;
