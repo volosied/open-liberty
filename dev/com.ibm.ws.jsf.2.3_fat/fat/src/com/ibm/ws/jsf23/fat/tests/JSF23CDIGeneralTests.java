@@ -50,7 +50,6 @@ import com.ibm.ws.jsf23.fat.selenium_util.WebPage;
 import componenttest.annotation.ExpectedFFDC;
 import componenttest.annotation.Server;
 import componenttest.annotation.SkipForRepeat;
-import componenttest.containers.SimpleLogConsumer;
 import componenttest.custom.junit.runner.FATRunner;
 import componenttest.custom.junit.runner.Mode;
 import componenttest.custom.junit.runner.Mode.TestMode;
@@ -76,8 +75,7 @@ public class JSF23CDIGeneralTests {
 
     @ClassRule
     public static BrowserWebDriverContainer<?> chrome = new BrowserWebDriverContainer<>(FATSuite.getChromeImage()).withCapabilities(new ChromeOptions())
-                    .withAccessToHost(true)
-                    .withLogConsumer(new SimpleLogConsumer(c, "selenium-driver"));
+                    .withAccessToHost(true);
 
     private static ExtendedWebDriver driver;
 
@@ -563,7 +561,6 @@ public class JSF23CDIGeneralTests {
      */
     @Test
     public void testFacesBehaviorBeanInjection() throws Exception {
-        ExtendedWebDriver driver = new CustomDriver(new RemoteWebDriver(chrome.getSeleniumAddress(), new ChromeOptions().setAcceptInsecureCerts(true)));
         // Construct the URL for the test
         String contextRoot = "ConverterValidatorBehaviorInjectionTarget";
         String url = JSFUtils.createSeleniumURLString(server, contextRoot, "index.xhtml");
