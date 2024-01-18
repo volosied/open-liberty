@@ -35,7 +35,6 @@ import com.ibm.ws.jsf23.fat.selenium_util.ExtendedWebDriver;
 import com.ibm.ws.jsf23.fat.selenium_util.WebPage;
 
 import componenttest.annotation.Server;
-import componenttest.containers.SimpleLogConsumer;
 import componenttest.custom.junit.runner.FATRunner;
 import componenttest.custom.junit.runner.Mode;
 import componenttest.custom.junit.runner.Mode.TestMode;
@@ -58,8 +57,7 @@ public class JSF23EvalScriptsTests {
 
     @ClassRule
     public static BrowserWebDriverContainer<?> chrome = new BrowserWebDriverContainer<>(FATSuite.getChromeImage()).withCapabilities(new ChromeOptions())
-                    .withAccessToHost(true)
-                    .withLogConsumer(new SimpleLogConsumer(c, "selenium-driver"));
+                    .withAccessToHost(true);
 
     private static ExtendedWebDriver driver;
 

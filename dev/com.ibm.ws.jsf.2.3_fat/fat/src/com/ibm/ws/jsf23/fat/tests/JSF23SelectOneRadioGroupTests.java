@@ -43,7 +43,6 @@ import com.ibm.ws.jsf23.fat.selenium_util.WebPage;
 
 import componenttest.annotation.Server;
 import componenttest.annotation.SkipForRepeat;
-import componenttest.containers.SimpleLogConsumer;
 import componenttest.custom.junit.runner.FATRunner;
 import componenttest.custom.junit.runner.Mode;
 import componenttest.custom.junit.runner.Mode.TestMode;
@@ -67,8 +66,7 @@ public class JSF23SelectOneRadioGroupTests {
 
     @Rule
     public BrowserWebDriverContainer<?> chrome = new BrowserWebDriverContainer<>(FATSuite.getChromeImage()).withCapabilities(new ChromeOptions())
-                    .withAccessToHost(true)
-                    .withLogConsumer(new SimpleLogConsumer(c, "selenium-driver"));
+                    .withAccessToHost(true);
 
     @BeforeClass
     public static void setup() throws Exception {

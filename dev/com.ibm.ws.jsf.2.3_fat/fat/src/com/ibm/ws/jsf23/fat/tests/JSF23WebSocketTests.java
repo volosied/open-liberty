@@ -37,7 +37,6 @@ import com.ibm.ws.jsf23.fat.selenium_util.ExtendedWebDriver;
 import com.ibm.ws.jsf23.fat.selenium_util.WebPage;
 
 import componenttest.annotation.Server;
-import componenttest.containers.SimpleLogConsumer;
 import componenttest.custom.junit.runner.FATRunner;
 import componenttest.rules.repeater.JakartaEEAction;
 import componenttest.topology.impl.LibertyServer;
@@ -61,8 +60,7 @@ public class JSF23WebSocketTests {
 
     @ClassRule
     public BrowserWebDriverContainer<?> chrome = new BrowserWebDriverContainer<>(FATSuite.getChromeImage()).withCapabilities(new ChromeOptions())
-                    .withAccessToHost(true)
-                    .withLogConsumer(new SimpleLogConsumer(JSF23WebSocketTests.class, "selenium-driver"));
+                    .withAccessToHost(true);
 
     private static ExtendedWebDriver driver;
 
