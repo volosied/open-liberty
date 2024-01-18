@@ -39,7 +39,6 @@ import com.ibm.ws.jsf22.fat.selenium_util.ExtendedWebDriver;
 import com.ibm.ws.jsf22.fat.selenium_util.WebPage;
 
 import componenttest.annotation.Server;
-import componenttest.containers.SimpleLogConsumer;
 import componenttest.custom.junit.runner.FATRunner;
 import componenttest.custom.junit.runner.Mode;
 import componenttest.custom.junit.runner.Mode.TestMode;
@@ -67,8 +66,7 @@ public class JSF22ComponentTesterTests {
 
     @Rule
     public BrowserWebDriverContainer<?> chrome = new BrowserWebDriverContainer<>(FATSuite.getChromeImage()).withCapabilities(new ChromeOptions())
-                    .withAccessToHost(true)
-                    .withLogConsumer(new SimpleLogConsumer(JSF22ComponentTesterTests.class, "selenium-driver"));
+                    .withAccessToHost(true);
 
     @BeforeClass
     public static void setup() throws Exception {

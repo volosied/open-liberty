@@ -39,7 +39,6 @@ import com.ibm.ws.jsf22.fat.selenium_util.WebPage;
 
 import componenttest.annotation.ExpectedFFDC;
 import componenttest.annotation.Server;
-import componenttest.containers.SimpleLogConsumer;
 import componenttest.custom.junit.runner.FATRunner;
 import componenttest.custom.junit.runner.Mode;
 import componenttest.custom.junit.runner.Mode.TestMode;
@@ -65,8 +64,7 @@ public class JSFCompELTests {
 
     @Rule
     public BrowserWebDriverContainer<?> chrome = new BrowserWebDriverContainer<>(FATSuite.getChromeImage()).withCapabilities(new ChromeOptions())
-                    .withAccessToHost(true)
-                    .withLogConsumer(new SimpleLogConsumer(JSFCompELTests.class, "selenium-driver"));
+                    .withAccessToHost(true);
 
     @BeforeClass
     public static void setup() throws Exception {
