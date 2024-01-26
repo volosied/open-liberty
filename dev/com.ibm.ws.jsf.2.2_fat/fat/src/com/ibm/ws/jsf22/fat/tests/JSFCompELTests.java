@@ -66,7 +66,7 @@ public class JSFCompELTests {
     @ClassRule
     public static BrowserWebDriverContainer<?> chrome = new BrowserWebDriverContainer<>(FATSuite.getChromeImage()).withCapabilities(new ChromeOptions())
                     .withAccessToHost(true)
-                    .withSharedMemorySize((long) (1 * 10 ^ 6)); // avoids "message":"Duplicate mount point: /dev/shm"
+                    .withSharedMemorySize(2147483648L); // avoids "message":"Duplicate mount point: /dev/shm"
 
 
     @BeforeClass
