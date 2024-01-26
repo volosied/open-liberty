@@ -21,6 +21,7 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
@@ -76,9 +77,11 @@ public class JSF22MiscellaneousTests {
     @Server("jsf22MiscellaneousServer")
     public static LibertyServer jsf22MiscellaneousServer;
 
-    @Rule
-    public BrowserWebDriverContainer<?> chrome = new BrowserWebDriverContainer<>(FATSuite.getChromeImage()).withCapabilities(new ChromeOptions())
-                                                                                  .withAccessToHost(true);
+    @ClassRule
+    public static BrowserWebDriverContainer<?> chrome = new BrowserWebDriverContainer<>(FATSuite.getChromeImage()).withCapabilities(new ChromeOptions())
+                    .withAccessToHost(true)
+                    .withSharedMemorySize((long) (1 * 10 ^ 6)); // avoids "message":"Duplicate mount point: /dev/shm"
+
 
     @BeforeClass
     public static void setup() throws Exception {

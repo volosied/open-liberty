@@ -17,6 +17,7 @@ import java.util.List;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
@@ -62,9 +63,11 @@ public class JSFCompELTests {
     @Server("jsfTestServer2")
     public static LibertyServer jsfTestServer2;
 
-    @Rule
-    public BrowserWebDriverContainer<?> chrome = new BrowserWebDriverContainer<>(FATSuite.getChromeImage()).withCapabilities(new ChromeOptions())
-                    .withAccessToHost(true);
+    @ClassRule
+    public static BrowserWebDriverContainer<?> chrome = new BrowserWebDriverContainer<>(FATSuite.getChromeImage()).withCapabilities(new ChromeOptions())
+                    .withAccessToHost(true)
+                    .withSharedMemorySize((long) (1 * 10 ^ 6)); // avoids "message":"Duplicate mount point: /dev/shm"
+
 
     @BeforeClass
     public static void setup() throws Exception {

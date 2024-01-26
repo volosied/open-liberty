@@ -14,9 +14,11 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
@@ -59,11 +61,13 @@ public class JSF22ClientWindowTests {
     @Server("jsfTestServer2")
     public static LibertyServer jsfTestServer2;
 
-    @Rule
-    public BrowserWebDriverContainer<?> chrome = new BrowserWebDriverContainer<>(FATSuite.getChromeImage()).withCapabilities(new ChromeOptions())
-                    .withAccessToHost(true);
+    @ClassRule
+    public static BrowserWebDriverContainer<?> chrome = new BrowserWebDriverContainer<>(FATSuite.getChromeImage()).withCapabilities(new ChromeOptions())
+                    .withAccessToHost(true)
+                    .withSharedMemorySize((long) (1 * 10 ^ 6)); // avoids "message":"Duplicate mount point: /dev/shm"
 
-    private ExtendedWebDriver driver;
+
+    private static ExtendedWebDriver driver;
 
     @BeforeClass
     public static void setup() throws Exception {
@@ -80,6 +84,8 @@ public class JSF22ClientWindowTests {
         jsfTestServer2.startServer(c.getSimpleName() + ".log");
 
         Testcontainers.exposeHostPorts(jsfTestServer2.getHttpDefaultPort(), jsfTestServer2.getHttpDefaultSecurePort());
+
+        driver = new CustomDriver(new RemoteWebDriver(chrome.getSeleniumAddress(), new ChromeOptions().setAcceptInsecureCerts(true)));
     }
 
     @AfterClass
@@ -90,9 +96,10 @@ public class JSF22ClientWindowTests {
         }
     }
 
-    @Before
-    public void setupTest() {
-        driver = new CustomDriver(new RemoteWebDriver(chrome.getSeleniumAddress(), new ChromeOptions().setAcceptInsecureCerts(true)));
+    @After
+    public void after()
+    {
+        driver.getRemoteWebDriver().manage().deleteAllCookies();
     }
 
     /**
