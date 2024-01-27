@@ -14,7 +14,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.List;
 
 import org.junit.AfterClass;
-import org.junit.Before;
+import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -62,7 +62,7 @@ public class JSF23CommandScriptTests {
                     .withAccessToHost(true)
                     .withSharedMemorySize(2147483648L); // avoids "message":"Duplicate mount point: /dev/shm"
 
-    private ExtendedWebDriver driver;
+    private static ExtendedWebDriver driver;
 
 
     @BeforeClass
@@ -75,6 +75,8 @@ public class JSF23CommandScriptTests {
         // Many tests use the same server
         server.startServer(c.getSimpleName() + ".log");
         Testcontainers.exposeHostPorts(server.getHttpDefaultPort(), server.getHttpDefaultSecurePort());
+
+        driver = new CustomDriver(new RemoteWebDriver(chrome.getSeleniumAddress(), new ChromeOptions().setAcceptInsecureCerts(true)));
     }
 
     @AfterClass
@@ -85,10 +87,12 @@ public class JSF23CommandScriptTests {
         }
     }
 
-    @Before
-    public void setupPerTest() throws Exception {
-        driver = new CustomDriver(new RemoteWebDriver(chrome.getSeleniumAddress(), new ChromeOptions().setAcceptInsecureCerts(true)));
+    @After
+    public void clearCookies()
+    {
+        driver.getRemoteWebDriver().manage().deleteAllCookies();
     }
+    /**
 
     /**
      * This test case ensures that the commandScript is called when the page loads because of the autorun attribute.
