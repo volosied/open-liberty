@@ -37,7 +37,7 @@ instrument.disabled: true
 publish.wlp.jar.suffix: dev/api/spec
 
 -buildpath: \
-    ./myfaces-api-4.0.2-SNAPSHOT.jar;version=file
+    ./myfaces-api-4.0.2.jar;version=file
     # org.apache.myfaces.core:myfaces-api;strategy=exact;version=${Implementation-Version}
     # org.apache.myfaces.buildtools:myfaces-builder-annotations;version=1.0.9;strategy=exact, \
     # io.openliberty.jakarta.expressionLanguage.5.0;version=latest, \
