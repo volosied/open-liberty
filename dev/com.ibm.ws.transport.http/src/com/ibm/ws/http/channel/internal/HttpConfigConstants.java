@@ -441,6 +441,8 @@ public class HttpConfigConstants {
 
     public static final String PROPNAME_SAMESITE_STRICT = "sameSiteStrictInternal";
 
+    public static final String PROPNAME_SAMESITE_PARTITIONED = "sameSitePartitionedInternal";
+
     public static final String WILDCARD_CHAR = "*";
 
     public static final String PROPNAME_RESPONSE_HEADERS = "headersInternal";
@@ -456,7 +458,8 @@ public class HttpConfigConstants {
     public static enum SameSite {
         LAX("Lax"),
         NONE("None"),
-        STRICT("Strict");
+        STRICT("Strict"),
+        PARTITIONED("Partitioned");
 
         SameSite(String name) {
             this.name = name;

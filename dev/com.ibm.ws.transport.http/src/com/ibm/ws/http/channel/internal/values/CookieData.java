@@ -57,6 +57,8 @@ public abstract class CookieData extends GenericKeys {
     public static final CookieData cookieHttpOnly = new CookieHttpOnly();
     /** SameSite attribute */
     public static final CookieData cookieSameSite = new CookieSameSiteData();
+    /** Partitioned attribute */
+    public static final CookieData cookiePartitioned = new CookiePartitioned();
 
     /**
      * Constructor for a generic cookie data object.

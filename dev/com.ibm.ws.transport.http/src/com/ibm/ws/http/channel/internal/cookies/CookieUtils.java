@@ -390,6 +390,11 @@ public class CookieUtils {
             buffer.append(value);
         }
 
+        // check for partitioned
+        if (cookie.isPartitioned()) {
+            buffer.append("; Partitioned");
+        }
+
         //Servlet 6.0
         setAttributes(cookie, buffer);
 

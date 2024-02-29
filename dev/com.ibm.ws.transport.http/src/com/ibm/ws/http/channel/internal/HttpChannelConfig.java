@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2023 IBM Corporation and others.
+ * Copyright (c) 2004, 2024 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -194,6 +194,9 @@ public class HttpChannelConfig {
     private Map<String, String> sameSiteStringPatterns = null;
     private Map<Pattern, String> sameSitePatterns = null;
     private boolean onlySameSiteStar = false;
+    
+    /* Identifies if the partitioned cookie attrbute should be set */
+    private boolean isPartitioned = false;
 
     /** Identifies if the channel has been configured to use <headers> configuration */
     private boolean isHeadersConfigEnabled = false;
@@ -253,7 +256,7 @@ public class HttpChannelConfig {
         for (Entry<Object, Object> entry : propsIn.entrySet()) {
             key = (String) entry.getKey();
             value = entry.getValue();
-
+            System.out.println(key + " " + value);
             // First comparisons are for ones exposed in metatype.xml
             if (key.equalsIgnoreCase(HttpConfigConstants.PROPNAME_KEEPALIVE_ENABLED)) {
                 props.put(HttpConfigConstants.PROPNAME_KEEPALIVE_ENABLED, value);
@@ -497,6 +500,10 @@ public class HttpChannelConfig {
                 props.put(HttpConfigConstants.PROPNAME_SAMESITE_STRICT, value);
             }
 
+            if (key.equalsIgnoreCase(HttpConfigConstants.PROPNAME_SAMESITE_PARTITIONED)) {
+                props.put(HttpConfigConstants.PROPNAME_SAMESITE_PARTITIONED, value);
+            }
+
             if (key.equalsIgnoreCase(HttpConfigConstants.PROPNAME_RESPONSE_HEADERS)) {
                 props.put(HttpConfigConstants.PROPNAME_RESPONSE_HEADERS, value);
             }
@@ -578,6 +585,7 @@ public class HttpChannelConfig {
         parseCookiesSameSiteLax(props);
         parseCookiesSameSiteNone(props);
         parseCookiesSameSiteStrict(props);
+        parseCookiesSameSitePartitioned(props);
         initSameSiteCookiesPatterns();
         parseHeaders(props);
 
@@ -1250,6 +1258,25 @@ public class HttpChannelConfig {
             }
         }
     }
+
+    private void parseCookiesSameSitePartitioned(Map<Object, Object> props) {
+        System.out.println("parseCookiesSameSitePartitioned");
+        Object value = props.get(HttpConfigConstants.PROPNAME_SAMESITE_PARTITIONED);
+        System.out.println(value);
+        if (null != value && this.useSameSiteConfig) {
+
+            if (value instanceof Boolean) {
+                Boolean partitionedValue= (Boolean) value;
+                if(partitionedValue){
+                    this.isPartitioned = true;
+                }
+            }
+            if (this.useSameSiteConfig && (TraceComponent.isAnyTracingEnabled()) && (tc.isEventEnabled())) {
+                Tr.event(tc, "Http Channel Config: SameSite Partitioned configuration parsed.");
+            }
+        }
+    }
+
 
     private void addSameSiteAttribute(String name, HttpConfigConstants.SameSite sameSiteAttribute) {
         if (this.sameSiteErrorCookies.contains(name)) {
@@ -2982,6 +3009,13 @@ public class HttpChannelConfig {
      */
     public boolean onlySameSiteStar() {
         return this.onlySameSiteStar;
+    }
+
+    /*
+     * Returns a boolean which indicates whether Partitioned should be added the the SameSite=None cookies. 
+     */
+    public boolean getPartitioned() {
+        return this.isPartitioned;
     }
 
     /**

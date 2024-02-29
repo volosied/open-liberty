@@ -30,6 +30,7 @@ public class HttpCookie {
     private int myMaxAge = -1;
     private boolean myHttpOnlyFlag = false;
     private boolean myDiscardFlag = false;
+    private boolean myPartitionedFlag = false;
     private Map<String, String> myAttrs = new HashMap<String, String>();
 
     /**
@@ -229,6 +230,25 @@ public class HttpCookie {
     public void setDiscard(boolean flag) {
         this.myDiscardFlag = flag;
     }
+
+    /**
+     * Set the Partitioned attribute flag.
+     *
+     * @param flag
+     */
+    public void setPartitioned(boolean flag) {
+        this.myPartitionedFlag = flag;
+    }
+
+    /**
+     * Query if the Partitioned attribute is set.
+     *
+     * @return boolean
+     */
+    public boolean isPartitioned() {
+        return this.myPartitionedFlag;
+    }
+
 
     /*
      * @see java.lang.Object#clone()
