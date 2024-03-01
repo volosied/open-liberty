@@ -216,8 +216,8 @@ public class WebContainerRequestState {
      *
      * Currently the only Cookie attribute that is supported by the runtime here
      * is the SameSite Cookie attribute.  All other existing Cookie attributes must 
-     * be added via the Cookie API.  Using this API to add anything but the SameSite attribute
-     * will be ignored.
+     * be added via the Cookie API. Only SameSite attribute and Partitioned attribute 
+     * are supported at this time. All other attributes will be ignored.
      *
      * The cookieAttribute should be in the form: attributeName=attributeValue.
      *
@@ -234,8 +234,8 @@ public class WebContainerRequestState {
         //future cookieAttributes can be further separated with semicolon delimiter:  attributeName=attributeValue;attributeName2=attributeValue2;singleAttributeNameNoValue
         //Currently ignore all but SameSite 
         String[] attribute = cookieAttributes.split("=");
-        if (!attribute[0].equals("SameSite")) {
-                logger.logp(Level.FINE, CLASS_NAME, methodName, " Only SameSite attribute is supported at this time.");
+        if (!attribute[0].equals("SameSite") || !attribute[0].equals("Partitioned")) {
+                logger.logp(Level.FINE, CLASS_NAME, methodName, " Only SameSite attribute and Partitioned attribute are supported at this time.");
                 return;
         }
         
