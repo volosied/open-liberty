@@ -234,7 +234,7 @@ public class WebContainerRequestState {
         //future cookieAttributes can be further separated with semicolon delimiter:  attributeName=attributeValue;attributeName2=attributeValue2;singleAttributeNameNoValue
         //Currently ignore all but SameSite 
         String[] attribute = cookieAttributes.split("=");
-        if (!attribute[0].equals("SameSite") || !attribute[0].equals("Partitioned")) {
+        if (!(attribute[0].equals("SameSite") || attribute[0].equals("Partitioned"))) {
                 logger.logp(Level.FINE, CLASS_NAME, methodName, " Only SameSite attribute and Partitioned attribute are supported at this time.");
                 return;
         }
@@ -243,7 +243,12 @@ public class WebContainerRequestState {
             cookieAttributesMap = new HashMap<String,String>();
         }
 
-        cookieAttributesMap.put(cookieName, cookieAttributes);
+        String existingCookieAttribute = cookieAttributesMap.get(cookieName);
+        if(existingCookieAttribute != null) {
+            cookieAttributesMap.put(cookieName, existingCookieAttribute + "; " + cookieAttributes);
+        } else {
+            cookieAttributesMap.put(cookieName, cookieAttributes);
+        }
     }
     
     /**
