@@ -217,6 +217,8 @@ public class SessionManagerConfig implements Cloneable {
     
     private int connectionRetryCount = 2; // Feature 68570
     private SameSiteCookie sessionCookieSameSite;
+
+    private boolean sessionCookiePartitioned = false;
     
     // finished Custom Properties
 
@@ -1123,6 +1125,7 @@ public class SessionManagerConfig implements Cloneable {
             msg.append("sessionCookiePath=").append(this.getSessionCookiePath()).append("\n");
             msg.append("sessionCookieSecure=").append(this.getSessionCookieSecure()).append("\n");
             msg.append("sessionCookieSameSite=").append(this.getSessionCookieSameSite().getSameSiteCookieValue()).append("\n");
+            msg.append("sessionCookiePartitioned=").append(sessionCookiePartitioned).append("\n");
             msg.append("sessionCookieHttpOnly=").append(this.getSessionCookieHttpOnly()).append("\n");
             msg.append("inMemorySize=").append(inMemorySize).append("\n");
             msg.append("enableOverflow=").append(enableOverflow).append("\n");
@@ -1193,7 +1196,15 @@ public class SessionManagerConfig implements Cloneable {
     public final void setSessionCookieSameSite(SameSiteCookie sameSite) {
        this.sessionCookieSameSite = sameSite;
     }
+
+    //cookiePartitioned
+    public void setSessionCookiePartitioned(boolean b) {
+        this.sessionCookiePartitioned = b;
+    }
     
+    public boolean getSessionCookiePartitioned() {
+        return this.sessionCookiePartitioned;
+    }
 
     //Servlet 6.0 - updated to use interface
     // if web.xml cookie-config found, method will update the this SMC.cookieConfig with the webApp cookieConfig

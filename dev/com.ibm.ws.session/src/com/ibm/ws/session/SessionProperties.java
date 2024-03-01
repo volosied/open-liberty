@@ -759,6 +759,11 @@ final public class SessionProperties {
         if (sValue != null) {
             smc.setSessionCookieSameSite(SameSiteCookie.get(sValue));  
         }
+        s = "cookiePartitioned";
+        bValue = propertyToBoolean(xtpProperties.get(s));
+        if (bValue != null) {
+            smc.setSessionCookiePartitioned(bValue.booleanValue());
+        }
 
         s = "maxInMemorySessionCount";
         iValue = propertyToInteger(xtpProperties.get(s));
