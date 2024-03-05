@@ -30,6 +30,7 @@ import com.ibm.ws.fat.wc.tests.WCFileUpLoadFileCountMaxPropertyTest;
 import com.ibm.ws.fat.wc.tests.WCFileUpLoadFileCountMaxTest;
 import com.ibm.ws.fat.wc.tests.WCGetMappingSlashStarTest;
 import com.ibm.ws.fat.wc.tests.WCGetMappingTest;
+import com.ibm.ws.fat.wc.tests.WCPartitionedAttributeTests;
 import com.ibm.ws.fat.wc.tests.WCPushBuilderTest;
 import com.ibm.ws.fat.wc.tests.WCResponseHeadersTest;
 import com.ibm.ws.fat.wc.tests.WCSCIHandlesTypesTest;
@@ -74,37 +75,38 @@ import componenttest.rules.repeater.RepeatTests;
 @RunWith(Suite.class)
 @SuiteClasses({
                 // WCPushBuilderSecurityTest.class,
-                WC500BadRequestDefaultTest.class,
-                WC400BadRequestTest.class,
-                WCApplicationMBeanStatusTest.class,
-                WCContextRootPrecedence.class,
-                WCPushBuilderTest.class,
-                WCServletContainerInitializerFilterServletNameMappingTest.class,
-                WCServletClarificationTest.class,
-                WCAddJspFileTest.class,
-                WCTrailersTest.class,
-                WCEncodingTest.class,
-                WCFileUpLoadFileCountMaxPropertyTest.class,
-                WCFileUpLoadFileCountMaxTest.class,
-                WCServerTest.class,
-                WC5JakartaServletTest.class,
-                WCGetMappingTest.class,
-                WCServletContainerInitializerExceptionTest.class,
-                WCSameSiteCookieAttributeTests.class,
-                WCSameSiteCookieAttributeSecurityTest.class,
-                WCServletPathForDefaultMappingDefault.class,
-                WCServletPathForDefaultMappingFalse.class,
-                WCGetMappingSlashStarTest.class,
-                WCSameContextRootTest.class,
-                WCSendRedirectRelativeURLTrue.class,
-                WCSendRedirectRelativeURLDefault.class,
-                WC5GetContextPath.class,
-                WCSCIHandlesTypesTest.class,
-                WCResponseHeadersTest.class,
-                WCServerMiscTest.class,
-                WCServerPropertyTest.class,
-                WCTestEncodedX590.class,
-                WCServletContextUnsupportedOperationExceptionTest.class
+                // WC500BadRequestDefaultTest.class,
+                // WC400BadRequestTest.class,
+                // WCApplicationMBeanStatusTest.class,
+                // WCContextRootPrecedence.class,
+                // WCPushBuilderTest.class,
+                // WCServletContainerInitializerFilterServletNameMappingTest.class,
+                // WCServletClarificationTest.class,
+                // WCAddJspFileTest.class,
+                // WCTrailersTest.class,
+                // WCEncodingTest.class,
+                // WCFileUpLoadFileCountMaxPropertyTest.class,
+                // WCFileUpLoadFileCountMaxTest.class,
+                // WCServerTest.class,
+                // WC5JakartaServletTest.class,
+                // WCGetMappingTest.class,
+                // WCServletContainerInitializerExceptionTest.class,
+                // WCSameSiteCookieAttributeTests.class,
+                // WCSameSiteCookieAttributeSecurityTest.class,
+                // WCServletPathForDefaultMappingDefault.class,
+                // WCServletPathForDefaultMappingFalse.class,
+                // WCGetMappingSlashStarTest.class,
+                // WCSameContextRootTest.class,
+                // WCSendRedirectRelativeURLTrue.class,
+                // WCSendRedirectRelativeURLDefault.class,
+                // WC5GetContextPath.class,
+                // WCSCIHandlesTypesTest.class,
+                // WCResponseHeadersTest.class,
+                // WCServerMiscTest.class,
+                // WCServerPropertyTest.class,
+                // WCTestEncodedX590.class,
+                // WCServletContextUnsupportedOperationExceptionTest.class
+                WCPartitionedAttributeTests.class
 })
 
 public class FATSuite {
