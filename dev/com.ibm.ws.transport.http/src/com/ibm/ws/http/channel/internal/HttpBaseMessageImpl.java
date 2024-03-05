@@ -2927,7 +2927,8 @@ public abstract class HttpBaseMessageImpl extends GenericMessageImpl implements 
                         if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
                             Tr.debug(tc, "Setting the Partitioned attribute for SameSite=None");
                         }
-                        cookie.setPartitioned(true);
+                        // cookie.setPartitioned(true);
+                        cookie.setAttribute("partitioned", "");
                     }
 
                 } else {

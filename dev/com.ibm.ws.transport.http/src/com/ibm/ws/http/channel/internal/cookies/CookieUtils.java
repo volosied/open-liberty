@@ -390,10 +390,15 @@ public class CookieUtils {
             buffer.append(value);
         }
 
-        // check for partitioned
-        if (cookie.isPartitioned()) {
+        value = cookie.getAttribute("partitioned");
+        if (null != value) {
             buffer.append("; Partitioned");
         }
+
+        // // check for partitioned
+        // if (cookie.isPartitioned()) {
+        //     buffer.append("; Partitioned");
+        // }
 
         //Servlet 6.0
         setAttributes(cookie, buffer);
@@ -469,6 +474,11 @@ public class CookieUtils {
         if (null != value && 0 != value.length()) {
             buffer.append("; SameSite=");
             buffer.append(value);
+        }
+
+        value = cookie.getAttribute("partitioned");
+        if (null != value) {
+            buffer.append("; Partitioned");
         }
 
         //Servlet 6.0
@@ -563,6 +573,11 @@ public class CookieUtils {
             buffer.append(value);
         }
 
+        value = cookie.getAttribute("partitioned");
+        if (null != value) {
+            buffer.append("; Partitioned");
+        }
+
         //Servlet 6.0
         setAttributes(cookie, buffer);
 
@@ -583,7 +598,7 @@ public class CookieUtils {
             String key, value;
             for (Entry<String, String> entry : cookieAttrs.entrySet()) {
                 key = entry.getKey();
-                if (!(key.equals("samesite") || key.equals("port") || key.equals("commenturl"))) {
+                if (!(key.equals("samesite") || key.equals("port") || key.equals("commenturl") || key.equals("partitioned"))) {
                     value = entry.getValue();
                     if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
                         Tr.debug(tc, "setAttribute (" + key + " , " + value + ")");

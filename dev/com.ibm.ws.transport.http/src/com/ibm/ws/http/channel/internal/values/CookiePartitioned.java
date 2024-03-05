@@ -37,7 +37,8 @@ public class CookiePartitioned extends CookieData {
     @SuppressWarnings("unused")
     public boolean set(HttpCookie cookie, byte[] attribValue) {
         //HttpChannelUtils.getEnglishString(attribValue)
-        cookie.setPartitioned(true);
+        // cookie.setPartitioned(true);
+        cookie.setAttribute("partitioned", "");
         if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
             Tr.debug(tc, "Cookie HttpOnly attribute set");
         }
