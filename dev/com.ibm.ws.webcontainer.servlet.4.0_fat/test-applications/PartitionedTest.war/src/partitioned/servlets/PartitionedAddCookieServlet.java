@@ -31,12 +31,33 @@ public class PartitionedAddCookieServlet extends HttpServlet {
         protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
             PrintWriter pw = resp.getWriter();
             pw.print("Welcome to the TestPartitionedCookieServlet!");
-    
+
+            // String testName = req.getParameter("testName");
+
             resp.setHeader("Set-Cookie", "PartitionedCookieName_SetHeader=PartitionedCookieValue_SetHeader;");
             resp.addHeader("Set-Cookie", "PartitionedCookieName_AddHeader=PartitionedCookieValue_AddHeader;");
             
             Cookie cookie = new Cookie("PartitionedCookieName_AddCookie","PartitionedCookieValue_AddCookie");
             resp.addCookie(cookie);
+
+            // switch(testName){
+            //     case "testPartitionedCookie_Basic":
+            //         resp.setHeader("Set-Cookie", "PartitionedCookieName_SetHeader=PartitionedCookieValue_SetHeader;");
+            //         resp.addHeader("Set-Cookie", "PartitionedCookieName_AddHeader=PartitionedCookieValue_AddHeader;");
+                    
+            //         cookie = new Cookie("PartitionedCookieName_AddCookie","PartitionedCookieValue_AddCookie");
+            //         resp.addCookie(cookie);
+            //         break;
+            //     case "testParitionedNotSetOnLax":
+            //         resp.setHeader("Set-Cookie", "PartitionedCookieName_SetHeader=PartitionedCookieValue_SetHeader;");
+            //         resp.addHeader("Set-Cookie", "PartitionedCookieName_AddHeader=PartitionedCookieValue_AddHeader;");
+                    
+            //         cookie = new Cookie("PartitionedCookieName_AddCookie","PartitionedCookieValue_AddCookie");
+            //         resp.addCookie(cookie);
+            //     break;
+            //     default:
+            //         throw new ServletException("No test specified via the testName query!");
+            // }
 
         }
     
