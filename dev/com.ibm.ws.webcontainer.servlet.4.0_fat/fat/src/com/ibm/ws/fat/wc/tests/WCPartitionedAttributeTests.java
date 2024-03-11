@@ -184,6 +184,10 @@ public class WCPartitionedAttributeTests {
                 assertTrue("The response did not contain the expected Set-Cookie header: " + expectedAddCookie, addCookieFound);
                 assertTrue("The response did not contain the expected number of cookie headers" + expectedAddHeader, cookieCount == 3);
             }
+        } finally {
+            server.setMarkToEndOfLog();
+            server.restoreServerConfiguration();
+            server.waitForConfigUpdateInLogUsingMark(Collections.singleton(APP_NAME), false, "CWWKT0016I:.*PartitionedTest.*");
         }
     }
 
@@ -256,7 +260,87 @@ public class WCPartitionedAttributeTests {
                 assertTrue("The response did not contain the expected Set-Cookie header: " + expectedAddCookie, addCookieFound);
                 assertTrue("The response did not contain the expected number of cookie headers" + expectedAddHeader, cookieCount == 3);
             }
+        } finally {
+            server.setMarkToEndOfLog();
+            server.restoreServerConfiguration();
+            server.waitForConfigUpdateInLogUsingMark(Collections.singleton(APP_NAME), false, "CWWKT0016I:.*PartitionedTest.*");
         }
+    }
+
+    /**
+     *
+     */
+    @Test
+    public void testPartitionIsFalseByDefault() throws Exception {
+        String expectedSetHeader = "Set-Cookie: PartitionedCookieName_SetHeader=PartitionedCookieValue_SetHeader; Secure; SameSite=None";
+        String expectedAddHeader = "Set-Cookie: PartitionedCookieName_AddHeader=PartitionedCookieValue_AddHeader; Secure; SameSite=None";
+        String expectedAddCookie = "Set-Cookie: PartitionedCookieName_AddCookie=PartitionedCookieValue_AddCookie; Secure; SameSite=None";
+
+        String expectedResponse = "Welcome to the TestPartitionedCookieServlet!";
+        boolean setHeaderFound = false;
+        boolean addHeaderFound = false;
+        boolean addCookieFound = false;
+
+        server.saveServerConfiguration();
+
+        ServerConfiguration configuration = server.getServerConfiguration();
+        LOG.info("Server configuration that was saved: " + configuration);
+
+        HttpEndpoint httpEndpoint = configuration.getHttpEndpoints().getById("defaultHttpEndpoint");
+        httpEndpoint.getSameSite().setStrict(null);
+        httpEndpoint.getSameSite().setPartitioned(null);
+        httpEndpoint.getSameSite().setNone("*");
+        httpEndpoint.getSameSite().setLax(null);
+
+        server.setMarkToEndOfLog();
+        server.updateServerConfiguration(configuration);
+        server.waitForConfigUpdateInLogUsingMark(Collections.singleton(APP_NAME), false, "CWWKT0016I:.*PartitionedTest.*");
+
+        String url = "http://" + server.getHostname() + ":" + server.getHttpDefaultPort() + "/" + APP_NAME + "/TestPartitionedCookie?testName=testPartitionIsFalseByDefault";
+        LOG.info("url: " + url);
+
+        HttpGet getMethod = new HttpGet(url);
+
+        try (final CloseableHttpClient client = HttpClientBuilder.create().build()) {
+            try (final CloseableHttpResponse response = client.execute(getMethod)) {
+                String responseText = EntityUtils.toString(response.getEntity());
+                LOG.info("\n" + "Response Text:");
+                LOG.info("\n" + responseText);
+
+                Header[] headers = response.getHeaders("Set-Cookie");
+                LOG.info("\n" + "Set-Cookie headers contained in the response:");
+
+                // Verify that the expected Set-Cookie headers were found by the client.
+                int cookieCount = 0;
+                String headerValue;
+                for (Header header : headers) {
+                    headerValue = header.toString();
+                    LOG.info("\n" + headerValue);
+                    if(headerValue.contains("Set-Cookie:")){
+                        cookieCount++;
+                    }
+                    // must use equals
+                    if (headerValue.equals(expectedSetHeader)) {
+                        setHeaderFound = true;
+                    } else if (headerValue.equals(expectedAddHeader)) {
+                        addHeaderFound = true;
+                    } else if (headerValue.equals(expectedAddCookie)) {
+                        addCookieFound = true;
+                    }
+                }
+
+                assertTrue("The response did not contain the following String: " + expectedResponse, responseText.contains(expectedResponse));
+                assertTrue("The response did not contain the expected Set-Cookie header: " + expectedSetHeader, setHeaderFound);
+                assertTrue("The response did not contain the expected Set-Cookie header: " + expectedAddHeader, addHeaderFound);
+                assertTrue("The response did not contain the expected Set-Cookie header: " + expectedAddCookie, addCookieFound);
+                assertTrue("The response did not contain the expected number of cookie headers" + expectedAddHeader, cookieCount == 3);
+            }
+        } finally {
+            server.setMarkToEndOfLog();
+            server.restoreServerConfiguration();
+            server.waitForConfigUpdateInLogUsingMark(Collections.singleton(APP_NAME), false, "CWWKT0016I:.*PartitionedTest.*");
+        }
+
     }
 
 }
