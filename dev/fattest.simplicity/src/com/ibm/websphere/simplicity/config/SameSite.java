@@ -80,11 +80,11 @@ public class SameSite extends ConfigElement {
      * 
      * @return The partitioned boolean for this entry
      */
-    public boolean isPartitioned() {
-        if(partitioned == null){
-            return false;
-        }
-        return partitioned;
+    public Boolean isPartitioned() {
+        // if(partitioned == null){
+        //     return false;
+        // }
+        return this.partitioned;
     }
 
     /**
@@ -92,7 +92,7 @@ public class SameSite extends ConfigElement {
      * @param partitioned Determines if cookies should be paritioned 
      */
     @XmlAttribute
-    public void setPartitioned(boolean partitioned) {
+    public void setPartitioned(Boolean partitioned) {
         this.partitioned = partitioned;
     }
 
