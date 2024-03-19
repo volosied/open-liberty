@@ -27,6 +27,7 @@ import org.junit.runner.RunWith;
 
 import com.ibm.websphere.simplicity.ShrinkHelper;
 import com.ibm.websphere.simplicity.config.HttpEndpoint;
+import com.ibm.websphere.simplicity.config.HttpSession;
 import com.ibm.websphere.simplicity.config.ServerConfiguration;
 
 import componenttest.annotation.Server;
@@ -474,6 +475,60 @@ public class WCPartitionedAttributeTests {
             server.waitForConfigUpdateInLogUsingMark(Collections.singleton(APP_NAME), false, "CWWKT0016I:.*PartitionedTest.*");
         }
 
+    }
+
+    /**
+     * Previous test used the wildcard within the samesite config, but this test refernces them by name. 
+     */
+    @Test
+    public void testPartitionSessionCookieDefault() throws Exception {
+        String expectedSessionHeader = "Set-Cookie: PartitionedCookieName_SetHeader=PartitionedCookieValue_SetHeader; SameSite=Lax";
+
+        String expectedResponse = "Welcome to the TestPartitionedCookieServlet!";
+
+        server.saveServerConfiguration();
+
+        ServerConfiguration configuration = server.getServerConfiguration();
+        LOG.info("Server configuration that was saved: " + configuration);
+
+        HttpSession httpSession = configuration.getHttpSession();
+        httpSession.setCookiePartitioned(null);
+
+        server.setMarkToEndOfLog();
+        server.updateServerConfiguration(configuration);
+        server.waitForConfigUpdateInLogUsingMark(Collections.singleton(APP_NAME), false, "CWWKT0016I:.*PartitionedTest.*");
+
+        String url = "http://" + server.getHostname() + ":" + server.getHttpDefaultPort() + "/" + APP_NAME + "/TestPartitionedCookie";
+        LOG.info("url: " + url);
+
+        HttpGet getMethod = new HttpGet(url);
+
+        try (final CloseableHttpClient client = HttpClientBuilder.create().build()) {
+            try (final CloseableHttpResponse response = client.execute(getMethod)) {
+                String responseText = EntityUtils.toString(response.getEntity());
+                LOG.info("\n" + "Response Text:");
+                LOG.info("\n" + responseText);
+
+                assertTrue("The response did not contain the following String: " + expectedResponse, responseText.contains(expectedResponse));
+
+                Header[] headers = response.getHeaders("Set-Cookie");
+                LOG.info("\n" + "Set-Cookie headers contained in the response:");
+
+                String headerValue;
+                for (Header header : headers) {
+                    headerValue = header.toString();
+                    LOG.info("\n" + headerValue);
+                     
+                    if(headerValue.contains("Set-Cookie:")){
+                        assertTrue("The response did not contain the expected cookies header for the session", headerValue.equals(expectedSessionHeader));
+                    }
+                }
+            }
+        } finally {  
+            server.setMarkToEndOfLog();
+            server.restoreServerConfiguration();
+            server.waitForConfigUpdateInLogUsingMark(Collections.singleton(APP_NAME), false, "CWWKT0016I:.*PartitionedTest.*");
+        }
     }
 
 }
