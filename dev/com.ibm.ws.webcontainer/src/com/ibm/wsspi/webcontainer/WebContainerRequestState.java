@@ -214,16 +214,10 @@ public class WebContainerRequestState {
      *
      * Currently the only Cookie attribute that is supported by the runtime here
      * is the SameSite Cookie attribute.  All other existing Cookie attributes must 
-     * be added via the Cookie API. Only SameSite attribute and Partitioned attribute 
-     * are supported at this time. All other attributes will be ignored.
+     * be added via the Cookie API. Using this API to add anything but the SameSite attribute
+     * will be ignored.
      *
-     * The cookieAttribute should be in the form: attributeName=attributeValue. An attributeValue
-     * must exist.
-     * 
-     * If the cookieAttribute is a flag, then it should in the form: attributeName=true
-     * If the attributeValue evaluates to true via Boolean.parseBoolean() then 
-     * only the cookieAttribute will be sent. For example, "The call setCookieAttributes("myCookie", "secure=true") 
-     * will be sent as "Set-Cookie: myCookie=someValue; Secure;"
+     * The cookieAttribute should be in the form: attributeName=attributeValue.
      *
      * @param cookieName - The Cookie name to add the attribute to.
      * @param cookieAttributes - The Cookie attributes to be added in  the form: attributeName = attributeValue.  Currently, only SameSite=Lax|None|Strict is supported.
@@ -234,18 +228,29 @@ public class WebContainerRequestState {
         if (com.ibm.ejs.ras.TraceComponent.isAnyTracingEnabled()&&logger.isLoggable (Level.FINE)) {
             logger.logp(Level.FINE, CLASS_NAME, methodName, " cookieName --> " + cookieName + " cookieAttribute --> " + cookieAttributes);
         }
+        String[] attribute = cookieAttributes.split("=");
+
+        /*
+         * This method will start accepting "Parititioned" as a new attribute. It will need to be in the form "partitioned=boolean".
+         */
+        if (ProductInfo.getBetaEdition()) { 
+            if (!(attribute[0].equals("SameSite") || attribute[0].equals("Partitioned"))) {
+                logger.logp(Level.FINE, CLASS_NAME, methodName, " Only SameSite attribute and Partitioned attribute are supported at this time.");
+                return;
+            }
+        } else {
+            if (!attribute[0].equals("SameSite")) {
+                logger.logp(Level.FINE, CLASS_NAME, methodName, " Only SameSite attribute is supported at this time.");
+                return;
+            }
+        }
 
         //Currently ignore all but SameSite or Partitioned
         String[] attribute = cookieAttributes.split("=");
-        if (!(attribute[0].equals("SameSite") || attribute[0].equals("Partitioned"))) {
+        if (!(attribute[0].equals("SameSite") || ( ProductInfo.getBetaEdition() && attribute[0].equals("Partitioned") ))) {
                 logger.logp(Level.FINE, CLASS_NAME, methodName, " Only SameSite attribute and Partitioned attribute are supported at this time.");
                 return;
         }
-
-        // Should we throw any exceptions? such as: 
-        // if(attribute.length == 1) { // No attributeValue set
-        //     throw IllegalStateException("attribute value not specififed");
-        // }
         
         if (cookieAttributesMap == null) {
             cookieAttributesMap = new HashMap<String,HashMap<String,String>>();
@@ -262,11 +267,6 @@ public class WebContainerRequestState {
     /**
      * Return the Cookie attributes associated with the provided cookieName that were
      * added via the setCookieAttributes()
-     * 
-     * If multiple attributes exist for a cookie, then they will be returned semi-colon delimited key value pairs.
-     * For example: attributeName1=attributeValue1;attributeName2=attributeValue2
-     * 
-     * If no cookie attributes exist, null is returned;
      *
      * @param cookieName - The name of the Cookie the attributes were set for.
      * @return - The Cookie attributes associated with the specified Cookie name.
@@ -282,6 +282,12 @@ public class WebContainerRequestState {
             logger.logp(Level.FINE, CLASS_NAME, methodName, " cookieName --> " + cookieName);
         }
 
+        /*
+        * If multiple attributes exist for a cookie, then they will be returned semi-colon delimited key value pairs.
+        * For example: attributeName1=attributeValue1;attributeName2=attributeValue2
+        * 
+        * If no cookie attributes exist, null is returned;
+        */
         String cookieAttributes = cookieAttributesMap.get(cookieName).entrySet()
                                                      .stream().map(e->e.getKey() + "=" + e.getValue())
                                                      .collect(java.util.stream.Collectors.joining(";"));
