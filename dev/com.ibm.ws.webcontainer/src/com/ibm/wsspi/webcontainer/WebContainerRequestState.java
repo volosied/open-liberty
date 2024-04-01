@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.ibm.ws.kernel.productinfo.ProductInfo;
 import com.ibm.ws.util.WSThreadLocal;
 import com.ibm.wsspi.webcontainer.servlet.AsyncContext;
 import com.ibm.wsspi.webcontainer.servlet.IExtendedRequest;
@@ -243,13 +244,6 @@ public class WebContainerRequestState {
                 logger.logp(Level.FINE, CLASS_NAME, methodName, " Only SameSite attribute is supported at this time.");
                 return;
             }
-        }
-
-        //Currently ignore all but SameSite or Partitioned
-        String[] attribute = cookieAttributes.split("=");
-        if (!(attribute[0].equals("SameSite") || ( ProductInfo.getBetaEdition() && attribute[0].equals("Partitioned") ))) {
-                logger.logp(Level.FINE, CLASS_NAME, methodName, " Only SameSite attribute and Partitioned attribute are supported at this time.");
-                return;
         }
         
         if (cookieAttributesMap == null) {
