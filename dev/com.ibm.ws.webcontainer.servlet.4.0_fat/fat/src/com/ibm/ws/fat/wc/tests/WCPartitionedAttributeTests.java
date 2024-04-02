@@ -84,44 +84,64 @@ public class WCPartitionedAttributeTests {
         boolean addHeaderFound = false;
         boolean addCookieFound = false;
 
+        server.saveServerConfiguration();
+
+        ServerConfiguration configuration = server.getServerConfiguration();
+        LOG.info("Server configuration that was saved: " + configuration);
+
+        HttpEndpoint httpEndpoint = configuration.getHttpEndpoints().getById("defaultHttpEndpoint");
+        httpEndpoint.getSameSite().setPartitioned(true);
+        httpEndpoint.getSameSite().setNone("*");
+
+        server.setMarkToEndOfLog();
+        server.updateServerConfiguration(configuration);
+        server.waitForConfigUpdateInLogUsingMark(Collections.singleton(APP_NAME), false, "CWWKT0016I:.*PartitionedTest.*");
+
         String url = "http://" + server.getHostname() + ":" + server.getHttpDefaultPort() + "/" + APP_NAME + "/TestPartitionedCookie";
         LOG.info("url: " + url);
 
         HttpGet getMethod = new HttpGet(url);
 
-        try (final CloseableHttpClient client = HttpClientBuilder.create().build()) {
-            try (final CloseableHttpResponse response = client.execute(getMethod)) {
-                String responseText = EntityUtils.toString(response.getEntity());
-                LOG.info("\n" + "Response Text:");
-                LOG.info("\n" + responseText);
-
-                Header[] headers = response.getHeaders("Set-Cookie");
-                LOG.info("\n" + "Set-Cookie headers contained in the response:");
-
-                // Verify that the expected Set-Cookie headers were found by the client.
-                int cookieCount = 0;
-                String headerValue;
-                for (Header header : headers) {
-                    headerValue = header.toString();
-                    LOG.info("\n" + headerValue);
-                    if (headerValue.contains("Set-Cookie:")) {
-                        cookieCount++;
+        try {
+            try (final CloseableHttpClient client = HttpClientBuilder.create().build()) {
+                try (final CloseableHttpResponse response = client.execute(getMethod)) {
+                    String responseText = EntityUtils.toString(response.getEntity());
+                    LOG.info("\n" + "Response Text:");
+                    LOG.info("\n" + responseText);
+    
+                    Header[] headers = response.getHeaders("Set-Cookie");
+                    LOG.info("\n" + "Set-Cookie headers contained in the response:");
+    
+                    // Verify that the expected Set-Cookie headers were found by the client.
+                    int cookieCount = 0;
+                    String headerValue;
+                    for (Header header : headers) {
+                        headerValue = header.toString();
+                        LOG.info("\n" + headerValue);
+                        if (headerValue.contains("Set-Cookie:")) {
+                            cookieCount++;
+                        }
+                        if (headerValue.equals(expectedSetHeader)) {
+                            setHeaderFound = true;
+                        } else if (headerValue.equals(expectedAddHeader)) {
+                            addHeaderFound = true;
+                        } else if (headerValue.equals(expectedAddCookie)) {
+                            addCookieFound = true;
+                        }
                     }
-                    if (headerValue.equals(expectedSetHeader)) {
-                        setHeaderFound = true;
-                    } else if (headerValue.equals(expectedAddHeader)) {
-                        addHeaderFound = true;
-                    } else if (headerValue.equals(expectedAddCookie)) {
-                        addCookieFound = true;
-                    }
+    
+                    assertTrue("The response did not contain the following String: " + expectedResponse, responseText.contains(expectedResponse));
+                    assertTrue("The response did not contain the expected Set-Cookie header: " + expectedSetHeader, setHeaderFound);
+                    assertTrue("The response did not contain the expected Set-Cookie header: " + expectedAddHeader, addHeaderFound);
+                    assertTrue("The response did not contain the expected Set-Cookie header: " + expectedAddCookie, addCookieFound);
+                    assertTrue("The response did not contain the expected number of cookie headers" + expectedAddHeader, cookieCount == 3);
                 }
-
-                assertTrue("The response did not contain the following String: " + expectedResponse, responseText.contains(expectedResponse));
-                assertTrue("The response did not contain the expected Set-Cookie header: " + expectedSetHeader, setHeaderFound);
-                assertTrue("The response did not contain the expected Set-Cookie header: " + expectedAddHeader, addHeaderFound);
-                assertTrue("The response did not contain the expected Set-Cookie header: " + expectedAddCookie, addCookieFound);
-                assertTrue("The response did not contain the expected number of cookie headers" + expectedAddHeader, cookieCount == 3);
             }
+    
+        } finally {
+            server.setMarkToEndOfLog(); 
+            server.restoreServerConfiguration();
+            server.waitForConfigUpdateInLogUsingMark(Collections.singleton(APP_NAME), false, "CWWKT0016I:.*PartitionedTest.*");
         }
     }
 
@@ -139,46 +159,62 @@ public class WCPartitionedAttributeTests {
         boolean setHeaderFound = false;
         boolean addHeaderFound = false;
 
+        server.saveServerConfiguration();
+
         ServerConfiguration configuration = server.getServerConfiguration();
-        LOG.info("\n" + configuration);
+        LOG.info("Server configuration that was saved: " + configuration);
+
+        HttpEndpoint httpEndpoint = configuration.getHttpEndpoints().getById("defaultHttpEndpoint");
+        httpEndpoint.getSameSite().setPartitioned(true);
+        httpEndpoint.getSameSite().setNone("*");
+
+        server.setMarkToEndOfLog();
+        server.updateServerConfiguration(configuration);
+        server.waitForConfigUpdateInLogUsingMark(Collections.singleton(APP_NAME), false, "CWWKT0016I:.*PartitionedTest.*");
 
         String url = "http://" + server.getHostname() + ":" + server.getHttpDefaultPort() + "/" + APP_NAME + "/TestDuplicatePartitionedCookie";
         LOG.info("url: " + url);
 
         HttpGet getMethod = new HttpGet(url);
 
-        try (final CloseableHttpClient client = HttpClientBuilder.create().build()) {
-            try (final CloseableHttpResponse response = client.execute(getMethod)) {
-                String responseText = EntityUtils.toString(response.getEntity());
-                LOG.info("\n" + "Response Text:");
-                LOG.info("\n" + responseText);
-
-                Header[] headers = response.getHeaders("Set-Cookie");
-                LOG.info("\n" + "Set-Cookie headers contained in the response:");
-
-                // Verify that the expected Set-Cookie headers were found by the client.
-                int cookieCount = 0;
-                String headerValue;
-                for (Header header : headers) {
-                    headerValue = header.toString();
-                    LOG.info("\n" + headerValue);
-                    if(headerValue.contains("Set-Cookie:")){
-                        cookieCount++;
+        try {
+            try (final CloseableHttpClient client = HttpClientBuilder.create().build()) {
+                try (final CloseableHttpResponse response = client.execute(getMethod)) {
+                    String responseText = EntityUtils.toString(response.getEntity());
+                    LOG.info("\n" + "Response Text:");
+                    LOG.info("\n" + responseText);
+    
+                    Header[] headers = response.getHeaders("Set-Cookie");
+                    LOG.info("\n" + "Set-Cookie headers contained in the response:");
+    
+                    // Verify that the expected Set-Cookie headers were found by the client.
+                    int cookieCount = 0;
+                    String headerValue;
+                    for (Header header : headers) {
+                        headerValue = header.toString();
+                        LOG.info("\n" + headerValue);
+                        if(headerValue.contains("Set-Cookie:")){
+                            cookieCount++;
+                        }
+                        // must use equals
+                        if (headerValue.equals(expectedSetHeader)) {
+                            setHeaderFound = true;
+                        } else if (headerValue.equals(expectedAddHeader)) {
+                            addHeaderFound = true;
+                        }
                     }
-                    // must use equals
-                    if (headerValue.equals(expectedSetHeader)) {
-                        setHeaderFound = true;
-                    } else if (headerValue.equals(expectedAddHeader)) {
-                        addHeaderFound = true;
-                    }
+    
+                    assertTrue("The response did not contain the following String: " + expectedResponse, responseText.contains(expectedResponse));
+                    assertTrue("The response did not contain th e expected Set-Cookie header: " + expectedSetHeader, setHeaderFound);
+                    assertTrue("The response did not contain the expected Set-Cookie header: " + expectedAddHeader, addHeaderFound);
+                    assertTrue("The response did not contain the expected number of cookie headers" + expectedAddHeader, cookieCount == 2);
                 }
-
-                assertTrue("The response did not contain the following String: " + expectedResponse, responseText.contains(expectedResponse));
-                assertTrue("The response did not contain th e expected Set-Cookie header: " + expectedSetHeader, setHeaderFound);
-                assertTrue("The response did not contain the expected Set-Cookie header: " + expectedAddHeader, addHeaderFound);
-                assertTrue("The response did not contain the expected number of cookie headers" + expectedAddHeader, cookieCount == 2);
-            }
-        } 
+            } 
+        } finally {
+            server.setMarkToEndOfLog(); 
+            server.restoreServerConfiguration();
+            server.waitForConfigUpdateInLogUsingMark(Collections.singleton(APP_NAME), false, "CWWKT0016I:.*PartitionedTest.*");
+        }
     }
 
     /**
@@ -569,7 +605,7 @@ public class WCPartitionedAttributeTests {
 
     }
 
-        /**
+    /**
      * Verify Paritioned is Not Set by Default
      */
     @Test
@@ -581,20 +617,14 @@ public class WCPartitionedAttributeTests {
         ServerConfiguration configuration = server.getServerConfiguration();
         LOG.info("Server configuration that was saved: " + configuration);
 
-        Boolean restoreConfig = false;
-        HttpSession httpSession = configuration.getHttpSession();
-        System.out.println(httpSession.getCookiePartitioned());
+        HttpEndpoint httpEndpoint = configuration.getHttpEndpoints().getById("defaultHttpEndpoint");
+
+        httpEndpoint.getSameSite().setPartitioned(null);  
+        httpEndpoint.getSameSite().setNone(null);  
         
-        //Test may run out of order. Don't update config if paritioned isn't set already
-        if(httpSession.getCookiePartitioned() != null && httpSession.getCookieSameSite() != null){
-            httpSession.setCookiePartitioned(null);
-
-            server.setMarkToEndOfLog();
-            server.updateServerConfiguration(configuration);
-            server.waitForConfigUpdateInLogUsingMark(Collections.singleton(APP_NAME), false, "CWWKT0016I:.*PartitionedTest.*");
-
-            restoreConfig = true;
-        }
+        server.setMarkToEndOfLog();
+        server.updateServerConfiguration(configuration);
+        server.waitForConfigUpdateInLogUsingMark(Collections.singleton(APP_NAME), false, "CWWKT0016I:.*PartitionedTest.*");
 
         String url = "http://" + server.getHostname() + ":" + server.getHttpDefaultPort() + "/" + APP_NAME + "/TestPartitionedSession";
         LOG.info("url: " + url);
@@ -618,19 +648,17 @@ public class WCPartitionedAttributeTests {
                     LOG.info("\n" + headerValue);
                      
                     if(headerValue.contains("Set-Cookie: JSESSIONID=")){
-                        // Assert Partitioned is not contained in the Cookie
+                        // Assert Partitioned is NOT contained in the Cookie
                         assertTrue("The response did not contain the expected cookies header for the session", !headerValue.contains("Partitioned"));
                         // Assert SameSite is NOT contained in the Cookie
-                        assertTrue("The response did not contain the expected cookies header for the session", headerValue.contains("SameSite="));
+                        assertTrue("The response did not contain the expected cookies header for the session", !headerValue.contains("SameSite="));
                     }
                 }
             }
         } finally {  
-            if(restoreConfig){
-                server.setMarkToEndOfLog();
-                server.restoreServerConfiguration();
-                server.waitForConfigUpdateInLogUsingMark(Collections.singleton(APP_NAME), false, "CWWKT0016I:.*PartitionedTest.*");
-            }
+            server.setMarkToEndOfLog();
+            server.restoreServerConfiguration();
+            server.waitForConfigUpdateInLogUsingMark(Collections.singleton(APP_NAME), false, "CWWKT0016I:.*PartitionedTest.*");
         }
     }
 
