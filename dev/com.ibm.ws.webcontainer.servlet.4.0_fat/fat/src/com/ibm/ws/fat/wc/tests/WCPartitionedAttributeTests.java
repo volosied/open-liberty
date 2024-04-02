@@ -607,6 +607,7 @@ public class WCPartitionedAttributeTests {
 
     /**
      * Verify Paritioned is Not Set by Default
+     * No Configurations enabled in the server.xml
      */
     @Test
     public void testPartitionSessionCookieDefault() throws Exception {
@@ -664,6 +665,8 @@ public class WCPartitionedAttributeTests {
 
     /**
      * Verify Paritioned is set when CookiePartitioned=true
+     * Configuration Tested:
+     *    <httpSession cookiePartitioned="true" cookieSameSite="none"/> 
      */
     @Test
     public void testPartitionSessionCookiePartitioned() throws Exception {
@@ -721,6 +724,8 @@ public class WCPartitionedAttributeTests {
 
     /**
      * Verify Paritioned is not set on the SameSite=Lax Cookie
+     * Configuration Tested:
+     *    <httpSession cookiePartitioned="true" cookieSameSite="*"/> 
      */
     @Test
     public void testParitionedNotSetonLaxSessionCookie() throws Exception {
@@ -779,6 +784,8 @@ public class WCPartitionedAttributeTests {
 
     /**
      * Verify Paritioned is not set on SameSite=Strict
+     * Configuration Tested:
+     *    <httpSession cookiePartitioned="true" cookieSameSite="strict"/> 
      */
     @Test
     public void testParitionedNotSetonStrictSessionCookie() throws Exception {
@@ -823,6 +830,73 @@ public class WCPartitionedAttributeTests {
                     if(headerValue.contains("Set-Cookie: JSESSIONID=")){
                         // Assert Lax IS contained in the Cookie
                         assertTrue("The response did not contain the expected cookies header for the session", headerValue.contains("SameSite=Strict"));
+                         // Assert Partitioned is NOT contained in the Cookie
+                        assertTrue("The response did not contain the expected cookies header for the session", !headerValue.contains("Partitioned"));
+                    }
+                }
+            }
+        } finally {  
+            server.setMarkToEndOfLog();
+            server.restoreServerConfiguration();
+            server.waitForConfigUpdateInLogUsingMark(Collections.singleton(APP_NAME), false, "CWWKT0016I:.*PartitionedTest.*");
+        }
+    }
+
+    /**
+     * Verify HttpSession's Config overrides the HttpChannel Config. 
+     * All cookies except the JSESSIONID should be Partitioned.
+     * 
+     * Configuration Tested:
+     *    <httpSession cookiePartitioned="false" cookieSameSite="none"/> 
+     *    <samesite none="*" partitioned="true"/>
+     */
+    @Test
+    public void testHttpSessionOverridesHttpChannelConfig() throws Exception {
+        String expectedResponse = "Welcome to the TestPartitionedSessionServlet!";
+
+        server.saveServerConfiguration();
+
+        ServerConfiguration configuration = server.getServerConfiguration();
+        LOG.info("Server configuration that was saved: " + configuration);
+
+        HttpSession httpSession = configuration.getHttpSession();
+
+        httpSession.setCookieSameSite("none");
+        httpSession.setCookiePartitioned(false);
+
+        HttpEndpoint httpEndpoint = configuration.getHttpEndpoints().getById("defaultHttpEndpoint");
+
+        httpEndpoint.getSameSite().setPartitioned(true);  
+        httpEndpoint.getSameSite().setNone("*");  
+
+        server.setMarkToEndOfLog();
+        server.updateServerConfiguration(configuration);
+        server.waitForConfigUpdateInLogUsingMark(Collections.singleton(APP_NAME), false, "CWWKT0016I:.*PartitionedTest.*");
+
+        String url = "http://" + server.getHostname() + ":" + server.getHttpDefaultPort() + "/" + APP_NAME + "/TestPartitionedSession";
+        LOG.info("url: " + url);
+
+        HttpGet getMethod = new HttpGet(url);
+
+        try (final CloseableHttpClient client = HttpClientBuilder.create().build()) {
+            try (final CloseableHttpResponse response = client.execute(getMethod)) {
+                String responseText = EntityUtils.toString(response.getEntity());
+                LOG.info("\n" + "Response Text:");
+                LOG.info("\n" + responseText);
+
+                assertTrue("The response did not contain the following String: " + expectedResponse, responseText.contains(expectedResponse));
+
+                Header[] headers = response.getHeaders("Set-Cookie");
+                LOG.info("\n" + "Set-Cookie headers contained in the response:");
+
+                String headerValue;
+                for (Header header : headers) {
+                    headerValue = header.toString();
+                    LOG.info("\n" + headerValue);
+                     
+                    if(headerValue.contains("Set-Cookie: JSESSIONID=")){
+                        // Assert Lax IS contained in the Cookie
+                        assertTrue("The response did not contain the expected cookies header for the session", headerValue.contains("SameSite=None"));
                          // Assert Partitioned is NOT contained in the Cookie
                         assertTrue("The response did not contain the expected cookies header for the session", !headerValue.contains("Partitioned"));
                     }
