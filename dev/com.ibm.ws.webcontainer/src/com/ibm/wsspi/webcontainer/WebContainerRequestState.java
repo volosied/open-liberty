@@ -246,7 +246,7 @@ public class WebContainerRequestState {
             }
         }
         
-        if (cookieAttributesMap == null) {
+        if (cookieAttributesMap == null || cookieAttributesMap.isEmpty()) {
             cookieAttributesMap = new HashMap<String,HashMap<String,String>>();
             cookieAttributesMap.put(cookieName, new HashMap<String,String>() {{
                 put(attribute[0], attribute[1]);
