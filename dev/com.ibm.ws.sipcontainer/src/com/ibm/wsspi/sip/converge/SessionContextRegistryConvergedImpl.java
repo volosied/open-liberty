@@ -65,7 +65,7 @@ public class SessionContextRegistryConvergedImpl extends SessionContextRegistryI
     		c_logger.traceEntry(this, "getHttpSessionById", "sessionID = " + sessionId);
 		}
         HttpSession sess = null;
-        ConvergedHttpSessionContextImpl wsCtx = getSessionContextByName(virtualHost + contextRoot);
+        IConvergedHttpSessionContext wsCtx = getSessionContextByName(virtualHost + contextRoot);
         if (wsCtx ==null) {
             if (contextRoot.startsWith("/")) {
                 wsCtx = getSessionContextByName(virtualHost + contextRoot.substring(1));
@@ -85,8 +85,8 @@ public class SessionContextRegistryConvergedImpl extends SessionContextRegistryI
     /*
      * Tries to get the WsSessionContext with the given appName as the key
      */
-    static private ConvergedHttpSessionContextImpl getSessionContextByName(String appname) {
-        return (ConvergedHttpSessionContextImpl)scrSessionContexts.get(appname);
+    static private IConvergedHttpSessionContext getSessionContextByName(String appname) {
+        return (IConvergedHttpSessionContext) scrSessionContexts.get(appname);
     }    
     
 }

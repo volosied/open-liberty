@@ -199,7 +199,7 @@ public class ConvergedHttpSessionImpl extends HttpSessionImpl implements Converg
             	c_logger.traceEntry(this,"encodeURL", "encoding url with relative path = " + relativePath +" and scheme = " + scheme);
             }
             String contextPath = getServletContext().getContextPath();
-            ConvergedHttpSessionContextImpl sessCtx = (ConvergedHttpSessionContextImpl)this.getSessCtx();
+            IConvergedHttpSessionContext sessCtx = (IConvergedHttpSessionContext)this.getSessCtx();
             String fullyQualifiedUrl = sessCtx.getSipBaseUrlForEncoding(contextPath, relativePath, scheme);
             if (c_logger.isTraceEntryExitEnabled()) {
             	c_logger.traceExit(this, "encodeURL", "going to encode fully qualified url = " + fullyQualifiedUrl);
