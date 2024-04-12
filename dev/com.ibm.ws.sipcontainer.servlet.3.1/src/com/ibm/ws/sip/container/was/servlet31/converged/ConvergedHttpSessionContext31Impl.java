@@ -14,6 +14,10 @@ package com.ibm.ws.sip.container.was.servlet31.converged;
 
 import javax.servlet.ServletContext;
 import javax.servlet.sip.ConvergedHttpSession;
+import javax.servlet.http.HttpSession;
+
+import com.ibm.sip.util.log.Log;
+import com.ibm.sip.util.log.LogMgr;
 
 import com.ibm.ws.session.SessionApplicationParameters;
 import com.ibm.ws.session.SessionData;
@@ -23,9 +27,18 @@ import com.ibm.ws.webcontainer31.session.impl.HttpSessionContext31Impl;
 import com.ibm.wsspi.session.ISession;
 import com.ibm.wsspi.sip.converge.ConvergedHttpSessionContextImpl;
 import com.ibm.wsspi.sip.converge.ConvergedHttpSessionImpl;
+import com.ibm.wsspi.sip.converge.IConvergedHttpSessionContext;
 
-public class ConvergedHttpSessionContext31Impl extends HttpSessionContext31Impl{
+import com.ibm.wsspi.session.IStore;
+import com.ibm.ws.webcontainer.session.impl.HttpSessionImpl;
+
+public class ConvergedHttpSessionContext31Impl extends HttpSessionContext31Impl implements IConvergedHttpSessionContext {
     
+    /**
+	 * Class Logger.
+	 */
+	private static final transient LogMgr c_logger = Log.get(ConvergedHttpSessionContext31Impl.class);
+
 	/**
      * @param smc
      * @param sap
@@ -50,7 +63,40 @@ public class ConvergedHttpSessionContext31Impl extends HttpSessionContext31Impl{
      * @param scheme
      * @return
      */
-    public String getSipBaseUrlForEncoding(ConvergedHttpSession session, String contextPath, String relativePath, String scheme) {
+    public String getSipBaseUrlForEncoding(String contextPath, String relativePath, String scheme) {
         return ConvergedHttpSessionContextImpl.getSipBaseUrlForEncoding(_smc, contextPath, relativePath, scheme, this);
     }
+
+        /*
+     * Added for SIP/HTTP Converged App Support. SIP container calls this method via
+     * com.ibm.wsspi.servlet.session.ConvergedAppUtils to get an HTTP session reference
+     * for those HTTP sessions that belong to application sessions.
+     */
+    public HttpSession getHttpSessionById(String sessId) {
+    	HttpSessionImpl sd = null;
+        IStore iStore = _coreHttpSessionManager.getIStore();
+
+        if (c_logger.isTraceEntryExitEnabled()) {
+        	StringBuffer sb = new StringBuffer(sessId).append(" ").append(iStore.getId());
+            c_logger.traceEntry(this, "getHttpSessionById",sb.toString());
+        }
+        try {
+            iStore.setThreadContext();
+            sd = (HttpSessionImpl)_coreHttpSessionManager.getSession(sessId, true);
+        } finally {
+            iStore.unsetThreadContext();
+        }
+        
+        if (sd!=null) {
+        	if (c_logger.isTraceEntryExitEnabled()) {
+                	 c_logger.traceExit(this, "getHttpSessionById","got a session");
+            }
+            return (HttpSession)sd.getFacade();
+        } 
+    	
+        if (c_logger.isTraceEntryExitEnabled()) {
+    		 c_logger.traceExit(this, "getHttpSessionById", null);
+        }
+        return null;
+    } 
 }
