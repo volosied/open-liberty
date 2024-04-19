@@ -24,7 +24,7 @@
         host="*"
         httpPort="${bvt.prop.HTTP_default}"
         httpsPort="${bvt.prop.HTTP_default.secure}">
-        <samesite none="*" />
+        <samesite none="*" partitioned="false" />
     </httpEndpoint>
 
     <keyStore id="defaultKeyStore" password="{xor}EzY9Oi0rJg==" /> <!-- pwd: Liberty, expires
