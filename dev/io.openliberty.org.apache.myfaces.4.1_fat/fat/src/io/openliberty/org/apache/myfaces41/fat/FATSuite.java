@@ -37,8 +37,8 @@ import io.openliberty.org.apache.myfaces41.fat.test.UUIDConverterTest;
                 CompositeExtensionTest.class,
                 UUIDConverterTest.class,
                 Faces41CDITests.class,
-                FacesMessagesTest.class
-                // RenderIdTest.class, id in head is not rendered
+                FacesMessagesTest.class,
+                RenderIdTest.class
 })
 
 public class FATSuite {

@@ -10,11 +10,18 @@
  -->
 <faces-config xmlns="http://xmlns.jcp.org/xml/ns/javaee"
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_3.xsd"
-              version="2.3">
+              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_4_0.xsd"
+              version="4.0">
               
-    <component>
-        <component-type>jakarta.faces.ViewRoot</component-type>
-        <component-class>io.openliberty.org.apache.myfaces41.fat.namespace.view.NamespacedView</component-class>
-    </component>
+              <faces-config-extension>
+                <facelets-processing>
+                    <file-extension>.xml</file-extension>
+                    <process-as>xml</process-as>
+                </facelets-processing>
+                <facelets-processing>
+                    <file-extension>.xhtml</file-extension>
+                    <process-as>xhtml</process-as>
+                </facelets-processing>
+            </faces-config-extension>
+
 </faces-config>

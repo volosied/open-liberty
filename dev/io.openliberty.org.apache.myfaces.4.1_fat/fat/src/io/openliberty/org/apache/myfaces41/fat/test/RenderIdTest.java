@@ -12,6 +12,7 @@ package io.openliberty.org.apache.myfaces41.fat.test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.net.URL;
 import java.util.logging.Logger;
@@ -80,21 +81,79 @@ public class RenderIdTest {
 
     /**
      *  
-     * Skipped as this is not yet working in 4.1.0-RC1
      *
      * @throws Exception
      */
-    // @Test
-    public void verifyIDsAreGeneratedOnHead() throws Exception {
+    @Test
+    public void verifyIDsAreGenerated_WithIDs_XHTML() throws Exception {
         try (WebClient webClient = new WebClient()) {
-            URL url = JSFUtils.createHttpUrl(server, APP_NAME, "index.xhtml");
+            URL url = JSFUtils.createHttpUrl(server, APP_NAME, "withIDs.xhtml");
 
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
-            // assertNotNull("Id attribute not found on head!", page.getHead().getId());
+            logPage(page);
+
+            assertNotNull("Id attribute not found on head!", page.getHead().getId());
+            assertNotNull("Id attribute not found on head!", page.getBody().getId());
         }
     }
 
+    /*
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void verifyIDsAreGenerated_WithIDs_XML() throws Exception {
+        try (WebClient webClient = new WebClient()) {
+            URL url = JSFUtils.createHttpUrl(server, APP_NAME, "withIDs.xml");
 
+            HtmlPage page = (HtmlPage) webClient.getPage(url);
+
+            logPage(page);
+
+            assertNull("Id attribute was found on head!", page.getHead().getId());
+            assertNull("Id attribute was found on head!", page.getBody().getId());
+        }
+    }
+
+    /*
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void verifyIDsAreGenerated_NoIDs_XHTML() throws Exception {
+        try (WebClient webClient = new WebClient()) {
+            URL url = JSFUtils.createHttpUrl(server, APP_NAME, "noIDs.xhtml");
+
+            HtmlPage page = (HtmlPage) webClient.getPage(url);
+
+            logPage(page);
+
+            assertNull("Id attribute was found on head!", page.getHead().getId());
+            assertNull("Id attribute was found on head!", page.getBody().getId());
+        }
+    }
+
+    /*
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void verifyIDsAreGenerated_NoIDs_XML() throws Exception {
+        try (WebClient webClient = new WebClient()) {
+            URL url = JSFUtils.createHttpUrl(server, APP_NAME, "noIDs.xml");
+
+            HtmlPage page = (HtmlPage) webClient.getPage(url);
+
+            logPage(page);
+
+            assertNull("Id attribute was found on head!", page.getHead().getId());
+            assertNull("Id attribute was found on head!", page.getBody().getId());
+        }
+    }
+
+    public void logPage(HtmlPage page){
+            LOG.info(page.asXml());
+    }
 
 }

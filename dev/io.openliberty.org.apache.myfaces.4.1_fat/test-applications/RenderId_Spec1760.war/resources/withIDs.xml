@@ -12,13 +12,13 @@
     xmlns:h="jakarta.faces.html" xmlns:c="jakarta.tags.core"
     xmlns:cb="http://io.openliberty/test/annotation/literal/clientBehavior">
 
-    <h:head>
+    <h:head id="headID">
         <title>Test ids on h:head and h:body</title>
     </h:head>
 
-    <h:body>
+    <h:body id="bodyID">
 
-        Verifying IDs are generated on head and body elements
+        Verifying IDs are NOT generated on head and body elements
 
     </h:body>
 
