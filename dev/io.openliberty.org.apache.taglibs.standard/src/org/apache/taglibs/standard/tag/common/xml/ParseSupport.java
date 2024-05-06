@@ -80,13 +80,6 @@
      private TransformerFactory tf;
      private TransformerHandler th;
  
-     
-     // Liberty Change Start
-     // To secure XML processing
-     private static final String ACCESS_EXTERNAL_DTD_SETTING = "javax.xml.accessExternalDTD";
-     private static final String ACCESS_EXTERNAL_SCHEMA_SETTING = "javax.xml.accessExternalSchema";
-     // Liberty Change End
- 
      //*********************************************************************
      // Constructor and initialization
  
@@ -134,7 +127,7 @@
                 	 try {
 	                     accessExternalDTD = AccessController.doPrivileged(new PrivilegedExceptionAction<String>() {
 	                         public String run() throws PrivilegedActionException {
-	                             return System.getProperty(ACCESS_EXTERNAL_DTD_SETTING);
+	                             return System.getProperty("javax.xml.accessExternalDTD");
 	                         }
 	                     });
                 	 } catch (PrivilegedActionException pae) {} // eat the exception
@@ -142,13 +135,13 @@
                 	 try {
                 		 accessExternalSchema = AccessController.doPrivileged(new PrivilegedExceptionAction<String>() {
 	                         public String run() throws PrivilegedActionException {
-	                             return System.getProperty(ACCESS_EXTERNAL_SCHEMA_SETTING);
+	                             return System.getProperty("javax.xml.accessExternalSchema");
 	                         }
 	                     });
                 	 } catch (PrivilegedActionException pae) {} // eat the exception
                  } else {
-                	 accessExternalDTD = System.getProperty(ACCESS_EXTERNAL_DTD_SETTING);
-                	 accessExternalSchema = System.getProperty(ACCESS_EXTERNAL_SCHEMA_SETTING);
+                	 accessExternalDTD = System.getProperty("javax.xml.accessExternalDTD");
+                	 accessExternalSchema = System.getProperty("javax.xml.accessExternalSchema");
                  }
    
                  if(accessExternalDTD == null){

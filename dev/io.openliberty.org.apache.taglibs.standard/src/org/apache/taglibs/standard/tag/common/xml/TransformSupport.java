@@ -86,12 +86,6 @@
      private TransformerFactory tf;		   // reusable factory
      private DocumentBuilder db;			   // reusable factory
      private DocumentBuilderFactory dbf;		   // reusable factory
- 
-     // Liberty Change Start
-     // To secure XML processing
-     private static final String ACCESS_EXTERNAL_DTD_SETTING = "javax.xml.accessExternalDTD";
-     private static final String ACCESS_EXTERNAL_SCHEMA_SETTING = "javax.xml.accessExternalSchema";
-     // Liberty Change End
      
      //*********************************************************************
      // Constructor and initialization
@@ -143,7 +137,7 @@
                 	 try {
 	                     accessExternalDTD = AccessController.doPrivileged(new PrivilegedExceptionAction<String>() {
 	                         public String run() throws PrivilegedActionException {
-	                             return System.getProperty(ACCESS_EXTERNAL_DTD_SETTING);
+	                             return System.getProperty("javax.xml.accessExternalDTD");
 	                         }
 	                     });
                 	 } catch (PrivilegedActionException pae) {} // eat the exception
@@ -156,7 +150,7 @@
 	                     });
                 	 } catch (PrivilegedActionException pae) {} // eat the exception
                  } else {
-                	 accessExternalDTD = System.getProperty(ACCESS_EXTERNAL_DTD_SETTING);
+                	 accessExternalDTD = System.getProperty("javax.xml.accessExternalDTD");
                 	 accessExternalSchema = System.getProperty(ACCESS_EXTERNAL_SCHEMA_SETTING);
                  }
    
