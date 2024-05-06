@@ -8,18 +8,18 @@
     
     SPDX-License-Identifier: EPL-2.0
  -->
-<faces-config xmlns="http://xmlns.jcp.org/xml/ns/javaee"
-              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_4_0.xsd"
-              version="4.0">
-              
+ <faces-config 
+ xmlns="https://jakarta.ee/xml/ns/jakartaee"
+ xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance" 
+ xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-facesconfig_4_1.xsd"
+ version="4.1">
               <faces-config-extension>
                 <facelets-processing>
-                    <file-extension>.xml</file-extension>
+                    <file-extension>.xhtml_xml</file-extension>
                     <process-as>xml</process-as>
                 </facelets-processing>
                 <facelets-processing>
-                    <file-extension>.xhtml</file-extension>
+                    <file-extension>.xhtml_xhtml</file-extension>
                     <process-as>xhtml</process-as>
                 </facelets-processing>
             </faces-config-extension>

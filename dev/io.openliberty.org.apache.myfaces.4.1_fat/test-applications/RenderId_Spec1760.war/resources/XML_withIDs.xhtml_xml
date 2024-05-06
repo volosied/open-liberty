@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
     Copyright (c) 2024 IBM Corporation and others.
     All rights reserved. This program and the accompanying materials
@@ -12,11 +12,13 @@
     xmlns:h="jakarta.faces.html" xmlns:c="jakarta.tags.core"
     xmlns:cb="http://io.openliberty/test/annotation/literal/clientBehavior">
 
-    <h:head>
+    <h:head id="headID">
         <title>Test ids on h:head and h:body</title>
     </h:head>
 
-    <h:body>
+    <h:body id="bodyID">
+
+        Type: XML
 
         Verifying IDs are NOT generated on head and body elements
 
