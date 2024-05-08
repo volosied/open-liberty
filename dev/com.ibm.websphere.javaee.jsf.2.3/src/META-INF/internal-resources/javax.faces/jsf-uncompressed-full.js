@@ -70,114 +70,88 @@ if (!myfaces._impl.core._EvalHandlers) {
          */
         var _T = this;
 
-        /*cascaded eval methods depending upon the browser*/
-
+        // note it is safe to remove the cascaded global eval
+        // the head appendix method is the standard method and has been
+        // for over a decade even on ie6 (see file history)
         /**
-         * @function
+         * an implementation of eval which drops legacy support
+         * and allows nonce
          * @param code
-
-         *
-         * evals a script globally using exec script (ie6 fallback)
-         * @param {String} code the code which has to be evaluated
-         * @borrows myfaces._impl.core._Runtime as _T
-         *
-         * TODO eval if we cannot replace this method with the head appendix
-         * method which is faster for ie this also would reduce our code
-         * by a few bytes
+         * @param cspMeta optional csp metadata, only allowed key atm nonce
          */
-        _T._evalExecScript = function(code) {
-            //execScript definitely only for IE otherwise we might have a custom
-            //window extension with undefined behavior on our necks
-            //window.execScript does not return anything
-            //on htmlunit it return "null object"
-            //_r == ret
-            var _r = window.execScript(code);
-            if ('undefined' != typeof _r && _r == "null" /*htmlunit bug*/) {
-                return null;
+        _T.globalEval = function(code, cspMeta) {
+            //check for jsf nonce
+            var nonce = cspMeta ? cspMeta.nonce : this._currentScriptNonce();
+
+            var element = document.createElement("script");
+            element.setAttribute("type", "text/javascript");
+            element.innerHTML = code;
+            if(nonce) {
+                element.setAttribute("nonce", nonce);
             }
-            return _r;
+            //head appendix method, modern browsers use this method savely to eval scripts
+            //we did not use it up until now because there were really old legacy browsers where
+            //it did not work
+            var htmlScriptElement = document.head.appendChild(element);
+            document.head.removeChild(htmlScriptElement);
         };
 
-        /**
-         * flakey head appendix method which does not work in the correct
-         * order or at all for all modern browsers
-         * but seems to be the only method which works on blackberry correctly
-         * hence we are going to use it as fallback
-         *
-         * @param {String} code the code part to be evaled
-         * @borrows myfaces._impl.core._Runtime as _T
-         */
-        _T._evalHeadAppendix = function(code) {
-            //_l == location
-            var _l = document.getElementsByTagName("head")[0] || document.documentElement;
-            //_p == placeHolder
-            var _p = document.createElement("script");
-            _p.type = "text/javascript";
-            _p.text = code;
-            _l.insertBefore(_p, _l.firstChild);
-            _l.removeChild(_p);
-            return null;
-        };
+        _T.resolveNonce = function(item) {
+            var nonce = null;
+            if(!!(item && item.nonce)) {
+                nonce = item.nonce;
+            } else if(!!item && item.getAttribute) {
+                nonce = item.getAttribute("nonce");
+            }
+            //empty nonce means no nonce, the rest
+            //of the code treats it like null
+            return (!nonce) ? null : nonce;
+        }
+        /*
+        * determines the jsfjs nonce and adds them to the namespace
+        * this is done once and only lazily
+        */
+        _T._currentScriptNonce = function() {
+            //already processed
+            if(myfaces.config && myfaces.config.cspMeta) {
+                return myfaces.config.cspMeta.nonce;
+            }
 
-        /**
-         * @name myfaces._impl.core._Runtime._standardGlobalEval
-         * @private
-         * @param {String} code
-         */
-        _T._standardGlobalEval = function(code) {
-            //fix which works in a cross browser way
-            //we used to scope an anonymous function
-            //but I think this is better
-            //the reason is some Firefox versions
-            // apply a wrong scope
-            //if we call eval by not scoping
-            //_U == "undefined"
-            var _U = "undefined";
-            var gEval = function () {
-                //_r == retVal;
-                var _r = window.eval.call(window, code);
-                if (_U == typeof _r) return null;
-                return _r;
+            //since our baseline atm is ie11 we cannot use document.currentScript globally
+            if(_T.resolveNonce(document.currentScript)) {
+                // fastpath for modern browsers
+                return _T.resolveNonce(document.currentScript);
+            }
+
+            var _Lang = myfaces._impl._util._Lang;
+            var scripts = _Lang.objToArray(document.getElementsByTagName("script"))
+                .concat(_Lang.objToArray(document.getElementsByTagName("link")));
+
+            var jsf_js = null;
+
+            //we search all scripts
+            for(var cnt = 0; scripts && cnt < scripts.length; cnt++) {
+                var scriptNode = scripts[cnt];
+                if(!_T.resolveNonce(scriptNode)) {
+                    continue;
+                }
+                var src = scriptNode.getAttribute("src") || "";
+                if(src && !src.match(/jsf\.js\?ln\=javax\.faces/gi)) {
+                    jsf_js = scriptNode;
+                    //the first one is the one we have our code in
+                    //subsequent ones do not overwrite our code
+                    break;
+                }
+            }
+            //found
+            myfaces.config = myfaces.config || {};
+            myfaces.config.cspMeta = myfaces.config.cspMeta || {
+                nonce: null
             };
-            var _r = gEval();
-            if (_U == typeof _r) return null;
-            return _r;
-        };
-
-        /**
-         * global eval on scripts
-         * @param {String} c (code abbreviated since the compression does not work here)
-         * @name myfaces._impl.core._Runtime.globalEval
-         * @function
-         */
-        _T.globalEval = function(c) {
-            //TODO add a config param which allows to evaluate global scripts even if the call
-            //is embedded in an iframe
-            //We lazy init the eval type upon the browsers
-            //capabilities   
-            var _e = "_evalType";
-            var _w = window;
-            var _b = myfaces._impl.core._Runtime.browser;
-            //central routine to determine the eval method
-            if (!_T[_e]) {
-                //execScript supported
-                _T[_e] = _w.execScript ? "_evalExecScript" : null;
-
-                //in case of no support we go to the standard global eval  window.eval.call(window,
-                // with Firefox fixes for scoping
-                _T[_e] = _T[_e] ||(( _w.eval && (!_b.isBlackBerry ||_b.isBlackBerry >= 6)) ? "_standardGlobalEval" : null);
-
-                //this one routes into the hed appendix method
-                _T[_e] = _T[_e] ||((_w.eval ) ? "_evalHeadAppendix" : null);
+            if(jsf_js) {
+                myfaces.config.cspMeta.nonce = _T.resolveNonce(jsf_js);
             }
-            if (_T[_e]) {
-                //we now execute the eval method
-                return _T[_T[_e]](c);
-            }
-            //we probably have covered all browsers, but this is a safety net which might be triggered
-            //by some foreign browser which is not covered by the above cases
-            eval.call(window, c);
-            return null;
+            return myfaces.config.cspMeta.nonce;
         };
 
     };
@@ -257,8 +231,12 @@ if (!myfaces._impl.core._Runtime) {
          * @name myfaces._impl.core._Runtime.globalEval
          * @function
          */
-        _T.globalEval = function(code) {
-            return myfaces._impl.core._EvalHandlers.globalEval(code);
+        _T.globalEval = function(code, cspMeta) {
+            return myfaces._impl.core._EvalHandlers.globalEval(code, cspMeta);
+        };
+
+        _T.resolveNonce = function(item) {
+            return myfaces._impl.core._EvalHandlers.resolveNonce(item);
         };
 
         /**
@@ -575,9 +553,10 @@ if (!myfaces._impl.core._Runtime) {
          * @param {Boolean} defer  defer true or false, same as the javascript tag defer param
          * @param {String} charSet the charset under which the script has to be loaded
          * @param {Boolean} async tells whether the script can be asynchronously loaded or not, currently
+         * @param cspMetas csp meta data to be processed by globalEval
          * not used
          */
-        this.loadScriptEval = function(src, type, defer, charSet, async) {
+        this.loadScriptEval = function(src, type, defer, charSet, async, cspMeta) {
             var xhr = _T.getXHRObject();
             xhr.open("GET", src, false);
 
@@ -599,12 +578,12 @@ if (!myfaces._impl.core._Runtime) {
                         //we moved the sourceurl notation to # instead of @ because ie does not cover it correctly
                         //newer browsers understand # including ie since windows 8.1
                         //see http://updates.html5rocks.com/2013/06/sourceMappingURL-and-sourceURL-syntax-changed
-                        _T.globalEval(xhr.responseText.replace("\n", "\r\n") + "\r\n//# sourceURL=" + src);
+                        _T.globalEval(xhr.responseText.replace("\n", "\r\n") + "\r\n//# sourceURL=" + src, cspMeta);
                     } else {
                         //TODO not ideal we maybe ought to move to something else here
                         //but since it is not in use yet, it is ok
                         setTimeout(function() {
-                            _T.globalEval(xhr.responseText.replace("\n", "\r\n") + "\r\n//# sourceURL=" + src);
+                            _T.globalEval(xhr.responseText.replace("\n", "\r\n") + "\r\n//# sourceURL=" + src, cspMeta);
                         }, 1);
                     }
                 } else {
@@ -625,7 +604,7 @@ if (!myfaces._impl.core._Runtime) {
          * @param {Boolean} defer  defer true or false, same as the javascript tag defer param
          * @param {String} charSet the charset under which the script has to be loaded
          */
-        this.loadScriptByBrowser = function(src, type, defer, charSet, async) {
+        this.loadScriptByBrowser = function(src, type, defer, charSet, async, cspMeta) {
             //if a head is already present then it is safer to simply
             //use the body, some browsers prevent head alterations
             //after the first initial rendering
@@ -645,6 +624,9 @@ if (!myfaces._impl.core._Runtime) {
 
                 script.type = type || "text/javascript";
                 script.src = src;
+                if(cspMeta && cspMeta.nonce) {
+                    script.setAttribute("nonce", cspMeta.nonce);
+                }
                 if (charSet) {
                     script.charset = charSet;
                 }
@@ -2381,6 +2363,22 @@ _MF_SINGLTN(_PFX_UTIL + "_Lang", Object, /** @lends myfaces._impl._util._Lang.pr
         }
         return str.slice(0, i + 1);
     },
+
+    /**
+     * a fuzzy match where one item is subset of the other or vice versa
+     * @param str1
+     * @param str2
+     * @returns {boolean}
+     */
+    match: function(str1, str2) {
+        //Sometimes we have to deal with paths in hrefs so
+        //one of the itmes either is an exact match or a substring
+        str1 = this.trim(str1 || "");
+        str2 = this.trim(str2 || "");
+
+        return str1.indexOf(str2) != -1 || str2.indexOf(str1) != -1;
+    },
+
     /**
      * Backported from dojo
      * a failsafe string determination method
@@ -2503,14 +2501,14 @@ _MF_SINGLTN(_PFX_UTIL + "_Lang", Object, /** @lends myfaces._impl._util._Lang.pr
      *      <li>param scope (optional) the scope to apply the closure to  </li>
      * </ul>
      */
-    arrForEach:function (arr, func /*startPos, scope*/) {
+    arrForEach:function (arr, func, startPos, scope) {
         if (!arr || !arr.length) return;
-        var startPos = Number(arguments[2]) || 0;
-        var thisObj = arguments[3];
+        var start = startPos || 0;
+        var thisObj = scope || arr;
         //check for an existing foreach mapping on array prototypes
         //IE9 still does not pass array objects as result for dom ops
         arr = this.objToArray(arr);
-        (startPos) ? arr.slice(startPos).forEach(func, thisObj) : arr.forEach(func, thisObj);
+        (start) ? arr.slice(start).forEach(func, thisObj) : arr.forEach(func, thisObj);
     },
     /**
      * foreach implementation utilizing the
@@ -2527,10 +2525,12 @@ _MF_SINGLTN(_PFX_UTIL + "_Lang", Object, /** @lends myfaces._impl._util._Lang.pr
      *  <li> scope (optional) the scope to apply the closure to</li>
      * </ul>
      */
-    arrFilter:function (arr, func /*startPos, scope*/) {
+    arrFilter:function (arr, func, startPos, scope) {
         if (!arr || !arr.length) return [];
+        var start = startPos || 0;
+        var thisObj = scope || arr;
         arr = this.objToArray(arr);
-        return ((startPos) ? arr.slice(startPos).filter(func, thisObj) : arr.filter(func, thisObj));
+        return ((start) ? arr.slice(start).filter(func, thisObj) : arr.filter(func, thisObj));
     },
     /**
      * adds a EcmaScript optimized indexOf to our mix,
@@ -2770,13 +2770,13 @@ _MF_SINGLTN(_PFX_UTIL + "_Lang", Object, /** @lends myfaces._impl._util._Lang.pr
              * @constructor
              */
             this.FormDataDecoratorOther = function (theFormData) {
-                this._valBuf = theFormData;
+                this._valBuf = theFormData || [];
                 this._idx = {};
 
             };
             _newCls = this.FormDataDecoratorOther;
             _newCls.prototype.append = function (key, val) {
-                this._valBuf.append(key, val);
+                this._valBuf.push([encodeURIComponent(key), encodeURIComponent(val)]);
                 this._idx[key] = true;
             };
             _newCls.prototype.hasKey = function (key) {
@@ -3142,6 +3142,77 @@ _MF_CLS(_PFX_CORE+"Object", Object, {
     /*optional functionality can be provided
      * for ie6 but is turned off by default*/
     _initDefaultFinalizableFields: function() {
+    },
+
+    /**
+     * ie6 cleanup
+     * This method disposes all properties manually in case of ie6
+     * hence reduces the chance of running into a gc problem tremendously
+     * on other browsers this method does nothing
+     */
+    _finalize: function() {
+        // not needed anymore but to preserve
+        // the connection to quirks mode
+        // we keep it as empty implementation
+    },
+
+    attr: function(name, value) {
+       return this._Lang.attr(this, name, value);
+    },
+
+    getImpl: function() {
+        this._Impl = this._Impl || this._RT.getGlobalConfig("jsfAjaxImpl", myfaces._impl.core.Impl);
+        return this._Impl;
+    },
+
+    applyArgs: function(args) {
+        this._Lang.applyArgs(this, args);
+    },
+
+    updateSingletons: function(key) {
+        var _T = this;
+        _T._RT.iterateSingletons(function(namespace) {
+            if(namespace[key]) namespace[key] = _T;
+        });
+    }
+
+});
+
+(function() {
+    /*some mobile browsers do not have a window object*/
+    var target = window ||document;
+    target._MF_OBJECT = myfaces._impl.core.Object;
+
+})();
+/* Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to you under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ Base class which provides several helper functions over all objects
+ */
+_MF_CLS(_PFX_CORE+"ObjectQuirks", myfaces._impl.core.Object, {
+
+
+
+    constructor_: function() {
+       this._callSuper("constructor_");
+    },
+
+    /*optional functionality can be provided
+     * for ie6 but is turned off by default*/
+    _initDefaultFinalizableFields: function() {
         var isIE = this._RT.browser.isIE;
         if(!isIE || isIE > 7) return;
         for (var key in this) {
@@ -3174,37 +3245,19 @@ _MF_CLS(_PFX_CORE+"Object", Object, {
         } finally {
             this._isGCed = true;
         }
-    },
-
-    attr: function(name, value) {
-       return this._Lang.attr(this, name, value);
-    },
-
-    getImpl: function() {
-        this._Impl = this._Impl || this._RT.getGlobalConfig("jsfAjaxImpl", myfaces._impl.core.Impl);
-        return this._Impl;
-    },
-
-    applyArgs: function(args) {
-        this._Lang.applyArgs(this, args);
-    },
-
-    updateSingletons: function(key) {
-        var _T = this;
-        _T._RT.iterateSingletons(function(namespace) {
-            if(namespace[key]) namespace[key] = _T;
-        });
     }
-
 });
 
 (function() {
     /*some mobile browsers do not have a window object*/
     var target = window ||document;
-    var _RT = myfaces._impl.core._Runtime;
-    _RT._MF_OBJECT = target._MF_OBJECT;
 
-     target._MF_OBJECT = myfaces._impl.core.Object;
+    // we still reuse the other namespaces for our quirks module, to avoid
+    // specific quirks code on our core code
+    // this class is a full replacement of Object, not just
+    // an extension
+    target._MF_OBJECT = myfaces._impl.core.ObjectQuirks;
+
 })();
 
 /* Licensed to the Apache Software Foundation (ASF) under one or more
@@ -3534,103 +3587,75 @@ _MF_SINGLTN(_PFX_UTIL + "_Dom", Object, /** @lends myfaces._impl._util._Dom.prot
     constructor_: function() {
     },
 
-    runCss: function(item/*, xmlData*/) {
-
-        var  UDEF = "undefined",
-                _RT = this._RT,
-                _Lang = this._Lang,
-                applyStyle = function(item, style) {
-                    var newSS = document.createElement("style");
-
-                    newSS.setAttribute("rel", item.getAttribute("rel") || "stylesheet");
-                    newSS.setAttribute("type", item.getAttribute("type") || "text/css");
-                    document.getElementsByTagName("head")[0].appendChild(newSS);
-                    //ie merrily again goes its own way
-                    if (window.attachEvent && !_RT.isOpera && UDEF != typeof newSS.styleSheet && UDEF != newSS.styleSheet.cssText) newSS.styleSheet.cssText = style;
-                    else newSS.appendChild(document.createTextNode(style));
-                },
-
-                execCss = function(item) {
-                    var equalsIgnoreCase = _Lang.equalsIgnoreCase;
-                    var tagName = item.tagName;
-                    if (tagName && equalsIgnoreCase(tagName, "link") && equalsIgnoreCase(item.getAttribute("type"), "text/css")) {
-                        applyStyle(item, "@import url('" + item.getAttribute("href") + "');");
-                    } else if (tagName && equalsIgnoreCase(tagName, "style") && equalsIgnoreCase(item.getAttribute("type"), "text/css")) {
-                        var innerText = [];
-                        //compliant browsers know child nodes
-                        var childNodes = item.childNodes;
-                        if (childNodes) {
-                            var len = childNodes.length;
-                            for (var cnt = 0; cnt < len; cnt++) {
-                                innerText.push(childNodes[cnt].innerHTML || childNodes[cnt].data);
-                            }
-                            //non compliant ones innerHTML
-                        } else if (item.innerHTML) {
-                            innerText.push(item.innerHTML);
-                        }
-
-                        applyStyle(item, innerText.join(""));
-                    }
-                };
-
-        try {
-            var scriptElements = this.findByTagNames(item, {"link":1,"style":1}, true);
-            if (scriptElements == null) return;
-            for (var cnt = 0; cnt < scriptElements.length; cnt++) {
-                execCss(scriptElements[cnt]);
-            }
-
-        } finally {
-            //the usual ie6 fix code
-            //the IE6 garbage collector is broken
-            //nulling closures helps somewhat to reduce
-            //mem leaks, which are impossible to avoid
-            //at this browser
-            execCss = null;
-            applyStyle = null;
-        }
-    },
-
-
     /**
      * Run through the given Html item and execute the inline scripts
      * (IE doesn't do this by itself)
      * @param {Node} item
      */
     runScripts: function(item, xmlData) {
+        var _T = this;
+        var finalScripts = [];
+        var _RT = this._RT;
+
+        var evalCollectedScripts = function (scriptsToProcess) {
+            if (scriptsToProcess && scriptsToProcess.length) {
+                //script source means we have to eval the existing
+                //scripts before running the include
+                var joinedScripts = [];
+                for(var scrptCnt = 0; scrptCnt < scriptsToProcess.length; scrptCnt++) {
+                    var item = scriptsToProcess[scrptCnt];
+                    if (!item.cspMeta) {
+                        joinedScripts.push(item.text)
+                    } else {
+                        if (joinedScripts.length) {
+                            _RT.globalEval(joinedScripts.join("\n"));
+                            joinedScripts.length = 0;
+                        }
+                        _RT.globalEval(item.text, item.cspMeta);
+                    }
+                }
+
+                if (joinedScripts.length) {
+                    _RT.globalEval(joinedScripts.join("\n"));
+                    joinedScripts.length = 0;
+                }
+            }
+            return [];
+        }
+
+
         var _Lang = this._Lang,
-            _RT = this._RT,
-            finalScripts = [],
             execScrpt = function(item) {
                 var tagName = item.tagName;
                 var type = item.type || "";
                 //script type javascript has to be handled by eval, other types
                 //must be handled by the browser
                 if (tagName && _Lang.equalsIgnoreCase(tagName, "script") &&
-                        (type === "" ||
+                    (type === "" ||
                         _Lang.equalsIgnoreCase(type,"text/javascript") ||
                         _Lang.equalsIgnoreCase(type,"javascript") ||
                         _Lang.equalsIgnoreCase(type,"text/ecmascript") ||
                         _Lang.equalsIgnoreCase(type,"ecmascript"))) {
 
+                    //now given that scripts can embed nonce
+                    //we cannoit
+                    var nonce = _RT.resolveNonce(item);
+
                     var src = item.getAttribute('src');
                     if ('undefined' != typeof src
-                            && null != src
-                            && src.length > 0
-                            ) {
+                        && null != src
+                        && src.length > 0
+                    ) {
                         //we have to move this into an inner if because chrome otherwise chokes
                         //due to changing the and order instead of relying on left to right
                         //if jsf.js is already registered we do not replace it anymore
-                        if ((src.indexOf("ln=scripts") == -1 && src.indexOf("ln=javax.faces") == -1) || (src.indexOf("/jsf.js") == -1
-                                && src.indexOf("/jsf-uncompressed.js") == -1)) {
-                            if (finalScripts.length) {
-                                //script source means we have to eval the existing
-                                //scripts before running the include
-                                _RT.globalEval(finalScripts.join("\n"));
-
-                                finalScripts = [];
-                            }
-                            _RT.loadScriptEval(src, item.getAttribute('type'), false, "UTF-8", false);
+                        if ((src.indexOf("ln=scripts") == -1 && src.indexOf("ln=javax.faces") == -1) ||
+                            (src.indexOf("/jsf.js") == -1
+                            && (src.indexOf("/jsf-uncompressed.js") == -1)
+                            && (src.indexOf("/jsf-development.js") == -1)
+                            )) {
+                            finalScripts = evalCollectedScripts(finalScripts);
+                            _RT.loadScriptEval(src, item.getAttribute('type'), false, "UTF-8", false, nonce ? {nonce: nonce} : null );
                         }
 
                     } else {
@@ -3654,8 +3679,12 @@ _MF_SINGLTN(_PFX_UTIL + "_Dom", Object, /** @lends myfaces._impl._util._Dom.prot
                         }
                         // we have to run the script under a global context
                         //we store the script for less calls to eval
-                        finalScripts.push(test);
-
+                        finalScripts.push(nonce ? {
+                            cspMeta: {nonce: nonce},
+                            text: test
+                        }: {
+                            text: test
+                        });
                     }
                 }
             };
@@ -3665,9 +3694,7 @@ _MF_SINGLTN(_PFX_UTIL + "_Dom", Object, /** @lends myfaces._impl._util._Dom.prot
             for (var cnt = 0; cnt < scriptElements.length; cnt++) {
                 execScrpt(scriptElements[cnt]);
             }
-            if (finalScripts.length) {
-                _RT.globalEval(finalScripts.join("\n"));
-            }
+            evalCollectedScripts(finalScripts);
         } catch (e) {
             //we are now in accordance with the rest of the system of showing errors only in development mode
             //the default error output is alert we always can override it with
@@ -3813,9 +3840,9 @@ _MF_SINGLTN(_PFX_UTIL + "_Dom", Object, /** @lends myfaces._impl._util._Dom.prot
         if (markup === "") return null;
 
         var evalNodes = this._buildEvalNodes(item, markup),
-                currentRef = item,
-                parentNode = item.parentNode,
-                ret = [];
+            currentRef = item,
+            parentNode = item.parentNode,
+            ret = [];
         for (var cnt = evalNodes.length - 1; cnt >= 0; cnt--) {
             currentRef = parentNode.insertBefore(evalNodes[cnt], currentRef);
             ret.push(currentRef);
@@ -3837,9 +3864,9 @@ _MF_SINGLTN(_PFX_UTIL + "_Dom", Object, /** @lends myfaces._impl._util._Dom.prot
         if (markup === "") return null;
 
         var evalNodes = this._buildEvalNodes(item, markup),
-                currentRef = item,
-                parentNode = item.parentNode,
-                ret = [];
+            currentRef = item,
+            parentNode = item.parentNode,
+            ret = [];
 
         for (var cnt = 0; cnt < evalNodes.length; cnt++) {
             if (currentRef.nextSibling) {
@@ -3871,24 +3898,15 @@ _MF_SINGLTN(_PFX_UTIL + "_Dom", Object, /** @lends myfaces._impl._util._Dom.prot
     detectAttributes: function(element) {
         //test if 'hasAttribute' method is present and its native code is intact
         //for example, Prototype can add its own implementation if missing
+        //JSF 2.4 we now can reduce the complexity here, one of the functions now
+        //is definitely implemented
         if (element.hasAttribute && this.isFunctionNative(element.hasAttribute)) {
             return function(name) {
                 return element.hasAttribute(name);
             }
         } else {
-            try {
-                //when accessing .getAttribute method without arguments does not throw an error then the method is not available
-                element.getAttribute;
-
-                var html = element.outerHTML;
-                var startTag = html.match(/^<[^>]*>/)[0];
-                return function(name) {
-                    return startTag.indexOf(name + '=') > -1;
-                }
-            } catch (ex) {
-                return function(name) {
-                    return element.getAttribute(name);
-                }
+            return function (name) {
+                return !!element.getAttribute(name);
             }
         }
     },
@@ -3902,7 +3920,7 @@ _MF_SINGLTN(_PFX_UTIL + "_Dom", Object, /** @lends myfaces._impl._util._Dom.prot
     cloneAttributes: function(target, source) {
 
         // enumerate core element attributes - without 'dir' as special case
-        var coreElementProperties = ['className', 'title', 'lang', 'xmllang'];
+        var coreElementProperties = ['className', 'title', 'lang', 'xmllang', "href", "rel", "src"];
         // enumerate additional input element attributes
         var inputElementProperties = [
             'name', 'value', 'size', 'maxLength', 'src', 'alt', 'useMap', 'tabIndex', 'accessKey', 'accept', 'type'
@@ -4022,6 +4040,26 @@ _MF_SINGLTN(_PFX_UTIL + "_Dom", Object, /** @lends myfaces._impl._util._Dom.prot
         } catch (ex) {
             //most probably dataset properties are not supported
         }
+
+        // still works in ie6
+        var attrs = source.hasAttributes() ? source.attributes: [];
+        var dataAttributes = this._Lang.arrFilter(attrs, function(attr) {
+            return attr.name && attr.name.indexOf("data-") == 0;
+        });
+        this._Lang.arrForEach(dataAttributes, function(name) {
+           if(target.setAttribute) {
+               var attrValue = source.getAttribute(name)  || source[name];
+               target.setAttribute(name, attrValue)
+           } else {
+               target[name] = attrValue;
+           }
+        });
+
+        //special nonce handling
+        var nonce = this._RT.resolveNonce(source);
+        if(!!nonce) {
+            target["nonce"] = nonce;
+        }
     },
     //from
     // http://blog.vishalon.net/index.php/javascript-getting-and-setting-caret-position-in-textarea/
@@ -4082,7 +4120,6 @@ _MF_SINGLTN(_PFX_UTIL + "_Dom", Object, /** @lends myfaces._impl._util._Dom.prot
      */
     outerHTML : function(item, markup, preserveFocus) {
         this._assertStdParams(item, markup, "outerHTML");
-        markup = this._Lang.trim(markup);
         // we can work on a single element in a cross browser fashion
         // regarding the focus thanks to the
         // icefaces team for providing the code
@@ -4091,6 +4128,7 @@ _MF_SINGLTN(_PFX_UTIL + "_Dom", Object, /** @lends myfaces._impl._util._Dom.prot
             this.cloneAttributes(item, replacingInput);
             return item;
         } else {
+            markup = this._Lang.trim(markup);
             if (markup !== "") {
                 var ret = null;
 
@@ -4252,7 +4290,7 @@ _MF_SINGLTN(_PFX_UTIL + "_Dom", Object, /** @lends myfaces._impl._util._Dom.prot
      */
     _buildEvalNodes: function(item, markup) {
         var evalNodes = null;
-        if (this._isTableElement(item)) {
+        if (item && this._isTableElement(item)) {
             evalNodes = this._buildTableNodes(item, markup);
         } else {
             var nonIEQuirks = (!this._RT.browser.isIE || this._RT.browser.isIE > 8);
@@ -4260,9 +4298,9 @@ _MF_SINGLTN(_PFX_UTIL + "_Dom", Object, /** @lends myfaces._impl._util._Dom.prot
             //elements bug, but it is mostly dom compliant so we have to give it a special
             //treatment, IE9 finally fixes that issue finally after 10 years
             evalNodes = (this.isDomCompliant() &&  nonIEQuirks) ?
-                    this._buildNodesCompliant(markup) :
-                    //ie8 or quirks mode browsers
-                    this._buildNodesNonCompliant(markup);
+                this._buildNodesCompliant(markup) :
+                //ie8 or quirks mode browsers
+                this._buildNodesNonCompliant(markup);
         }
         return evalNodes;
     },
@@ -4282,9 +4320,9 @@ _MF_SINGLTN(_PFX_UTIL + "_Dom", Object, /** @lends myfaces._impl._util._Dom.prot
             throw this._Lang.makeException(new Error(), null, null, this._nameSpace, "_assertStdParams",  "Caller must be set for assertion");
         }
         var _Lang = this._Lang,
-                ERR_PROV = "ERR_MUST_BE_PROVIDED1",
-                DOM = "myfaces._impl._util._Dom.",
-                finalParams = params || ["item", "markup"];
+            ERR_PROV = "ERR_MUST_BE_PROVIDED1",
+            DOM = "myfaces._impl._util._Dom.",
+            finalParams = params || ["item", "markup"];
 
         if (!item || !markup) {
             _Lang.makeException(new Error(), null, null,DOM, ""+caller,  _Lang.getMessage(ERR_PROV, null, DOM +"."+ caller, (!item) ? finalParams[0] : finalParams[1]));
@@ -4340,8 +4378,8 @@ _MF_SINGLTN(_PFX_UTIL + "_Dom", Object, /** @lends myfaces._impl._util._Dom.prot
 
         var parentNode = item.parentNode,
 
-                sibling = item.nextSibling,
-                resultArr = this._Lang.objToArray(evalNodes);
+            sibling = item.nextSibling,
+            resultArr = this._Lang.objToArray(evalNodes);
 
         for (var cnt = 0; cnt < resultArr.length; cnt++) {
             if (cnt == 0) {
@@ -4414,7 +4452,7 @@ _MF_SINGLTN(_PFX_UTIL + "_Dom", Object, /** @lends myfaces._impl._util._Dom.prot
     findByTagName : function(fragment, tagName) {
         this._assertStdParams(fragment, tagName, "findByTagName", ["fragment", "tagName"]);
         var _Lang = this._Lang,
-                nodeType = fragment.nodeType;
+            nodeType = fragment.nodeType;
         if (nodeType != 1 && nodeType != 9 && nodeType != 11) return null;
 
         //remapping to save a few bytes
@@ -4481,8 +4519,8 @@ _MF_SINGLTN(_PFX_UTIL + "_Dom", Object, /** @lends myfaces._impl._util._Dom.prot
         //we use the reject mechanism to prevent a deep scan reject means any
         //child elements will be omitted from the scan
         var FILTER_ACCEPT = NodeFilter.FILTER_ACCEPT,
-                FILTER_SKIP = NodeFilter.FILTER_SKIP,
-                FILTER_REJECT = NodeFilter.FILTER_REJECT;
+            FILTER_SKIP = NodeFilter.FILTER_SKIP,
+            FILTER_REJECT = NodeFilter.FILTER_REJECT;
 
         var walkerFilter = function (node) {
             var retCode = (filter(node)) ? FILTER_ACCEPT : FILTER_SKIP;
@@ -4562,10 +4600,10 @@ _MF_SINGLTN(_PFX_UTIL + "_Dom", Object, /** @lends myfaces._impl._util._Dom.prot
             return null;
         }
 
-        // This will not work well on portlet case, because we cannot be sure
-        // the returned form is right one.
-        //we can cover that case by simply adding one of our config params
-        //the default is the weaker, but more correct portlet code
+            // This will not work well on portlet case, because we cannot be sure
+            // the returned form is right one.
+            //we can cover that case by simply adding one of our config params
+            //the default is the weaker, but more correct portlet code
         //you can override it with myfaces_config.no_portlet_env = true globally
         else if (1 == forms.length && this._RT.getGlobalConfig("no_portlet_env", false)) {
             return forms[0];
@@ -4579,7 +4617,7 @@ _MF_SINGLTN(_PFX_UTIL + "_Dom", Object, /** @lends myfaces._impl._util._Dom.prot
             //https://issues.apache.org/jira/browse/MYFACES-2793
 
             return (_Lang.equalsIgnoreCase(elem.tagName, "form")) ? elem :
-                    ( this.html5FormDetection(elem) || this.getParent(elem, "form"));
+                ( this.html5FormDetection(elem) || this.getParent(elem, "form"));
         });
 
         if (finalElem) {
@@ -4612,8 +4650,9 @@ _MF_SINGLTN(_PFX_UTIL + "_Dom", Object, /** @lends myfaces._impl._util._Dom.prot
         return (1 == foundElements.length ) ? foundElements[0] : null;
     },
 
-    html5FormDetection: function(/*item*/) {
-        return null;
+    html5FormDetection:function (item) {
+        var elemForm = this.getAttribute(item, "form");
+        return (elemForm) ? this.byId(elemForm) : null;
     },
 
 
@@ -4626,13 +4665,13 @@ _MF_SINGLTN(_PFX_UTIL + "_Dom", Object, /** @lends myfaces._impl._util._Dom.prot
 
         if (!item) {
             throw this._Lang.makeException(new Error(), null, null, this._nameSpace, "getParent",
-                    this._Lang.getMessage("ERR_MUST_BE_PROVIDED1", null, "_Dom.getParent", "item {DomNode}"));
+                this._Lang.getMessage("ERR_MUST_BE_PROVIDED1", null, "_Dom.getParent", "item {DomNode}"));
         }
 
         var _Lang = this._Lang;
         var searchClosure = function(parentItem) {
             return parentItem && parentItem.tagName
-                    && _Lang.equalsIgnoreCase(parentItem.tagName, tagName);
+                && _Lang.equalsIgnoreCase(parentItem.tagName, tagName);
         };
         try {
             return this.getFilteredParent(item, searchClosure);
@@ -4749,6 +4788,128 @@ _MF_SINGLTN(_PFX_UTIL + "_Dom", Object, /** @lends myfaces._impl._util._Dom.prot
 
     getNamedElementFromForm: function(form, elementId) {
         return form[elementId];
+    },
+
+    /**
+     * backport new faces codebase, should work from ie9 onwards
+     * (cutoff point)
+     * builds the ie nodes properly in a placeholder
+     * and bypasses a non script insert bug that way
+     * @param markup the markup code to be executed from
+     */
+    fromMarkup: function(markup) {
+
+        // https:// developer.mozilla.org/de/docs/Web/API/DOMParser license creative commons
+        var doc = document.implementation.createHTMLDocument("");
+        var lowerMarkup = markup.toLowerCase();
+        if (lowerMarkup.indexOf('<!doctype') != -1 ||
+            lowerMarkup.indexOf('<html') != -1 ||
+            lowerMarkup.indexOf('<head') != -1 ||
+            lowerMarkup.indexOf('<body') != -1) {
+            doc.documentElement.innerHTML = markup;
+            return doc.documentElement;
+        } else {
+            var dummyPlaceHolder = document.createElement("div");
+            dummyPlaceHolder.innerHTML = markup;
+            return dummyPlaceHolder;
+        }
+    },
+
+    appendToHead: function(markup) {
+
+        //we filter out only those evalNodes which do not match
+        var _RT = this._RT;
+        var _Lang = this._Lang;
+        var _T = this;
+
+        var doubleExistsFilter = function(item)  {
+            switch((item.tagName || "").toLowerCase()) {
+                case "script":
+                    var src = item.getAttribute("src");
+                    var content = item.innerText;
+                    var scripts = document.head.getElementsByTagName("script");
+
+                    for(var cnt = 0; cnt < scripts.length; cnt++) {
+                        if(src && _Lang.match(scripts[cnt].getAttribute("src"), src)) {
+                            return false;
+                        } else if(!src && _Lang.match(scripts[cnt].innerText, content)) {
+                            return false;
+                        }
+                    }
+                    break;
+                case "style":
+                    var content = item.innerText;
+                    var styles = document.head.getElementsByTagName("style");
+                    for(var cnt = 0; cnt < styles.length; cnt++) {
+                        if(content && _Lang.match(styles[cnt].innerText, content)) {
+                            return false;
+                        }
+                    }
+                    break;
+                case "link":
+                    var href = item.getAttribute("href");
+                    var content = item.innerText;
+                    var links = document.head.getElementsByTagName("link");
+                    for(var cnt = 0; cnt < links.length; cnt++) {
+                        if(href && _Lang.match(links[cnt].getAttribute("href"), href)) {
+                            return false;
+                        } else if(!href && _Lang.match(links[cnt].innerText, content)) {
+                            return false;
+                        }
+                    }
+                    break;
+                default: break;
+            }
+            return true;
+        };
+
+        var appendElement = function (item) {
+            var tagName = (item.tagName || "").toLowerCase();
+            var nonce = _RT.resolveNonce(item);
+            if (tagName === "script") {
+                var newItem = document.createElement("script");
+                newItem.textContent = item.textContent;
+                _T.cloneAttributes(newItem, item);
+                item = newItem;
+            } else if (tagName === "link") {
+                var newItem = document.createElement("link");
+                newItem.textContent = item.textContent;
+                _T.cloneAttributes(newItem, item);
+                item = newItem;
+            } else if (tagName === "style") {
+                var newItem = document.createElement("style");
+                newItem.textContent = item.textContent;
+                _T.cloneAttributes(newItem, item);
+                item = newItem;
+            }
+
+            document.head.appendChild(item);
+        };
+        var evalNodes = [];
+        if(this._Lang.isString(markup)) {
+            var lastHeadChildTag = document.getElementsByTagName("head")[0].lastChild;
+            //resource requests only hav one item anyway
+            evalNodes = this._buildEvalNodes(null, markup);
+        } else {
+            evalNodes = markup.childNodes;
+        }
+
+
+        //var evalNodes = this._buildEvalNodes(lastHeadChildTag, markup);
+        var scripts = this._Lang.arrFilter(evalNodes, function(item) {
+           return (item.tagName || "").toLowerCase() == "script";
+        }, 0, this);
+        var other = this._Lang.arrFilter(evalNodes, function(item) {
+            return (item.tagName || "").toLowerCase() != "script";
+        }, 0, this);
+
+        var finalOther = this._Lang.arrFilter(other, doubleExistsFilter , 0, this);
+        var finalScripts = this._Lang.arrFilter(scripts, doubleExistsFilter , 0, this);
+        //var finalAll = this._Lang.arrFilter(evalNodes, doubleExistsFilter , 0, this);
+
+        this._Lang.arrForEach(finalOther, appendElement);
+        this._Lang.arrForEach(finalScripts, appendElement);
+        //this._Lang.arrForEach(finalAll, appendElement);
     }
 });
 
@@ -5386,6 +5547,36 @@ if (_MF_SINGLTN) {
             } else {
                 return form[elementName];
             }
+        },
+
+        detectAttributes: function(element) {
+            //test if 'hasAttribute' method is present and its native code is intact
+            //for example, Prototype can add its own implementation if missing
+            //JSF 2.4 we now can reduce the complexity here, one of the functions now
+            //is definitely implemented
+            if (element.hasAttribute && this.isFunctionNative(element.hasAttribute)) {
+                return function(name) {
+                    return element.hasAttribute(name);
+                }
+            } else {
+                try {
+                    //when accessing .getAttribute method without arguments does not throw an error then the method is not available
+                    element.getAttribute;
+
+                    var html = element.outerHTML;
+                    var startTag = html.match(/^<[^>]*>/)[0];
+                    return function(name) {
+                        return startTag.indexOf(name + '=') > -1;
+                    }
+                } catch (ex) {
+                    return function(name) {
+                        return element.getAttribute(name);
+                    }
+                }
+            }
+        },
+        html5FormDetection: function(/*item*/) {
+            return null;
         }
 
     });
@@ -5717,6 +5908,9 @@ _MF_SINGLTN(_PFX_XHR+"_AjaxUtils", _MF_OBJECT,
 /** @lends myfaces._impl.xhrCore._AjaxUtils.prototype */
 {
 
+    NAMED_VIEWROOT: "namedViewRoot",
+    NAMING_CONTAINER_ID: "myfaces.partialId",
+
 
     /**
      * determines fields to submit
@@ -5837,6 +6031,85 @@ _MF_SINGLTN(_PFX_XHR+"_AjaxUtils", _MF_OBJECT,
                 }
             }
 
+        }
+    },
+
+    _$ncRemap: function(internalContext, containerId) {
+        var namedVieRoot = internalContext[this.NAMED_VIEWROOT];
+        var namingContainerId = internalContext[this.NAMING_CONTAINER_ID];
+        if(!namedVieRoot || !namingContainerId) {
+            return containerId
+        }
+        if(containerId.indexOf(namingContainerId) == 0) {
+            return containerId;
+        }
+        return [namingContainerId, containerId].join("");
+    },
+
+    /**
+     * determines the current naming container
+     * and assigns it internally
+     *
+     * @param internalContext
+     * @param formElement
+     * @private
+     */
+    _assignNamingContainerData: function(internalContext, formElement, separatorChar) {
+        const viewRootId = this._resolveViewRootId(formElement, separatorChar);
+
+        if(!!viewRootId) {
+            internalContext[this.NAMED_VIEWROOT] = true;
+            internalContext[this.NAMING_CONTAINER_ID] = viewRootId;
+        }
+    },
+
+    /**
+     * resolve the viewRoot id in a naming container situation
+     * (aka ViewState element name is prefixed)
+     * @param form
+     * @return a string (never null) which is either emtpy or contains the prefix for the ViewState
+     * (including the separator)
+     */
+    _resolveViewRootId: function(form, separatorChar) /*string*/ {
+        form = this._Dom.byId(form);
+        var _t = this;
+        var foundNames = this._Dom.findAll(form, function(node) {
+            var name = node.getAttribute("name");
+            if(!name || name.indexOf(_t.P_VIEWSTATE)) {
+                return false;
+            }
+            return node;
+        }, true);
+        if(!foundNames.length) {
+            return "";
+        }
+        return foundNames[0].name.split(separatorChar, 2)[0];
+    },
+
+    /**
+     * as per jsdoc before the request it must be ensured that every post argument
+     * is prefixed with the naming container id (there is an exception in mojarra with
+     * the element=element param, which we have to follow here as well.
+     * (inputs are prefixed by name anyway normally this only affects our standard parameters)
+     * @private
+     */
+    _resoveConfigNamingContainerMapper: function(myfacesOptions, separatorChar) {
+        var isNamedViewRoot = !!myfacesOptions[this.NAMED_VIEWROOT];
+        if(!isNamedViewRoot) {
+            return;
+        }
+
+        var partialId = myfacesOptions[this.NAMING_CONTAINER_ID];
+        var prefix = partialId + this.getSeparatorChar();
+        return function (data /*assoc array of key value pairs*/) {
+            var ret = {};
+            for(var key in data) {
+                if(!data.hasOwnProperty(key)) {
+                    continue;
+                }
+                ret[prefix + key] = data[key]
+            }
+            return ret;
         }
     }
 });
@@ -6702,18 +6975,18 @@ _MF_CLS(_PFX_XHR + "engine.IFrame", myfaces._impl.xhrCore.engine.BaseRequest,
  */
 _MF_CLS(_PFX_XHR + "_AjaxRequest", _MF_OBJECT, /** @lends myfaces._impl.xhrCore._AjaxRequest.prototype */ {
 
-    _contentType:"application/x-www-form-urlencoded",
+    _contentType: "application/x-www-form-urlencoded",
     /** source element issuing the request */
-    _source:null,
+    _source: null,
     /** context passed down from the caller */
     _context:null,
     /** source form issuing the request */
-    _sourceForm:null,
+    _sourceForm: null,
     /** passthrough parameters */
-    _passThrough:null,
+    _passThrough: null,
 
     /** queue control */
-    _timeout:null,
+    _timeout: null,
     /** enqueuing delay */
     //_delay:null,
     /** queue size */
@@ -6723,13 +6996,13 @@ _MF_CLS(_PFX_XHR + "_AjaxRequest", _MF_OBJECT, /** @lends myfaces._impl.xhrCore.
      back reference to the xhr queue,
      only set if the object really is queued
      */
-    _xhrQueue:null,
+    _xhrQueue: null,
 
     /** pps an array of identifiers which should be part of the submit, the form is ignored */
-    _partialIdsArray:null,
+    _partialIdsArray : null,
 
     /** xhr object, internal param */
-    _xhr:null,
+    _xhr: null,
 
     /** predefined method */
     _ajaxType:"POST",
@@ -6741,8 +7014,8 @@ _MF_CLS(_PFX_XHR + "_AjaxRequest", _MF_OBJECT, /** @lends myfaces._impl.xhrCore.
      */
     _CONTENT_TYPE:"Content-Type",
     _HEAD_FACES_REQ:"Faces-Request",
-    _VAL_AJAX:"partial/ajax",
-    _XHR_CONST:myfaces._impl.xhrCore.engine.XhrConst,
+    _VAL_AJAX: "partial/ajax",
+    _XHR_CONST: myfaces._impl.xhrCore.engine.XhrConst,
 
     // _exception: null,
     // _requestParameters: null,
@@ -6756,7 +7029,7 @@ _MF_CLS(_PFX_XHR + "_AjaxRequest", _MF_OBJECT, /** @lends myfaces._impl.xhrCore.
      * @param {Object} args an arguments map which an override any of the given protected
      * instance variables, by a simple name value pair combination
      */
-    constructor_:function (args) {
+    constructor_: function(args) {
 
         try {
             this._callSuper("constructor_", args);
@@ -6779,6 +7052,273 @@ _MF_CLS(_PFX_XHR + "_AjaxRequest", _MF_OBJECT, /** @lends myfaces._impl.xhrCore.
         }
     },
 
+    /**
+     * Sends an Ajax request
+     */
+    send : function() {
+
+        var _Lang = this._Lang;
+        var _RT = this._RT;
+
+        try {
+
+            var scopeThis = _Lang.hitch(this, function(functionName) {
+                return _Lang.hitch(this, this[functionName]);
+            });
+            this._xhr = _Lang.mixMaps(this._getTransport(), {
+                onprogress: scopeThis("onprogress"),
+                ontimeout:  scopeThis("ontimeout"),
+				//remove for xhr level2 support (chrome has problems with it)
+                onloadend:  scopeThis("ondone"),
+                onload:     scopeThis("onsuccess"),
+                onerror:    scopeThis("onerror")
+
+            }, true);
+            var xhr = this._xhr,
+                sourceForm = this._sourceForm,
+                targetURL = (typeof sourceForm.elements[this.ENCODED_URL] == 'undefined') ?
+                    sourceForm.action :
+                    sourceForm.elements[this.ENCODED_URL].value,
+                formData = this.getFormData();
+
+            for (var key in this._passThrough) {
+                if(!this._passThrough.hasOwnProperty(key)) continue;
+                formData.append(key, this._passThrough[key]);
+            }
+
+            xhr.open(this._ajaxType, targetURL +
+                ((this._ajaxType == "GET") ? "?" + this._formDataToURI(formData) : "")
+                , true);
+
+            xhr.timeout = this._timeout || 0;
+
+            this._applyContentType(xhr);
+            xhr.setRequestHeader(this._HEAD_FACES_REQ, this._VAL_AJAX);
+
+            //some webkit based mobile browsers do not follow the w3c spec of
+            // setting the accept headers automatically
+            if(this._RT.browser.isWebKit) {
+                xhr.setRequestHeader("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+            }
+            this._sendEvent("BEGIN");
+            //Check if it is a custom form data object
+            //if yes we use makefinal for the final handling
+            if (formData && formData.makeFinal) {
+                formData = formData.makeFinal()
+            }
+            xhr.send((this._ajaxType != "GET") ? formData : null);
+
+        } catch (e) {
+            //_onError//_onError
+            e = (e._mfInternal)? e: this._Lang.makeException(new Error(), "sendError","sendError", this._nameSpace, "send", e.message);
+            this._stdErrorHandler(this._xhr, this._context, e);
+        }
+    },
+
+    /**
+     * helper, in multipart situations we might alter the content type
+     * from the urlencoded one
+     */
+    _applyContentType: function(xhr) {
+        var contentType = this._contentType+"; charset=utf-8";
+
+        xhr.setRequestHeader(this._CONTENT_TYPE, contentType);
+    },
+
+    ondone: function() {
+        this._requestDone();
+    },
+
+
+    onsuccess: function(/*evt*/) {
+
+        var context = this._context;
+        var xhr = this._xhr;
+        try {
+            this._sendEvent("COMPLETE");
+            //now we have to reroute into our official api
+            //because users might want to decorate it, we will split it apart afterwards
+
+            context._mfInternal = context._mfInternal || {};
+            jsf.ajax.response((xhr.getXHRObject) ? xhr.getXHRObject() : xhr, context);
+
+
+
+        } catch (e) {
+            this._stdErrorHandler(this._xhr, this._context, e);
+        }
+        //add for xhr level2 support
+        //}  finally {
+        //W3C spec onloadend must be called no matter if success or not
+        //    this.ondone();
+        //}
+    },
+
+    onerror: function(/*evt*/) {
+        //TODO improve the error code detection here regarding server errors etc...
+        //and push it into our general error handling subframework
+        var context = this._context;
+        var xhr = this._xhr;
+        var _Lang = this._Lang;
+
+        var errorText = "";
+        this._sendEvent("COMPLETE");
+        try {
+            var UNKNOWN = _Lang.getMessage("UNKNOWN");
+            //status can be 0 and statusText can be ""
+            var status = ('undefined' != xhr.status  && null != xhr.status)? xhr.status : UNKNOWN;
+            var statusText = ('undefined' != xhr.statusText  && null != xhr.statusText)? xhr.statusText : UNKNOWN;
+            errorText = _Lang.getMessage("ERR_REQU_FAILED", null,status,statusText);
+
+        } catch (e) {
+            errorText = _Lang.getMessage("ERR_REQ_FAILED_UNKNOWN", null);
+        } finally {
+            var _Impl = this.attr("impl");
+                _Impl.sendError(xhr, context, _Impl.HTTPERROR,
+                _Impl.HTTPERROR, errorText,"","myfaces._impl.xhrCore._AjaxRequest","onerror");
+            //add for xhr level2 support
+            //since chrome does not call properly the onloadend we have to do it manually
+            //to eliminate xhr level1 for the compile profile modern
+            //W3C spec onloadend must be called no matter if success or not
+            //this.ondone();
+        }
+        //_onError
+    },
+
+    onprogress: function(/*evt*/) {
+        //do nothing for now
+    },
+
+    ontimeout: function(/*evt*/) {
+        try {
+            //we issue an event not an error here before killing the xhr process
+            this._sendEvent("TIMEOUT_EVENT");
+            //timeout done we process the next in the queue
+        } finally {
+            this._requestDone();
+        }
+    },
+
+    _formDataToURI: function(formData) {
+        if (formData && formData.makeFinal) {
+            formData = formData.makeFinal()
+        }
+        return formData;
+    },
+
+    /**
+     * change for jsf 2.3 since we drop legacy browser support
+     * there is no need anymore to support xhr level 1.
+     * @returns {XMLHttpRequest} the transport object
+     * @private
+     */
+    _getTransport: function() {
+        return new XMLHttpRequest();
+    },
+
+
+    //----------------- backported from the base request --------------------------------
+    //non abstract ones
+
+
+    /**
+     * Spec. 13.3.1
+     * Collect and encode input elements.
+     * Additionally the hidden element javax.faces.ViewState
+     * Enhancement partial page submit
+     *
+     * @return  an element of formDataWrapper
+     * which keeps the final Send Representation of the
+     */
+    getFormData : function() {
+        var _AJAXUTIL = this._AJAXUTIL, myfacesOptions = this._context.myfaces, ret = null;
+
+
+
+        if (!this._partialIdsArray || !this._partialIdsArray.length) {
+            var _AJAXUTIL = this._AJAXUTIL, myfacesOptions = this._context.myfaces;
+            return this._Lang.createFormDataDecorator(jsf.getViewState(this._sourceForm));
+        } else {
+            //now this is less performant but we have to call it to allow viewstate decoration
+            ret = this._Lang.createFormDataDecorator(new Array());
+            _AJAXUTIL.encodeSubmittableFields(ret, this._sourceForm, this._partialIdsArray);
+            if (this._source && myfacesOptions && myfacesOptions.form)
+                _AJAXUTIL.appendIssuingItem(this._source, ret);
+
+        }
+        return ret;
+
+    },
+
+
+
+    /**
+     * Client error handlers which also in the long run route into our error queue
+     * but also are able to deliver more meaningful messages
+     * note, in case of an error all subsequent xhr requests are dropped
+     * to get a clean state on things
+     *
+     * @param request the xhr request object
+     * @param context the context holding all values for further processing
+     * @param exception the embedded exception
+     */
+    _stdErrorHandler: function(request, context, exception) {
+        var xhrQueue = this._xhrQueue;
+        try {
+            this.attr("impl").stdErrorHandler(request, context, exception);
+        } finally {
+            if (xhrQueue) {
+                xhrQueue.cleanup();
+            }
+        }
+    },
+
+    _sendEvent: function(evtType) {
+        var _Impl = this.attr("impl");
+        _Impl.sendEvent(this._xhr, this._context, _Impl[evtType]);
+    },
+
+    _requestDone: function() {
+        var queue = this._xhrQueue;
+        if (queue) {
+            queue.processQueue();
+        }
+        //ie6 helper cleanup
+        delete this._context.source;
+
+    }
+});
+
+
+/* Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to you under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * An implementation of an xhr request object
+ * with partial page submit functionality, and jsf
+ * ppr request and timeout handling capabilities
+ *
+ * Author: Werner Punz (latest modification by $Author: ganeshpuri $)
+ * Version: $Revision: 1.4 $ $Date: 2009/05/31 09:16:44 $
+ */
+
+_MF_CLS(_PFX_XHR + "_AjaxRequestQuirks", myfaces._impl.xhrCore._AjaxRequest, /** @lends myfaces._impl.xhrCore._AjaxRequest.prototype */ {
+    constructor_: function (args) {
+        this._callSuper("constructor_", args);
+    },
     /**
      * Sends an Ajax request
      */
@@ -6806,11 +7346,11 @@ _MF_CLS(_PFX_XHR + "_AjaxRequest", _MF_OBJECT, /** @lends myfaces._impl.xhrCore.
 
             this._applyClientWindowId();
             var xhr = this._xhr,
-                    sourceForm = this._sourceForm,
-                    targetURL = (typeof sourceForm.elements[this.ENCODED_URL] == 'undefined') ?
-                            sourceForm.action :
-                            sourceForm.elements[this.ENCODED_URL].value,
-                    formData = this.getFormData();
+                sourceForm = this._sourceForm,
+                targetURL = (typeof sourceForm.elements[this.ENCODED_URL] == 'undefined') ?
+                    sourceForm.action :
+                    sourceForm.elements[this.ENCODED_URL].value,
+                formData = this.getFormData();
 
             for (var key in this._passThrough) {
                 if (!this._passThrough.hasOwnProperty(key)) continue;
@@ -6818,8 +7358,8 @@ _MF_CLS(_PFX_XHR + "_AjaxRequest", _MF_OBJECT, /** @lends myfaces._impl.xhrCore.
             }
 
             xhr.open(this._ajaxType, targetURL +
-                    ((this._ajaxType == "GET") ? "?" + this._formDataToURI(formData) : "")
-                    , true);
+                ((this._ajaxType == "GET") ? "?" + this._formDataToURI(formData) : "")
+                , true);
 
             xhr.timeout = this._timeout || 0;
 
@@ -6878,20 +7418,7 @@ _MF_CLS(_PFX_XHR + "_AjaxRequest", _MF_OBJECT, /** @lends myfaces._impl.xhrCore.
         }
     },
 
-    /**
-     * applies the content type, this needs to be done only for xhr
-     * level1
-     * @param xhr
-     * @private
-     */
-    _applyContentType:function (xhr) {
-        var contentType = this._contentType + "; charset=utf-8";
-        xhr.setRequestHeader(this._CONTENT_TYPE, contentType);
-    },
 
-    ondone:function () {
-        this._requestDone();
-    },
 
     onsuccess:function (/*evt*/) {
         this._restoreClientWindowId();
@@ -6938,7 +7465,7 @@ _MF_CLS(_PFX_XHR + "_AjaxRequest", _MF_OBJECT, /** @lends myfaces._impl.xhrCore.
             try {
                 var _Impl = this.attr("impl");
                 _Impl.sendError(xhr, context, _Impl.HTTPERROR,
-                        _Impl.HTTPERROR, errorText, "", "myfaces._impl.xhrCore._AjaxRequest", "onerror");
+                    _Impl.HTTPERROR, errorText, "", "myfaces._impl.xhrCore._AjaxRequest", "onerror");
             } finally {
                 //add for xhr level2 support
                 //since chrome does not call properly the onloadend we have to do it manually
@@ -6950,9 +7477,6 @@ _MF_CLS(_PFX_XHR + "_AjaxRequest", _MF_OBJECT, /** @lends myfaces._impl.xhrCore.
         //_onError
     },
 
-    onprogress:function (/*evt*/) {
-        //do nothing for now
-    },
 
     ontimeout:function (/*evt*/) {
         try {
@@ -7047,9 +7571,13 @@ _MF_CLS(_PFX_XHR + "_AjaxRequest", _MF_OBJECT, /** @lends myfaces._impl.xhrCore.
             this._callSuper("_finalize");
         }
     }
+
 });
 
-
+(function() {
+    /*some mobile browsers do not have a window object*/
+    myfaces._impl.xhrCore._AjaxRequest = myfaces._impl.xhrCore._AjaxRequestQuirks;
+})();
 /* Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -7067,78 +7595,63 @@ _MF_CLS(_PFX_XHR + "_AjaxRequest", _MF_OBJECT, /** @lends myfaces._impl.xhrCore.
  */
 /**
  * this method is used only for pure multipart form parts
- * otherwise the normal method is used
- * IT is a specialized request which uses the form data
- * element for the handling of forms
+ * like form data with file uploads.
+ * This is a replacement for the iframe request which we used until now
+ * The iframe method works on older browsers but most likely will
+ * be cut off in future browsers, because there is an alternative
+ * in form of FormData.
  */
-_MF_CLS(_PFX_XHR + "_MultipartAjaxRequestLevel2", myfaces._impl.xhrCore._AjaxRequest, {
+_MF_CLS(_PFX_XHR+"_FormDataRequest", myfaces._impl.xhrCore._AjaxRequest, {
+    _AJAXUTIL: myfaces._impl.xhrCore._AjaxUtils,
 
-    _sourceForm:null,
+    constructor_: function(arguments) {
+        this._callSuper("constructor_", arguments);
 
-    constructor_:function (args) {
-        this._callSuper("constructor_", args);
-        //TODO xhr level2 can deal with real props
-
-    },
-
-    getFormData:function () {
-        var ret;
-        //in case of a multipart form post we savely can use the FormData object
-        if (this._context._mfInternal.xhrOp === "multipartQueuedPost") {
-            ret = new FormData(this._sourceForm);
-            this._AJAXUTIL.appendIssuingItem(this._source, ret);
-        } else {
-            //we switch back to the encode submittable fields system
-            this._AJAXUTIL.encodeSubmittableFields(ret, this._sourceForm, null);
-            this._AJAXUTIL.appendIssuingItem(this._source, ret);
-        }
-        return ret;
+        this._contentType = "multipart/form-data";
     },
 
     /**
-     * applies the content type, this needs to be done only for xhr
-     * level1
-     * @param xhr
-     * @private
+     * Spec. 13.3.1
+     * Collect and encode input elements.
+     * Additionally, the hidden element javax.faces.ViewState
+     * Enhancement partial page submit
+     *
+     * @return  an element of formDataWrapper
+     * which keeps the final Send Representation of the
      */
-    _applyContentType:function (xhr) {
-        //content type is not set in case of xhr level2 because
-        //the form data object does it itself
+    getFormData : function() {
+        var _AJAXUTIL = this._AJAXUTIL, myfacesOptions = this._context.myfaces, ret = null;
+
+
+        //now this is less performant but we have to call it to allow viewstate decoration
+        if (!this._partialIdsArray || !this._partialIdsArray.length) {
+            ret = new FormData();
+            _AJAXUTIL.encodeSubmittableFields(ret, this._sourceForm);
+            //just in case the source item is outside of the form
+            //only if the form override is set we have to append the issuing item
+            //otherwise it is an element of the parent form
+            if (this._source && myfacesOptions && myfacesOptions.form)
+                _AJAXUTIL.appendIssuingItem(this._source, ret);
+        } else {
+            ret = new FormData();
+            _AJAXUTIL.encodeSubmittableFields(ret, this._sourceForm, this._partialIdsArray);
+            if (this._source && myfacesOptions && myfacesOptions.form)
+                _AJAXUTIL.appendIssuingItem(this._source, ret);
+
+        }
+
+        return ret;
     },
 
-    _formDataToURI:function (formData) {
-        //in xhr level2 form data takes care of the http get parametrisation
-        return "";
-    },
-
-    _getTransport:function () {
+    _getTransport: function() {
         return new XMLHttpRequest();
-    }
-});
-
-/**
- * for normal requests we basically use
- * only the xhr level2 object but
- */
-_MF_CLS(_PFX_XHR + "_AjaxRequestLevel2", myfaces._impl.xhrCore._AjaxRequest, {
-
-    _sourceForm:null,
-
-    constructor_:function (args) {
-        this._callSuper("constructor_", args);
-        //TODO xhr level2 can deal with real props
-
     },
 
-    _getTransport:function () {
-        return new XMLHttpRequest();
+    _applyContentType: function(xhr) {
+
     }
+
 });
-
-
-
-
-
 /* Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -7480,7 +7993,7 @@ _MF_SINGLTN(_PFX_XHR + "_AjaxResponse", _MF_OBJECT, /** @lends myfaces._impl.xhr
 
             //per JSF 2.3 spec the identifier of the element must be unique in the dom tree
             //otherwise we will break the html spec here
-            element.innerHTML = ["<input type='hidden'", "id='", this._fetchUniqueId(prefix, identifier), "' name='", identifier, "' value='", value, "' />"].join("");
+            element.innerHTML = ["<input type='hidden'", "id='", this._fetchUniqueId(prefix, identifier), "' name='", this._getNamingContainerPrefix(context) + identifier, "' value='", value, "' />"].join("");
             //now we go to proper dom handling after having to deal with another ie screw-up
             try {
                 theForm.appendChild(element.childNodes[0]);
@@ -7491,7 +8004,7 @@ _MF_SINGLTN(_PFX_XHR + "_AjaxResponse", _MF_OBJECT, /** @lends myfaces._impl.xhr
     },
 
     _fetchUniqueId: function(prefix, identifier) {
-        var cnt = 0;
+        var cnt = 1;
         var retVal = prefix + identifier + jsf.separatorchar + cnt;
         while(this._Dom.byId(retVal) != null) {
             cnt++;
@@ -7611,6 +8124,12 @@ _MF_SINGLTN(_PFX_XHR + "_AjaxResponse", _MF_OBJECT, /** @lends myfaces._impl.xhr
         return prefix;
     },
 
+    _getNamingContainerPrefix: function(context) {
+        var mfInternal = context._mfInternal;
+        var prefix = myfaces._impl.xhrCore._AjaxUtils._$ncRemap(context._mfInternal, "");
+        return prefix;
+    },
+
     /**
      * processes an incoming error from the response
      * which is hosted under the &lt;error&gt; tag
@@ -7678,6 +8197,8 @@ _MF_SINGLTN(_PFX_XHR + "_AjaxResponse", _MF_OBJECT, /** @lends myfaces._impl.xhr
                 case this.CMD_UPDATE:
                     this.processUpdate(request, context, changes[i]);
                     break;
+                //this one needs a csp spec extension for the global eval
+                //for now we recycle the csp for this case from the jsf.js file
                 case this.CMD_EVAL:
                     _Lang.globalEval(changes[i].firstChild.data);
                     break;
@@ -7827,56 +8348,21 @@ _MF_SINGLTN(_PFX_XHR + "_AjaxResponse", _MF_OBJECT, /** @lends myfaces._impl.xhr
     _replaceHead: function (request, context, newData) {
 
         var _Lang = this._Lang,
-            _Dom = this._Dom,
-            isWebkit = this._RT.browser.isWebKit,
-            //we have to work around an xml parsing bug in Webkit
-            //see https://issues.apache.org/jira/browse/MYFACES-3061
-            doc = (!isWebkit) ? _Lang.parseXML(newData) : null,
-            newHead = null;
+            _Dom = this._Dom;
 
-        if (!isWebkit && _Lang.isXMLParseError(doc)) {
-            doc = _Lang.parseXML(newData.replace(/<!\-\-[\s\n]*<!\-\-/g, "<!--").replace(/\/\/-->[\s\n]*\/\/-->/g, "//-->"));
-        }
+        var newDom = _Dom.fromMarkup(newData);
+        var newHead = newDom.getElementsByTagName("head")[0];
+        var oldTags = document.head.childNodes;
 
-        if (isWebkit || _Lang.isXMLParseError(doc)) {
-            //the standard xml parser failed we retry with the stripper
-            var parser = new (this._RT.getGlobalConfig("updateParser", myfaces._impl._util._HtmlStripper))();
-            var headData = parser.parse(newData, "head");
-            //We cannot avoid it here, but we have reduced the parsing now down to the bare minimum
-            //for further processing
-            newHead = _Lang.parseXML("<head>" + headData + "</head>");
-            //last and slowest option create a new head element and let the browser
-            //do its slow job
-            if (_Lang.isXMLParseError(newHead)) {
-                try {
-                    newHead = _Dom.createElement("head");
-                    newHead.innerHTML = headData;
-                } catch (e) {
-                    //we give up no further fallbacks
-                    throw this._raiseError(new Error(), "Error head replacement failed reason:" + e.toString(), "_replaceHead");
-                }
-            }
-        } else {
-            //parser worked we go on
-            newHead = doc.getElementsByTagName("head")[0];
-        }
+        _Dom.deleteItems(_Lang.objToArray(oldTags));
+        _Dom.appendToHead(newHead);
 
-        var oldTags = _Dom.findByTagNames(document.getElementsByTagName("head")[0], {"link": true, "style": true});
-        _Dom.runCss(newHead, true);
-        _Dom.deleteItems(oldTags);
 
-        //var oldTags = _Dom.findByTagNames(document.getElementsByTagName("head")[0], {"script": true});
-        //_Dom.deleteScripts(oldTags);
-        _Dom.runScripts(newHead, true);
-
-        return doc;
+        return document.head;
     },
 
     _addResourceToHead: function (request, context, newData) {
-        var lastHeadChildTag = document.getElementsByTagName("head")[0].lastChild;
-
-        this._Dom.insertAfter(lastHeadChildTag, newData);
-
+        this._Dom.appendToHead(newData);
     },
 
     /**
@@ -7893,61 +8379,36 @@ _MF_SINGLTN(_PFX_XHR + "_AjaxResponse", _MF_OBJECT, /** @lends myfaces._impl.xhr
     _replaceBody: function (request, context, newData /*varargs*/) {
         var _RT = this._RT,
             _Dom = this._Dom,
-            _Lang = this._Lang,
 
             oldBody = document.getElementsByTagName("body")[0],
-            placeHolder = document.createElement("div"),
-            isWebkit = _RT.browser.isWebKit;
+            placeHolder = document.createElement("div");
 
         placeHolder.id = "myfaces_bodyplaceholder";
+
+        var newDom = _Dom.fromMarkup(newData);
+        var newBodyData = newDom.getElementsByTagName("body")[0];
 
         _Dom._removeChildNodes(oldBody);
         oldBody.innerHTML = "";
         oldBody.appendChild(placeHolder);
 
-        var bodyData, doc = null, parser;
 
-        //we have to work around an xml parsing bug in Webkit
-        //see https://issues.apache.org/jira/browse/MYFACES-3061
-        if (!isWebkit) {
-            doc = (arguments.length > 3) ? arguments[3] : _Lang.parseXML(newData);
-        }
-
-        if (!isWebkit && _Lang.isXMLParseError(doc)) {
-            doc = _Lang.parseXML(newData.replace(/<!\-\-[\s\n]*<!\-\-/g, "<!--").replace(/\/\/-->[\s\n]*\/\/-->/g, "//-->"));
-        }
-
-        if (isWebkit || _Lang.isXMLParseError(doc)) {
-            //the standard xml parser failed we retry with the stripper
-
-            parser = new (_RT.getGlobalConfig("updateParser", myfaces._impl._util._HtmlStripper))();
-
-            bodyData = parser.parse(newData, "body");
-        } else {
-            //parser worked we go on
-            var newBodyData = doc.getElementsByTagName("body")[0];
-
-            //speedwise we serialize back into the code
-            //for code reduction, speedwise we will take a small hit
-            //there which we will clean up in the future, but for now
-            //this is ok, I guess, since replace body only is a small subcase
-            //bodyData = _Lang.serializeChilds(newBodyData);
-            var browser = _RT.browser;
-            if (!browser.isIEMobile || browser.isIEMobile >= 7) {
-                //TODO check what is failing there
-                for (var cnt = 0; cnt < newBodyData.attributes.length; cnt++) {
-                    var value = newBodyData.attributes[cnt].value;
-                    if (value)
-                        _Dom.setAttribute(oldBody, newBodyData.attributes[cnt].name, value);
-                }
+        //speedwise we serialize back into the code
+        //for code reduction, speedwise we will take a small hit
+        //there which we will clean up in the future, but for now
+        //this is ok, I guess, since replace body only is a small subcase
+        //bodyData = _Lang.serializeChilds(newBodyData);
+        var browser = _RT.browser;
+        if (!browser.isIEMobile || browser.isIEMobile >= 7) {
+            //TODO check what is failing there
+            for (var cnt = 0; cnt < newBodyData.attributes.length; cnt++) {
+                var value = newBodyData.attributes[cnt].value;
+                if (value)
+                    _Dom.setAttribute(oldBody, newBodyData.attributes[cnt].name, value);
             }
         }
-        //we cannot serialize here, due to escape problems
-        //we must parse, this is somewhat unsafe but should be safe enough
-        parser = new (_RT.getGlobalConfig("updateParser", myfaces._impl._util._HtmlStripper))();
-        bodyData = parser.parse(newData, "body");
 
-        var returnedElement = this.replaceHtmlItem(request, context, placeHolder, bodyData);
+        var returnedElement = this.replaceHtmlItem(request, context, placeHolder, newBodyData.innerHTML);
 
         if (returnedElement) {
             this._pushOperationResult(context, returnedElement);
@@ -8189,6 +8650,178 @@ _MF_SINGLTN(_PFX_XHR + "_AjaxResponse", _MF_OBJECT, /** @lends myfaces._impl.xhr
 
 /**
  * @class
+ * @name _AjaxResponse
+ * @memberOf myfaces._impl.xhrCore
+ * @extends myfaces._impl.core.Object
+ * @description
+ * This singleton is responsible for handling the standardized xml ajax response
+ * Note: since the semantic processing can be handled about 90% in a functional
+ * style we make this class stateless. Every state information is stored
+ * temporarily in the context.
+ *
+ * Ajax Response overrides for IE quirks mode
+ *
+ */
+_MF_SINGLTN(_PFX_XHR + "_AjaxResponseQuirks", myfaces._impl.xhrCore._AjaxResponse, /** @lends myfaces._impl.xhrCore._AjaxResponse.prototype */ {
+    constructor_: function() {
+        this._callSuper("constructor_");
+        myfaces._impl.xhrCore._AjaxResponse = this;
+    },
+
+    /**
+     * replaces a current head theoretically,
+     * pratically only the scripts are evaled anew since nothing else
+     * can be changed.
+     *
+     * @param request the current request
+     * @param context the ajax context
+     * @param newData the data to be processed
+     *
+     * @return an xml representation of the page for further processing if possible
+     */
+    _replaceHead: function (request, context, newData) {
+        var _Lang = this._Lang,
+            _Dom = this._Dom,
+            _RT = this._RT,
+            isWebkit = this._RT.browser.isWebKit,
+            //we have to work around an xml parsing bug in Webkit
+            //see https://issues.apache.org/jira/browse/MYFACES-3061
+            doc = (!isWebkit) ? _Lang.parseXML(newData) : null,
+            newHead = null;
+
+        if (!isWebkit && _Lang.isXMLParseError(doc)) {
+            doc = _Lang.parseXML(newData.replace(/<!\-\-[\s\n]*<!\-\-/g, "<!--").replace(/\/\/-->[\s\n]*\/\/-->/g, "//-->"));
+        }
+
+        if (isWebkit || _Lang.isXMLParseError(doc)) {
+            //the standard xml parser failed we retry with the stripper
+            var parser = new (this._RT.getGlobalConfig("updateParser", myfaces._impl._util._HtmlStripper))();
+            var headData = parser.parse(newData, "head");
+            //We cannot avoid it here, but we have reduced the parsing now down to the bare minimum
+            //for further processing
+            newHead = _Lang.parseXML("<head>" + headData + "</head>");
+            //last and slowest option create a new head element and let the browser
+            //do its slow job
+            if (_Lang.isXMLParseError(newHead)) {
+                try {
+                    newHead = _Dom.createElement("head");
+                    newHead.innerHTML = headData;
+                } catch (e) {
+                    //we give up no further fallbacks
+                    throw this._raiseError(new Error(), "Error head replacement failed reason:" + e.toString(), "_replaceHead");
+                }
+            }
+            newHead = newHead.childNodes[0];
+        } else {
+            //parser worked we go on
+            newHead = doc.getElementsByTagName("head")[0];
+        }
+
+        var oldTags = _Lang.objToArray(document.head.childNodes);
+
+
+        _Dom.deleteItems(_Lang.objToArray(oldTags));
+        _Dom.appendToHead(newHead);
+
+
+        return document.head;
+    },
+
+    /**
+     * special method to handle the body dom manipulation,
+     * replacing the entire body does not work fully by simply adding a second body
+     * and by creating a range instead we have to work around that by dom creating a second
+     * body and then filling it properly!
+     *
+     * @param {Object} request our request object
+     * @param {Object} context (Map) the response context
+     * @param {String} newData the markup which replaces the old dom node!
+     * @param {Node} parsedData (optional) preparsed XML representation data of the current document
+     */
+    _replaceBody: function (request, context, newData /*varargs*/) {
+        var _RT = this._RT,
+            _Dom = this._Dom,
+            _Lang = this._Lang,
+
+            oldBody = document.getElementsByTagName("body")[0],
+            placeHolder = document.createElement("div"),
+            isWebkit = _RT.browser.isWebKit;
+
+        placeHolder.id = "myfaces_bodyplaceholder";
+
+        _Dom._removeChildNodes(oldBody);
+        oldBody.innerHTML = "";
+        oldBody.appendChild(placeHolder);
+
+        var bodyData, doc = null, parser;
+
+        //we have to work around an xml parsing bug in Webkit
+        //see https://issues.apache.org/jira/browse/MYFACES-3061
+        if (!isWebkit) {
+            doc = (arguments.length > 3) ? arguments[3] : _Lang.parseXML(newData);
+        }
+
+        if (!isWebkit && _Lang.isXMLParseError(doc)) {
+            doc = _Lang.parseXML(newData.replace(/<!\-\-[\s\n]*<!\-\-/g, "<!--").replace(/\/\/-->[\s\n]*\/\/-->/g, "//-->"));
+        }
+
+        if (isWebkit || _Lang.isXMLParseError(doc)) {
+            //the standard xml parser failed we retry with the stripper
+
+            parser = new (_RT.getGlobalConfig("updateParser", myfaces._impl._util._HtmlStripper))();
+
+            bodyData = parser.parse(newData, "body");
+        } else {
+            //parser worked we go on
+            var newBodyData = doc.getElementsByTagName("body")[0];
+
+            //speedwise we serialize back into the code
+            //for code reduction, speedwise we will take a small hit
+            //there which we will clean up in the future, but for now
+            //this is ok, I guess, since replace body only is a small subcase
+            //bodyData = _Lang.serializeChilds(newBodyData);
+            var browser = _RT.browser;
+            if (!browser.isIEMobile || browser.isIEMobile >= 7) {
+                //TODO check what is failing there
+                for (var cnt = 0; cnt < newBodyData.attributes.length; cnt++) {
+                    var value = newBodyData.attributes[cnt].value;
+                    if (value)
+                        _Dom.setAttribute(oldBody, newBodyData.attributes[cnt].name, value);
+                }
+            }
+        }
+        //we cannot serialize here, due to escape problems
+        //we must parse, this is somewhat unsafe but should be safe enough
+        parser = new (_RT.getGlobalConfig("updateParser", myfaces._impl._util._HtmlStripper))();
+        bodyData = parser.parse(newData, "body");
+
+        var returnedElement = this.replaceHtmlItem(request, context, placeHolder, bodyData);
+
+        if (returnedElement) {
+            this._pushOperationResult(context, returnedElement);
+        }
+        return returnedElement;
+    },
+});
+
+/* Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to you under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * @class
  * @name _Transports
  * @memberOf myfaces._impl.xhrCore
  * @description
@@ -8213,154 +8846,297 @@ _MF_SINGLTN(_PFX_XHR + "_AjaxResponse", _MF_OBJECT, /** @lends myfaces._impl.xhr
  * corresponding protected attributes on class level in the transports themselves)
  */
 _MF_SINGLTN(_PFX_XHR + "_Transports", _MF_OBJECT,
-        /** @lends myfaces._impl.xhrCore._Transports.prototype */ {
+    /** @lends myfaces._impl.xhrCore._Transports.prototype */ {
 
-    _PAR_ERRORLEVEL:"errorlevel",
-    _PAR_QUEUESIZE:"queuesize",
-    _PAR_PPS:"pps",
-    _PAR_TIMEOUT:"timeout",
-    _PAR_DELAY:"delay",
+        _PAR_ERRORLEVEL: "errorlevel",
+        _PAR_QUEUESIZE: "queuesize",
+        _PAR_PPS: "pps",
+        _PAR_TIMEOUT: "timeout",
+        _PAR_DELAY: "delay",
 
 
-    /**
-     * a singleton queue
-     * note the structure of our inheritance
-     * is that that _queue is attached to prototype
-     * and hence the pointer to the request qeue
-     * is shared over all instances
-     *
-     * if you need to have it per instance for complex objects
-     * you have to initialize in the constructor
-     *
-     * (This is the same limitation dojo class inheritance
-     * where our inheritance pattern is derived from has)
-     */
-    _q: new myfaces._impl.xhrCore._AjaxRequestQueue(),
+        /**
+         * a singleton queue
+         * note the structure of our inheritance
+         * is that that _queue is attached to prototype
+         * and hence the pointer to the request qeue
+         * is shared over all instances
+         *
+         * if you need to have it per instance for complex objects
+         * you have to initialize in the constructor
+         *
+         * (This is the same limitation dojo class inheritance
+         * where our inheritance pattern is derived from has)
+         */
+        _q: new myfaces._impl.xhrCore._AjaxRequestQueue(),
 
-    /**
-     * xhr post with enqueuing as defined by the jsf 2.0 specification
-     *
-     * mapped options already have the exec and view properly in place
-     * myfaces specifics can be found under mappedOptions.myFaces
-     * @param {Node} source the source of this call
-     * @param {Node} sourceForm the html form which is the source of this call
-     * @param {Object} context (Map) the internal pass through context
-     * @param {Object} passThrgh (Map) values to be passed through
-     **/
-    xhrQueuedPost : function(source, sourceForm, context, passThrgh) {
-        context._mfInternal.xhrOp = "xhrQueuedPost";
-        this._q.enqueue(
+        /**
+         * xhr post with enqueuing as defined by the jsf 2.0 specification
+         *
+         * mapped options already have the exec and view properly in place
+         * myfaces specifics can be found under mappedOptions.myFaces
+         * @param {Node} source the source of this call
+         * @param {Node} sourceForm the html form which is the source of this call
+         * @param {Object} context (Map) the internal pass through context
+         * @param {Object} passThrgh (Map) values to be passed through
+         **/
+        xhrQueuedPost: function (source, sourceForm, context, passThrgh) {
+            this._q.enqueue(
                 new (this._getAjaxReqClass(context))(this._getArguments(source, sourceForm, context, passThrgh)));
-    },
-
-    /**
-      * iframe queued post
-      *
-      * mapped options already have the exec and view properly in place
-      * myfaces specifics can be found under mappedOptions.myFaces
-      * @param {Node} source the source of this call
-      * @param {Node} sourceForm the html form which is the source of this call
-      * @param {Object} context (Map) the internal pass through context
-      * @param {Object} passThrgh (Map) values to be passed through
-      **/
-     multipartQueuedPost : function(source, sourceForm, context, passThrgh) {
-         context._mfInternal.xhrOp = "multipartQueuedPost";
-         var args = this._getArguments(source, sourceForm, context, passThrgh);
-         // note in get the timeout is not working delay however is and queue size as well
-         // since there are no cross browser ways to resolve a timeout on xhr level
-         this._q.enqueue(
-                 new (this._getMultipartReqClass(context))(args));
-     },
+        },
 
 
-    /**
-     * creates the arguments map and
-     * fetches the config params in a proper way in to
-     * deal with them in a flat way (from the nested context way)
-     *
-     * @param source the source of the request
-     * @param sourceForm the sourceform
-     * @param context   the context holding all values
-     * @param passThrgh the passThrough values to be blended into the response
-     */
-    _getArguments: function(source, sourceForm, context, passThrgh) {
-        var _RT = myfaces._impl.core._Runtime,
-        /** @ignore */
-             _Lang = myfaces._impl._util._Lang,
-             applyCfg = _Lang.hitch(this, this._applyConfig),
-            //RT does not have this references, hence no hitch needed
-             getCfg = _RT.getLocalOrGlobalConfig,
+        /**
+         * a simple not enqueued xhr post
+         *
+         * mapped options already have the exec and view properly in place
+         * myfaces specifics can be found under mappedOptions.myFaces
+         * @param {Node} source the source of this call
+         * @param {Node} sourceForm the html form which is the source of this call
+         * @param {Object} context (Map) the internal pass through context
+         * @param {Object} passThrgh (Map) values to be passed through
+         **/
+        xhrPost: function (source, sourceForm, context, passThrgh) {
+            var args = this._getArguments(source, sourceForm, context, passThrgh);
+            delete args.xhrQueue;
+            (new (this._getAjaxReqClass(context))(args)).send();
+        },
 
 
-            ret = {
-                "source": source,
-                "sourceForm": sourceForm,
-                "context": context,
-                "passThrough": passThrgh,
-                "xhrQueue": this._q
-            };
+        /**
+         * xhr get without enqueuing
+         *
+         * mapped options already have the exec and view properly in place
+         * myfaces specifics can be found under mappedOptions.myFaces
+         * @param {Node} source the source of this call
+         * @param {Node} sourceForm the html form which is the source of this call
+         * @param {Object} context (Map) the internal pass through context
+         * @param {Object} passThrgh (Map) values to be passed through
+         **/
+        xhrGet: function (source, sourceForm, context, passThrgh) {
+            var args = this._getArguments(source, sourceForm, context, passThrgh);
+            // note in get the timeout is not working delay however is and queue size as well
+            // since there are no cross browser ways to resolve a timeout on xhr level
+            // we have to live with it
+            args.ajaxType = "GET";
+            delete args.xhrQueue;
+            (new (this._getAjaxReqClass(context))(args)).send();
+        },
 
-        //we now mix in the config settings which might either be set globally
-        //or pushed in under the context myfaces.<contextValue> into the current request
-        applyCfg(ret, context, "alarmThreshold", this._PAR_ERRORLEVEL);
-        applyCfg(ret, context, "queueSize", this._PAR_QUEUESIZE);
-        //TODO timeout probably not needed anymore
-        applyCfg(ret, context, "timeout", this._PAR_TIMEOUT);
-        //applyCfg(ret, context, "delay", this._PAR_DELAY);
+        /**
+         * xhr get which takes the existing queue into consideration to by synchronized
+         * to previous queued post requests
+         *
+         * mapped options already have the exec and view properly in place
+         * myfaces specifics can be found under mappedOptions.myFaces
+         * @param {Node} source the source of this call
+         * @param {Node} sourceForm the html form which is the source of this call
+         * @param {Object} context (Map) the internal pass through context
+         * @param {Object} passThrgh (Map) values to be passed through
+         **/
+        xhrQueuedGet: function (source, sourceForm, context, passThrgh) {
+            var args = this._getArguments(source, sourceForm, context, passThrgh);
+            // note in get the timeout is not working delay however is and queue size as well
+            // since there are no cross browser ways to resolve a timeout on xhr level
+            // we have to live with it
+            args.ajaxType = "GET";
+            this._q.enqueue(
+                new (this._getAjaxReqClass(context))(args));
+        },
 
-        //now partial page submit needs a different treatment
-        //since pps == execute strings
-        if (getCfg(context, this._PAR_PPS, false)
+
+        /**
+         * multipart post without queueing
+         *
+         * mapped options already have the exec and view properly in place
+         * myfaces specifics can be found under mappedOptions.myFaces
+         * @param {Node} source the source of this call
+         * @param {Node} sourceForm the html form which is the source of this call
+         * @param {Object} context (Map) the internal pass through context
+         * @param {Object} passThrgh (Map) values to be passed through
+         **/
+        multipartPost: function (source, sourceForm, context, passThrgh) {
+            var args = this._getArguments(source, sourceForm, context, passThrgh);
+            // note in get the timeout is not working delay however is and queue size as well
+            // since there are no cross browser ways to resolve a timeout on xhr level
+            // we have to live with it
+            delete args.xhrQueue;
+            (new (this._getMultipartReqClass(context))(args)).send();
+        },
+
+        /**
+         * multipart queued post
+         *
+         * mapped options already have the exec and view properly in place
+         * myfaces specifics can be found under mappedOptions.myFaces
+         * @param {Node} source the source of this call
+         * @param {Node} sourceForm the html form which is the source of this call
+         * @param {Object} context (Map) the internal pass through context
+         * @param {Object} passThrgh (Map) values to be passed through
+         **/
+        multipartQueuedPost: function (source, sourceForm, context, passThrgh) {
+            var args = this._getArguments(source, sourceForm, context, passThrgh);
+            // note in get the timeout is not working delay however is and queue size as well
+            // since there are no cross browser ways to resolve a timeout on xhr level
+            this._q.enqueue(
+                new (this._getMultipartReqClass(context))(args));
+        },
+
+        /**
+         * iframe get without queueing
+         *
+         * mapped options already have the exec and view properly in place
+         * myfaces specifics can be found under mappedOptions.myFaces
+         * @param {Node} source the source of this call
+         * @param {Node} sourceForm the html form which is the source of this call
+         * @param {Object} context (Map) the internal pass through context
+         * @param {Object} passThrgh (Map) values to be passed through
+         **/
+        multipartGet: function (source, sourceForm, context, passThrgh) {
+            var args = this._getArguments(source, sourceForm, context, passThrgh);
+            // note in get the timeout is not working delay however is and queue size as well
+            // since there are no cross browser ways to resolve a timeout on xhr level
+            // we have to live with it
+            args.ajaxType = "GET";
+            delete args.xhrQueue;
+            (new (this._getMultipartReqClass(context))(args)).send();
+        },
+
+        /**
+         * multipart queued http get
+         *
+         * mapped options already have the exec and view properly in place
+         * myfaces specifics can be found under mappedOptions.myFaces
+         * @param {Node} source the source of this call
+         * @param {Node} sourceForm the html form which is the source of this call
+         * @param {Object} context (Map) the internal pass through context
+         * @param {Object} passThrgh (Map) values to be passed through
+         **/
+        multipartQueuedGet: function (source, sourceForm, context, passThrgh) {
+            var args = this._getArguments(source, sourceForm, context, passThrgh);
+            // note in get the timeout is not working delay however is and queue size as well
+            // since there are no cross browser ways to resolve a timeout on xhr level
+            args.ajaxType = "GET";
+            this._q.enqueue(
+                new (this._getMultipartReqClass(context))(args));
+        },
+
+
+        /**
+         * creates the arguments map and
+         * fetches the config params in a proper way in to
+         * deal with them in a flat way (from the nested context way)
+         *
+         * @param source the source of the request
+         * @param sourceForm the sourceform
+         * @param context   the context holding all values
+         * @param passThrgh the passThrough values to be blended into the response
+         */
+        _getArguments: function (source, sourceForm, context, passThrgh) {
+            var _RT = myfaces._impl.core._Runtime,
+                /** @ignore */
+                _Lang = myfaces._impl._util._Lang,
+                applyCfg = _Lang.hitch(this, this._applyConfig),
+                //RT does not have this references, hence no hitch needed
+                getCfg = _RT.getLocalOrGlobalConfig,
+
+
+                ret = {
+                    "source": source,
+                    "sourceForm": sourceForm,
+                    "context": context,
+                    "passThrough": passThrgh,
+                    "xhrQueue": this._q
+                };
+
+            //we now mix in the config settings which might either be set globally
+            //or pushed in under the context myfaces.<contextValue> into the current request
+            applyCfg(ret, context, "alarmThreshold", this._PAR_ERRORLEVEL);
+            applyCfg(ret, context, "queueSize", this._PAR_QUEUESIZE);
+            //TODO timeout probably not needed anymore
+            applyCfg(ret, context, "timeout", this._PAR_TIMEOUT);
+            //applyCfg(ret, context, "delay", this._PAR_DELAY);
+
+            //now partial page submit needs a different treatment
+            //since pps == execute strings
+            if (getCfg(context, this._PAR_PPS, false)
                 && _Lang.exists(passThrgh, myfaces._impl.core.Impl.P_EXECUTE)
                 && passThrgh[myfaces._impl.core.Impl.P_EXECUTE].length > 0) {
-            ret['partialIdsArray'] = passThrgh[myfaces._impl.core.Impl.P_EXECUTE].split(" ");
+                ret['partialIdsArray'] = passThrgh[myfaces._impl.core.Impl.P_EXECUTE].split(" ");
+            }
+            return ret;
+        },
+
+        /**
+         * helper method to apply a config setting to our varargs param list
+         *
+         * @param destination the destination map to receive the setting
+         * @param context the current context
+         * @param destParm the destination param of the destination map
+         * @param srcParm the source param which is the key to our config setting
+         */
+        _applyConfig: function (destination, context, destParm, srcParm) {
+            var _RT = myfaces._impl.core._Runtime;
+            /** @ignore */
+            var _getConfig = _RT.getLocalOrGlobalConfig;
+            if (_getConfig(context, srcParm, null) != null) {
+                destination[destParm] = _getConfig(context, srcParm, null);
+            }
+        },
+
+        /**
+         * centralized transport switching helper
+         * for the multipart submit case
+         *
+         * @param context the context which is passed down
+         */
+        _getMultipartReqClass: function (context) {
+            return myfaces._impl.xhrCore._FormDataRequest;
+        },
+
+
+        _getAjaxReqClass: function (context) {
+            return myfaces._impl.xhrCore._AjaxRequest;
         }
-        return ret;
-    },
 
-    /**
-     * helper method to apply a config setting to our varargs param list
-     *
-     * @param destination the destination map to receive the setting
-     * @param context the current context
-     * @param destParm the destination param of the destination map
-     * @param srcParm the source param which is the key to our config setting
-     */
-    _applyConfig: function(destination, context, destParm, srcParm) {
-        var _RT = myfaces._impl.core._Runtime;
-        /** @ignore */
-        var _getConfig = _RT.getLocalOrGlobalConfig;
-        if (_getConfig(context, srcParm, null) != null) {
-            destination[destParm] = _getConfig(context, srcParm, null);
+    });
+
+/* Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to you under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+_MF_SINGLTN(_PFX_XHR + "_TransportsQuirks", myfaces._impl.xhrCore._Transports,
+    /** @lends myfaces._impl.xhrCore._Transports.prototype */ {
+        constructor_: function () {
+            this._callSuper("constructor_");
+            myfaces._impl.xhrCore._Transports = this;
+        },
+        /**
+         * centralized transport switching helper
+         * for the multipart submit case
+         *
+         * @param context the context which is passed down
+         */
+        _getMultipartReqClass: function (context) {
+            if (this._RT.getXHRLvl() >= 2) {
+                return myfaces._impl.xhrCore._FormDataRequest;
+            } else {
+                return myfaces._impl.xhrCore._IFrameRequest;
+            }
         }
-    },
-
-    /**
-     * centralized transport switching helper
-     * for the multipart submit case
-     *
-     * @param context the context which is passed down
-     */
-    _getMultipartReqClass: function(context) {
-       if (this._RT.getXHRLvl() >= 2) {
-            return myfaces._impl.xhrCore._MultipartAjaxRequestLevel2;
-       } else {
-            return myfaces._impl.xhrCore._IFrameRequest;
-       }
-    },
-
-
-    _getAjaxReqClass: function(context) {
-        // var _RT = myfaces._impl.core._Runtime;
-        if(this._RT.getXHRLvl() < 2) {
-           return myfaces._impl.xhrCore._AjaxRequest;
-        } else {
-           return myfaces._impl.xhrCore._AjaxRequestLevel2;
-        }
-    }
-
-});
-
+    });
 /* Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -8598,6 +9374,10 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
     P_WINDOW_ID:"javax.faces.ClientWindow",
     P_RESET_VALUES:"javax.faces.partial.resetValues",
 
+    //faces std values
+    STD_VALUES: [this.P_PARTIAL_SOURCE, this.P_VIEWSTATE, this.P_CLIENTWINDOW, this.P_AJAX,
+        this.P_EXECUTE, this.P_RENDER, this.P_EVT, this.P_WINDOW_ID, this.P_RESET_VALUES],
+
     /* message types */
     ERROR:"error",
     EVENT:"event",
@@ -8620,7 +9400,7 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
 
     /*blockfilter for the passthrough filtering, the attributes given here
      * will not be transmitted from the options into the passthrough*/
-    _BLOCKFILTER:{onerror:1, onevent:1, render:1, execute:1, myfaces:1, delay:1, resetValues:1},
+    _BLOCKFILTER:{onerror:1, onevent:1, render:1, execute:1, myfaces:1, delay:1, resetValues:1, params: 1},
 
     /**
      * collect and encode data for a given form element (must be of type form)
@@ -8682,7 +9462,8 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
          *all the time
          **/
         var _Lang = this._Lang,
-                _Dom = this._Dom;
+            _Dom = this._Dom,
+            _Utils = myfaces._impl.xhrCore._AjaxUtils;
         /*assert if the onerror is set and once if it is set it must be of type function*/
         _Lang.assertType(options.onerror, "function");
         /*assert if the onevent is set and once if it is set it must be of type function*/
@@ -8692,7 +9473,7 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
         options = options || {};
 
         /**
-         * we cross reference statically hence the mapping here
+         * we cross - reference statically hence the mapping here
          * the entire mapping between the functions is stateless
          */
         //null definitely means no event passed down so we skip the ie specific checks
@@ -8718,11 +9499,20 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
          * this copy is also the pass through parameters
          * which are sent down our request
          */
+        // this is legacy behavior which is faulty, will be removed if we decide to do it
+        // that way
+        // TODO not sure whether we add the naming container prefix to the user params
         var passThrgh = _Lang.mixMaps({}, options, true, this._BLOCKFILTER);
+        // jsdoc spec everything under params must be passed through
+        if(options.params)  {
+            passThrgh = _Lang.mixMaps(passThrgh, options.params, true, {});
+        }
 
         if (event) {
             passThrgh[this.P_EVT] = event.type;
         }
+
+
 
         /**
          * ajax pass through context with the source
@@ -8732,7 +9522,7 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
             source:elem,
             onevent:options.onevent,
             onerror:options.onerror,
-
+            viewId: "",
             //TODO move the myfaces part into the _mfInternal part
             myfaces:options.myfaces,
             _mfInternal:{}
@@ -8752,6 +9542,14 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
                 _Lang.byId(options.myfaces.form) :
                 this._getForm(elem, event);
 
+        context.viewId = this.getViewId(form);
+
+        /**
+         * we also now assign the container data to deal with it later
+         */
+        _Utils._assignNamingContainerData(mfInternal, form, jsf.separatorchar);
+
+
         /**
          * JSF2.2 client window must be part of the issuing form so it is encoded
          * automatically in the request
@@ -8761,7 +9559,7 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
         //in case someone decorates the getClientWindow we reset the value from
         //what we are getting
         if ('undefined' != typeof clientWindow && null != clientWindow) {
-            var formElem = _Dom.getNamedElementFromForm(form, this.P_CLIENTWINDOW);
+            var formElem = _Dom.getNamedElementFromForm(form, _Utils._$ncRemap(mfInternal,  this.P_CLIENTWINDOW));
             if (formElem) {
                 //we store the value for later processing during the ajax phase
                 //job so that we do not get double values
@@ -8808,13 +9606,13 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
              */
             options.execute = (options.execute.indexOf("@this") == -1) ? options.execute : options.execute;
 
-            this._transformList(passThrgh, this.P_EXECUTE, options.execute, form, elementId);
+            this._transformList(passThrgh, this.P_EXECUTE, options.execute, form, elementId, context.viewId);
         } else {
             passThrgh[this.P_EXECUTE] = elementId;
         }
 
         if (options.render) {
-            this._transformList(passThrgh, this.P_RENDER, options.render, form, elementId);
+            this._transformList(passThrgh, this.P_RENDER, options.render, form, elementId, context.viewId);
         }
 
         /**
@@ -8839,12 +9637,32 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
         //this is not documented behavior but can be determined by running
         //mojarra under blackbox conditions
         //i assume it does the same as our formId_submit=1 so leaving it out
-        //wont hurt but for the sake of compatibility we are going to add it
+        //won´t hurt but for the sake of compatibility we are going to add it
         passThrgh[form.id] = form.id;
 
         /* jsf2.2 only: options.delay || */
+
+        // TCK 790 we now have to remap all passthroughs in case of a naming container
+        // thing is the naming container is always prefixed on inputs, and our own
+        // passthroughs are not mapped for now (if we have to do that we we have to add a similar mapping code)
+        var passthroughKeys = Object.keys(passThrgh);
+        for(var key in passthroughKeys) {
+            if(!Object.hasOwnProperty(key) || this.STD_VALUES.indexOf(key) == -1) {
+                continue;
+            }
+            passThrgh[_Utils._$ncRemap(mfInternal, key)] = passThrgh[key];
+            delete passThrgh[key];
+        }
+
+        /* faces2.2 only: options.delay || */
         var delayTimeout = options.delay || this._RT.getLocalOrGlobalConfig(context, "delay", false);
-        if (delayTimeout) {
+
+        if (!!delayTimeout) {
+            if(!(delayTimeout >= 0)) {
+                // abbreviation which covers all cases of non positive values,
+                // including NaN and non-numeric strings, no type equality is deliberate here,
+                throw new Error("Invalid delay value: " + delayTimeout);
+            }
             if (this._delayTimeout) {
                 clearTimeout(this._delayTimeout);
             }
@@ -8899,8 +9717,8 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
         //for now we turn off the transport auto selection, to enable 2.0 backwards compatibility
         //on protocol level, the file upload only can be turned on if the auto selection is set to true
         var getConfig = this._RT.getLocalOrGlobalConfig,
-                _Lang = this._Lang,
-                _Dom = this._Dom;
+            _Lang = this._Lang,
+            _Dom = this._Dom;
 
         var transportAutoSelection = getConfig(context, "transportAutoSelection", true);
         /*var isMultipart = (transportAutoSelection && _Dom.getAttribute(form, "enctype") == "multipart/form-data") ?
@@ -8911,7 +9729,7 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
             return getConfig(context, "transportType", "xhrQueuedPost");
         }
         var multiPartCandidate = _Dom.isMultipartCandidate((!getConfig(context, "pps", false)) ?
-                form : passThrgh[this.P_EXECUTE]);
+            form : passThrgh[this.P_EXECUTE]);
         var multipartForm = (_Dom.getAttribute(form, "enctype") || "").toLowerCase() == "multipart/form-data";
         //spec section jsdoc, if we have a multipart candidate in our execute (aka fileupload)
         //and the form is not multipart then we have to raise an error
@@ -8932,8 +9750,8 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
          *
          */
         var transportType = (!isMultipart) ?
-                getConfig(context, "transportType", "xhrQueuedPost") :
-                getConfig(context, "transportType", "multipartQueuedPost");
+            getConfig(context, "transportType", "xhrQueuedPost") :
+            getConfig(context, "transportType", "multipartQueuedPost");
         if (!this._transport[transportType]) {
             //throw new Error("Transport type " + transportType + " does not exist");
             throw new Error(_Lang.getMessage("ERR_TRANSPORT", null, transportType));
@@ -8953,8 +9771,9 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
      * @param srcStr
      * @param form
      * @param elementId
+     * @param namingContainerId the naming container namingContainerId
      */
-    _transformList:function (passThrgh, target, srcStr, form, elementId) {
+    _transformList:function (passThrgh, target, srcStr, form, elementId, namingContainerId) {
         var _Lang = this._Lang;
         //this is probably the fastest transformation method
         //it uses an array and an index to position all elements correctly
@@ -8962,14 +9781,14 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
         //false
         srcStr = this._Lang.trim(srcStr);
         var offset = 1,
-                vals = (srcStr) ? srcStr.split(/\s+/) : [],
-                idIdx = (vals.length) ? _Lang.arrToMap(vals, offset) : {},
+            vals = (srcStr) ? srcStr.split(/\s+/) : [],
+            idIdx = (vals.length) ? _Lang.arrToMap(vals, offset) : {},
 
-        //helpers to improve speed and compression
-                none = idIdx[this.IDENT_NONE],
-                all = idIdx[this.IDENT_ALL],
-                theThis = idIdx[this.IDENT_THIS],
-                theForm = idIdx[this.IDENT_FORM];
+            //helpers to improve speed and compression
+            none = idIdx[this.IDENT_NONE],
+            all = idIdx[this.IDENT_ALL],
+            theThis = idIdx[this.IDENT_THIS],
+            theForm = idIdx[this.IDENT_FORM];
 
         if (none) {
             //in case of none nothing is returned
@@ -8995,8 +9814,61 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
         }
 
         //the final list must be blank separated
-        passThrgh[target] = vals.join(" ");
+        passThrgh[target] = this._remapNamingContainer(elementId, form, namingContainerId,vals).join(" ");
         return passThrgh;
+    },
+
+    /**
+     * in namespaced situations root naming containers must be resolved
+     * ":" absolute searches must be mapped accordingly, the same
+     * goes for absolut searches containing already the root naming container id
+     *
+     * @param issuingElementId the issuing element id
+     * @param form the hosting form of the issiung element id
+     * @param rootNamingContainerId the root naming container id
+     * @param elements a list of element client ids to be processed
+     * @returns {*} the mapped element client ids, which are resolved correctly to their naming containers
+     * @private
+     */
+    _remapNamingContainer: function(issuingElementId, form, rootNamingContainerId, elements) {
+        var SEP = jsf.separatorchar;
+        function remapViewId(toTransform) {
+            var EMPTY_STR = "";
+            var rootNamingContainerPrefix = (rootNamingContainerId.length) ? rootNamingContainerId+SEP : EMPTY_STR;
+            var formClientId = form.id;
+            // nearest parent naming container relative to the form
+            var nearestNamingContainer = formClientId.substring(0, formClientId.lastIndexOf(SEP));
+            var nearestNamingContainerPrefix = (nearestNamingContainer.length) ? nearestNamingContainer + SEP : EMPTY_STR;
+            // absolut search expression, always starts with SEP or the name of the root naming container
+            var hasLeadingSep = toTransform.indexOf(SEP) === 0;
+            var isAbsolutSearchExpr = hasLeadingSep || (rootNamingContainerId.length
+                && toTransform.indexOf(rootNamingContainerPrefix) == 0);
+            if (isAbsolutSearchExpr) {
+                //we cut off the leading sep if there is one
+                toTransform = hasLeadingSep ? toTransform.substring(1) : toTransform;
+                toTransform = toTransform.indexOf(rootNamingContainerPrefix) == 0 ? toTransform.substring(rootNamingContainerPrefix.length) : toTransform;
+                //now we prepend either the prefix or "" from the cut-off string to get the final result
+                return  [rootNamingContainerPrefix, toTransform].join(EMPTY_STR);
+            } else { //relative search according to the javadoc
+                //we cut off the root naming container id from the form
+                if (formClientId.indexOf(rootNamingContainerPrefix) == 0) {
+                    formClientId = formClientId.substring(rootNamingContainerPrefix.length);
+                }
+
+                //If prependId = true, the outer form id must be present in the id if same form
+                var hasPrependId = toTransform.indexOf(formClientId) == 0;
+
+                return hasPrependId ?
+                    [rootNamingContainerPrefix, toTransform].join(EMPTY_STR) :
+                    [nearestNamingContainerPrefix, toTransform].join(EMPTY_STR);
+            }
+        }
+
+        for(var cnt = 0; cnt < elements.length; cnt++) {
+            elements[cnt] = remapViewId(this._Lang.trim(elements[cnt]));
+        }
+
+        return elements;
     },
 
     addOnError:function (/*function*/errorListener) {
@@ -9072,7 +9944,7 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
 
         if (jsf.getProjectStage() === "Development" && this._errListeners.length() == 0 && !context["onerror"]) {
             var DIVIDER = "--------------------------------------------------------",
-                    defaultErrorOutput = myfaces._impl.core._Runtime.getGlobalConfig("defaultErrorOutput", alert),
+                    defaultErrorOutput = myfaces._impl.core._Runtime.getGlobalConfig("defaultErrorOutput", (console && console.error) ? console.error : alert),
                     finalMessage = [],
             //we remap the function to achieve a better compressability
                     pushMsg = _Lang.hitch(finalMessage, finalMessage.push);
@@ -9197,7 +10069,7 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
 
             /* run through all script tags and try to find the one that includes jsf.js */
             for (var i = 0; i < scriptTags.length && !found; i++) {
-                if (scriptTags[i].src.search(/\/javax\.faces\.resource\/jsf\.js.*ln=javax\.faces/) != -1) {
+                if (scriptTags[i] && scriptTags[i].src && scriptTags[i].src.search(/\/javax\.faces\.resource\/jsf\.js.*ln=javax\.faces/) != -1) {
                     var result = scriptTags[i].src.match(/stage=([^&;]*)/);
                     found = true;
                     if (result) {
@@ -9365,6 +10237,26 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
         var forms = this._Dom.findByTagName(finalNode, "form");
         var result = fetchWindowIdFromForms(forms);
         return (null != result) ? result : fetchWindowIdFromURL();
+    },
+
+    /**
+     * returns the view id from an incoming form
+     * crossport from new codebase
+     * @param form
+     */
+    getViewId: function (form) {
+        var _t = this;
+        var foundViewStates = this._Dom.findAll(form, function(node) {
+            return node.tagName === "INPUT" && node.type === "hidden" && (node.name || "").indexOf(_t.P_VIEWSTATE) !== -1
+        }, true);
+        if(!foundViewStates.length) {
+            return "";
+        }
+        var viewId =  foundViewStates[0].id.split(jsf.separatorchar, 2)[0];
+        var viewStateViewId = viewId.indexOf(this.P_VIEWSTATE) === -1 ? viewId : "";
+        // myfaces specific, we in non portlet environments prepend the viewId
+        // even without being in a naming container, the other components ignore that
+        return form.id.indexOf(viewStateViewId) === 0 ? viewStateViewId : "";
     }
 });
 
@@ -9767,7 +10659,7 @@ if (!jsf.push) {
     }
 
     // Public static functions ----------------------------------------------------------------------------------------
-
+    var _t = this;
     /**
      *
      * @param {function} onopen The function to be invoked when the web socket is opened.
@@ -9805,7 +10697,7 @@ if (!jsf.push) {
         }
 
         if (autoconnect) {
-            this.open(socketClientId);
+            _t.open(socketClientId);
         }
     }
 
