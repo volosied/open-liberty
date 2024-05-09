@@ -88,6 +88,7 @@ public class LinkWrite {
                 if (tc.isDebugEnabled()) {
                     Tr.debug(tc, "calling onResult on SendHandler: " + wsocSendHandler);
                 }
+                System.out.println("SESSION TO USE " + connLink.getWsocSession());
                 wsocSendHandler.onResult(SendResultGood);
             }
         }

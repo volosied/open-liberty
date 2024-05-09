@@ -148,7 +148,7 @@ public class WsocConnLink {
 
         TCPWriteRequestContext tcpWriteContext = tcpConnection.getWriteInterface();
         tcpReadContext = tcpConnection.getReadInterface();
-        linkWrite = new LinkWrite();
+        linkWrite = new LinkWrite(); // VS NEW LINK CREATED
         linkRead = new LinkRead();
 
         wrc = new WsocReadCallback();
