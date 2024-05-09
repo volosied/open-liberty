@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 
-import com.ibm.ws.kernel.productinfo.ProductInfo;
 import com.ibm.ws.session.utils.LoggingUtil;
 
 
@@ -759,12 +758,10 @@ final public class SessionProperties {
             smc.setSessionCookieSameSite(SameSiteCookie.get(sValue));  
         }
 
-        if (ProductInfo.getBetaEdition()) {
-            s = "cookiePartitioned";
-            bValue = propertyToBoolean(xtpProperties.get(s));
-            if (bValue != null) {
-                smc.setSessionCookiePartitioned(bValue);
-            }
+        s = "cookiePartitioned";
+        bValue = propertyToBoolean(xtpProperties.get(s));
+        if (bValue != null) {
+            smc.setSessionCookiePartitioned(bValue);
         }
 
         s = "maxInMemorySessionCount";
