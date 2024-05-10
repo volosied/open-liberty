@@ -1,4 +1,4 @@
-package io.openliberty.wsoc21.link;
+package io.openliberty.wsoc22.link;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

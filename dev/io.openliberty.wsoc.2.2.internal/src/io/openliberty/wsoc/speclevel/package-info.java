@@ -11,4 +11,4 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 @org.osgi.annotation.versioning.Version("1.0")
-package io.openliberty.wsoc22.speclevel;
+package io.openliberty.wsoc.speclevel;
