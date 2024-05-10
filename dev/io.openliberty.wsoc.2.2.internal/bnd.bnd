@@ -13,14 +13,30 @@
 -include= ~../cnf/resources/bnd/bundle.props,
 
 bVersion=1.0
-bSymbolicName=io.openliberty.wsoc.1.0.internal
+bSymbolicName=io.openliberty.wsoc.2.2.internal
 
 Bundle-Name: WebSocket
-Bundle-SymbolicName: io.openliberty.wsoc.1.0.internal
+Bundle-SymbolicName: io.openliberty.wsoc.2.2.internal
 Bundle-Description: WebSocket, version ${bVersion}
 
+Service-Component: \
+  io.openliberty.wsoc.link; \
+    implementation:= io.openliberty.wsoc22.link.LinkWriteFactory22; \
+    provide:=com.ibm.ws.wsoc.link.LinkWriteFactory; \
+    configuration-policy:=ignore;\
+    immediate:=true;\
+    properties:="service.vendor=IBM",\
+
 Export-Package: \
- io.openliberty.wsoc.speclevel
+ io.openliberty.wsoc22.speclevel,\
+ io.openliberty.wsoc22.link
 
 -buildpath: \
- 	com.ibm.ws.org.osgi.annotation.versioning;version=latest
+ 	com.ibm.ws.org.osgi.annotation.versioning;version=latest,\
+  com.ibm.ws.wsoc.jakarta;version=latest,\
+  io.openliberty.jakarta.websocket.client.2.2;version=latest,\
+  com.ibm.ws.kernel.service;version=latest,\
+ 	io.openliberty.jakarta.websocket.2.2;version=latest,\
+  com.ibm.ws.channelfw;version=latest,\
+  com.ibm.ws.logging;version=latest,\
+	com.ibm.ws.transport.http;version=latest,\
