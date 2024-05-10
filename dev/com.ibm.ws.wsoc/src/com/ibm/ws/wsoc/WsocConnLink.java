@@ -43,6 +43,10 @@ import com.ibm.ws.wsoc.injection.InjectionThings;
 import com.ibm.ws.wsoc.link.LinkRead;
 import com.ibm.ws.wsoc.link.LinkWrite;
 import com.ibm.ws.wsoc.link.LinkWriteExt10;
+import com.ibm.ws.wsoc.link.LinkWriteFactory;
+import com.ibm.ws.wsoc.servercontainer.ServerContainerExt;
+import com.ibm.ws.wsoc.servercontainer.ServletContainerFactory;
+import com.ibm.ws.wsoc.servercontainer.v10.ServerContainerImplFactory10;
 import com.ibm.ws.wsoc.util.Utils;
 import com.ibm.wsspi.bytebuffer.WsByteBuffer;
 import com.ibm.wsspi.bytebuffer.WsByteBufferPoolManager;
@@ -151,7 +155,10 @@ public class WsocConnLink {
 
         TCPWriteRequestContext tcpWriteContext = tcpConnection.getWriteInterface();
         tcpReadContext = tcpConnection.getReadInterface();
-        linkWrite = new LinkWriteExt10(); // VS NEW LINK CREATED
+
+
+        linkWrite = WebSocketVersionServiceManager.getLinkWriteFactory().getLinkWrite();
+        System.out.println("CREATED " + linkWrite);
         linkRead = new LinkRead();
 
         wrc = new WsocReadCallback();
