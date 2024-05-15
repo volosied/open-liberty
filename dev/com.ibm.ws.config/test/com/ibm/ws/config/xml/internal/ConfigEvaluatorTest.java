@@ -1937,11 +1937,12 @@ public class ConfigEvaluatorTest {
                     ServerConfiguration serverConfig = configParser.parseServerConfiguration(new StringReader(xml));
                     ConfigElement entry = serverConfig.getFactoryInstance(pid, alias, "one");
                     try {
-                        evaluator.evaluate(entry, re);
-                        fail(pfx + " " + attr + " invalid");
+                        evaluator.evaluate(entry, re); // VS
+                        assertTrue("Invalid boolean warning is expected!", outputMgr.checkForMessages("CWWKG0081E"));
                     } catch (ConfigEvaluatorException e) {
                         System.out.println(pfx + " " + attr + " invalid attribute value caught expected " + e);
                     }
+                    outputMgr.resetStreams(); // reset
                 }
 
                 // Test validation errors for XML string elements.
@@ -1958,10 +1959,11 @@ public class ConfigEvaluatorTest {
                     ConfigElement entry = serverConfig.getFactoryInstance(pid, alias, "one");
                     try {
                         evaluator.evaluate(entry, re);
-                        fail(pfx + " " + attr + " invalid");
+                        assertTrue("Invalid boolean warning is expected!", outputMgr.checkForMessages("CWWKG0081E"));
                     } catch (ConfigEvaluatorException e) {
                         System.out.println(pfx + " " + attr + " invalid element value caught expected " + e);
                     }
+                    outputMgr.resetStreams(); // reset
                 }
 
                 // Reset validation.
@@ -2197,8 +2199,8 @@ public class ConfigEvaluatorTest {
         evaluator.evaluate(entry, registryEntry);
     }
 
-    // Should throw an exception because the value of a boolean field is not "true" or "false"
-    @Test(expected = ConfigEvaluatorException.class)
+    // Should log a warning because the value of a boolean field is not "true" or "false"
+    @Test
     public void testInvalidBoolean() throws ConfigParserException, ConfigValidationException, ConfigEvaluatorException, ConfigMergeException {
         changeLocationSettings("default");
 
@@ -2223,6 +2225,8 @@ public class ConfigEvaluatorTest {
         RegistryEntry registryEntry = registry.getRegistryEntry(loggingPid);
         entry = serverConfig.getFactoryInstance(loggingPid, registryEntry.getAlias(), "one");
         evaluator.evaluate(entry, registryEntry);
+        assertTrue("Invalid boolean warning is expected!", outputMgr.checkForMessages("CWWKG0081E"));
+
     }
 
     @Test
