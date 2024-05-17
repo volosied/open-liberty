@@ -2939,7 +2939,7 @@ public abstract class HttpBaseMessageImpl extends GenericMessageImpl implements 
                 }
             }
             
-            // If SameSite=None is set programmatically, but partitioned is set via server.xml, then add the parititioned attribute
+            // If SameSite=None is set programmatically, but partitioned is set via server.xml, then add the partitioned attribute
             if (getServiceContext().getHttpConfig().useSameSiteConfig() && cookie.getAttribute("samesite") != null) {
                 boolean sameSiteNoneUsed = cookie.getAttribute("samesite").equalsIgnoreCase(HttpConfigConstants.SameSite.NONE.getName());
                 if(getServiceContext().getHttpConfig().getPartitioned() && sameSiteNoneUsed) {

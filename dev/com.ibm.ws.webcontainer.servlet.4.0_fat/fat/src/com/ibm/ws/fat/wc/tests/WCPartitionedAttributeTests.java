@@ -40,8 +40,8 @@ import componenttest.topology.impl.LibertyServer;
  * Tests for CHIPS (Partitioned Cookies) via samesite partitioned metatype
  * 
  * Remaining Work: 
- * - Test Precedence for Paritioned (Security and Session Cookies)
- * - Test Paritioned via JSP
+ * - Test Precedence for partitioned (Security and Session Cookies)
+ * - Test partitioned via JSP
  */
 @RunWith(FATRunner.class)
 public class WCPartitionedAttributeTests {
@@ -150,12 +150,12 @@ public class WCPartitionedAttributeTests {
     }
 
     /**
-     * Ensure Paritioned is not set twice if already set programmatically within the servlet and specifed via server.xml config. 
+     * Ensure partitioned is not set twice if already set programmatically within the servlet and specifed via server.xml config. 
      * Configuration Tested:
      *    <samesite none="*" partitioned="true"/>
      */
     @Test
-    public void testDuplicateParitionDoesNotOccur() throws Exception {
+    public void testDuplicatepartitionDoesNotOccur() throws Exception {
         String expectedSetHeader = "Set-Cookie: PartitionedCookieName_SetHeader=PartitionedCookieValue_SetHeader; SameSite=None; Partitioned";
         String expectedAddHeader = "Set-Cookie: PartitionedCookieName_AddHeader=PartitionedCookieValue_AddHeader; SameSite=None; Partitioned";
 
@@ -222,7 +222,7 @@ public class WCPartitionedAttributeTests {
     }
 
     /**
-     * Checks the default behavior (paritioned is false - therefore not added). 
+     * Checks the default behavior (partitioned is false - therefore not added). 
      * Configuration Tested:
      *    <samesite none="*" />
      */
@@ -300,12 +300,12 @@ public class WCPartitionedAttributeTests {
     }
 
     /**
-     * Verify Paritioned is not set on Lax Cookies. 
+     * Verify partitioned is not set on Lax Cookies. 
      * Configuration Tested:
      *    <samesite lax="*" partitioned="true" />
      */
     @Test
-    public void testParitionedNotSetOnLax() throws Exception {
+    public void testpartitionedNotSetOnLax() throws Exception {
         String expectedSetHeader = "Set-Cookie: PartitionedCookieName_SetHeader=PartitionedCookieValue_SetHeader; SameSite=Lax";
         String expectedAddHeader = "Set-Cookie: PartitionedCookieName_AddHeader=PartitionedCookieValue_AddHeader; SameSite=Lax";
         String expectedAddCookie = "Set-Cookie: PartitionedCookieName_AddCookie=PartitionedCookieValue_AddCookie; SameSite=Lax";
@@ -376,12 +376,12 @@ public class WCPartitionedAttributeTests {
     }
 
     /**
-     * Verify Paritioned is not set on Strict Cookies. 
+     * Verify partitioned is not set on Strict Cookies. 
      * Configuration Tested:
      *    <samesite strict="*" partitioned="true" />
      */
     @Test
-    public void testParitionedNotSetOnStrict() throws Exception {
+    public void testpartitionedNotSetOnStrict() throws Exception {
         String expectedSetHeader = "Set-Cookie: PartitionedCookieName_SetHeader=PartitionedCookieValue_SetHeader; SameSite=Strict";
         String expectedAddHeader = "Set-Cookie: PartitionedCookieName_AddHeader=PartitionedCookieValue_AddHeader; SameSite=Strict";
         String expectedAddCookie = "Set-Cookie: PartitionedCookieName_AddCookie=PartitionedCookieValue_AddCookie; SameSite=Strict";
@@ -454,7 +454,7 @@ public class WCPartitionedAttributeTests {
 
     /**
      * Ensure cookies are not split when Partitioned is specified via setHeader/addHeader and addCookie is invoked. 
-     * Paritioned should be a recongized cookie attribute by the server
+     * partitioned should be a recongized cookie attribute by the server
      * See more information here: https://github.com/OpenLiberty/open-liberty/issues/22324#issuecomment-1961939339
      */
     @Test
@@ -610,7 +610,7 @@ public class WCPartitionedAttributeTests {
     }
 
     /**
-     * Verify Paritioned is Not Set by Default
+     * Verify partitioned is Not Set by Default
      * No Configurations enabled in the server.xml
      */
     @Test
@@ -668,7 +668,7 @@ public class WCPartitionedAttributeTests {
     }
 
     /**
-     * Verify Paritioned is set when CookiePartitioned=true
+     * Verify partitioned is set when CookiePartitioned=true
      * Configuration Tested:
      *    <httpSession cookiePartitioned="true" cookieSameSite="none"/> 
      */
@@ -727,12 +727,12 @@ public class WCPartitionedAttributeTests {
 
 
     /**
-     * Verify Paritioned is not set on the SameSite=Lax Cookie
+     * Verify partitioned is not set on the SameSite=Lax Cookie
      * Configuration Tested:
      *    <httpSession cookiePartitioned="true" cookieSameSite="*"/> 
      */
     @Test
-    public void testParitionedNotSetonLaxSessionCookie() throws Exception {
+    public void testpartitionedNotSetonLaxSessionCookie() throws Exception {
         String expectedResponse = "Welcome to the TestPartitionedSessionServlet!";
 
         server.saveServerConfiguration();
@@ -787,12 +787,12 @@ public class WCPartitionedAttributeTests {
     }
 
     /**
-     * Verify Paritioned is not set on SameSite=Strict
+     * Verify partitioned is not set on SameSite=Strict
      * Configuration Tested:
      *    <httpSession cookiePartitioned="true" cookieSameSite="strict"/> 
      */
     @Test
-    public void testParitionedNotSetonStrictSessionCookie() throws Exception {
+    public void testpartitionedNotSetonStrictSessionCookie() throws Exception {
         String expectedResponse = "Welcome to the TestPartitionedSessionServlet!";
 
         server.saveServerConfiguration();
