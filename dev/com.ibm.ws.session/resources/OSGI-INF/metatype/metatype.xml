@@ -126,7 +126,7 @@
             name="internal" 
             description="internal use only"
             ibmui:group="cookies"
-            required="false" type="Boolean" default="false" /> 
+            required="false" type="String" /> 
 
         <!-- ibmui:group=url.rewriting -->
         <AD id="rewriteId" 

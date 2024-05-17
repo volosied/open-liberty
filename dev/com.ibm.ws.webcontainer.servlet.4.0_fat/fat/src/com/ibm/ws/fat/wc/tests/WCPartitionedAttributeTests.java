@@ -916,7 +916,7 @@ public class WCPartitionedAttributeTests {
             server.waitForConfigUpdateInLogUsingMark(Collections.singleton(APP_NAME), false, "CWWKT0016I:.*PartitionedTest.*");
         }
     }
-
+    
      /**
      * Verify HttpSession's Config overrides the HttpChannel Config. 
      * All cookies except the Session Cookie is Partitioned. 
@@ -1061,5 +1061,74 @@ public class WCPartitionedAttributeTests {
         }
     }
 
+    /**
+     *  Only the session cookie is partitioned. 
+     * 
+     * Configuration Tested:
+     *    <httpSession cookieSameSite="None" /> 
+     *    <samesite partitioned="true" />
+     */
+    @Test
+    public void testHttpSessionOverridesHttpChannelConfigCase4() throws Exception {
+        String expectedResponse = "Welcome to the TestPartitionedSessionServlet!";
+
+        server.saveServerConfiguration();
+
+        ServerConfiguration configuration = server.getServerConfiguration();
+        LOG.info("Server configuration that was saved: " + configuration);
+
+        HttpSession httpSession = configuration.getHttpSession();
+        httpSession.setCookieSameSite("none");
+
+        HttpEndpoint httpEndpoint = configuration.getHttpEndpoints().getById("defaultHttpEndpoint");
+
+        httpEndpoint.getSameSite().setPartitioned(true);  
+
+        server.setMarkToEndOfLog();
+        server.updateServerConfiguration(configuration);
+        server.waitForConfigUpdateInLogUsingMark(Collections.singleton(APP_NAME), false, "CWWKT0016I:.*PartitionedTest.*");
+
+        String url = "http://" + server.getHostname() + ":" + server.getHttpDefaultPort() + "/" + APP_NAME + "/TestPartitionedSession";
+        LOG.info("url: " + url);
+
+        HttpGet getMethod = new HttpGet(url);
+
+        try (final CloseableHttpClient client = HttpClientBuilder.create().build()) {
+            try (final CloseableHttpResponse response = client.execute(getMethod)) {
+                String responseText = EntityUtils.toString(response.getEntity());
+                LOG.info("\n" + "Response Text:");
+                LOG.info("\n" + responseText);
+
+                assertTrue("The response did not contain the following String: " + expectedResponse, responseText.contains(expectedResponse));
+
+                Header[] headers = response.getHeaders("Set-Cookie");
+                LOG.info("\n" + "Set-Cookie headers contained in the response:");
+
+                String headerValue;
+                for (Header header : headers) {
+                    headerValue = header.toString();
+                    LOG.info("\n" + headerValue);
+                     
+                    if(headerValue.contains("Set-Cookie: JSESSIONID=")){
+                        // Assert SameSite=None IS contained in the Cookie
+                        assertTrue("The response did not contain the expected cookies header for the session", headerValue.contains("SameSite=None"));
+                         // Assert Partitioned is contained in the Cookie
+                        assertTrue("The response did not contain the expected cookies header for the session", headerValue.contains("Partitioned"));
+                    } else if (headerValue.contains("Set-Cookie: AddCookieName=")) {
+                        // Assert SameSite=None IS contained in the Cookie
+                        assertTrue("The response did not contain the expected cookies header for the session", !headerValue.contains("SameSite=None"));
+                        // Assert Partitioned IS contained in the Cookie
+                        assertTrue("The response did not contain the expected cookies header for the session", !headerValue.contains("Partitioned"));
+                    } else {
+                        fail("Unknown cookie encountered: " + headerValue);
+                    }
+                }
+            }
+        } finally {  
+            server.setMarkToEndOfLog();
+            server.restoreServerConfiguration();
+            server.waitForConfigUpdateInLogUsingMark(Collections.singleton(APP_NAME), false, "CWWKT0016I:.*PartitionedTest.*");
+        }
+    }
 
 }
