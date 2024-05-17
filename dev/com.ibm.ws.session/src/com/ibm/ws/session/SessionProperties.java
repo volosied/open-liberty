@@ -759,11 +759,13 @@ final public class SessionProperties {
         }
 
         s = "cookiePartitioned";
-        bValue = propertyToBoolean(xtpProperties.get(s));
-        if (bValue != null) {
+        sValue = propertyToString(xtpProperties.get(s));
+        // if it's not defered then it's true or false which we can parse to a boolean
+        if(!sValue.equalsIgnoreCase("defer")){
+            bValue = propertyToBoolean(sValue);
             smc.setSessionCookiePartitioned(bValue);
         }
-
+        
         s = "maxInMemorySessionCount";
         iValue = propertyToInteger(xtpProperties.get(s));
         if (iValue != null) {
