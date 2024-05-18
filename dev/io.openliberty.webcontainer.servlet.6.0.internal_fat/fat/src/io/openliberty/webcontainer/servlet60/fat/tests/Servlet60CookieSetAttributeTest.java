@@ -211,7 +211,7 @@ public class Servlet60CookieSetAttributeTest {
     @Test
     public void test_setAttributePartitioned() throws Exception {
         String url = "http://" + server.getHostname() + ":" + server.getHttpDefaultPort() + "/" + TEST_APP_NAME + "/CookieSetAttributeServlet?testName=setAttributePartitioned";
-        String expectedSetCookie = "CookieSetAttributeServlet=TestSetAttributePartitioned; HttpOnly; SameSite=None; Partitioned";
+        String expectedSetCookie = "CookieSetAttributeServlet=TestSetAttributePartitioned; HttpOnly; SameSite=None; partitioned=";
 
         LOG.info("\n Sending Request [" + url + "]");
         HttpGet getMethod = new HttpGet(url);
