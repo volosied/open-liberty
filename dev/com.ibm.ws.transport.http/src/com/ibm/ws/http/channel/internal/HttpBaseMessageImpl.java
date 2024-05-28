@@ -2932,6 +2932,18 @@ public abstract class HttpBaseMessageImpl extends GenericMessageImpl implements 
                             }
                     }
 
+                    boolean isNotNone = !sameSiteAttributeValue.equalsIgnoreCase(HttpConfigConstants.SameSite.NONE.getName());
+                    String partitionedValue = cookie.getAttribute("partitioned");
+
+                    // webAppSecurity or httpSession can set partitioned independently in case channel sets samesite=none. 
+                    // if samesite=none is NOT set, then we'll remove it. 
+                    if(isNotNone && (partitionedValue != null && !partitionedValue.equalsIgnoreCase("false"))) {
+                        if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
+                            Tr.debug(tc, "Remove Paritioned from SameSite=" + sameSiteAttributeValue);
+                        }
+                        cookie.removeAttribute("partitioned");
+                    }
+
                 } else {
                     if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
                         Tr.debug(tc, "No SameSite configuration found");

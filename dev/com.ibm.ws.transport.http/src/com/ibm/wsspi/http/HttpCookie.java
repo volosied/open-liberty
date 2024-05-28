@@ -108,6 +108,17 @@ public class HttpCookie {
     }
 
     /**
+     * Remove a generic attribute on this cookie. Only Supports Partitioned.
+     *
+     * @param name
+     */
+    public void removeAttribute(String name) {
+        if(name.toLowerCase().equalsIgnoreCase("partitioned")) {
+            this.myAttrs.remove(name.toLowerCase());
+        }
+    }
+
+    /**
      * Set a generic attribute on this cookie.
      *
      * @param name
@@ -254,4 +265,5 @@ public class HttpCookie {
     public Map<String, String> getAttributes() {
         return myAttrs;
     }
+    
 }
