@@ -107,4 +107,5 @@ fat.project: true
     org.seleniumhq.selenium:selenium-chromium-driver;version=4.8.3,\
     org.seleniumhq.selenium:selenium-remote-driver;version=4.8.3,\
     org.seleniumhq.selenium:selenium-support;version=4.8.3,\
-    xml-apis:xml-apis;version=1.4.01
+    xml-apis:xml-apis;version=1.4.01,\
+    io.openliberty.jsf.fat.selenium.util.internal;version=1.0
