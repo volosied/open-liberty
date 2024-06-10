@@ -17,10 +17,11 @@ import org.junit.runners.Suite.SuiteClasses;
 import com.ibm.ws.fat.util.FatLogHandler;
 
 import componenttest.custom.junit.runner.AlwaysPassesTest;
+import io.openliberty.wsoc22.tests.SendRequestSession;
 
 @RunWith(Suite.class)
 @SuiteClasses({
-                AlwaysPassesTest.class
+                //SendRequestSession.class
 })
 public class FATSuite {
 
