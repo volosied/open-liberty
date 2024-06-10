@@ -20,4 +20,4 @@ javac.target: 17
 
 fat.minimum.java.level: 17
 
--buildpath: \
+-buildpath: org.asynchttpclient:async-http-client:2.2.0
