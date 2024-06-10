@@ -44,6 +44,9 @@ import io.openliberty.wsoc.util.WebServerSetup;
 import io.openliberty.wsoc.util.wsoc.WsocTest;
 import io.openliberty.wsoc.tests.all.SSLTest;
 
+import org.asynchttpclient.ws.*;
+import org.asynchttpclient.*;
+
 /**
  * WebSocket 2.2 Test
  */
