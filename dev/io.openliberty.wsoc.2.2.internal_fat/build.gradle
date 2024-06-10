@@ -10,12 +10,13 @@
 
 // Define G:A:V coordinates of each dependency
 
-apply from: '../wlp-gradle/subprojects/maven-central-mirror.gradle'
+// apply from: '../wlp-gradle/subprojects/maven-central-mirror.gradle'
 
 addRequiredLibraries.dependsOn addJakartaTransformer
 
 dependencies {
-    requiredLibs "org.asynchttpclient:async-http-client:2.12.3"
+    requiredLibs "org.asynchttpclient:async-http-client:2.12.3",
+    project(":io.openliberty.io.netty")
 }
 
 addRequiredLibraries {
