@@ -21,7 +21,7 @@ import io.openliberty.wsoc22.tests.SendRequestSession;
 
 @RunWith(Suite.class)
 @SuiteClasses({
-                //SendRequestSession.class
+                SendRequestSession.class
 })
 public class FATSuite {
 
