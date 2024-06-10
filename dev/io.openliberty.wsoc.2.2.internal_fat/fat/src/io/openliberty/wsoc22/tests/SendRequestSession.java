@@ -53,66 +53,62 @@ import io.netty.util.concurrent.*;
 @RunWith(FATRunner.class)
 public class SendRequestSession {
 
-    // @Server("sessionTestServer")
-    // public static LibertyServer LS;
+    @Server("sessionTestServer")
+    public static LibertyServer LS;
 
-    // // private static WebServerSetup bwst = null;
+    // private static WebServerSetup bwst = null;
 
-    // // @Rule
-    // // public final TestRule notOnZRule = new OnlyRunNotOnZRule();
+    // @Rule
+    // public final TestRule notOnZRule = new OnlyRunNotOnZRule();
 
-    // // private static WsocTest wt = null;
-    // // private static WsocTest wt_secure = null;
+    // private static WsocTest wt = null;
+    // private static WsocTest wt_secure = null;
 
-    // private static final Logger LOG = Logger.getLogger(SendRequestSession.class.getName());
+    private static final Logger LOG = Logger.getLogger(SendRequestSession.class.getName());
 
-    // private static final String BASIC_WAR_NAME = "basic21";
+    private static final String SESSION_WAR_NAME = "session";
 
-    // @BeforeClass
-    // public static void setUp() throws Exception {
+    @BeforeClass
+    public static void setUp() throws Exception {
 
-    //     // Build the war app and add the dependencies
-    //     WebArchive BasicApp = ShrinkHelper.buildDefaultApp(BASIC_WAR_NAME + ".war",
-    //             "basic.war",
-    //             "basic.war.*",
-    //             "io.openliberty.wsoc.common",
-    //             "io.openliberty.wsoc.util.wsoc",
-    //             "io.openliberty.wsoc.tests.all",
-    //             "io.openliberty.wsoc.endpoints.client.basic");
+        // Build the war app and add the dependencies
+        WebArchive SessionApp = ShrinkHelper.buildDefaultApp(SESSION_WAR_NAME + ".war",
+                "session.war",
+                "session.war.*");
 
-    //     BasicApp = (WebArchive) ShrinkHelper.addDirectory(BasicApp,
-    //             "test-applications/" + BASIC_WAR_NAME + ".war/resources");
-    //     // BasicApp = BasicApp.addAsLibraries(BasicJar);
-    //     ShrinkHelper.exportDropinAppToServer(LS, BasicApp);
+        SessionApp = (WebArchive) ShrinkHelper.addDirectory(SessionApp,
+                "test-applications/" + SESSION_WAR_NAME + ".war/resources");
+        // BasicApp = BasicApp.addAsLibraries(BasicJar);
+        ShrinkHelper.exportDropinAppToServer(LS, SessionApp);
 
-    //     LS.startServer();
-    //     LS.waitForStringInLog("CWWKZ0001I.* " + BASIC_WAR_NAME);
-    //     // bwst = new WebServerSetup(LS);
-    //     // wt = new WsocTest(LS, false);
-    //     // wt_secure = new WsocTest(LS, true);
-    //     // bwst.setUp();
+        LS.startServer();
+        LS.waitForStringInLog("CWWKZ0001I.* " + SESSION_WAR_NAME);
+        // bwst = new WebServerSetup(LS);
+        // wt = new WsocTest(LS, false);
+        // wt_secure = new WsocTest(LS, true);
+        // bwst.setUp();
 
-    //     // Allow Jetty to finish starting up -
-    //     // https://github.com/OpenLiberty/open-liberty/issues/23172
-    //     // Updated to 5100 - Jan 2nd 2024
-    //     Thread.sleep(5100);
-    // }
+        // Allow Jetty to finish starting up -
+        // https://github.com/OpenLiberty/open-liberty/issues/23172
+        // Updated to 5100 - Jan 2nd 2024
+        Thread.sleep(5100);
+    }
 
-    // @AfterClass
-    // public static void tearDown() throws Exception {
+    @AfterClass
+    public static void tearDown() throws Exception {
 
-    //     // give the system 10 seconds to settle down before stopping
-    //     try {
-    //         Thread.sleep(10000);
-    //     } catch (InterruptedException x) {
+        // give the system 10 seconds to settle down before stopping
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException x) {
 
-    //     }
+        }
 
-    //     if (LS != null && LS.isStarted()) {
-    //         LS.stopServer("CWWKH0023E", "CWWKH0020E", "CWWKH0039E", "CWWKH0040E", "SRVE8115W", "SRVE0190E");
-    //     }
-    //     //bwst.tearDown();
-    // }
+        if (LS != null && LS.isStarted()) {
+            LS.stopServer("CWWKH0023E", "CWWKH0020E", "CWWKH0039E", "CWWKH0040E", "SRVE8115W", "SRVE0190E");
+        }
+        //bwst.tearDown();
+    }
 
     /*
      * testSSC means liberty wsoc impl is the client and server
@@ -148,7 +144,9 @@ public class SendRequestSession {
                 }).build();
 
         WebSocket webSocketClient = Dsl.asyncHttpClient()
-                .prepareGet("ws://localhost:9080/websocket-demo/echo")
+                .prepareGet("ws://host.testcontainers.internal:" + 
+                            LS.getHttpDefaultPort() + 
+                            "/session/echo")
                 .setRequestTimeout(5000)
                 .execute(wsHandler)
                 .get();
