@@ -382,6 +382,11 @@
       <version>3.0.2</version>
     </dependency>
     <dependency>
+      <groupId>com.typesafe.netty</groupId>
+      <artifactId>netty-reactive-streams</artifactId>
+      <version>2.0.12</version>
+    </dependency>
+    <dependency>
       <groupId>com.unboundid</groupId>
       <artifactId>unboundid-ldapsdk</artifactId>
       <version>5.1.0</version>
@@ -2530,6 +2535,16 @@
       <groupId>org.apache.xbean</groupId>
       <artifactId>xbean-asm8-shaded</artifactId>
       <version>4.17</version>
+    </dependency>
+    <dependency>
+      <groupId>org.asynchttpclient</groupId>
+      <artifactId>async-http-client-netty-utils</artifactId>
+      <version>2.12.3</version>
+    </dependency>
+    <dependency>
+      <groupId>org.asynchttpclient</groupId>
+      <artifactId>async-http-client</artifactId>
+      <version>2.12.3</version>
     </dependency>
     <dependency>
       <groupId>org.bitbucket.b_c</groupId>

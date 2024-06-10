@@ -148,12 +148,13 @@ public class SendRequestSession {
                 }).build();
 
         WebSocket webSocketClient = Dsl.asyncHttpClient()
-                .prepareGet("ws://localhost:9080/basic21/echo")
+                .prepareGet("ws://localhost:9080/websocket-demo/echo")
                 .setRequestTimeout(5000)
                 .execute(wsHandler)
                 .get();
 
         if (webSocketClient.isOpen()) {
+            System.out.println("sending message");
             webSocketClient.sendTextFrame("test message");
         }
     }
