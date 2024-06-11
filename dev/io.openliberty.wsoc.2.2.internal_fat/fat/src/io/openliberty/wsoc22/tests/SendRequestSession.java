@@ -144,13 +144,14 @@ public class SendRequestSession {
                 }).build();
 
         WebSocket webSocketClient = Dsl.asyncHttpClient()
-                .prepareGet("ws://host.testcontainers.internal:" + 
+                .prepareGet("ws://" + 
+                            LS.getHostname() + ":" + 
                             LS.getHttpDefaultPort() + 
                             "/session/echo")
                 .setRequestTimeout(5000)
                 .execute(wsHandler)
                 .get();
-
+        
         if (webSocketClient.isOpen()) {
             System.out.println("sending message");
             webSocketClient.sendTextFrame("test message");
