@@ -18,8 +18,8 @@ dependencies {
     requiredLibs "org.asynchttpclient:async-http-client:2.12.3",
     "org.asynchttpclient:async-http-client-netty-utils:2.12.3",
     "com.typesafe.netty:netty-reactive-streams:2.0.4",
-    project(":io.openliberty.io.netty"),
-    files("./reactive-streams-1.0.3.jar")
+    "org.reactivestreams:reactive-streams:1.0.4",
+    project(":io.openliberty.io.netty")
 }
 
 addRequiredLibraries {
