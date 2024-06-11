@@ -83,31 +83,22 @@ public class SendRequestSession {
 
         LS.startServer();
         LS.waitForStringInLog("CWWKZ0001I.* " + SESSION_WAR_NAME);
-        // bwst = new WebServerSetup(LS);
-        // wt = new WsocTest(LS, false);
-        // wt_secure = new WsocTest(LS, true);
-        // bwst.setUp();
-
-        // Allow Jetty to finish starting up -
-        // https://github.com/OpenLiberty/open-liberty/issues/23172
-        // Updated to 5100 - Jan 2nd 2024
-        Thread.sleep(5100);
     }
 
     @AfterClass
     public static void tearDown() throws Exception {
 
-        // give the system 10 seconds to settle down before stopping
+        // give the system .5 seconds to settle down before stopping
         try {
-            Thread.sleep(10000);
+            Thread.sleep(500);
         } catch (InterruptedException x) {
 
         }
 
         if (LS != null && LS.isStarted()) {
-            LS.stopServer("CWWKH0023E", "CWWKH0020E", "CWWKH0039E", "CWWKH0040E", "SRVE8115W", "SRVE0190E");
+            LS.stopServer();
         }
-        //bwst.tearDown();
+
     }
 
     /*
