@@ -187,14 +187,18 @@ public class JSF22InputFileTests {
 
         System.out.println(page.getPageSource());
 
-        jsfTestServer2.setMarkToEndOfLog();
+        jsfTestServer2.setTraceMarkToEndOfDefaultTrace();
+
         WebElement element = page.findElement(By.id("form1:file1"));
+
+        System.out.println("Upload");
         element.sendKeys(fileToUpload.getAbsolutePath());
 
-        assertNotNull("SRTServletRequestPart31 getSubmittedFileName() was not called",
-        jsfTestServer2.waitForStringInTraceUsingMark("com.ibm.ws.webcontainer31.srt.SRTServletRequestPart31 getSubmittedFileName() AjaxJSF22InputFileCONTENT.txt"));
-
+        System.out.println("CLICK");
         page.findElement(By.id("form1:uploadButton")).click();
+
+        assertNotNull("SRTServletRequestPart31 getSubmittedFileName() was not called",
+        jsfTestServer2.waitForStringInTraceUsingMark(".*com\\.ibm\\.ws\\.webcontainer31\\.srt\\.SRTServletRequestPart31 getSubmittedFileName\\(\\) AjaxJSF22InputFileCONTENT\\.txt"));
 
         System.out.println(page.getPageSource());
 
