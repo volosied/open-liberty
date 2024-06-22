@@ -5769,7 +5769,8 @@ _MF_SINGLTN(_PFX_XHR+"_AjaxUtils", _MF_OBJECT,
         var identifier = item.id || item.name;
         var type = ((item && item.type) || "").toLowerCase();
 
-        if(targetBuf.hasKey(identifier)) { //already processed within the values
+        // MYFACES-4672: Temp Fix
+        if((targetBuf.has && targetBuf.has(identifier)) || (targetBuf.hasKey && targetBuf.hasKey(identifier)))  { //already processed within the values
             return;
         }
 
