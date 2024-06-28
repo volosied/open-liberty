@@ -10,6 +10,7 @@
 package com.ibm.ws.jsf22.fat.tests;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -116,6 +117,7 @@ public class JSF22InputFileTests {
     public void clearCookies()
     {
         driver.getRemoteWebDriver().manage().deleteAllCookies();
+        jsfTestServer2.resetLogMarks();
     }
 
     /**
@@ -157,13 +159,11 @@ public class JSF22InputFileTests {
     }
 
     /**
-     * inputFile defect - This test copies a file to the ServerRoot (so we have a full path) and then
-     * sets the file to be uploaded. It then attempts to upload the file, if it works, the word 'SUCCESS'
-     * will be present in the subsequently loaded page.
-     *
-     * Note: Even though we are copying the file to 'ServerRoot' that is just so we can figure out/know where
-     * it is. This lets us create the path to it so it can be selected later on.
-     *
+     * Scenario:
+     * - MultiPart Form 
+     * - An ajax enabled h:inputFile tag
+     * 
+     * - Verifies the file upload works via XHR requests.
      * @throws Exception
      */
     @Test
@@ -187,14 +187,21 @@ public class JSF22InputFileTests {
 
         System.out.println(page.getPageSource());
 
+        jsfTestServer2.setMarkToEndOfLog();
         WebElement element = page.findElement(By.id("form1:file1"));
         element.sendKeys(fileToUpload.getAbsolutePath());
 
+        assertNotNull("SRTServletRequestPart31 getSubmittedFileName() was not called",
+        jsfTestServer2.waitForStringInTraceUsingMark("com.ibm.ws.webcontainer31.srt.SRTServletRequestPart31 getSubmittedFileName() AjaxJSF22InputFileCONTENT.txt"));
+
         page.findElement(By.id("form1:uploadButton")).click();
+
+        System.out.println(page.getPageSource());
+
         page.waitForCondition(driver -> page.isInPage("Ajax-SUCCESS"));
     }
 
-        private static File generateTempFile(String name, String ext, String content) throws IOException {
+    private static File generateTempFile(String name, String ext, String content) throws IOException {
         Path path = Files.createTempFile(name, "." + ext);
         Files.write(path, content.getBytes(), StandardOpenOption.APPEND);
         return path.toFile();
