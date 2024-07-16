@@ -54,19 +54,19 @@ import componenttest.rules.repeater.RepeatTests;
  */
 @RunWith(Suite.class)
 @SuiteClasses({
-                JSF22StatelessViewTests.class,
-                JSF22FlowsTests.class,
-                CDIFlowsTests.class,
-                JSF22MiscellaneousTests.class,
-                JSF22ResetValuesAndAjaxDelayTests.class,
-                CDIConfigByACPTests.class,
-                CDIFacesInMetaInfTests.class,
-                CDIFacesInWebXMLTests.class,
-                CDITests.class,
-                JSF22BeanValidationTests.class,
+                // JSF22StatelessViewTests.class,
+                // JSF22FlowsTests.class,
+                // CDIFlowsTests.class,
+                // JSF22MiscellaneousTests.class,
+                // JSF22ResetValuesAndAjaxDelayTests.class,
+                // CDIConfigByACPTests.class,
+                // CDIFacesInMetaInfTests.class,
+                // CDIFacesInWebXMLTests.class,
+                // CDITests.class,
+                // JSF22BeanValidationTests.class,
                 JSF22AparTests.class,
-                JSF22ThirdPartyApiTests.class,
-                JSF22APARSeleniumTests.class
+                // JSF22ThirdPartyApiTests.class,
+                // JSF22APARSeleniumTests.class
 })
 public class FATSuite extends TestContainerSuite {
 

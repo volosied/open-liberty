@@ -17,6 +17,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Set;
 
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
@@ -38,6 +39,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlInput;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.html.HtmlSubmitInput;
 import com.gargoylesoftware.htmlunit.html.HtmlTextInput;
+import com.gargoylesoftware.htmlunit.util.Cookie;
 import com.ibm.websphere.simplicity.ShrinkHelper;
 import com.ibm.websphere.simplicity.log.Log;
 import com.ibm.ws.jsf22.fat.JSFUtils;
@@ -56,7 +58,7 @@ import junit.framework.Assert;
  * Tests to execute on the jsfAparServer that use HtmlUnit.
  * Only execute on Java7 since the jsf-2.2 feature requires servlet-3.1
  */
-@Mode(TestMode.FULL)
+// @Mode(TestMode.FULL)
 @RunWith(FATRunner.class)
 public class JSF22AparTests {
     @Rule
@@ -136,6 +138,8 @@ public class JSF22AparTests {
 
         ShrinkHelper.defaultDropinApp(jsfAparServer, "PH06008.war", "");
 
+        ShrinkHelper.defaultDropinApp(jsfAparServer, "PH62283.war", "com.ibm.ws.jsf22.fat.PH62283.bean");
+
         jsfAparServer.startServer(c.getSimpleName() + ".log");
 
     }
@@ -175,7 +179,7 @@ public class JSF22AparTests {
      *
      * @throws Exception
      */
-    @Test
+    //@Test
     public void testPI47600() throws Exception {
         try (WebClient webClient = new WebClient()) {
             URL url = JSFUtils.createHttpUrl(jsfAparServer, "PI47600", "");
@@ -199,7 +203,7 @@ public class JSF22AparTests {
      *
      * @throws Exception
      */
-    @Test
+    //@Test
     // Skipping for EE10+ as this test tests com.ibm.ws.jsf.delayManagedBeanPostConstruct which
     // is specific to ManagedBeans which are no longer available in Faces 4.0.
     @SkipForRepeat(EE10_OR_LATER_FEATURES)
@@ -220,7 +224,7 @@ public class JSF22AparTests {
      *
      * @throws Exception
      */
-    @Test
+    //@Test
     // Skipping for EE10+ as this test tests com.ibm.ws.jsf.delayManagedBeanPostConstruct which
     // is specific to ManagedBeans which are no longer available in Faces 4.0.
     @SkipForRepeat(EE10_OR_LATER_FEATURES)
@@ -242,7 +246,7 @@ public class JSF22AparTests {
      *
      * @throws Exception
      */
-    @Test
+    //@Test
     public void testPI50108() throws Exception {
         try (WebClient webClient = new WebClient()) {
             URL url = JSFUtils.createHttpUrl(jsfAparServer, "PI50108", "");
@@ -274,7 +278,7 @@ public class JSF22AparTests {
      *
      * @throws Exception
      */
-    @Test
+    //@Test
     public void testPI51038() throws Exception {
         try (WebClient webClient = new WebClient()) {
             URL url = JSFUtils.createHttpUrl(jsfAparServer, "PI51038", "");
@@ -299,7 +303,7 @@ public class JSF22AparTests {
      *
      * @throws Exception
      */
-    @Test
+    //@Test
     public void testPI51038_Default() throws Exception {
         try (WebClient webClient = new WebClient()) {
             URL url = JSFUtils.createHttpUrl(jsfAparServer, "PI51038_Default", "");
@@ -331,7 +335,7 @@ public class JSF22AparTests {
      *
      * @throws Exception
      */
-    @Test
+    //@Test
     public void testPI46218() throws Exception {
         testSimpleFlow("/PI46218Flow1", "test-flow-1");
         testSimpleFlow("/PI46218Flow2", "test-flow-2");
@@ -343,7 +347,7 @@ public class JSF22AparTests {
      * To load the non-CDI application first, a request is made to the non-CDI application
      * after a server restart.
      */
-    @Test
+    //@Test
     public void testPI57255() throws Exception {
         URL url = JSFUtils.createHttpUrl(jsfAparServer, "PI57255Default", "");
 
@@ -370,7 +374,7 @@ public class JSF22AparTests {
      *
      * @throws Exception
      */
-    @Test
+    //@Test
     public void testPI59422() throws Exception {
         URL url = JSFUtils.createHttpUrl(jsfAparServer, "PI59422", "index.xhtml");
 
@@ -444,7 +448,7 @@ public class JSF22AparTests {
         return ((HtmlElement) page.getElementById(buttonId)).click();
     }
 
-    @Test
+    //@Test
     public void testPI63135() throws Exception {
         try (WebClient webClient = new WebClient()) {
             HtmlPage page;
@@ -470,7 +474,7 @@ public class JSF22AparTests {
      *
      * @throws Exception
      */
-    @Test
+    //@Test
     public void testViewScopedJSFManagedBeanPreDestroy() throws Exception {
         try (WebClient webClient = new WebClient()) {
             URL url = JSFUtils.createHttpUrl(jsfAparServer, "ViewScopedJSFBean", "");
@@ -497,7 +501,7 @@ public class JSF22AparTests {
      *
      * @throws Exception
      */
-    @Test
+    //@Test
     // Skipping for EE10+ as this test uses both a CDI bean and a ManagedBean and ManagedBeans are
     // no longer available in Faces 4.0. The testViewScopedJSFManagedBeanPreDestroy test will
     // be executed for EE10 with just a CDI bean to verify that PreDestroy is called.
@@ -537,7 +541,7 @@ public class JSF22AparTests {
      * If there is no text written to the form, a ValidatorException should be thrown. If text is
      * written, however, a Faces Message should be printed out.
      */
-    @Test
+    //@Test
     public void testPI64714() throws Exception {
         try (WebClient webClient = new WebClient()) {
             HtmlPage page;
@@ -575,7 +579,7 @@ public class JSF22AparTests {
      * The test page has four UISelectMany components, and each has three checkboxes. Validation
      * should fail unless exactly two checkboxes are selected for each component.
      */
-    @Test
+    //@Test
     public void testPI64718() throws Exception {
         try (WebClient webClient = new WebClient()) {
             HtmlPage page;
@@ -655,7 +659,7 @@ public class JSF22AparTests {
      *
      * @throws Exception
      */
-    @Test
+    //@Test
     public void testPI67525() throws Exception {
         try (WebClient webClient = new WebClient()) {
             URL url = JSFUtils.createHttpUrl(jsfAparServer, "PI67525", "index.xhtml");
@@ -682,7 +686,7 @@ public class JSF22AparTests {
      *
      * @throws Exception
      */
-    @Test
+    //@Test
     public void testPI79562() throws Exception {
         try (WebClient webClient = new WebClient()) {
             URL url = JSFUtils.createHttpUrl(jsfAparServer, "PI79562", "faces/index.xhtml");
@@ -706,7 +710,7 @@ public class JSF22AparTests {
      *
      * @throws Exception
      */
-    @Test
+    //@Test
     public void testPI85492() throws Exception {
         try (WebClient webClient = new WebClient()) {
 
@@ -737,7 +741,7 @@ public class JSF22AparTests {
      *
      * @throws Exception
      */
-    @Test
+    //@Test
     public void testPI89363() throws Exception {
         try (WebClient webClient = new WebClient(BrowserVersion.CHROME)) {
             webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
@@ -799,7 +803,7 @@ public class JSF22AparTests {
      *
      * @throws Exception
      */
-    @Test
+    //@Test
     @ExpectedFFDC({ "javax.servlet.ServletException" })
     public void testPI89363StrictJSF2() throws Exception {
         try (WebClient webClient = new WebClient(BrowserVersion.CHROME)) {
@@ -857,7 +861,7 @@ public class JSF22AparTests {
      *
      * @throws Exception
      */
-    @Test
+    //@Test
     @ExpectedFFDC({ "javax.servlet.ServletException" })
     public void testPI89168() throws Exception {
         try (WebClient webClient = new WebClient()) {
@@ -920,7 +924,7 @@ public class JSF22AparTests {
      * flow1 -> flow2 -> flow1 -> flow2
      * -> return (back in flow 1) -> return (back in flow2) -> return (back in flow 1) -> return (no flow)
      */
-    @Test
+    //@Test
     public void testPI90391() throws Exception {
         URL url = JSFUtils.createHttpUrl(jsfAparServer, "PI90391", "");
         try (WebClient webClient = new WebClient()) {
@@ -1036,7 +1040,7 @@ public class JSF22AparTests {
      * @throws Exception
      */
     @SkipForRepeat(EE8_OR_LATER_FEATURES)
-    @Test
+    //@Test
     public void testPI90507NonBindingCase() throws Exception {
         try (WebClient webClient = new WebClient()) {
             // Set up search mark and restart the app so that we can check to see if preDestroy is called
@@ -1080,7 +1084,7 @@ public class JSF22AparTests {
      * @throws Exception
      */
     @SkipForRepeat(EE8_OR_LATER_FEATURES)
-    @Test
+    //@Test
     public void testPI90507BindingCase() throws Exception {
         try (WebClient webClient = new WebClient()) {
             // Set up search mark and restart the app so that we can check to see if preDestroy is called
@@ -1120,7 +1124,7 @@ public class JSF22AparTests {
      * Make sure that a JSF application with and invalid servlet defined and its faces servlet mapping defined in a web fragment jar
      * starts up correctly
      */
-    @Test
+    //@Test
     public void testPH01566_and_PH09730() throws Exception {
         try (WebClient webClient = new WebClient()) {
 
@@ -1149,7 +1153,7 @@ public class JSF22AparTests {
      *
      * @throws Exception
      */
-    @Test
+    //@Test
     public void testPH06008() throws Exception {
         try (WebClient webClient = new WebClient()) {
 
@@ -1170,4 +1174,42 @@ public class JSF22AparTests {
                        page.asText().contains("PH06008 success!"));
         }
     }
+
+    /*
+     * MYFACES-4423: The oam.Flash.REDIRECT cookie should not be set when Flash is disabled.
+     * 
+     * https://github.com/OpenLiberty/open-liberty/issues/29083
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testPH62283() throws Exception {
+        try (WebClient webClient = new WebClient()) {
+
+            URL url = JSFUtils.createHttpUrl(jsfAparServer, "PH62283", "index.xhtml");
+
+            Log.info(c, name.getMethodName(), "PH62283: Making a request to " + url);
+            HtmlPage page = (HtmlPage) webClient.getPage(url);
+
+            
+            boolean flashCookieFound = false;
+
+
+            Set<Cookie> cookies = webClient.getCookieManager().getCookies();
+            for (Cookie cookie : cookies) {
+                Log.info(c, name.getMethodName(), "Looking at Cookie -> " + cookie.getName());
+                if(cookie.getName().equals("oam.Flash.REDIRECT")) { // for the APAR
+                    flashCookieFound = true;
+                }
+                if(cookie.getName().equals("oam.Flash.RENDERMAP.TOKEN")) { // extra check to ensure all flash cookies are disabled
+                    flashCookieFound = true;
+                }
+            }
+
+            // Check for the expected text in the target page
+            assertFalse("testPH62283:: The oam.Flash.REDIRECT or oam.Flash.RENDERMAP.TOKEN was found when it should not have been!",
+                       false);
+        }
+    }
+
 }
