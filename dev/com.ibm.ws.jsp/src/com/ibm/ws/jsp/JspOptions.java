@@ -110,6 +110,8 @@ public class JspOptions {
     protected boolean    allowMultipleAttributeValues = false; //PI30519
     protected boolean    allowPrecedenceInJspExpressionsWithConstantString = false; //PI37304
 
+    protected boolean    reduceServiceMethodSize = false; // PH62212
+
     //@BLB Pretouch End
     // defect 400645
     String overriddenJspOptions = new String();
@@ -937,6 +939,20 @@ public class JspOptions {
         }
         //PI37304 end
 
+        /* generic property name in case future improves are added */
+        String reduceServiceMethodSize = jspParams.getProperty("reduceServiceMethodSize");
+        if (reduceServiceMethodSize != null){
+                if (reduceServiceMethodSize.equalsIgnoreCase("true"))
+                        this.reduceServiceMethodSize = true;
+                else if (reduceServiceMethodSize.equalsIgnoreCase("false"))
+                        this.reduceServiceMethodSize = false;
+                else {
+                        if (logger.isLoggable(Level.INFO)){
+                                logger.logp(Level.INFO, CLASS_NAME, "populateOptions", "Invalid value for reduceServiceMethodSize = "+ allowPrecedenceInJspExpressions);
+                        }
+                }
+        }
+
     	/*---------------------*/
     	/*      Fix-Ups        */
     	/*---------------------*/
@@ -1599,6 +1615,14 @@ public class JspOptions {
     }
     //PI37304 end
 
+    public boolean isReduceServiceMethodSize(){
+        return isReduceServiceMethodSize;
+    }
+    
+    public void setReduceServiceMethodSize(boolean temp){
+        this.isReduceServiceMethodSize = temp;
+    }
+
     public String toString() {	//overrride Object's toString to assist in debugging.
     	String separatorString = System.getProperty("line.separator");
     	// defect 204907 start
@@ -1684,6 +1708,7 @@ public class JspOptions {
                 "deleteClassFilesBeforeRecompile =     [" + deleteClassFilesBeforeRecompile +"]"+separatorString+
                 "allowMultipleAttributeValues =        [" + allowMultipleAttributeValues +"]"+separatorString+
                 "allowPrecedenceInJspExpressionsWithConstantString = [" + allowPrecedenceInJspExpressionsWithConstantString +"]"+separatorString+
+                "reduceServiceMethodSize = [" + reduceServiceMethodSize +"]"+separatorString+
     	"");
     }
 

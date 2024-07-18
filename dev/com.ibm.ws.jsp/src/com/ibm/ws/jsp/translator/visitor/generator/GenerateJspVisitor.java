@@ -375,7 +375,10 @@ public class GenerateJspVisitor extends GenerateVisitor {
         //writer.println("JspFactory _jspxFactory = null;");
         writer.println("PageContext pageContext = null;");
 
-        GeneratorUtils.generate__jspTagList_variable(writer);
+        // Note: this property has drawbacks. if a jstl tag has nested scriplet code, it will fail to compile
+        if(!jspOptions.isReduceServiceMethodSize()){ 
+            GeneratorUtils.generate__jspTagList_variable(writer);
+        }
 
         if (genSessionVariable)
             writer.println("HttpSession session = null;");
@@ -561,7 +564,7 @@ public class GenerateJspVisitor extends GenerateVisitor {
 
         writer.println("} finally {");
 
-        if (!(jspOptions.isUsePageTagPool() || jspOptions.isUseThreadTagPool())) {
+        if (!(jspOptions.isUsePageTagPool() || jspOptions.isUseThreadTagPool()) && !jspOptions.isReduceServiceMethodSize()) {
             writer.println("_jsp_cleanUpTagArrayList(_jspTagList);");
         }
 
