@@ -80,7 +80,13 @@ public class SimpleTagGenerator extends BaseTagGenerator {
                 tagStartWriter.println("try {");
             } 
 
-            tagStartWriter.print("_jsp_tagPostConstruct(" +tagHandlerVar+ ", " + (!genTagInMethod ? "_jspTagList, " : "null, ") + tagHandlerVar + "_mo" + ");");
+            // String tagListVar = "_jspTagList, ";
+
+            // if(!jspOptions.isReduceServiceMethodSize()){
+            //     tagListVar = "null, ";
+            // }
+
+            tagStartWriter.print("_jsp_tagPostConstruct(" +tagHandlerVar+ ", " + (!genTagInMethod && !jspOptions.isReduceServiceMethodSize() ? "_jspTagList, " : "null, ") + tagHandlerVar + "_mo" + ");");
 
         } else {
             // not using CDI
@@ -139,6 +145,10 @@ public class SimpleTagGenerator extends BaseTagGenerator {
         	tagEndWriter.print (tagHandlerVar);
         	tagEndWriter.println (");");
             tagEndWriter.println ("}");
+        } else if(!jspOptions.isDisableResourceInjection()) {
+        	tagEndWriter.print ("_jspx_iaHelper.doPreDestroy(");
+        	tagEndWriter.print (tagHandlerVar);
+        	tagEndWriter.println (");");
         }
 
         restoreScriptingVars(tagEndWriter, VariableInfo.AT_BEGIN);

@@ -941,6 +941,7 @@ public class JspOptions {
 
         /* generic property name in case future improves are added */
         String reduceServiceMethodSize = jspParams.getProperty("reduceServiceMethodSize");
+        System.out.println("reduceServiceMethodSize " + reduceServiceMethodSize);
         if (reduceServiceMethodSize != null){
                 if (reduceServiceMethodSize.equalsIgnoreCase("true"))
                         this.reduceServiceMethodSize = true;
@@ -1616,11 +1617,11 @@ public class JspOptions {
     //PI37304 end
 
     public boolean isReduceServiceMethodSize(){
-        return isReduceServiceMethodSize;
+        return reduceServiceMethodSize;
     }
     
     public void setReduceServiceMethodSize(boolean temp){
-        this.isReduceServiceMethodSize = temp;
+        this.reduceServiceMethodSize = temp;
     }
 
     public String toString() {	//overrride Object's toString to assist in debugging.

@@ -110,7 +110,7 @@ public class ClassicTagGenerator extends BaseTagGenerator {
                     tagStartWriter.println("try {");
                 } 
 
-                tagStartWriter.print("_jsp_tagPostConstruct(" +tagHandlerVar+ ", " + (!genTagInMethod ? "_jspTagList, " : "null, ") + tagHandlerVar + "_mo" + ");");
+                tagStartWriter.print("_jsp_tagPostConstruct(" +tagHandlerVar+ ", " + (!genTagInMethod && !jspOptions.isReduceServiceMethodSize() ? "_jspTagList, " : "null, ") + tagHandlerVar + "_mo" + ");");
 
             } else {
                 // not using CDI
@@ -124,7 +124,7 @@ public class ClassicTagGenerator extends BaseTagGenerator {
 
                 if (genTagInMethod) {
                     tagStartWriter.println("try {");
-                } else {
+                } else if(!jspOptions.isReduceServiceMethodSize()){
                     tagStartWriter.println("_jspTagList.add(" + tagHandlerVar + ");");
                 }
             }
@@ -351,7 +351,7 @@ public class ClassicTagGenerator extends BaseTagGenerator {
             //           LIDB4147-24
 
             if (!genTagInMethod) {
-                tagEndWriter.println("_jsp_cleanUpTag(" + tagHandlerVar + ", _jspTagList);");
+                tagEndWriter.println("_jsp_cleanUpTag(" + tagHandlerVar + (!jspOptions.isReduceServiceMethodSize() ? ", _jspTagList);" : ", null);"));
             }
         }
 
