@@ -306,11 +306,10 @@ public class TextGenerator extends CodeGeneratorBase {
                                         if (attrName != null) {
                                             writer.print("String " + attrName + " = String.valueOf(_jsp_string"+stringId+")");
                                             writer.print(";");
-                                            writer.println();
                                         }
                                         else {
-                                            writer.print("out.write(_jsp_string"+stringId+");");
-                                            writer.println();
+                                            writer.queueMessages("_jsp_string"+stringId);
+                                            // writer.println();
                                         }
                                     }
                                     sb = new StringBuffer();
@@ -402,11 +401,10 @@ public class TextGenerator extends CodeGeneratorBase {
                 if (attrName != null) {
                     writer.print("String " + attrName + " = String.valueOf(_jsp_string"+stringId+")");
                     writer.print(";");
-                    writer.println();
                 }
                 else {
-                    writer.print("out.write(_jsp_string"+stringId+");");
-                    writer.println();
+                    // writer.print("out.write(_jsp_string"+stringId+");");
+                    writer.queueMessages("_jsp_string"+stringId);
                 }
             }
         }

@@ -15,10 +15,12 @@ package com.ibm.ws.jsp.translator.visitor.generator;
 import java.io.PrintWriter;
 import java.io.BufferedReader;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.io.IOException;
 
 public class JavaCodeWriter {
     PrintWriter writer;
+    ArrayList<String> list = new ArrayList<String>(); 
 
     public JavaCodeWriter(PrintWriter writer) {
         this.writer = writer;
@@ -31,6 +33,10 @@ public class JavaCodeWriter {
     }
 
     public void close() throws IOException {
+        System.out.println("close SIZE " + list.size());
+        if(list.size() > 0) {
+            writeQueue();
+        }
         writer.close();
     }
     
@@ -70,18 +76,40 @@ public class JavaCodeWriter {
     }
 
     public void println(String line) {
+        if(list.size() > 0) {
+            writeQueue();
+        }
         writer.println(line);
     }
 
     public void println() {
+        System.out.println("println SIZE " + list.size());
         writer.println("");
     }
 
+    public void queueMessages(String s) {
+        System.out.println("Added to queue " + s);
+        list.add(s);
+    }
+
     public void print(String s) {
+        if(list.size() > 0) {
+            writeQueue();
+        }
         writer.print(s);
     }
 
+    protected void writeQueue(){
+        for(String s : list){
+            System.out.println("writing " + s);
+            writer.print("_jsp_out_write(" + s + ");");
+            writer.println();
+        }
+        list.clear();
+    }
+
     public void printMultiLn(String multiline) {
+        System.out.println("write SIZE " + list.size());
         // Try to be smart (i.e. indent properly) at generating the code:
         BufferedReader reader = new BufferedReader(new StringReader(multiline));
         try {
@@ -96,6 +124,7 @@ public class JavaCodeWriter {
     }
     
     public void write(char[] buff, int off, int len) {
+        System.out.println("write SIZE " + list.size());
         writer.write(buff, off, len);
     }
 }
