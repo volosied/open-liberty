@@ -21,6 +21,7 @@ import java.io.IOException;
 public class JavaCodeWriter {
     PrintWriter writer;
     ArrayList<String> list = new ArrayList<String>(); 
+    OutWriterList tester = new OutWriterList();
 
     public JavaCodeWriter(PrintWriter writer) {
         this.writer = writer;
@@ -34,10 +35,14 @@ public class JavaCodeWriter {
 
     public void close() throws IOException {
         System.out.println("close SIZE " + list.size());
-        if(list.size() > 0) {
+         if(tester.getSize() > 0) {
             writeQueue();
         }
         writer.close();
+    }
+
+    public OutWriterList getTester(){
+        return tester;
     }
     
     public String quoteString(String s) {
@@ -76,40 +81,64 @@ public class JavaCodeWriter {
     }
 
     public void println(String line) {
-        if(list.size() > 0) {
+         if(tester.getSize() > 0) {
             writeQueue();
         }
         writer.println(line);
     }
 
     public void println() {
-        System.out.println("println SIZE " + list.size());
+        // System.out.println("println SIZE " + list.size());
         writer.println("");
     }
 
     public void queueMessages(String s) {
-        System.out.println("Added to queue " + s);
+        System.out.println(" ---- Added to queue " + s);
         list.add(s);
     }
 
     public void print(String s) {
-        if(list.size() > 0) {
+        if(tester.getSize() > 0) {
             writeQueue();
         }
         writer.print(s);
     }
 
-    protected void writeQueue(){
-        for(String s : list){
-            System.out.println("writing " + s);
-            writer.print("_jsp_out_write(" + s + ");");
-            writer.println();
+    protected void writeQueue() {
+        try {
+           writer.print( this.tester.getNextJavaCode());
+        } catch (Exception e) {
+           System.out.println(e);
+           e.printStackTrace();
         }
-        list.clear();
-    }
+
+        
+        // if (this.list.size() == 1) {
+        //   this.writer.print("out.write(" + (String)this.list.get(0) + ");");
+        // } else {
+        //   String arg = "out,";
+        //   for (int i = 0; i < this.list.size(); i++) {
+        //     arg = arg + (String)this.list.get(i);
+        //     if (i != this.list.size() - 1)
+        //       arg = arg + ", "; 
+        //   } 
+        //   this.writer.print("_jsp_out_write(" + arg + ");");
+        // } 
+        // this.writer.println();
+        // this.list.clear();
+      }
+
+    // protected void writeQueue(){
+    //     for(String s : list){
+    //         System.out.println("writing " + s);
+    //         writer.print("_jsp_out_write(" + s + ");");
+    //         writer.println();
+    //     }
+    //     list.clear();
+    // }
 
     public void printMultiLn(String multiline) {
-        System.out.println("write SIZE " + list.size());
+        // System.out.println("write SIZE " + list.size());
         // Try to be smart (i.e. indent properly) at generating the code:
         BufferedReader reader = new BufferedReader(new StringReader(multiline));
         try {
@@ -124,7 +153,7 @@ public class JavaCodeWriter {
     }
     
     public void write(char[] buff, int off, int len) {
-        System.out.println("write SIZE " + list.size());
+        // System.out.println("write SIZE " + list.size());
         writer.write(buff, off, len);
     }
 }

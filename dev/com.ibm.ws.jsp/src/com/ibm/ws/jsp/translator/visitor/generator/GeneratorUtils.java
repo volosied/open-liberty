@@ -626,6 +626,34 @@ public class GeneratorUtils {
         writer.println("    }");
         writer.println("  }");
         writer.println("}");
+
+        writer.println("public void _jsp_out_write(JspWriter out, char[] s1, char[] s2, char[] s3) throws java.io.IOException {");
+        writer.println("     out.write(s1);");
+        writer.println("     out.write(s2);");
+        writer.println("     out.write(s3);");
+        writer.println("}");
+
+        writer.println("public void _jsp_print(JspWriter out, char[] s1, char[] s2) throws java.io.IOException {");
+        writer.println("     out.print(s1);");
+        writer.println("     out.print(s2);");
+        writer.println("}");
+
+        writer.println("public void _jsp_print_write(JspWriter out, char[] s1, char[] s2) throws java.io.IOException {");
+        writer.println("     out.print(s1);");
+        writer.println("     out.write(s2);");
+        writer.println("}");
+
+        writer.println("public void _jsp_write_print_out(JspWriter out, char[] s1, char[] s2) throws java.io.IOException {");
+        writer.println("     out.write(s1);");
+        writer.println("     out.print(s2);");
+        writer.println("}");
+
+        writer.println("public void _jsp_write(JspWriter out, char[] s1, char[] s2) throws java.io.IOException {");
+        writer.println("     out.write(s1);");
+        writer.println("     out.write(s2);");
+
+        writer.println("}");
+
     }
 
     public static void generateVersionInformation(JavaCodeWriter writer, boolean isDebugClassFile) {

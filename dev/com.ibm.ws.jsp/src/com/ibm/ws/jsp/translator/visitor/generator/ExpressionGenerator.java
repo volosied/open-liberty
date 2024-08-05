@@ -211,20 +211,23 @@ public class ExpressionGenerator extends CodeGeneratorBase {
                               // we can use write instead of print because we know that the expression is non-null
                               // (print checks for null and then calls write)
                               writer.println("out.write("+el+");");
-                              //System.out.print("   TERM1 ");
+                              System.out.print("   TERM1 ");
                               //System.out.println(el);
                     
                            } else {
                               writer.println("out.print("+el+");");
-                              //System.out.print("   TERM2 ");
+                              System.out.print("   TERM2 ");
                               //System.out.println(el);
                            }
                        }
                    }
                } else // we could not detect any expression, thus go back to the regular code
                    writer.println("out.print("+expression+");");
+                   System.out.print("   TERM11111 ");
             } else // we could not detect any expression, thus go back to the regular code
-               writer.println("out.print("+expression+");");
+            //    writer.println("out.print("+expression+");");
+               System.out.print("   TERM2222 ");
+               writer.getTester().queueMessages(expression, OutWriterList.Type.PRINT);
             // original code commented out
             //writer.println("out.print("+new String(GeneratorUtils.escapeQuotes(chars))+");");
             

@@ -25,8 +25,8 @@ public class MethodWriter extends JavaCodeWriter {
     }
 
     public String toString() {
-        System.out.println("calling to string" + list.size());
-        if(list.size() > 0) {
+        // System.out.println("calling to string" + list.size());
+         if(tester.getSize() > 0) {
             writeQueue();
         }
         return charWriter.toString();

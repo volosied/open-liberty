@@ -308,7 +308,8 @@ public class TextGenerator extends CodeGeneratorBase {
                                             writer.print(";");
                                         }
                                         else {
-                                            writer.queueMessages("_jsp_string"+stringId);
+                                            writer.getTester().queueMessages("_jsp_string"+stringId, OutWriterList.Type.WRITE);
+                                            // writer.queueMessages("_jsp_string"+stringId);
                                             // writer.println();
                                         }
                                     }
@@ -404,7 +405,8 @@ public class TextGenerator extends CodeGeneratorBase {
                 }
                 else {
                     // writer.print("out.write(_jsp_string"+stringId+");");
-                    writer.queueMessages("_jsp_string"+stringId);
+                    writer.getTester().queueMessages("_jsp_string"+stringId, OutWriterList.Type.WRITE);
+                    // writer.queueMessages("_jsp_string"+stringId);
                 }
             }
         }
