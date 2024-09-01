@@ -585,7 +585,7 @@ var Implementation;
         internalCtx.assign(Const_1.CTX_PARAM_SRC_FRM_ID).value = formId;
         // mojarra compatibility, mojarra is sending the form id as well
         // this is not documented behavior but can be determined by running
-        // mojarra under closed box conditions.
+        // mojarra under blackbox conditions.
         // I assume it does the same as our formId_submit=1 so leaving it out
         // won't hurt but for the sake of compatibility we are going to add it
         requestCtx.assign(Const_1.CTX_PARAM_REQ_PASS_THR, formId).value = formId;
@@ -981,7 +981,7 @@ var Implementation;
         return targetConfig;
     }
     /**
-     * Filters the provided options using a blocklist to ensure
+     * Filters the provided options using a blacklist to ensure
      * only pass-through parameters are processed for the Ajax request.
      *
      * Note that this issue is leftover from a previous implementation.
@@ -1193,14 +1193,14 @@ var PushImpl;
             this.reconnectAttempts = 0;
         }
         onerror(event) {
-            var _a, _b;
-            let message = JSON.parse(event?.data ?? null);
+            var _a, _b, _c;
+            let message = JSON.parse((_a = event === null || event === void 0 ? void 0 : event.data) !== null && _a !== void 0 ? _a : null);
             //TODO replace this with a more readable Stream code
             for (let i = PushImpl.clientIdsByTokens[this.channelToken].length - 1; i >= 0; i--) {
                 let socketClientId = PushImpl.clientIdsByTokens[this.channelToken][i];
                 if (document.getElementById(socketClientId)) {
                     try {
-                        (_b = (_a = PushImpl.components[socketClientId]) === null || _a === void 0 ? void 0 : _a['onerror']) === null || _b === void 0 ? void 0 : _b.call(_a, message, this.channel, event);
+                        (_c = (_b = PushImpl.components[socketClientId]) === null || _b === void 0 ? void 0 : _b['onerror']) === null || _c === void 0 ? void 0 : _c.call(_b, message, this.channel, event);
                     }
                     catch (e) {
                         //Ignore
@@ -1342,7 +1342,7 @@ var PushImpl;
  * limitations under the License.
  */
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.CTX_OPTIONS_PARAMS = exports.TIMEOUT_EVENT = exports.CLIENT_ERROR = exports.SERVER_ERROR = exports.MALFORMEDXML = exports.EMPTY_RESPONSE = exports.HTTPERROR = exports.RESPONSE_XML = exports.RESPONSE_TEXT = exports.ERROR_MESSAGE = exports.ERROR_NAME = exports.STATUS = exports.SOURCE = exports.SUCCESS = exports.COMPLETE = exports.BEGIN = exports.ON_EVENT = exports.ON_ERROR = exports.EVENT = exports.ERROR = exports.WINDOW_ID = exports.CTX_PARAM_RENDER = exports.P_BEHAVIOR_EVENT = exports.P_WINDOW_ID = exports.P_RESET_VALUES = exports.P_EVT = exports.P_RENDER_OVERRIDE = exports.P_RENDER = exports.P_EXECUTE = exports.P_AJAX = exports.IDENT_FORM = exports.IDENT_THIS = exports.IDENT_NONE = exports.IDENT_ALL = exports.HTML_CLIENT_WINDOW = exports.HTML_VIEWSTATE = exports.EMPTY_MAP = exports.EMPTY_STR = exports.EMPTY_FUNC = exports.P_RESOURCE = exports.P_VIEWBODY = exports.P_VIEWHEAD = exports.P_VIEWROOT = exports.P_CLIENT_WINDOW = exports.P_VIEWSTATE = exports.VIEW_ID = exports.NAMING_CONTAINER_ID = exports.P_AJAX_SOURCE = exports.NAMED_VIEWROOT = exports.XML_ATTR_NAMED_VIEWROOT = void 0;
+exports.CTX_OPTIONS_PARAMS = exports.TIMEOUT_EVENT = exports.CLIENT_ERROR = exports.SERVER_ERROR = exports.MALFORMEDXML = exports.EMPTY_RESPONSE = exports.HTTP_ERROR = exports.RESPONSE_XML = exports.RESPONSE_TEXT = exports.ERROR_MESSAGE = exports.ERROR_NAME = exports.STATUS = exports.SOURCE = exports.SUCCESS = exports.COMPLETE = exports.BEGIN = exports.ON_EVENT = exports.ON_ERROR = exports.EVENT = exports.ERROR = exports.WINDOW_ID = exports.CTX_PARAM_RENDER = exports.P_BEHAVIOR_EVENT = exports.P_WINDOW_ID = exports.P_RESET_VALUES = exports.P_EVT = exports.P_RENDER_OVERRIDE = exports.P_RENDER = exports.P_EXECUTE = exports.P_AJAX = exports.IDENT_FORM = exports.IDENT_THIS = exports.IDENT_NONE = exports.IDENT_ALL = exports.HTML_CLIENT_WINDOW = exports.HTML_VIEWSTATE = exports.EMPTY_MAP = exports.EMPTY_STR = exports.EMPTY_FUNC = exports.P_RESOURCE = exports.P_VIEWBODY = exports.P_VIEWHEAD = exports.P_VIEWROOT = exports.P_CLIENT_WINDOW = exports.P_VIEWSTATE = exports.VIEW_ID = exports.NAMING_CONTAINER_ID = exports.P_AJAX_SOURCE = exports.NAMED_VIEWROOT = exports.XML_ATTR_NAMED_VIEWROOT = void 0;
 exports.XML_TAG_REDIRECT = exports.XML_TAG_EXTENSION = exports.XML_TAG_ATTRIBUTES = exports.XML_TAG_ERROR = exports.XML_TAG_EVAL = exports.XML_TAG_INSERT = exports.XML_TAG_DELETE = exports.XML_TAG_UPDATE = exports.XML_TAG_CHANGES = exports.XML_TAG_PARTIAL_RESP = exports.ATTR_ID = exports.ATTR_VALUE = exports.ATTR_NAME = exports.ATTR_URL = exports.MYFACES_OPTION_PPS = exports.ERR_NO_PARTIAL_RESPONSE = exports.PHASE_PROCESS_RESPONSE = exports.SEL_RESPONSE_XML = exports.SEL_CLIENT_WINDOW_ELEM = exports.SEL_VIEWSTATE_ELEM = exports.HTML_TAG_STYLE = exports.HTML_TAG_SCRIPT = exports.HTML_TAG_LINK = exports.HTML_TAG_BODY = exports.HTML_TAG_FORM = exports.HTML_TAG_HEAD = exports.STD_ACCEPT = exports.NO_TIMEOUT = exports.MULTIPART = exports.URL_ENCODED = exports.STATE_EVT_COMPLETE = exports.STATE_EVT_TIMEOUT = exports.STATE_EVT_BEGIN = exports.REQ_TYPE_POST = exports.REQ_TYPE_GET = exports.ENCODED_URL = exports.VAL_AJAX = exports.REQ_ACCEPT = exports.HEAD_FACES_REQ = exports.CONTENT_TYPE = exports.CTX_PARAM_PPS = exports.CTX_PARAM_REQ_PASS_THR = exports.CTX_PARAM_SRC_CTL_ID = exports.CTX_PARAM_SRC_FRM_ID = exports.CTX_PARAM_MF_INTERNAL = exports.CTX_OPTIONS_EXECUTE = exports.CTX_OPTIONS_RESET = exports.CTX_OPTIONS_TIMEOUT = exports.DELAY_NONE = exports.CTX_OPTIONS_DELAY = void 0;
 exports.$nsp = exports.$faces = exports.UNKNOWN = exports.MAX_RECONNECT_ATTEMPTS = exports.RECONNECT_INTERVAL = exports.APPLIED_CLIENT_WINDOW = exports.APPLIED_VST = exports.REASON_EXPIRED = exports.MF_NONE = exports.MYFACES = exports.DEFERRED_HEAD_INSERTS = exports.UPDATE_ELEMS = exports.UPDATE_FORMS = exports.XML_TAG_ATTR = exports.XML_TAG_AFTER = exports.XML_TAG_BEFORE = void 0;
 /*
@@ -1398,7 +1398,7 @@ exports.ERROR_MESSAGE = "error-message";
 exports.RESPONSE_TEXT = "responseText";
 exports.RESPONSE_XML = "responseXML";
 /*ajax errors spec 14.4.2*/
-exports.HTTPERROR = "httpError";
+exports.HTTP_ERROR = "httpError";
 exports.EMPTY_RESPONSE = "emptyResponse";
 exports.MALFORMEDXML = "malformedXML";
 exports.SERVER_ERROR = "serverError";
@@ -2023,14 +2023,14 @@ class ExtDomQuery extends mona_dish_1.DQ {
      * decorated run scripts which takes our jsf extensions into consideration
      * (standard DomQuery will let you pass anything)
      * @param sticky if set to true the internally generated element for the script is left in the dom
-     * @param allowListed
+     * @param whiteListed
      */
-    runScripts(sticky = false, allowListed) {
-        const allowListFunc = (src) => {
+    runScripts(sticky = false, whiteListed) {
+        const whitelistFunc = (src) => {
             var _a;
-            return ((_a = allowListed === null || allowListed === void 0 ? void 0 : allowListed(src)) !== null && _a !== void 0 ? _a : true) && !IS_FACES_SOURCE(src) && !IS_INTERNAL_SOURCE(src);
+            return ((_a = whiteListed === null || whiteListed === void 0 ? void 0 : whiteListed(src)) !== null && _a !== void 0 ? _a : true) && !IS_FACES_SOURCE(src) && !IS_INTERNAL_SOURCE(src);
         };
-        return super.runScripts(sticky, allowListFunc);
+        return super.runScripts(sticky, whitelistFunc);
     }
     /**
      * adds the elements in this ExtDomQuery to the head
@@ -2217,14 +2217,15 @@ exports.encodeFormData = encodeFormData;
  */
 function decodeEncodedValues(encoded) {
     const filterBlanks = item => !!(item || '').replace(/\s+/g, '');
-    const splitKeyValuePair = line => {
+    const splitKeyValuePair = _line => {
+        let line = decodeURIComponent(_line);
         let index = line.indexOf("=");
         if (index == -1) {
             return [line];
         }
         return [line.substring(0, index), line.substring(index + 1)];
     };
-    let requestParamEntries = decodeURIComponent(encoded).split(/&/gi);
+    let requestParamEntries = encoded.split(/&/gi);
     return requestParamEntries.filter(filterBlanks).map(splitKeyValuePair);
 }
 exports.decodeEncodedValues = decodeEncodedValues;
@@ -2338,7 +2339,7 @@ class HiddenInputBuilder {
         const SEP = (0, Const_1.$faces)().separatorchar;
         let existingStates = (0, mona_dish_1.DQ$)(`[name*='${(0, Const_1.$nsp)(this.name)}']`);
         let cnt = existingStates.asArray.map(state => {
-            let ident = state.id.orElse("-1").value;
+            let ident = state.id.orElse("0").value;
             ident = ident.substring(ident.lastIndexOf(SEP) + 1);
             return parseInt(ident);
         })
@@ -2347,7 +2348,7 @@ class HiddenInputBuilder {
         })
             .reduce((item1, item2) => {
             return Math.max(item1, item2);
-        }, -1);
+        }, 0); //we start with 1 (see cnt++)
         //the maximum  new ident is the current max + 1
         cnt++;
         const newElement = mona_dish_1.DQ.fromMarkup((0, Const_1.$nsp)(this.template));
@@ -2784,18 +2785,19 @@ var ErrorType;
  * I will add deprecated myfaces backwards compatibility attributes as well
  */
 class ErrorData extends EventData_1.EventData {
-    constructor(source, errorName, errorMessage, responseText = null, responseXML = null, responseCode = "200", status = "", type = ErrorType.CLIENT_ERROR) {
+    constructor(source, errorName, errorMessage, responseText = null, responseXML = null, responseCode = -1, statusOverride = null, type = ErrorType.CLIENT_ERROR) {
         super();
         this.type = "error";
-        this.source = document.getElementById(source);
-        this.sourceId = source;
+        this.source = source;
         this.type = Const_1.ERROR;
         this.errorName = errorName;
         //tck requires that the type is prefixed to the message itself (jsdoc also) in case of a server error
-        this.message = this.errorMessage = (type == Const_1.SERVER_ERROR) ? type + ": " + errorMessage : errorMessage;
-        this.responseCode = responseCode;
+        this.errorMessage = errorMessage;
+        this.responseCode = `${responseCode}`;
         this.responseText = responseText;
-        this.status = status;
+        this.responseXML = responseXML;
+        this.status = statusOverride;
+        this.description = `Status: ${this.status}\nResponse Code: ${this.responseCode}\nError Message: ${this.errorMessage}`;
         this.typeDetails = type;
         if (type == ErrorType.SERVER_ERROR) {
             this.serverErrorName = this.errorName;
@@ -2806,8 +2808,8 @@ class ErrorData extends EventData_1.EventData {
         var _a, _b, _c, _d;
         return new ErrorData((_a = e === null || e === void 0 ? void 0 : e.source) !== null && _a !== void 0 ? _a : "client", (_b = e === null || e === void 0 ? void 0 : e.name) !== null && _b !== void 0 ? _b : Const_1.EMPTY_STR, (_c = e === null || e === void 0 ? void 0 : e.message) !== null && _c !== void 0 ? _c : Const_1.EMPTY_STR, (_d = e === null || e === void 0 ? void 0 : e.stack) !== null && _d !== void 0 ? _d : Const_1.EMPTY_STR);
     }
-    static fromHttpConnection(source, name, message, responseText, responseCode, status = Const_1.EMPTY_STR) {
-        return new ErrorData(source, name, message, responseText, responseCode, `${responseCode}`, status, ErrorType.HTTP_ERROR);
+    static fromHttpConnection(source, name, message, responseText, responseXML, responseCode, status = Const_1.EMPTY_STR) {
+        return new ErrorData(source, name, message, responseText, responseXML, responseCode, status, ErrorType.HTTP_ERROR);
     }
     static fromGeneric(context, errorCode, errorType = ErrorType.SERVER_ERROR) {
         let getMsg = this.getMsg;
@@ -2816,8 +2818,8 @@ class ErrorData extends EventData_1.EventData {
         let errorMessage = getMsg(context, Const_1.ERROR_MESSAGE);
         let status = getMsg(context, Const_1.STATUS);
         let responseText = getMsg(context, Const_1.RESPONSE_TEXT);
-        let responseXML = getMsg(context, Const_1.RESPONSE_XML);
-        return new ErrorData(source, errorName, errorMessage, responseText, responseXML, errorCode + Const_1.EMPTY_STR, status, errorType);
+        let responseXML = context.getIf(Const_1.RESPONSE_XML).value;
+        return new ErrorData(source, errorName, errorMessage, responseText, responseXML, errorCode, status, errorType);
     }
     static getMsg(context, param) {
         return getMessage(context.getIf(param).orElse(Const_1.EMPTY_STR).value);
@@ -4263,7 +4265,7 @@ class XhrRequest extends AsyncRunnable_1.AsyncRunnable {
         // reject means clear queue, in this case we abort entirely the processing
         // does not happen yet, we have to probably rethink this strategy in the future
         // when we introduce cancel functionality
-        this.handleGenericError(reject);
+        this.handleHttpError(reject);
     }
     /**
      * request timeout, this must be handled like a generic server error per spec
@@ -4276,7 +4278,7 @@ class XhrRequest extends AsyncRunnable_1.AsyncRunnable {
         // timeout also means we we probably should clear the queue,
         // the state is unsafe for the next requests
         this.sendEvent(Const_1.STATE_EVT_TIMEOUT);
-        this.handleGenericError(resolve);
+        this.handleHttpError(resolve);
     }
     /**
      * the response is received and normally is a normal response
@@ -4287,28 +4289,52 @@ class XhrRequest extends AsyncRunnable_1.AsyncRunnable {
      * @private
      */
     onResponseReceived(resolve) {
-        var _a, _b, _c, _d;
+        var _a;
         this.sendEvent(Const_1.COMPLETE);
-        /*
-         * second on error path
-         */
-        if (((_b = (_a = this.xhrObject) === null || _a === void 0 ? void 0 : _a.status) !== null && _b !== void 0 ? _b : 0) >= 300 || !((_c = this === null || this === void 0 ? void 0 : this.xhrObject) === null || _c === void 0 ? void 0 : _c.responseXML)) {
-            // all errors from the server are resolved without interfering in the queue
-            this.handleGenericError(resolve);
-            return;
+        //request error resolution as per spec:
+        if (!this.processRequestErrors(resolve)) {
+            (0, Const_1.$faces)().ajax.response(this.xhrObject, (_a = this.responseContext.value) !== null && _a !== void 0 ? _a : {});
         }
-        (0, Const_1.$faces)().ajax.response(this.xhrObject, (_d = this.responseContext.value) !== null && _d !== void 0 ? _d : {});
     }
-    handleGenericError(resolveOrReject) {
+    processRequestErrors(resolve) {
+        var _a, _b, _c;
+        const responseXML = new mona_dish_1.XMLQuery((_a = this.xhrObject) === null || _a === void 0 ? void 0 : _a.responseXML);
+        const responseCode = (_c = (_b = this.xhrObject) === null || _b === void 0 ? void 0 : _b.status) !== null && _c !== void 0 ? _c : -1;
+        if (responseXML.isXMLParserError()) {
+            // invalid response
+            const errorName = "Invalid Response";
+            const errorMessage = "The response xml is invalid";
+            this.handleGenericResponseError(errorName, errorMessage, Const_1.MALFORMEDXML, resolve);
+            return true;
+        }
+        else if (responseXML.isAbsent()) {
+            // empty response
+            const errorName = "Empty Response";
+            const errorMessage = "The response has provided no data";
+            this.handleGenericResponseError(errorName, errorMessage, Const_1.EMPTY_RESPONSE, resolve);
+            return true;
+        }
+        else if (responseCode >= 300 || responseCode < 200) {
+            // other server errors
+            // all errors from the server are resolved without interfering in the queue
+            this.handleHttpError(resolve);
+            return true;
+        }
+        //additional errors are application errors and must be handled within the response
+        return false;
+    }
+    handleGenericResponseError(errorName, errorMessage, responseStatus, resolve) {
         var _a, _b, _c, _d;
+        const errorData = new ErrorData_1.ErrorData(this.internalContext.getIf(Const_1.CTX_PARAM_SRC_CTL_ID).value, errorName, errorMessage, (_b = (_a = this.xhrObject) === null || _a === void 0 ? void 0 : _a.responseText) !== null && _b !== void 0 ? _b : "", (_d = (_c = this.xhrObject) === null || _c === void 0 ? void 0 : _c.responseXML) !== null && _d !== void 0 ? _d : null, this.xhrObject.status, responseStatus);
+        this.finalizeError(errorData, resolve);
+    }
+    handleHttpError(resolveOrReject, errorMessage = "Generic HTTP Serror") {
+        var _a, _b, _c, _d, _e, _f;
         this.stopProgress = true;
-        const errorData = {
-            type: Const_1.ERROR,
-            status: Const_1.MALFORMEDXML,
-            responseCode: (_b = (_a = this.xhrObject) === null || _a === void 0 ? void 0 : _a.status) !== null && _b !== void 0 ? _b : 400,
-            responseText: (_d = (_c = this.xhrObject) === null || _c === void 0 ? void 0 : _c.responseText) !== null && _d !== void 0 ? _d : "Error",
-            source: this.internalContext.getIf(Const_1.CTX_PARAM_SRC_CTL_ID).value
-        };
+        const errorData = new ErrorData_1.ErrorData(this.internalContext.getIf(Const_1.CTX_PARAM_SRC_CTL_ID).value, Const_1.HTTP_ERROR, errorMessage, (_b = (_a = this.xhrObject) === null || _a === void 0 ? void 0 : _a.responseText) !== null && _b !== void 0 ? _b : "", (_d = (_c = this.xhrObject) === null || _c === void 0 ? void 0 : _c.responseXML) !== null && _d !== void 0 ? _d : null, (_f = (_e = this.xhrObject) === null || _e === void 0 ? void 0 : _e.status) !== null && _f !== void 0 ? _f : -1, Const_1.HTTP_ERROR);
+        this.finalizeError(errorData, resolveOrReject);
+    }
+    finalizeError(errorData, resolveOrReject) {
         try {
             this.handleError(errorData, true);
         }
@@ -4317,8 +4343,8 @@ class XhrRequest extends AsyncRunnable_1.AsyncRunnable {
             // reject would clean up the queue
             // resolve would trigger the next element in the queue to be processed
             resolveOrReject(errorData);
+            this.stopProgress = true;
         }
-        // non blocking non clearing
     }
     /**
      * last minute cleanup, the request now either is fully done
@@ -4375,14 +4401,20 @@ class XhrRequest extends AsyncRunnable_1.AsyncRunnable {
         this.reject(e);
     }
     handleError(exception, responseFormatError = false) {
-        const errorData = (responseFormatError) ? ErrorData_1.ErrorData.fromHttpConnection(exception.source, exception.type, exception.status, exception.responseText, exception.responseCode, exception.status) : ErrorData_1.ErrorData.fromClient(exception);
+        var _a;
+        const errorData = (responseFormatError) ? ErrorData_1.ErrorData.fromHttpConnection(exception.source, exception.type, (_a = exception.message) !== null && _a !== void 0 ? _a : Const_1.EMPTY_STR, exception.responseText, exception.responseXML, exception.responseCode, exception.status) : ErrorData_1.ErrorData.fromClient(exception);
         const eventHandler = (0, RequestDataResolver_1.resolveHandlerFunc)(this.requestContext, this.responseContext, Const_1.ON_ERROR);
         AjaxImpl_1.Implementation.sendError(errorData, eventHandler);
     }
     appendIssuingItem(formData) {
+        var _a, _b;
         const issuingItemId = this.internalContext.getIf(Const_1.CTX_PARAM_SRC_CTL_ID).value;
+        //to avoid sideffects with buttons we only can append the issuing item if no behavior event is set
+        //MYFACES-4679!
+        const eventType = (_b = (_a = formData.getIf((0, Const_1.$nsp)(Const_1.P_BEHAVIOR_EVENT)).value) === null || _a === void 0 ? void 0 : _a[0]) !== null && _b !== void 0 ? _b : null;
+        const isBehaviorEvent = (!!eventType) && eventType != 'click';
         //not encoded
-        if (issuingItemId && formData.getIf(issuingItemId).isAbsent()) {
+        if (issuingItemId && formData.getIf(issuingItemId).isAbsent() && !isBehaviorEvent) {
             const issuingItem = mona_dish_1.DQ.byId(issuingItemId);
             const itemValue = issuingItem.inputValue;
             const arr = new ExtDomQuery_1.ExtConfig({});
@@ -4395,7 +4427,7 @@ class XhrRequest extends AsyncRunnable_1.AsyncRunnable {
             else if ((type == XhrRequest.TYPE_CHECKBOX || type == XhrRequest.TYPE_RADIO)) {
                 arr.assign(issuingItemId).value = itemValue.orElse(true).value;
             }
-            else {
+            else if (itemValue.isPresent()) {
                 arr.assign(issuingItemId).value = itemValue.value;
             }
             formData.shallowMerge(arr, true, true);
@@ -4570,7 +4602,7 @@ var oam;
  * limitations under the License.
  */
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.shallowMerge = exports.simpleShallowMerge = exports.deepCopy = exports.buildPath = exports.resolve = exports.appendIf = exports.assignIf = exports.append = exports.assign = void 0;
+exports.deepEqual = exports.shallowMerge = exports.simpleShallowMerge = exports.deepCopy = exports.buildPath = exports.resolve = exports.appendIf = exports.assignIf = exports.append = exports.assign = void 0;
 const Es2019Array_1 = __webpack_require__(/*! ./Es2019Array */ "./typescript/mona_dish/Es2019Array.ts");
 /**
  * A nop as assign functionality (aka ignore assign)
@@ -4791,12 +4823,71 @@ function simpleShallowMerge(...assocArrays) {
     return shallowMerge(true, false, ...assocArrays);
 }
 exports.simpleShallowMerge = simpleShallowMerge;
+function _appendWithOverwrite(withAppend, target, key, arr, toAssign) {
+    if (!withAppend) {
+        target[key] = arr[key];
+    }
+    else {
+        //overwrite means in this case, no double entries!
+        //we do not a deep compare for now a single value compare suffices
+        if ('undefined' == typeof (target === null || target === void 0 ? void 0 : target[key])) {
+            target[key] = toAssign;
+        }
+        else if (!Array.isArray(target[key])) {
+            let oldVal = target[key];
+            let newVals = [];
+            //TODO maybe deep deep compare here, but on the other hand it is
+            //shallow
+            toAssign.forEach(item => {
+                if (oldVal != item) {
+                    newVals.push(item);
+                }
+            });
+            target[key] = new Es2019Array_1.Es2019Array(...[]);
+            target[key].push(oldVal);
+            target[key].push(...newVals);
+        }
+        else {
+            let oldVal = target[key];
+            let newVals = [];
+            //TODO deep compare here
+            toAssign.forEach(item => {
+                if (oldVal.indexOf(item) == -1) {
+                    newVals.push(item);
+                }
+            });
+            target[key].push(...newVals);
+        }
+    }
+}
+function _appendWithoutOverwrite(withAppend, target, key, arr, toAssign) {
+    if (!withAppend) {
+        return;
+    }
+    else {
+        //overwrite means in this case, no double entries!
+        //we do not a deep compare for now a single value compare suffices
+        if ('undefined' == typeof (target === null || target === void 0 ? void 0 : target[key])) {
+            target[key] = toAssign;
+        }
+        else if (!Array.isArray(target[key])) {
+            let oldVal = target[key];
+            target[key] = new Es2019Array_1.Es2019Array(...[]);
+            target[key].push(oldVal);
+            target[key].push(...toAssign);
+        }
+        else {
+            target[key].push(...toAssign);
+        }
+    }
+}
 /**
  * Shallow merge as in config, but on raw associative arrays
  *
- * @param overwrite
- * @param withAppend
- * @param assocArrays
+ * @param overwrite overwrite existing keys, if they exist with their subtrees
+ * @param withAppend if a key exist append the values or drop them
+ * Combination overwrite withappend filters doubles out of merged arrays
+ * @param assocArrays array of assoc arres reduced right to left
  */
 function shallowMerge(overwrite = true, withAppend = false, ...assocArrays) {
     let target = {};
@@ -4809,29 +4900,47 @@ function shallowMerge(overwrite = true, withAppend = false, ...assocArrays) {
                 toAssign = new Es2019Array_1.Es2019Array(...[toAssign]);
             }
             if (overwrite || !(target === null || target === void 0 ? void 0 : target[key])) {
-                if (!withAppend) {
-                    target[key] = arr[key];
-                }
-                else {
-                    if ('undefined' == typeof (target === null || target === void 0 ? void 0 : target[key])) {
-                        target[key] = toAssign;
-                    }
-                    else if (!Array.isArray(target[key])) {
-                        let oldVal = target[key];
-                        target[key] = new Es2019Array_1.Es2019Array(...[]);
-                        target[key].push(oldVal);
-                        target[key].push(...toAssign);
-                    }
-                    else {
-                        target[key].push(...toAssign);
-                    }
-                }
+                _appendWithOverwrite(withAppend, target, key, arr, toAssign);
+            }
+            else if (!overwrite && (target === null || target === void 0 ? void 0 : target[key])) {
+                _appendWithoutOverwrite(withAppend, target, key, arr, toAssign);
             }
         });
     });
     return target;
 }
 exports.shallowMerge = shallowMerge;
+//TODO test this, slightly altered from https://medium.com/@pancemarko/deep-equality-in-javascript-determining-if-two-objects-are-equal-bf98cf47e934
+//he overlooked some optimizations and a shortcut at typeof!
+function deepEqual(obj1, obj2) {
+    if (obj1 == obj2) {
+        return false;
+    }
+    if (typeof obj1 != typeof obj2) {
+        return false;
+    }
+    if (Array.isArray(obj1) && Array.isArray(obj2)) {
+        if (obj1.length != obj2.length) {
+            return;
+        }
+        //arrays must be equal, order as well, there is no way around it
+        //this is the major limitation we have
+        return obj1.every((item, cnt) => deepEqual(item, obj2[cnt]));
+    }
+    //string number and other primitives are filtered out here
+    if ("object" == typeof obj1 && "object" == typeof obj2) {
+        let keys1 = Object.keys(obj1);
+        let keys2 = Object.keys(obj2);
+        if (keys1.length != keys2.length) {
+            return false;
+        }
+        return keys1.every(key => keys2.indexOf(key) != -1) &&
+            keys1.every(key => deepEqual(obj1[key], obj2[key]));
+    }
+    return false;
+    //done here no match found
+}
+exports.deepEqual = deepEqual;
 
 
 /***/ }),
@@ -5313,7 +5422,7 @@ exports.Style = Style;
  * small helper for the specialized jsf case
  * @constructor
  */
-const DEFAULT_ALLOWLIST = () => {
+const DEFAULT_WHITELIST = () => {
     return true;
 };
 /**
@@ -6314,10 +6423,10 @@ class DomQuery {
     /**
      * Run through the given nodes in the DomQuery execute the inline scripts
      * @param sticky if set to true the evaluated elements will stick to the head, default false
-     * @param allowListed: optional allowList function which can filter out script tags which are not processed
+     * @param whitelisted: optional whitelist function which can filter out script tags which are not processed
      * defaults to the standard jsf.js exclusion (we use this code for myfaces)
      */
-    runScripts(sticky = false, allowListed = DEFAULT_ALLOWLIST) {
+    runScripts(sticky = false, whitelisted = DEFAULT_WHITELIST) {
         const evalCollectedScripts = (scriptsToProcess) => {
             if (scriptsToProcess.length) {
                 // script source means we have to eval the existing
@@ -6362,7 +6471,7 @@ class DomQuery {
                     // we have to move this into an inner if because chrome otherwise chokes
                     // due to changing the and order instead of relying on left to right
                     // if jsf.js is already registered we do not replace it anymore
-                    if (allowListed(src)) {
+                    if (whitelisted(src)) {
                         // we run the collected scripts, before we run the 'include' command
                         finalScripts = evalCollectedScripts(finalScripts);
                         if (!sticky) {
