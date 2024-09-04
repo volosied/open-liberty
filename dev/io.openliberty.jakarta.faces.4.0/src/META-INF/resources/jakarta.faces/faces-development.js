@@ -4380,9 +4380,14 @@ class XhrRequest extends AsyncRunnable_1.AsyncRunnable {
         AjaxImpl_1.Implementation.sendError(errorData, eventHandler);
     }
     appendIssuingItem(formData) {
+        var _a, _b;
         const issuingItemId = this.internalContext.getIf(Const_1.CTX_PARAM_SRC_CTL_ID).value;
+        //to avoid sideffects with buttons we only can append the issuing item if no behavior event is set
+        //MYFACES-4679!
+        const eventType = (_b = (_a = formData.getIf((0, Const_1.$nsp)(Const_1.P_BEHAVIOR_EVENT)).value) === null || _a === void 0 ? void 0 : _a[0]) !== null && _b !== void 0 ? _b : null;
+        const isBehaviorEvent = (!!eventType) && eventType != 'click';
         //not encoded
-        if (issuingItemId && formData.getIf(issuingItemId).isAbsent()) {
+        if (issuingItemId && formData.getIf(issuingItemId).isAbsent() && !isBehaviorEvent) {
             const issuingItem = mona_dish_1.DQ.byId(issuingItemId);
             const itemValue = issuingItem.inputValue;
             const arr = new ExtDomQuery_1.ExtConfig({});
@@ -4395,7 +4400,7 @@ class XhrRequest extends AsyncRunnable_1.AsyncRunnable {
             else if ((type == XhrRequest.TYPE_CHECKBOX || type == XhrRequest.TYPE_RADIO)) {
                 arr.assign(issuingItemId).value = itemValue.orElse(true).value;
             }
-            else {
+            else if (itemValue.isPresent()) {
                 arr.assign(issuingItemId).value = itemValue.value;
             }
             formData.shallowMerge(arr, true, true);
