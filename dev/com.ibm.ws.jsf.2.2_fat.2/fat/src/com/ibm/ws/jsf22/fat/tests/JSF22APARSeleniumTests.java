@@ -12,6 +12,8 @@ package com.ibm.ws.jsf22.fat.tests;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.security.Key;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -21,6 +23,7 @@ import org.junit.Test;
 import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -66,6 +69,8 @@ public class JSF22APARSeleniumTests {
     public static void setup() throws Exception {
 
         ShrinkHelper.defaultDropinApp(jsf22APARSeleniumServer, "PH55398.war", "com.ibm.ws.jsf22.fat.PH55398.bean");
+
+        ShrinkHelper.defaultDropinApp(jsf22APARSeleniumServer, "PH62753.war", "com.ibm.ws.jsf22.fat.PH62753.bean");
 
         jsf22APARSeleniumServer.startServer(c.getSimpleName() + ".log");
 
@@ -160,6 +165,33 @@ public class JSF22APARSeleniumTests {
 
             output = page.findElement(By.id("form1:output")).getText();
             assertEquals("false", page.findElement(By.id("form1:output")).getText());
+
+    }
+
+    /*
+     * TODO
+     */
+    @Test
+    public void testPH62753() throws Exception {
+        String url = JSFUtils.createSeleniumURLString(jsf22APARSeleniumServer, "PH62753", "index.xhtml");
+        WebPage page = new WebPage(driver);
+     
+        page.get(url);
+        page.waitForPageToLoad(); 
+
+        WebElement ajaxButton = page.findElement(By.id("form1:EventBlurWithListener"));
+
+        ajaxButton.sendKeys("");
+
+        assertTrue("Element is not focused!", ajaxButton.equals(driver.switchTo().activeElement()));
+
+        ajaxButton.sendKeys(Keys.TAB);
+
+        page.waitReqJs();
+
+        assertTrue("Ajax Listener not invokved!", jsf22APARSeleniumServer.findStringsInLogs("listener() invoked!").size() == 1);
+
+        assertTrue("Action was wrongly invokved!", jsf22APARSeleniumServer.findStringsInLogs("confirm() invoked!").isEmpty());
 
     }
     
