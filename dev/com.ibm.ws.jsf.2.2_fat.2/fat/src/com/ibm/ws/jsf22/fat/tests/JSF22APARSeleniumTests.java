@@ -179,7 +179,7 @@ public class JSF22APARSeleniumTests {
         page.get(url);
         page.waitForPageToLoad(); 
 
-        WebElement ajaxButton = page.findElement(By.id("form1:EventBlurWithListener"));
+        WebElement ajaxButton = page.findElement(By.id("form1:buttonWithListener"));
 
         ajaxButton.sendKeys("");
 

@@ -30,7 +30,7 @@
          <div>
            <h:inputText />
            <h:commandButton id="buttonWithListener" value="EventBlurWithListener" action="#{testBean.confirm()}" >
-                 <f:ajax event="blur" listener="#{ajaxEventBean.listener()}"/>
+                 <f:ajax event="blur" listener="#{testBean.listener()}"/>
            </h:commandButton>
          </div>
        </h:form>
