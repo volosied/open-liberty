@@ -7025,10 +7025,17 @@ _MF_CLS(_PFX_XHR + "_AjaxRequest", _MF_OBJECT, /** @lends myfaces._impl.xhrCore.
      */
     getFormData:function () {
         var formDataDecorator = this._Lang.createFormDataDecorator(jsf.getViewState(this._sourceForm));
-        this._AJAXUTIL.appendIssuingItem(this._source, formDataDecorator);
+        if (this._source && !this._isBehaviorEvent()) {
+            this._AJAXUTIL.appendIssuingItem(this._source, formDataDecorator);
+        }
         return formDataDecorator;
     },
 
+    _isBehaviorEvent: function() {
+        var eventType = this._passThrough[this.attr("impl").P_BEHAVIOR_EVENT] || null;
+        var isBehaviorEvent = (!!eventType) && eventType != 'click';
+        return isBehaviorEvent;
+    },
     /**
      * Client error handlers which also in the long run route into our error queue
      * but also are able to deliver more meaningful messages
@@ -7110,11 +7117,15 @@ _MF_CLS(_PFX_XHR + "_MultipartAjaxRequestLevel2", myfaces._impl.xhrCore._AjaxReq
         //in case of a multipart form post we savely can use the FormData object
         if (this._context._mfInternal.xhrOp === "multipartQueuedPost") {
             ret = new FormData(this._sourceForm);
-            this._AJAXUTIL.appendIssuingItem(this._source, ret);
+            if(this._source && !this._isBehaviorEvent()) {
+                this._AJAXUTIL.appendIssuingItem(this._source, ret);
+            }
         } else {
             //we switch back to the encode submittable fields system
             this._AJAXUTIL.encodeSubmittableFields(ret, this._sourceForm, null);
-            this._AJAXUTIL.appendIssuingItem(this._source, ret);
+            if(this._source && !this._isBehaviorEvent()) {
+                this._AJAXUTIL.appendIssuingItem(this._source, ret);
+            }
         }
         return ret;
     },
@@ -8495,9 +8506,14 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
     P_EXECUTE:"javax.faces.partial.execute",
     P_RENDER:"javax.faces.partial.render",
     P_EVT:"javax.faces.partial.event",
+    P_BEHAVIOR_EVENT:"javax.faces.behavior.event",
     P_WINDOW_ID:"javax.faces.ClientWindow",
     P_RESET_VALUES:"javax.faces.partial.resetValues",
 
+    //faces std values
+    STD_VALUES: [this.P_PARTIAL_SOURCE, this.P_VIEWSTATE, this.P_CLIENTWINDOW, this.P_AJAX,
+        this.P_EXECUTE, this.P_RENDER, this.P_EVT, this.P_BEHAVIOR_EVENT, this.P_WINDOW_ID, this.P_RESET_VALUES],
+    
     /* message types */
     ERROR:"error",
     EVENT:"event",
