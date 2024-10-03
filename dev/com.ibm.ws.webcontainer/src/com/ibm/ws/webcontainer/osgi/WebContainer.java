@@ -986,7 +986,12 @@ public class WebContainer extends com.ibm.ws.webcontainer.WebContainer implement
                 // otherwise, launch is on its own thread
                 if (!WCCustomProperties.DEFER_SERVLET_LOAD) {
                     if (!startWebApplication(dMod)) {
-                        throw new StateChangeException("startWebApplication");
+                        Throwable t = dMod.getWebApp().getStartUpException(); // Servlet 6.1 +
+                        if(t != null) {
+                            throw t;
+                        } else {
+                            throw new StateChangeException("startWebApplication");
+                        }
                     }
                 } else {
                     backgroundWebAppStartFutures.add(es, new Runnable() {

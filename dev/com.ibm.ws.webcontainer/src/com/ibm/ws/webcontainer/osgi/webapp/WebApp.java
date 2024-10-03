@@ -1165,6 +1165,7 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
     return wccmd;
   }
   protected WebComponentMetaData[] internalServletMetaData = new WebComponentMetaData[internalServletList.length];
+private Throwable startUpException;
 
   protected ServletConfig createConfig(String servletName, int internalIndex) throws ServletException
   {
@@ -1516,6 +1517,14 @@ public class WebApp extends com.ibm.ws.webcontainer.webapp.WebApp implements Com
       }
 
       return docRoot;
+  }
+
+  public Throwable getStartUpException(){
+    return this.startUpException;
+  }
+
+  public void setStartUpException(Throwable t){
+    this.startUpException = t;
   }
   
   // PM21451 Add convenience method

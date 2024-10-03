@@ -490,6 +490,15 @@ public class DynamicVirtualHost extends com.ibm.ws.webcontainer.VirtualHost impl
                 if (TraceComponent.isAnyTracingEnabled() && tc.isEventEnabled()) {
                     Tr.event(tc, "Error starting web app: " + webApp + "; " + th);
                 }
+ 
+                if(WebContainer.isServlet61orAbove()) {
+                    if(th.getCause() != null) {
+                        webApp.setStartUpException(th.getCause());
+                    } else {
+                        webApp.setStartUpException(th);
+                    }
+                }
+
             } finally {
             	stopWebApp(webApp);
             }
