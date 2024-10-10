@@ -87,7 +87,7 @@ public class JSF23UIRepeatConditionTests {
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), page.asXml());
 
             HtmlTextInput beginInput = (HtmlTextInput) page.getElementById("beginInput");
@@ -107,7 +107,7 @@ public class JSF23UIRepeatConditionTests {
             page = page.getElementById("button1").click();
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), page.asXml());
 
             output = page.getElementById("panel1").getTextContent().replaceAll("\\s", "");
@@ -129,7 +129,7 @@ public class JSF23UIRepeatConditionTests {
             page = page.getElementById("button1").click();
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), page.asXml());
 
             output = page.getElementById("panel1").getTextContent().replaceAll("\\s", "");
@@ -163,10 +163,10 @@ public class JSF23UIRepeatConditionTests {
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), page.asXml());
 
-            assertTrue("The following error was not found on the page: " + errorText, page.asText().contains(errorText));
+            assertTrue("The following error was not found on the page: " + errorText, page.asNormalizedText().contains(errorText));
         }
     }
 }

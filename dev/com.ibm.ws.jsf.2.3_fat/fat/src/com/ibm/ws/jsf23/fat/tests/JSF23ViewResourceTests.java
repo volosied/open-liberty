@@ -106,37 +106,37 @@ public class JSF23ViewResourceTests {
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), page.asXml());
 
             // Ensure that all of the ResourceHandler output is correct
-            assertTrue(verifyOutput(page.getElementById("out1").asText(), index1, index2, template, webinf, metainf, index3, index4));
-            assertTrue(verifyOutput(page.getElementById("out2").asText(), index1, index2, template, index3, index4));
-            assertTrue(verifyOutput(page.getElementById("out3").asText(), index1));
-            assertTrue(verifyOutput(page.getElementById("out4").asText(), index1, index2, template, webinf, metainf));
-            assertTrue(verifyOutput(page.getElementById("out5").asText(), index1, index2, template, webinf, metainf, index3, index4));
-            assertTrue(verifyOutput(page.getElementById("out6").asText(), index1, index2, template, webinf, metainf, index3, index4));
-            assertTrue(verifyOutput(page.getElementById("out7").asText(), index1));
+            assertTrue(verifyOutput(page.getElementById("out1").asNormalizedText(), index1, index2, template, webinf, metainf, index3, index4));
+            assertTrue(verifyOutput(page.getElementById("out2").asNormalizedText(), index1, index2, template, index3, index4));
+            assertTrue(verifyOutput(page.getElementById("out3").asNormalizedText(), index1));
+            assertTrue(verifyOutput(page.getElementById("out4").asNormalizedText(), index1, index2, template, webinf, metainf));
+            assertTrue(verifyOutput(page.getElementById("out5").asNormalizedText(), index1, index2, template, webinf, metainf, index3, index4));
+            assertTrue(verifyOutput(page.getElementById("out6").asNormalizedText(), index1, index2, template, webinf, metainf, index3, index4));
+            assertTrue(verifyOutput(page.getElementById("out7").asNormalizedText(), index1));
 
             // Ensure that all of the ViewHandler output is correct
-            assertTrue(verifyOutput(page.getElementById("out8").asText(), index1, index2, index3, index4));
-            assertTrue(verifyOutput(page.getElementById("out9").asText(), index1.substring(0, index1.indexOf(".")), index2.substring(0, index2.indexOf(".")),
+            assertTrue(verifyOutput(page.getElementById("out8").asNormalizedText(), index1, index2, index3, index4));
+            assertTrue(verifyOutput(page.getElementById("out9").asNormalizedText(), index1.substring(0, index1.indexOf(".")), index2.substring(0, index2.indexOf(".")),
                                     index3.substring(0, index3.indexOf(".")), index4.substring(0, index4.indexOf("."))));
-            assertTrue(verifyOutput(page.getElementById("out10").asText(), index1));
-            assertTrue(verifyOutput(page.getElementById("out11").asText(), index1, index2));
-            assertTrue(verifyOutput(page.getElementById("out12").asText(), index1, index2, index3, index4));
-            assertTrue(verifyOutput(page.getElementById("out13").asText(), index1, index2, index3, index4));
-            assertTrue(verifyOutput(page.getElementById("out14").asText(), index1));
+            assertTrue(verifyOutput(page.getElementById("out10").asNormalizedText(), index1));
+            assertTrue(verifyOutput(page.getElementById("out11").asNormalizedText(), index1, index2));
+            assertTrue(verifyOutput(page.getElementById("out12").asNormalizedText(), index1, index2, index3, index4));
+            assertTrue(verifyOutput(page.getElementById("out13").asNormalizedText(), index1, index2, index3, index4));
+            assertTrue(verifyOutput(page.getElementById("out14").asNormalizedText(), index1));
 
             // Ensure that all of the VDL output is correct
-            assertTrue(verifyOutput(page.getElementById("out15").asText(), index1, index2, index3, index4));
-            assertTrue(verifyOutput(page.getElementById("out16").asText(), index1.substring(0, index1.indexOf(".")), index2.substring(0, index2.indexOf(".")),
+            assertTrue(verifyOutput(page.getElementById("out15").asNormalizedText(), index1, index2, index3, index4));
+            assertTrue(verifyOutput(page.getElementById("out16").asNormalizedText(), index1.substring(0, index1.indexOf(".")), index2.substring(0, index2.indexOf(".")),
                                     index3.substring(0, index3.indexOf(".")), index4.substring(0, index4.indexOf("."))));
-            assertTrue(verifyOutput(page.getElementById("out17").asText(), index1));
-            assertTrue(verifyOutput(page.getElementById("out18").asText(), index1, index2));
-            assertTrue(verifyOutput(page.getElementById("out19").asText(), index1, index2, index3, index4));
-            assertTrue(verifyOutput(page.getElementById("out20").asText(), index1, index2, index3, index4));
-            assertTrue(verifyOutput(page.getElementById("out21").asText(), index1));
+            assertTrue(verifyOutput(page.getElementById("out17").asNormalizedText(), index1));
+            assertTrue(verifyOutput(page.getElementById("out18").asNormalizedText(), index1, index2));
+            assertTrue(verifyOutput(page.getElementById("out19").asNormalizedText(), index1, index2, index3, index4));
+            assertTrue(verifyOutput(page.getElementById("out20").asNormalizedText(), index1, index2, index3, index4));
+            assertTrue(verifyOutput(page.getElementById("out21").asNormalizedText(), index1));
         }
     }
 

@@ -82,10 +82,10 @@ public class JSF23ViewParametersTests {
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), page.asXml());
 
-            assertTrue("The validation message was not displayed.", page.asText().contains("textParam1: must not be null"));
+            assertTrue("The validation message was not displayed.", page.asNormalizedText().contains("textParam1: must not be null"));
         }
     }
 
@@ -108,10 +108,10 @@ public class JSF23ViewParametersTests {
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), page.asXml());
 
-            assertTrue("The validation message was not displayed.", page.asText().contains("textParam2: Validation Error: Value is required."));
+            assertTrue("The validation message was not displayed.", page.asNormalizedText().contains("textParam2: Validation Error: Value is required."));
         }
     }
 
@@ -134,10 +134,10 @@ public class JSF23ViewParametersTests {
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), page.asXml());
 
-            assertTrue("The textParam3 was not set to null", page.asText().contains("test1|test2|"));
+            assertTrue("The textParam3 was not set to null", page.asNormalizedText().contains("test1|test2|"));
         }
     }
 }

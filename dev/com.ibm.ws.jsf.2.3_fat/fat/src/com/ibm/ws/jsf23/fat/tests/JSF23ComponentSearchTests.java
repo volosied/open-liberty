@@ -85,7 +85,7 @@ public class JSF23ComponentSearchTests {
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), page.asXml());
 
             String resultingXmlPage = page.asXml();
@@ -160,10 +160,10 @@ public class JSF23ComponentSearchTests {
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), page.asXml());
 
-            String resultingPage = page.asText();
+            String resultingPage = page.asNormalizedText();
 
             assertTrue("The expected string was not found.",
                        resultingPage.contains("TEST resolveClientId with search expression 'form1:@parent' -> body"));
@@ -204,7 +204,7 @@ public class JSF23ComponentSearchTests {
 
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
-            String resultingPage = page.asText();
+            String resultingPage = page.asNormalizedText();
 
             // Log the page for debugging if necessary in the future.
             Log.info(c, name.getMethodName(), resultingPage);

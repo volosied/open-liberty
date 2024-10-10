@@ -80,7 +80,7 @@ public class JSF23FacesDataModelTests {
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), page.asXml());
 
             // Ensure the proper values were output on the page
@@ -118,7 +118,7 @@ public class JSF23FacesDataModelTests {
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), page.asXml());
 
             // Ensure the proper values were output on the page
@@ -159,7 +159,7 @@ public class JSF23FacesDataModelTests {
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), page.asXml());
 
             // Ensure the proper values were output on the page
@@ -200,7 +200,7 @@ public class JSF23FacesDataModelTests {
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), page.asXml());
 
             // Ensure the proper values were output on the page

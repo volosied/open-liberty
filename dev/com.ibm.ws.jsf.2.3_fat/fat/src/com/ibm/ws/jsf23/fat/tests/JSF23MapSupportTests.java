@@ -79,7 +79,7 @@ public class JSF23MapSupportTests {
             HtmlPage testPage = (HtmlPage) webClient.getPage(url);
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), testPage.asText());
+            Log.info(c, name.getMethodName(), testPage.asNormalizedText());
             Log.info(c, name.getMethodName(), testPage.asXml());
 
             // Ensue the first key,value pair of the Map is correct.
@@ -120,7 +120,7 @@ public class JSF23MapSupportTests {
             HtmlPage testPage = (HtmlPage) webClient.getPage(url);
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), testPage.asText());
+            Log.info(c, name.getMethodName(), testPage.asNormalizedText());
             Log.info(c, name.getMethodName(), testPage.asXml());
 
             // Ensue the first key,value pair of the Map is correct.

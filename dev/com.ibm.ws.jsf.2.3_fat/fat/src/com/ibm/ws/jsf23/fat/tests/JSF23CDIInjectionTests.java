@@ -279,7 +279,7 @@ public class JSF23CDIInjectionTests extends CDITestBase {
                 Assert.fail("ViewScope.xhtml did not render properly.");
             }
 
-            LOG.info("First request output is:" + page.asText());
+            LOG.info("First request output is:" + page.asNormalizedText());
 
             int app = getAreaHashCode(page, "vab");
             int sess = getAreaHashCode(page, "vsb");
@@ -293,7 +293,7 @@ public class JSF23CDIInjectionTests extends CDITestBase {
                 Assert.fail("ViewScope.xhtml did not render properly after button press.");
             }
 
-            LOG.info("After button click content is:" + page.asText());
+            LOG.info("After button click content is:" + page.asNormalizedText());
 
             int app2 = getAreaHashCode(page, "vab");
             int sess2 = getAreaHashCode(page, "vsb");
@@ -316,7 +316,7 @@ public class JSF23CDIInjectionTests extends CDITestBase {
                 Assert.fail("ViewScope.xhtml did not render properly for second client.");
             }
 
-            LOG.info("Second client page request content:" + page2.asText());
+            LOG.info("Second client page request content:" + page2.asNormalizedText());
 
             int app3 = getAreaHashCode(page2, "vab");
             int sess3 = getAreaHashCode(page2, "vsb");
@@ -336,7 +336,7 @@ public class JSF23CDIInjectionTests extends CDITestBase {
 
         HtmlElement sess = (HtmlElement) page.getElementById(area + "Area");
         if (sess != null) {
-            retValue = Integer.valueOf(sess.asText());
+            retValue = Integer.valueOf(sess.asNormalizedText());
         }
 
         return retValue;

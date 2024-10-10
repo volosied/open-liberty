@@ -47,7 +47,7 @@ public abstract class CDITestBase {
                 Assert.fail(resource + " did not render properly.");
             }
 
-            if (!page.asText().contains(expectedResponse)) {
+            if (!page.asNormalizedText().contains(expectedResponse)) {
                 Assert.fail("The page did not contain the following expected response: " + expectedResponse);
             }
         }
@@ -64,7 +64,7 @@ public abstract class CDITestBase {
             }
 
             for (String expectedResponse : expectedResponseStrings) {
-                if (!page.asText().contains(expectedResponse)) {
+                if (!page.asNormalizedText().contains(expectedResponse)) {
                     Assert.fail("The page did not contain the following expected response: " + expectedResponse);
                 }
             }
@@ -142,13 +142,13 @@ public abstract class CDITestBase {
 
             assertNotNull(testBeanValue);
 
-            LOG.info("Bean Value = " + testBeanValue.asText());
+            LOG.info("Bean Value = " + testBeanValue.asNormalizedText());
 
-            assertTrue(testBeanValue.asText().contains(":ActionListenerBean:"));
-            assertTrue(testBeanValue.asText().contains(":ActionListener:"));
-            assertTrue(testBeanValue.asText().contains("com.ibm.ws.jsf23.fat.cdi.common.beans.injected.ManagedBeanFieldBean"));
-            assertTrue(testBeanValue.asText().contains("com.ibm.ws.jsf23.fat.cdi.common.beans.injected.MethodBean"));
-            assertTrue(testBeanValue.asText().contains(":PostConstructCalled:"));
+            assertTrue(testBeanValue.asNormalizedText().contains(":ActionListenerBean:"));
+            assertTrue(testBeanValue.asNormalizedText().contains(":ActionListener:"));
+            assertTrue(testBeanValue.asNormalizedText().contains("com.ibm.ws.jsf23.fat.cdi.common.beans.injected.ManagedBeanFieldBean"));
+            assertTrue(testBeanValue.asNormalizedText().contains("com.ibm.ws.jsf23.fat.cdi.common.beans.injected.MethodBean"));
+            assertTrue(testBeanValue.asNormalizedText().contains(":PostConstructCalled:"));
         }
     }
 
@@ -182,13 +182,13 @@ public abstract class CDITestBase {
 
             assertNotNull(testBeanValue);
 
-            LOG.info("Bean Value = " + testBeanValue.asText());
+            LOG.info("Bean Value = " + testBeanValue.asNormalizedText());
 
-            assertTrue(testBeanValue.asText().contains(":NavigationHandlerBean:"));
-            assertTrue(testBeanValue.asText().contains(":NavigationHandler:"));
-            assertTrue(testBeanValue.asText().contains("com.ibm.ws.jsf23.fat.cdi.common.beans.injected.ManagedBeanFieldBean"));
-            assertTrue(testBeanValue.asText().contains("com.ibm.ws.jsf23.fat.cdi.common.beans.injected.MethodBean"));
-            assertTrue(testBeanValue.asText().contains(":PostConstructCalled:"));
+            assertTrue(testBeanValue.asNormalizedText().contains(":NavigationHandlerBean:"));
+            assertTrue(testBeanValue.asNormalizedText().contains(":NavigationHandler:"));
+            assertTrue(testBeanValue.asNormalizedText().contains("com.ibm.ws.jsf23.fat.cdi.common.beans.injected.ManagedBeanFieldBean"));
+            assertTrue(testBeanValue.asNormalizedText().contains("com.ibm.ws.jsf23.fat.cdi.common.beans.injected.MethodBean"));
+            assertTrue(testBeanValue.asNormalizedText().contains(":PostConstructCalled:"));
         }
     }
 
@@ -232,7 +232,7 @@ public abstract class CDITestBase {
                 Assert.fail("FactoryInfo.jsf did not render properly.");
             }
 
-            String output = page.asText();
+            String output = page.asNormalizedText();
 
             LOG.info("Factory output value: " + output);
 

@@ -85,7 +85,7 @@ public class JSF23FaceletVDLTests {
             HtmlPage testImportConstantsTagPage = (HtmlPage) webClient.getPage(url);
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), testImportConstantsTagPage.asText());
+            Log.info(c, name.getMethodName(), testImportConstantsTagPage.asNormalizedText());
             Log.info(c, name.getMethodName(), testImportConstantsTagPage.asXml());
 
             // First ensure that the constants defined in a Class work properly
@@ -219,10 +219,10 @@ public class JSF23FaceletVDLTests {
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), page.asXml());
 
-            assertTrue("The page did not contain the Original Facelet text.", page.asText().contains("Original Facelet"));
+            assertTrue("The page did not contain the Original Facelet text.", page.asNormalizedText().contains("Original Facelet"));
 
             // Perform a hot replace and ensure the facelet does not update on the next request;
             String appPath = server.getServerRoot() + "/apps/expanded/" + appName;
@@ -232,10 +232,10 @@ public class JSF23FaceletVDLTests {
             // Drive another request to ensure the facelet was not refreshed
             page = (HtmlPage) webClient.getPage(url);
 
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), page.asXml());
 
-            assertTrue("The page did not contain the Original Facelet text.", page.asText().contains("Original Facelet"));
+            assertTrue("The page did not contain the Original Facelet text.", page.asNormalizedText().contains("Original Facelet"));
 
         }
         // Move the mark to the end of the log so we can ensure we wait for the correct server

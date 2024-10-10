@@ -85,7 +85,7 @@ public class JSF23UISelectManyTests {
 
             HtmlPage testPage = (HtmlPage) webClient.getPage(url);
 
-            String resultingPage = testPage.asText();
+            String resultingPage = testPage.asNormalizedText();
 
             // Log the page for debugging if necessary in the future.
             Log.info(c, name.getMethodName(), resultingPage);
@@ -106,7 +106,7 @@ public class JSF23UISelectManyTests {
             HtmlSubmitInput submitButton = (HtmlSubmitInput) testPage.getElementById("submitButton");
             testPage = submitButton.click();
 
-            resultingPage = testPage.asText();
+            resultingPage = testPage.asNormalizedText();
 
             // Log the page for debugging if necessary in the future.
             Log.info(c, name.getMethodName(), resultingPage);
@@ -142,7 +142,7 @@ public class JSF23UISelectManyTests {
 
             HtmlPage testPage = (HtmlPage) webClient.getPage(url);
 
-            String resultingPage = testPage.asText();
+            String resultingPage = testPage.asNormalizedText();
 
             // Log the page for debugging if necessary in the future.
             Log.info(c, name.getMethodName(), resultingPage);
@@ -161,7 +161,7 @@ public class JSF23UISelectManyTests {
             HtmlSubmitInput submitButton = (HtmlSubmitInput) testPage.getElementById("submitButton");
             testPage = submitButton.click();
 
-            resultingPage = testPage.asText();
+            resultingPage = testPage.asNormalizedText();
 
             // Log the page for debugging if necessary in the future.
             Log.info(c, name.getMethodName(), resultingPage);
@@ -195,7 +195,7 @@ public class JSF23UISelectManyTests {
 
             HtmlPage testPage = (HtmlPage) webClient.getPage(url);
 
-            String resultingPage = testPage.asText();
+            String resultingPage = testPage.asNormalizedText();
 
             // Log the page for debugging if necessary in the future.
             Log.info(c, name.getMethodName(), resultingPage);
@@ -216,7 +216,7 @@ public class JSF23UISelectManyTests {
             HtmlSubmitInput submitButton = (HtmlSubmitInput) testPage.getElementById("submitButton");
             testPage = submitButton.click();
 
-            resultingPage = testPage.asText();
+            resultingPage = testPage.asNormalizedText();
 
             // Log the page for debugging if necessary in the future.
             Log.info(c, name.getMethodName(), resultingPage);

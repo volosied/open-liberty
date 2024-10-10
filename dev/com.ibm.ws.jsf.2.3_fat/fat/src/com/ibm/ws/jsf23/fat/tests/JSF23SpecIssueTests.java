@@ -165,12 +165,12 @@ public class JSF23SpecIssueTests {
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), page.asXml());
 
             // Ensure the page loaded correctly
             String pageText = "JSF 2.3 Spec Issue 1300";
-            assertTrue("The page did not contain the following text: " + pageText, page.asText().contains(pageText));
+            assertTrue("The page did not contain the following text: " + pageText, page.asNormalizedText().contains(pageText));
 
             // No look at the logs to ensure that the PostConstructViewMapEventListener was invoked
             String listenerString = "PostConstructViewMapEventListener processEvent invoked for PostConstructViewMapEvent!!";
@@ -210,7 +210,7 @@ public class JSF23SpecIssueTests {
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), page.asXml());
 
             // First make sure that the h:dataTable rowClass attribute works correctly
@@ -267,12 +267,12 @@ public class JSF23SpecIssueTests {
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), page.asXml());
 
             // Format:  Class | Method | Method injected class: Field injected class : <option> constructor injected class
             String expectedText = "CustomClientWindowFactory|getClientWindow|FactoryDepBean:FactoryAppBean:PostConstructCalled";
-            assertTrue("Did not find " + expectedText + " in response", page.asText().contains(expectedText));
+            assertTrue("Did not find " + expectedText + " in response", page.asNormalizedText().contains(expectedText));
 
             // Stop the server but don't archive the logs (this should shutdown the app and trigger preDestroy)
             server.stopServer(false);
@@ -311,7 +311,8 @@ public class JSF23SpecIssueTests {
         try (WebClient webClient = new WebClient()) {
             // Use a synchronizing ajax controller to allow proper ajax updating
             webClient.setAjaxController(new NicelyResynchronizingAjaxController());
-
+            webClient.getOptions().setThrowExceptionOnScriptError(false);
+            
             // Construct the URL for the test
             String contextRoot = "JSF23Spec790";
             URL url = JSFUtils.createHttpUrl(server, contextRoot, "test1.xhtml");
@@ -326,7 +327,7 @@ public class JSF23SpecIssueTests {
             HtmlSubmitInput submitButton = (HtmlSubmitInput) page.getElementById("a:submitButton1");
             page = submitButton.click();
 
-            String resultingPage = page.asText();
+            String resultingPage = page.asNormalizedText();
 
             // Log the page for debugging if necessary in the future.
             Log.info(c, name.getMethodName(), resultingPage);
@@ -344,7 +345,7 @@ public class JSF23SpecIssueTests {
             HtmlAnchor commandLink1 = (HtmlAnchor) page.getElementById("b:commandLink1");
             page = commandLink1.click();
 
-            resultingPage = page.asText();
+            resultingPage = page.asNormalizedText();
 
             // Log the page for debugging if necessary in the future.
             Log.info(c, name.getMethodName(), resultingPage);
@@ -419,7 +420,7 @@ public class JSF23SpecIssueTests {
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), page.asXml());
 
             HtmlInput input1 = (HtmlInput) page.getElementById("input1");
@@ -427,7 +428,7 @@ public class JSF23SpecIssueTests {
 
             page = page.getElementById("button1").click();
 
-            String pageText = page.asText();
+            String pageText = page.asNormalizedText();
             String expectedText1 = "Value one is required please enter value one!";
             String expectedText2 = "Value two is required please enter value two!";
 
@@ -467,7 +468,7 @@ public class JSF23SpecIssueTests {
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), page.asXml());
 
             HtmlInput input1 = (HtmlInput) page.getElementById("input1");
@@ -479,7 +480,7 @@ public class JSF23SpecIssueTests {
 
             page = page.getElementById("button1").click();
 
-            String pageText = page.asText();
+            String pageText = page.asNormalizedText();
             String expectedText = "Value one is required please enter value one!";
             String unexpectedText = "Value two is required please enter value two!";
 
@@ -519,7 +520,7 @@ public class JSF23SpecIssueTests {
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), page.asXml());
 
             HtmlInput input1 = (HtmlInput) page.getElementById("input1");
@@ -527,7 +528,7 @@ public class JSF23SpecIssueTests {
 
             page = page.getElementById("button1").click();
 
-            String pageText = page.asText();
+            String pageText = page.asNormalizedText();
             String expectedText = "Value two is required please enter value two!";
             String unexpectedText = "Value one is required please enter value one!";
 
@@ -567,7 +568,7 @@ public class JSF23SpecIssueTests {
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), page.asXml());
 
             HtmlInput input1 = (HtmlInput) page.getElementById("input1");
@@ -578,7 +579,7 @@ public class JSF23SpecIssueTests {
 
             page = page.getElementById("button1").click();
 
-            String pageText = page.asText();
+            String pageText = page.asNormalizedText();
             String unexpectedText1 = "Value one is required please enter value one!";
             String unexpectedText2 = "Value two is required please enter value two!";
 
@@ -614,13 +615,13 @@ public class JSF23SpecIssueTests {
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), page.asXml());
 
             HtmlSubmitInput submitButton = (HtmlSubmitInput) page.getElementById("form1:submitButton");
             page = submitButton.click();
 
-            String pageText = page.asText();
+            String pageText = page.asNormalizedText();
             String expectedText1 = "Message from CustomComponent: isResourceRendered library=css name=test-style.css --> false";
             String expectedText2 = "Message from CustomComponent: isResourceRendered library=css name=test-style.css --> true";
             String expectedText3 = "Message from CustomComponent: getComponentResources List size --> 2";

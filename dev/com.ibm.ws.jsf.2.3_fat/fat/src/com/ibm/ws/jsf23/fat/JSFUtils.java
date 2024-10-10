@@ -87,7 +87,7 @@ public class JSFUtils {
         int i = 0;
         boolean isTextFound = false;
         while (!isTextFound && i < 5) {
-            isTextFound = page.asText().contains(responseMessage);
+            isTextFound = page.asNormalizedText().contains(responseMessage);
             i++;
             Thread.sleep(1000);
             Log.info(c, "waitForPageResponse", "Waiting for: " + responseMessage + " isTextFound: " + isTextFound + " i: " + i);

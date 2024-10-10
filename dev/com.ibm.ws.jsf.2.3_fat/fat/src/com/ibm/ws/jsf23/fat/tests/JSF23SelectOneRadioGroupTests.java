@@ -141,7 +141,7 @@ public class JSF23SelectOneRadioGroupTests {
 
             HtmlPage testPage = (HtmlPage) webClient.getPage(url);
 
-            String resultingPage = testPage.asText();
+            String resultingPage = testPage.asNormalizedText();
 
             // Log the page for debugging if necessary in the future.
             Log.info(c, name.getMethodName(), resultingPage);
@@ -158,7 +158,7 @@ public class JSF23SelectOneRadioGroupTests {
             HtmlSubmitInput submitButton = (HtmlSubmitInput) testPage.getElementById("submitButton");
             testPage = submitButton.click();
 
-            resultingPage = testPage.asText();
+            resultingPage = testPage.asNormalizedText();
 
             // Log the page for debugging if necessary in the future.
             Log.info(c, name.getMethodName(), resultingPage);
@@ -190,7 +190,7 @@ public class JSF23SelectOneRadioGroupTests {
 
             HtmlPage testPage = (HtmlPage) webClient.getPage(url);
 
-            String resultingPage = testPage.asText();
+            String resultingPage = testPage.asNormalizedText();
 
             // Log the page for debugging if necessary in the future.
             Log.info(c, name.getMethodName(), resultingPage);
@@ -207,7 +207,7 @@ public class JSF23SelectOneRadioGroupTests {
             HtmlSubmitInput submitButton = (HtmlSubmitInput) testPage.getElementById("submitButton");
             testPage = submitButton.click();
 
-            resultingPage = testPage.asText();
+            resultingPage = testPage.asNormalizedText();
 
             // Log the page for debugging if necessary in the future.
             Log.info(c, name.getMethodName(), resultingPage);
@@ -239,7 +239,7 @@ public class JSF23SelectOneRadioGroupTests {
 
             HtmlPage testPage = (HtmlPage) webClient.getPage(url);
 
-            String resultingPage = testPage.asText();
+            String resultingPage = testPage.asNormalizedText();
 
             // Log the page for debugging if necessary in the future.
             Log.info(c, name.getMethodName(), resultingPage);
@@ -261,7 +261,7 @@ public class JSF23SelectOneRadioGroupTests {
             HtmlSubmitInput submitButton = (HtmlSubmitInput) testPage.getElementById("submitButton");
             testPage = submitButton.click();
 
-            resultingPage = testPage.asText();
+            resultingPage = testPage.asNormalizedText();
 
             // Log the page for debugging if necessary in the future.
             Log.info(c, name.getMethodName(), resultingPage);
@@ -296,7 +296,7 @@ public class JSF23SelectOneRadioGroupTests {
 
             HtmlPage testPage = (HtmlPage) webClient.getPage(url);
 
-            String resultingPage = testPage.asText();
+            String resultingPage = testPage.asNormalizedText();
 
             // Log the page for debugging if necessary in the future.
             Log.info(c, name.getMethodName(), resultingPage);
@@ -318,7 +318,7 @@ public class JSF23SelectOneRadioGroupTests {
             HtmlSubmitInput submitButton = (HtmlSubmitInput) testPage.getElementById("submitButton");
             testPage = submitButton.click();
 
-            resultingPage = testPage.asText();
+            resultingPage = testPage.asNormalizedText();
 
             // Log the page for debugging if necessary in the future.
             Log.info(c, name.getMethodName(), resultingPage);
@@ -353,7 +353,7 @@ public class JSF23SelectOneRadioGroupTests {
 
             HtmlPage testPage = (HtmlPage) webClient.getPage(url);
 
-            String resultingPage = testPage.asText();
+            String resultingPage = testPage.asNormalizedText();
 
             // Log the page for debugging if necessary in the future.
             Log.info(c, name.getMethodName(), resultingPage);
@@ -370,7 +370,7 @@ public class JSF23SelectOneRadioGroupTests {
             HtmlSubmitInput submitButton = (HtmlSubmitInput) testPage.getElementById("submitButton");
             testPage = submitButton.click();
 
-            resultingPage = testPage.asText();
+            resultingPage = testPage.asNormalizedText();
 
             // Log the page for debugging if necessary in the future.
             Log.info(c, name.getMethodName(), resultingPage);
@@ -402,7 +402,7 @@ public class JSF23SelectOneRadioGroupTests {
 
             HtmlPage testPage = (HtmlPage) webClient.getPage(url);
 
-            String resultingPage = testPage.asText();
+            String resultingPage = testPage.asNormalizedText();
 
             // Log the page for debugging if necessary in the future.
             Log.info(c, name.getMethodName(), resultingPage);
@@ -419,7 +419,7 @@ public class JSF23SelectOneRadioGroupTests {
             HtmlSubmitInput submitButton = (HtmlSubmitInput) testPage.getElementById("submitButton");
             testPage = submitButton.click();
 
-            resultingPage = testPage.asText();
+            resultingPage = testPage.asNormalizedText();
 
             // Log the page for debugging if necessary in the future.
             Log.info(c, name.getMethodName(), resultingPage);
@@ -452,7 +452,7 @@ public class JSF23SelectOneRadioGroupTests {
 
             HtmlPage testPage = (HtmlPage) webClient.getPage(url);
 
-            String resultingPage = testPage.asText();
+            String resultingPage = testPage.asNormalizedText();
 
             // Log the page for debugging if necessary in the future.
             Log.info(c, name.getMethodName(), resultingPage);
@@ -469,7 +469,7 @@ public class JSF23SelectOneRadioGroupTests {
             HtmlSubmitInput submitButton = (HtmlSubmitInput) testPage.getElementById("submitButton");
             testPage = submitButton.click();
 
-            resultingPage = testPage.asText();
+            resultingPage = testPage.asNormalizedText();
 
             // Log the page for debugging if necessary in the future.
             Log.info(c, name.getMethodName(), resultingPage);
@@ -501,7 +501,7 @@ public class JSF23SelectOneRadioGroupTests {
 
             HtmlPage testPage = (HtmlPage) webClient.getPage(url);
 
-            String resultingPage = testPage.asText();
+            String resultingPage = testPage.asNormalizedText();
 
             // Log the page for debugging if necessary in the future.
             Log.info(c, name.getMethodName(), resultingPage);
@@ -518,7 +518,7 @@ public class JSF23SelectOneRadioGroupTests {
             HtmlSubmitInput submitButton = (HtmlSubmitInput) testPage.getElementById("submitButton");
             testPage = submitButton.click();
 
-            resultingPage = testPage.asText();
+            resultingPage = testPage.asNormalizedText();
 
             // Log the page for debugging if necessary in the future.
             Log.info(c, name.getMethodName(), resultingPage);
@@ -550,7 +550,7 @@ public class JSF23SelectOneRadioGroupTests {
 
             HtmlPage testPage = (HtmlPage) webClient.getPage(url);
 
-            String resultingPage = testPage.asText();
+            String resultingPage = testPage.asNormalizedText();
 
             // Log the page for debugging if necessary in the future.
             Log.info(c, name.getMethodName(), resultingPage);
@@ -567,7 +567,7 @@ public class JSF23SelectOneRadioGroupTests {
             HtmlSubmitInput submitButton = (HtmlSubmitInput) testPage.getElementById("submitButton");
             testPage = submitButton.click();
 
-            resultingPage = testPage.asText();
+            resultingPage = testPage.asNormalizedText();
 
             // Log the page for debugging if necessary in the future.
             Log.info(c, name.getMethodName(), resultingPage);
@@ -599,7 +599,7 @@ public class JSF23SelectOneRadioGroupTests {
 
             HtmlPage testPage = (HtmlPage) webClient.getPage(url);
 
-            String resultingPage = testPage.asText();
+            String resultingPage = testPage.asNormalizedText();
 
             // Log the page for debugging if necessary in the future.
             Log.info(c, name.getMethodName(), resultingPage);
@@ -616,7 +616,7 @@ public class JSF23SelectOneRadioGroupTests {
             HtmlSubmitInput submitButton = (HtmlSubmitInput) testPage.getElementById("submitButton");
             testPage = submitButton.click();
 
-            resultingPage = testPage.asText();
+            resultingPage = testPage.asNormalizedText();
 
             // Log the page for debugging if necessary in the future.
             Log.info(c, name.getMethodName(), resultingPage);
@@ -650,7 +650,7 @@ public class JSF23SelectOneRadioGroupTests {
 
             HtmlPage testPage = (HtmlPage) webClient.getPage(url);
 
-            String resultingPage = testPage.asText();
+            String resultingPage = testPage.asNormalizedText();
 
             // Log the page for debugging if necessary in the future.
             Log.info(c, name.getMethodName(), resultingPage);
@@ -667,7 +667,7 @@ public class JSF23SelectOneRadioGroupTests {
             HtmlSubmitInput submitButton = (HtmlSubmitInput) testPage.getElementById("submitButton");
             testPage = submitButton.click();
 
-            resultingPage = testPage.asText();
+            resultingPage = testPage.asNormalizedText();
 
             // Log the page for debugging if necessary in the future.
             Log.info(c, name.getMethodName(), resultingPage);
@@ -701,7 +701,7 @@ public class JSF23SelectOneRadioGroupTests {
 
             HtmlPage testPage = (HtmlPage) webClient.getPage(url);
 
-            String resultingPage = testPage.asText();
+            String resultingPage = testPage.asNormalizedText();
 
             // Log the page for debugging if necessary in the future.
             Log.info(c, name.getMethodName(), resultingPage);
@@ -718,7 +718,7 @@ public class JSF23SelectOneRadioGroupTests {
             HtmlSubmitInput submitButton = (HtmlSubmitInput) testPage.getElementById("submitButton");
             testPage = submitButton.click();
 
-            resultingPage = testPage.asText();
+            resultingPage = testPage.asNormalizedText();
 
             // Log the page for debugging if necessary in the future.
             Log.info(c, name.getMethodName(), resultingPage);
@@ -756,7 +756,7 @@ public class JSF23SelectOneRadioGroupTests {
             String resultingPage = testPage.asXml();
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), testPage.asText());
+            Log.info(c, name.getMethodName(), testPage.asNormalizedText());
             Log.info(c, name.getMethodName(), resultingPage);
 
             assertTrue("ID of first radio button is incorrect.", resultingPage.contains("id=\"radio0\""));
@@ -787,7 +787,7 @@ public class JSF23SelectOneRadioGroupTests {
             String resultingPage = testPage.asXml();
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), testPage.asText());
+            Log.info(c, name.getMethodName(), testPage.asNormalizedText());
             Log.info(c, name.getMethodName(), resultingPage);
 
             assertTrue("ID of first radio button is incorrect.", resultingPage.contains("id=\"radio8\""));
@@ -818,7 +818,7 @@ public class JSF23SelectOneRadioGroupTests {
             String resultingPage = testPage.asXml();
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), testPage.asText());
+            Log.info(c, name.getMethodName(), testPage.asNormalizedText());
             Log.info(c, name.getMethodName(), resultingPage);
 
             assertTrue("Value of first radio button is incorrect.", resultingPage.contains("value=\"radio1:staticValue1\""));
@@ -848,7 +848,7 @@ public class JSF23SelectOneRadioGroupTests {
             String resultingPage = testPage.asXml();
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), testPage.asText());
+            Log.info(c, name.getMethodName(), testPage.asNormalizedText());
             Log.info(c, name.getMethodName(), resultingPage);
 
             assertTrue("ID of first radio button is incorrect.", resultingPage.contains("id=\"radioOther\""));

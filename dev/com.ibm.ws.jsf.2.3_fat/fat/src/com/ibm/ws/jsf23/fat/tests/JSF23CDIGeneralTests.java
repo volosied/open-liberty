@@ -165,7 +165,7 @@ public class JSF23CDIGeneralTests {
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), page.asXml());
 
             // Ensure the messages are output in the correct order to verify the events are fired
@@ -249,7 +249,7 @@ public class JSF23CDIGeneralTests {
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), page.asXml());
 
             HtmlTextInput input1 = (HtmlTextInput) page.getElementById("in1");
@@ -257,7 +257,7 @@ public class JSF23CDIGeneralTests {
             HtmlTextInput input3 = (HtmlTextInput) page.getElementById("in3");
             HtmlTextInput input4 = (HtmlTextInput) page.getElementById("in4");
 
-            String output = page.getElementById("out1").asText();
+            String output = page.getElementById("out1").asNormalizedText();
 
             // Assert the initial values of out1.
             assertTrue("The initial values were not correct. One or more of the @ManagedProperty injections failed.",
@@ -272,9 +272,9 @@ public class JSF23CDIGeneralTests {
             // Now click the submit button
             page = page.getElementById("button1").click();
 
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
 
-            output = page.getElementById("out1").asText();
+            output = page.getElementById("out1").asNormalizedText();
 
             // Assert the updated values of out1
             assertTrue("The updated values were not correct. One or more of the @ManagedProperty injections failed.",
@@ -374,40 +374,40 @@ public class JSF23CDIGeneralTests {
             HtmlPage testELResolutionImplicitObjectsPage = (HtmlPage) webClient.getPage(url);
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), testELResolutionImplicitObjectsPage.asText());
+            Log.info(c, name.getMethodName(), testELResolutionImplicitObjectsPage.asNormalizedText());
             Log.info(c, name.getMethodName(), testELResolutionImplicitObjectsPage.asXml());
 
             // Verify that the page contains the expected messages.
-            assertTrue(testELResolutionImplicitObjectsPage.asText().contains("JSF 2.3 EL resolution of implicit objects using CDI"));
-            assertTrue(testELResolutionImplicitObjectsPage.asText().contains("Bean: com.ibm.ws.jsf23.fat.elimplicit.cdi.beans.ELImplicitObjectBean"));
+            assertTrue(testELResolutionImplicitObjectsPage.asNormalizedText().contains("JSF 2.3 EL resolution of implicit objects using CDI"));
+            assertTrue(testELResolutionImplicitObjectsPage.asNormalizedText().contains("Bean: com.ibm.ws.jsf23.fat.elimplicit.cdi.beans.ELImplicitObjectBean"));
 
             // MYFACES-4559
             if (isEE10) {
-                assertTrue(testELResolutionImplicitObjectsPage.asText().contains("Application name: JSF23ELImplicitObjectsViaCDI"));
+                assertTrue(testELResolutionImplicitObjectsPage.asNormalizedText().contains("Application name: JSF23ELImplicitObjectsViaCDI"));
             } else {
-                assertTrue(testELResolutionImplicitObjectsPage.asText().contains("Application project stage: Production"));
+                assertTrue(testELResolutionImplicitObjectsPage.asNormalizedText().contains("Application project stage: Production"));
             }
 
-            assertTrue(testELResolutionImplicitObjectsPage.asText().contains("ApplicationScope application name: ELImplicitObjectsViaCDI"));
-            assertTrue(testELResolutionImplicitObjectsPage.asText().contains("Component getStyle: font-weight:bold"));
-            assertTrue(testELResolutionImplicitObjectsPage.asText().contains("CompositeComponent label: Hello World"));
-            assertTrue(testELResolutionImplicitObjectsPage.asText().contains("FacesContext project stage: Production"));
-            assertTrue(testELResolutionImplicitObjectsPage.asText().contains("Flash isRedirect: false"));
+            assertTrue(testELResolutionImplicitObjectsPage.asNormalizedText().contains("ApplicationScope application name: ELImplicitObjectsViaCDI"));
+            assertTrue(testELResolutionImplicitObjectsPage.asNormalizedText().contains("Component getStyle: font-weight:bold"));
+            assertTrue(testELResolutionImplicitObjectsPage.asNormalizedText().contains("CompositeComponent label: Hello World"));
+            assertTrue(testELResolutionImplicitObjectsPage.asNormalizedText().contains("FacesContext project stage: Production"));
+            assertTrue(testELResolutionImplicitObjectsPage.asNormalizedText().contains("Flash isRedirect: false"));
             //Updated to check for User Agent
-            assertTrue(testELResolutionImplicitObjectsPage.asText().contains("Header: Mozilla"));
-            assertTrue(testELResolutionImplicitObjectsPage.asText().contains("HeaderValues: Mozilla"));
+            assertTrue(testELResolutionImplicitObjectsPage.asNormalizedText().contains("Header: Mozilla"));
+            assertTrue(testELResolutionImplicitObjectsPage.asNormalizedText().contains("HeaderValues: Mozilla"));
 
-            assertTrue(testELResolutionImplicitObjectsPage.asText().contains("InitParam: ELImplicitObjectsViaCDI"));
-            assertTrue(testELResolutionImplicitObjectsPage.asText().contains("Param: Hello World"));
-            assertTrue(testELResolutionImplicitObjectsPage.asText().contains("ParamValues: Hello World"));
-            assertTrue(testELResolutionImplicitObjectsPage.asText().contains("View viewId: /implicit_objects.xhtml "));
-            assertTrue(testELResolutionImplicitObjectsPage.asText().contains("ViewScope isEmpty: true"));
+            assertTrue(testELResolutionImplicitObjectsPage.asNormalizedText().contains("InitParam: ELImplicitObjectsViaCDI"));
+            assertTrue(testELResolutionImplicitObjectsPage.asNormalizedText().contains("Param: Hello World"));
+            assertTrue(testELResolutionImplicitObjectsPage.asNormalizedText().contains("ParamValues: Hello World"));
+            assertTrue(testELResolutionImplicitObjectsPage.asNormalizedText().contains("View viewId: /implicit_objects.xhtml "));
+            assertTrue(testELResolutionImplicitObjectsPage.asNormalizedText().contains("ViewScope isEmpty: true"));
             // See https://issues.apache.org/jira/projects/MYFACES/issues/MYFACES-4432
             // Note: The request & session objects are not resolved by CDI, but via ImplicitObjectResolver
-            assertTrue(testELResolutionImplicitObjectsPage.asText().contains("Request contextPath: /ELImplicitObjectsViaCDI"));
-            assertTrue(testELResolutionImplicitObjectsPage.asText().contains("HttpSession isNew: true"));
+            assertTrue(testELResolutionImplicitObjectsPage.asNormalizedText().contains("Request contextPath: /ELImplicitObjectsViaCDI"));
+            assertTrue(testELResolutionImplicitObjectsPage.asNormalizedText().contains("HttpSession isNew: true"));
             // Additional Requirement (See section 5.6.3)
-            assertTrue(testELResolutionImplicitObjectsPage.asText().contains("ExternalContext getApplicationContextPath: /ELImplicitObjectsViaCDI"));
+            assertTrue(testELResolutionImplicitObjectsPage.asNormalizedText().contains("ExternalContext getApplicationContextPath: /ELImplicitObjectsViaCDI"));
 
         }
     }
@@ -428,7 +428,7 @@ public class JSF23CDIGeneralTests {
             HtmlPage testELResolutionOfFlowScopePage = (HtmlPage) webClient.getPage(url);
 
             // Verify that the page contains the expected messages.
-            assertTrue(testELResolutionOfFlowScopePage.asText().contains("This flow tests a basic configuration with a @FlowScoped bean. The flow is defined via simple-flow.xml"));
+            assertTrue(testELResolutionOfFlowScopePage.asNormalizedText().contains("This flow tests a basic configuration with a @FlowScoped bean. The flow is defined via simple-flow.xml"));
 
             // Get the form that we are dealing with
             HtmlForm form = testELResolutionOfFlowScopePage.getFormByName("form1");
@@ -440,12 +440,12 @@ public class JSF23CDIGeneralTests {
             HtmlPage resultPage = submitButton.click();
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), resultPage.asText());
+            Log.info(c, name.getMethodName(), resultPage.asNormalizedText());
             Log.info(c, name.getMethodName(), resultPage.asXml());
 
             // Verify that the page contains the expected messages.
-            assertTrue(resultPage.asText().contains("FlowScope isEmpty: true"));
-            assertTrue(resultPage.asText().contains("Flow map isEmpty: true"));
+            assertTrue(resultPage.asNormalizedText().contains("FlowScope isEmpty: true"));
+            assertTrue(resultPage.asNormalizedText().contains("Flow map isEmpty: true"));
         }
     }
 
@@ -617,16 +617,16 @@ public class JSF23CDIGeneralTests {
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), page.asXml());
 
             // Verify that the page contains the expected response.
             // TestConverter, TestValidator and TestBehavior objects should have been injected
-            assertTrue(page.asText().contains("JSF 2.3 support injection of JSF Managed Objects: FacesConverter, FacesValidator, FacesBehavior"));
-            assertTrue(page.asText().contains("com.ibm.ws.jsf23.fat.converter.validator.behavior.injection.beans.TestConverter"));
+            assertTrue(page.asNormalizedText().contains("JSF 2.3 support injection of JSF Managed Objects: FacesConverter, FacesValidator, FacesBehavior"));
+            assertTrue(page.asNormalizedText().contains("com.ibm.ws.jsf23.fat.converter.validator.behavior.injection.beans.TestConverter"));
 
-            assertTrue(page.asText().contains("com.ibm.ws.jsf23.fat.converter.validator.behavior.injection.beans.TestValidator"));
-            assertTrue(page.asText().contains("com.ibm.ws.jsf23.fat.converter.validator.behavior.injection.beans.TestBehavior"));
+            assertTrue(page.asNormalizedText().contains("com.ibm.ws.jsf23.fat.converter.validator.behavior.injection.beans.TestValidator"));
+            assertTrue(page.asNormalizedText().contains("com.ibm.ws.jsf23.fat.converter.validator.behavior.injection.beans.TestBehavior"));
         }
     }
 
@@ -650,7 +650,7 @@ public class JSF23CDIGeneralTests {
 
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
-            String pageText = page.asText();
+            String pageText = page.asNormalizedText();
 
             // Log the page for debugging if necessary in the future.
             Log.info(c, name.getMethodName(), pageText);
@@ -736,7 +736,7 @@ public class JSF23CDIGeneralTests {
 
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
-            String responseText = page.asText();
+            String responseText = page.asNormalizedText();
 
             // Log the page for debugging if necessary in the future.
             Log.info(c, name.getMethodName(), responseText);

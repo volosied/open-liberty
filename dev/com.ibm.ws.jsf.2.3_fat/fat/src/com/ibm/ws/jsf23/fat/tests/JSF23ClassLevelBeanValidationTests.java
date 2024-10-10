@@ -86,7 +86,7 @@ public class JSF23ClassLevelBeanValidationTests {
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), page.asXml());
 
             HtmlTextInput password1Input = (HtmlTextInput) page.getElementById("form1:password1");
@@ -100,11 +100,11 @@ public class JSF23ClassLevelBeanValidationTests {
             page = page.getElementById("form1:button1").click();
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), page.asXml());
 
             //There should be a validation failure message displayed on the page because the two password fields did not match.
-            assertTrue("The class-level bean validate failed, password mismatch message not displayed.", page.asText().contains("Password fields must match"));
+            assertTrue("The class-level bean validate failed, password mismatch message not displayed.", page.asNormalizedText().contains("Password fields must match"));
 
             //Enter matching passwords in each input text
             password1Input = (HtmlTextInput) page.getElementById("form1:password1");
@@ -117,13 +117,13 @@ public class JSF23ClassLevelBeanValidationTests {
             page = page.getElementById("form1:button1").click();
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), page.asXml());
 
             //if the validation code works properly the password will be displayed on the page and the previous validation message will be gone
-            assertTrue("The class-level bean validate failed, password not displayed.", page.asText().contains("password1: testPassword"));
+            assertTrue("The class-level bean validate failed, password not displayed.", page.asNormalizedText().contains("password1: testPassword"));
             assertFalse("The class-level bean validate failed, The validation message regarding mismatched passwords is displayed.",
-                        page.asText().contains("Password fields must match"));
+                        page.asNormalizedText().contains("Password fields must match"));
         }
     }
 
@@ -147,7 +147,7 @@ public class JSF23ClassLevelBeanValidationTests {
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), page.asXml());
 
             HtmlTextInput password1Input = (HtmlTextInput) page.getElementById("form1:password1");
@@ -161,11 +161,11 @@ public class JSF23ClassLevelBeanValidationTests {
             page = page.getElementById("form1:button1").click();
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), page.asXml());
 
             //There should be a validation failure message displayed on the page because the two password fields did not match.
-            assertTrue("The class-level bean validate failed, password mismatch message not displayed.", page.asText().contains("Password fields must match"));
+            assertTrue("The class-level bean validate failed, password mismatch message not displayed.", page.asNormalizedText().contains("Password fields must match"));
 
             //Enter matching passwords in each input text
             password1Input = (HtmlTextInput) page.getElementById("form1:password1");
@@ -178,13 +178,13 @@ public class JSF23ClassLevelBeanValidationTests {
             page = page.getElementById("form1:button1").click();
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), page.asXml());
 
             //if the validation code works properly the password will be displayed on the page and the previous validation message will be gone
-            assertTrue("The class-level bean validate failed, password not displayed.", page.asText().contains("password1: testPassword"));
+            assertTrue("The class-level bean validate failed, password not displayed.", page.asNormalizedText().contains("password1: testPassword"));
             assertFalse("The class-level bean validate failed, The validation message regarding mismatched passwords is displayed.",
-                        page.asText().contains("Password fields must match"));
+                        page.asNormalizedText().contains("Password fields must match"));
         }
     }
 
@@ -208,7 +208,7 @@ public class JSF23ClassLevelBeanValidationTests {
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), page.asXml());
 
             HtmlTextInput password1Input = (HtmlTextInput) page.getElementById("form1:password1");
@@ -222,11 +222,11 @@ public class JSF23ClassLevelBeanValidationTests {
             page = page.getElementById("form1:button1").click();
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), page.asXml());
 
             //There should be a validation failure message displayed on the page because the two password fields did not match.
-            assertTrue("The class-level bean validate failed, password mismatch message not displayed.", page.asText().contains("Password fields must match"));
+            assertTrue("The class-level bean validate failed, password mismatch message not displayed.", page.asNormalizedText().contains("Password fields must match"));
 
             //Enter matching passwords in each input text
             password1Input = (HtmlTextInput) page.getElementById("form1:password1");
@@ -239,13 +239,13 @@ public class JSF23ClassLevelBeanValidationTests {
             page = page.getElementById("form1:button1").click();
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), page.asXml());
 
             //if the validation code works properly the password will be displayed on the page and the previous validation message will be gone
-            assertTrue("The class-level bean validate failed, password not displayed.", page.asText().contains("password1: testPassword"));
+            assertTrue("The class-level bean validate failed, password not displayed.", page.asNormalizedText().contains("password1: testPassword"));
             assertFalse("The class-level bean validate failed, The validation message regarding mismatched passwords is displayed.",
-                        page.asText().contains("Password fields must match"));
+                        page.asNormalizedText().contains("Password fields must match"));
         }
     }
 
@@ -273,7 +273,7 @@ public class JSF23ClassLevelBeanValidationTests {
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), page.asXml());
 
             HtmlTextInput password1Input = (HtmlTextInput) page.getElementById("form1:password1");
@@ -287,12 +287,12 @@ public class JSF23ClassLevelBeanValidationTests {
             page = page.getElementById("form1:button1").click();
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), page.asXml());
 
             //There should be a validation failure message displayed on the page because the two password fields did not match.
             assertTrue("The field-level validation did not display the 'form1:password1: Password must be between 8 and 16 characters long' message.",
-                       page.asText().contains("form1:password1: Password must be between 8 and 16 characters long"));
+                       page.asNormalizedText().contains("form1:password1: Password must be between 8 and 16 characters long"));
 
             //Enter matching passwords in each input text
             password1Input = (HtmlTextInput) page.getElementById("form1:password1");
@@ -305,13 +305,13 @@ public class JSF23ClassLevelBeanValidationTests {
             page = page.getElementById("form1:button1").click();
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), page.asXml());
 
             //if the validation code works properly the password will be displayed on the page and the previous validation message will be gone
-            assertTrue("The class-level bean validate failed, password not displayed.", page.asText().contains("password1: testPassword"));
+            assertTrue("The class-level bean validate failed, password not displayed.", page.asNormalizedText().contains("password1: testPassword"));
             assertFalse("The class-level bean validate failed, The validation message regarding mismatched passwords is displayed.",
-                        page.asText().contains("Password fields must match"));
+                        page.asNormalizedText().contains("Password fields must match"));
 
             /*
              * check the trace file to make sure the IllegalAcessException was logged.
@@ -356,7 +356,7 @@ public class JSF23ClassLevelBeanValidationTests {
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), page.asXml());
 
             HtmlTextInput password1Input = (HtmlTextInput) page.getElementById("form1:password1");
@@ -369,12 +369,12 @@ public class JSF23ClassLevelBeanValidationTests {
             page = page.getElementById("form1:button1").click();
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), page.asXml());
 
             //if the validation code works properly the password will be displayed on the page and the previous validation message will be gone
             assertTrue("The FacesException was not displayed.",
-                       page.asText().contains("Cannot create copy for wholeBeanValidator:"));
+                       page.asNormalizedText().contains("Cannot create copy for wholeBeanValidator:"));
         }
     }
 
@@ -396,7 +396,7 @@ public class JSF23ClassLevelBeanValidationTests {
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), page.asXml());
 
             HtmlTextInput password1Input = (HtmlTextInput) page.getElementById("form1:password1");
@@ -410,14 +410,14 @@ public class JSF23ClassLevelBeanValidationTests {
             page = page.getElementById("form1:button1").click();
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), page.asXml());
 
             //if the test works properly, the class level validation will not be performed, therefore allowing for two different passwords in the text boxes.
             //We will check that the password from the first text box is displayed, which means the validation didn't occur.
-            assertTrue("The password was not displayed.", page.asText().contains("password1: testPassword1"));
+            assertTrue("The password was not displayed.", page.asNormalizedText().contains("password1: testPassword1"));
             assertFalse("The class-level bean validate was called, The validation message regarding mismatched passwords is displayed when it should not have.",
-                        page.asText().contains("Password fields must match"));
+                        page.asNormalizedText().contains("Password fields must match"));
         }
     }
 }

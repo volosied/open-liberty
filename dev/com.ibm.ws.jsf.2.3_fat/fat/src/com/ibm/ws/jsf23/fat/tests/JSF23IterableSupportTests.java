@@ -80,7 +80,7 @@ public class JSF23IterableSupportTests {
             HtmlPage testPage = (HtmlPage) webClient.getPage(url);
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), testPage.asText());
+            Log.info(c, name.getMethodName(), testPage.asNormalizedText());
             Log.info(c, name.getMethodName(), testPage.asXml());
 
             // Ensure the first value returned by the Iterable's iterator is correct.
@@ -112,7 +112,7 @@ public class JSF23IterableSupportTests {
             HtmlPage testPage = (HtmlPage) webClient.getPage(url);
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), testPage.asText());
+            Log.info(c, name.getMethodName(), testPage.asNormalizedText());
             Log.info(c, name.getMethodName(), testPage.asXml());
 
             // Ensure the first value returned by the Iterable's iterator is correct.

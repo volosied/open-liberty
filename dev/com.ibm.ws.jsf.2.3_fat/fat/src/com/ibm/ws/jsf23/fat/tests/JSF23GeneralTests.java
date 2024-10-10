@@ -134,7 +134,7 @@ public class JSF23GeneralTests {
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), page.asXml());
 
             assertTrue("The correct page was not invoked.", page.getElementById("form1:out1").getTextContent().equals("exactMapping.xhtml invoked"));
@@ -144,7 +144,7 @@ public class JSF23GeneralTests {
             page = (HtmlPage) webClient.getPage(url);
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), page.asXml());
 
             assertTrue("The correct page was not invoked.", page.getElementById("form1:out1").getTextContent().equals("test/exactMapping.xhtml invoked"));
@@ -167,7 +167,7 @@ public class JSF23GeneralTests {
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), page.asXml());
 
             // Check the value of each API constant
@@ -247,7 +247,7 @@ public class JSF23GeneralTests {
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), page.asXml());
 
             // Now click the submit button
@@ -279,10 +279,10 @@ public class JSF23GeneralTests {
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), page.asXml());
 
-            assertTrue("The error page was not displayed.", page.asText().equals("ERROR PAGE"));
+            assertTrue("The error page was not displayed.", page.asNormalizedText().equals("ERROR PAGE"));
         }
     }
 
@@ -307,12 +307,12 @@ public class JSF23GeneralTests {
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), page.asXml());
 
             // The page should load successfully even though an exception was thrown in the
             // PhaseListener.
-            assertTrue("The exception was not handled correctly.", page.asText().contains("Hello World"));
+            assertTrue("The exception was not handled correctly.", page.asNormalizedText().contains("Hello World"));
         }
     }
 
@@ -333,10 +333,10 @@ public class JSF23GeneralTests {
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), page.asXml());
 
-            assertTrue("The error page was not displayed.", page.asText().equals("ERROR PAGE"));
+            assertTrue("The error page was not displayed.", page.asNormalizedText().equals("ERROR PAGE"));
         }
     }
 
@@ -361,7 +361,7 @@ public class JSF23GeneralTests {
             String pageXml = page.asXml();
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), pageXml);
 
             assertTrue("The disabled attributed did not work as expected, the html did not contain: disabled=\"disabled\": " + pageXml,
@@ -396,7 +396,7 @@ public class JSF23GeneralTests {
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), page.asXml());
 
             // Now click the submit button
@@ -404,7 +404,7 @@ public class JSF23GeneralTests {
 
             // Log the page for debugging if necessary in the future
             String pageXml = page.asXml();
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), pageXml);
 
             // If both of the @ResourceDependencies were not resolved then these two checks would fail.
@@ -450,7 +450,7 @@ public class JSF23GeneralTests {
             String pageXml = page.asXml();
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), pageXml);
 
             assertTrue("The value within the script should be: Within Script: <test>", pageXml.contains("Within Script: <test>"));
@@ -480,7 +480,7 @@ public class JSF23GeneralTests {
 
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
-            String pageText = page.asText();
+            String pageText = page.asNormalizedText();
 
             // Log the page for debugging if necessary in the future.
             Log.info(c, name.getMethodName(), pageText);
@@ -513,7 +513,7 @@ public class JSF23GeneralTests {
 
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
-            String pageText = page.asText();
+            String pageText = page.asNormalizedText();
 
             // Log the page for debugging if necessary in the future.
             Log.info(c, name.getMethodName(), pageText);
@@ -528,7 +528,7 @@ public class JSF23GeneralTests {
 
             page = (HtmlPage) webClient.getPage(url);
 
-            pageText = page.asText();
+            pageText = page.asNormalizedText();
 
             // Log the page for debugging if necessary in the future.
             Log.info(c, name.getMethodName(), pageText);
@@ -557,7 +557,7 @@ public class JSF23GeneralTests {
 
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
-            String pageText = page.asText();
+            String pageText = page.asNormalizedText();
 
             // Log the page for debugging if necessary in the future.
             Log.info(c, name.getMethodName(), pageText);
@@ -586,7 +586,7 @@ public class JSF23GeneralTests {
             //click the button
             page = submitButton.click();
 
-            pageText = page.asText();
+            pageText = page.asNormalizedText();
             // Log the page for debugging if necessary in the future.
             Log.info(c, name.getMethodName(), pageText);
             Log.info(c, name.getMethodName(), page.asXml());
@@ -622,7 +622,7 @@ public class JSF23GeneralTests {
             String pageXml = page.asXml();
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), pageXml);
 
             // Test that h:selectManyListbox does not render onselect attribute in a facelet with a select element
@@ -660,7 +660,7 @@ public class JSF23GeneralTests {
             pageXml = page.asXml();
 
             // Log the page for debugging if necessary in the future.
-            Log.info(c, name.getMethodName(), page.asText());
+            Log.info(c, name.getMethodName(), page.asNormalizedText());
             Log.info(c, name.getMethodName(), pageXml);
 
             // Test that h:selectManyCheckbox does render onselect attribute in an input element
