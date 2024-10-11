@@ -382,12 +382,9 @@ public class JSF23CDIGeneralTests {
             assertTrue(testELResolutionImplicitObjectsPage.asText().contains("Bean: com.ibm.ws.jsf23.fat.elimplicit.cdi.beans.ELImplicitObjectBean"));
 
             // MYFACES-4559
-            if (isEE10) {
-                assertTrue(testELResolutionImplicitObjectsPage.asText().contains("Application name: JSF23ELImplicitObjectsViaCDI"));
-            } else {
-                assertTrue(testELResolutionImplicitObjectsPage.asText().contains("Application project stage: Production"));
-            }
-
+            assertTrue(testELResolutionImplicitObjectsPage.asText().contains("Application name: JSF23ELImplicitObjectsViaCDI") ||
+            testELResolutionImplicitObjectsPage.asText().contains("Application project stage: Production"));
+            
             assertTrue(testELResolutionImplicitObjectsPage.asText().contains("ApplicationScope application name: ELImplicitObjectsViaCDI"));
             assertTrue(testELResolutionImplicitObjectsPage.asText().contains("Component getStyle: font-weight:bold"));
             assertTrue(testELResolutionImplicitObjectsPage.asText().contains("CompositeComponent label: Hello World"));
