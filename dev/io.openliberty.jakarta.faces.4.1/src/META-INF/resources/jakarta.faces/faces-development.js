@@ -1193,14 +1193,14 @@ var PushImpl;
             this.reconnectAttempts = 0;
         }
         onerror(event) {
-            var _a, _b;
-            let message = JSON.parse(event?.data ?? null);
+            var _a, _b, _c;
+            let message = JSON.parse((_a = event === null || event === void 0 ? void 0 : event.data) !== null && _a !== void 0 ? _a : null);
             //TODO replace this with a more readable Stream code
             for (let i = PushImpl.clientIdsByTokens[this.channelToken].length - 1; i >= 0; i--) {
                 let socketClientId = PushImpl.clientIdsByTokens[this.channelToken][i];
                 if (document.getElementById(socketClientId)) {
                     try {
-                        (_b = (_a = PushImpl.components[socketClientId]) === null || _a === void 0 ? void 0 : _a['onerror']) === null || _b === void 0 ? void 0 : _b.call(_a, message, this.channel, event);
+                        (_c = (_b = PushImpl.components[socketClientId]) === null || _b === void 0 ? void 0 : _b['onerror']) === null || _c === void 0 ? void 0 : _c.call(_b, message, this.channel, event);
                     }
                     catch (e) {
                         //Ignore
@@ -2547,12 +2547,18 @@ var ExtLang;
                 return foundForm;
             }
         }
+        //no direct form is found we look for parent/child relationships as fallback
+        //(90% case)
         let form = queryElem.firstParent(Const_1.HTML_TAG_FORM)
             .orElseLazy(() => queryElem.byTagName(Const_1.HTML_TAG_FORM, true))
             .orElseLazy(() => eventTarget.firstParent(Const_1.HTML_TAG_FORM))
             .orElseLazy(() => eventTarget.byTagName(Const_1.HTML_TAG_FORM))
             .first();
-        assertFormExists(form);
+        //either a form is found within parent child - nearest form (aka first)
+        //or we look for a single form
+        form = form.orElseLazy(() => mona_dish_1.DQ.byTagName(Const_1.HTML_TAG_FORM));
+        //the end result must be a found form otherwise - Exception
+        assertOnlyOneFormExists(form);
         return form;
     }
     ExtLang.getForm = getForm;
@@ -2625,12 +2631,12 @@ var ExtLang;
     }
     ExtLang.debounce = debounce;
     /**
-     * assert that the form exists and throw an exception in the case it does not
+     * assert that the form exists and only one form exists and throw an exception in the case it does not
      *
-     * @param form the form to check for
+     * @param forms the form to check for
      */
-    function assertFormExists(form) {
-        if (form.isAbsent()) {
+    function assertOnlyOneFormExists(forms) {
+        if (forms.isAbsent() || forms.length > 1) {
             throw makeException(new Error(), null, null, "Impl", "getForm", getMessage("ERR_FORM"));
         }
     }
@@ -4381,9 +4387,14 @@ class XhrRequest extends AsyncRunnable_1.AsyncRunnable {
         AjaxImpl_1.Implementation.sendError(errorData, eventHandler);
     }
     appendIssuingItem(formData) {
+        var _a, _b;
         const issuingItemId = this.internalContext.getIf(Const_1.CTX_PARAM_SRC_CTL_ID).value;
+        //to avoid sideffects with buttons we only can append the issuing item if no behavior event is set
+        //MYFACES-4679!
+        const eventType = (_b = (_a = formData.getIf((0, Const_1.$nsp)(Const_1.P_BEHAVIOR_EVENT)).value) === null || _a === void 0 ? void 0 : _a[0]) !== null && _b !== void 0 ? _b : null;
+        const isBehaviorEvent = (!!eventType) && eventType != 'click';
         //not encoded
-        if (issuingItemId && formData.getIf(issuingItemId).isAbsent()) {
+        if (issuingItemId && formData.getIf(issuingItemId).isAbsent() && !isBehaviorEvent) {
             const issuingItem = mona_dish_1.DQ.byId(issuingItemId);
             const itemValue = issuingItem.inputValue;
             const arr = new ExtDomQuery_1.ExtConfig({});
@@ -6490,7 +6501,7 @@ class DomQuery {
             // script execution order by relative pos in their dom tree
             scriptElements.asArray
                 .flatMap(item => [...item.values])
-                .sort((node1, node2) => node1.compareDocumentPosition(node2) - 3) // preceding 2, following == 4)
+                .sort((node1, node2) => node2.compareDocumentPosition(node1) - 3) // preceding 2, following == 4)
                 .forEach(item => execScript(item));
             evalCollectedScripts(finalScripts);
         }
