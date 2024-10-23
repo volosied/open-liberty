@@ -1,7 +1,7 @@
 <?xml version='1.0' ?>
 
 <model>
-  <modelId>myfaces-api</modelId>
+  <modelId>myfaces-impl</modelId>
   <component>
     <modelId>myfaces-api</modelId>
     <className>jakarta.faces.component.UIComponent</className>
@@ -7557,6 +7557,559 @@ The element may receive focus unless it has also been disabled.</longDesc>
       <clientEvent>change</clientEvent>
     </property>
   </component>
+  <component>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.component.ComponentResourceContainer</className>
+    <parentClassName>jakarta.faces.component.UIPanel</parentClassName>
+    <sourceClassName>org.apache.myfaces.component.ComponentResourceContainer</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.component.UIPanel</sourceClassParentClassName>
+    <type>jakarta.faces.ComponentResourceContainer</type>
+    <family>jakarta.faces.Panel</family>
+    <desc>Dummy class that is used as a container for resources 
+(see Faces 2</desc>
+    <longDesc>Dummy class that is used as a container for resources 
+(see Faces 2.0 rev A UIViewRoot.addComponentResource javadoc)</longDesc>
+  </component>
+  <component>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.component.validate.ValidateWholeBeanComponent</className>
+    <parentClassName>jakarta.faces.component.UIInput</parentClassName>
+    <sourceClassName>org.apache.myfaces.component.validate.ValidateWholeBeanComponent</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.component.UIInput</sourceClassParentClassName>
+    <type>org.apache.myfaces.component.validate.ValidateWholeBean</type>
+    <family>jakarta.faces.Input</family>
+    <desc>no description</desc>
+    <longDesc></longDesc>
+    <property>
+      <name>validationGroups</name>
+      <className>java.lang.String</className>
+      <desc>no description</desc>
+    </property>
+    <property>
+      <name>disabled</name>
+      <className>boolean</className>
+      <desc>no description</desc>
+      <defaultValue>false</defaultValue>
+    </property>
+  </component>
+  <component>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.push.WebsocketComponent</className>
+    <parentClassName>jakarta.faces.component.UIOutput</parentClassName>
+    <sourceClassName>org.apache.myfaces.push.AbstractWebsocketComponent</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.component.UIOutput</sourceClassParentClassName>
+    <type>org.apache.myfaces.WebsocketComponent</type>
+    <family>jakarta.faces.Output</family>
+    <rendererType>org.apache.myfaces.WebsocketComponent</rendererType>
+    <generatedComponentClass>true</generatedComponentClass>
+    <clientBehaviorHolder>true</clientBehaviorHolder>
+    <desc>This component hold f:websocket client behavior and other properties</desc>
+    <longDesc>This component hold f:websocket client behavior and other properties.</longDesc>
+    <property>
+      <name>channel</name>
+      <className>java.lang.String</className>
+      <desc>no description</desc>
+      <generated>true</generated>
+    </property>
+    <property>
+      <name>scope</name>
+      <className>java.lang.String</className>
+      <desc>no description</desc>
+      <generated>true</generated>
+    </property>
+    <property>
+      <name>user</name>
+      <className>java.lang.String</className>
+      <desc>no description</desc>
+      <generated>true</generated>
+    </property>
+    <property>
+      <name>onopen</name>
+      <className>java.lang.String</className>
+      <desc>no description</desc>
+      <generated>true</generated>
+    </property>
+    <property>
+      <name>onmessage</name>
+      <className>java.lang.String</className>
+      <desc>no description</desc>
+      <generated>true</generated>
+    </property>
+    <property>
+      <name>onclose</name>
+      <className>java.lang.String</className>
+      <desc>no description</desc>
+      <generated>true</generated>
+    </property>
+    <property>
+      <name>connected</name>
+      <className>boolean</className>
+      <desc>no description</desc>
+      <defaultValue>true</defaultValue>
+      <generated>true</generated>
+    </property>
+  </component>
+  <component>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.push.WebsocketInit</className>
+    <parentClassName>jakarta.faces.component.UIOutput</parentClassName>
+    <sourceClassName>org.apache.myfaces.push._WebsocketInit</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.component.UIOutput</sourceClassParentClassName>
+    <type>org.apache.myfaces.WebsocketInit</type>
+    <family>jakarta.faces.Output</family>
+    <rendererType>org.apache.myfaces.WebsocketInit</rendererType>
+    <generatedComponentClass>true</generatedComponentClass>
+    <template>true</template>
+    <desc>This component is the one that render the initialization at the end of body section</desc>
+    <longDesc>This component is the one that render the initialization at the end of body section.
+
+The idea is it works like a buffer that collects all markup generated by 
+UIWebsocket and then render it at the end of body section. In that way it 
+is possible to preserve the context and ensure the script is called when the page
+is loaded.</longDesc>
+  </component>
+  <component>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.component.UIRepeat</className>
+    <parentClassName>jakarta.faces.component.UIComponentBase</parentClassName>
+    <sourceClassName>org.apache.myfaces.view.facelets.component.UIRepeat</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.component.UIComponentBase</sourceClassParentClassName>
+    <name>ui:repeat</name>
+    <type>facelets.ui.Repeat</type>
+    <family>facelets</family>
+    <rendererType>facelets.ui.Repeat</rendererType>
+    <desc>no description</desc>
+    <longDesc></longDesc>
+    <property>
+      <name>offset</name>
+      <className>int</className>
+      <desc>no description</desc>
+    </property>
+    <property>
+      <name>size</name>
+      <className>int</className>
+      <desc>no description</desc>
+    </property>
+    <property>
+      <name>step</name>
+      <className>int</className>
+      <desc>no description</desc>
+    </property>
+    <property>
+      <name>begin</name>
+      <className>int</className>
+      <desc>no description</desc>
+    </property>
+    <property>
+      <name>end</name>
+      <className>int</className>
+      <desc>no description</desc>
+    </property>
+    <property>
+      <name>var</name>
+      <className>java.lang.String</className>
+      <literalOnly>true</literalOnly>
+      <desc>no description</desc>
+    </property>
+    <property>
+      <name>varStatus</name>
+      <className>java.lang.String</className>
+      <literalOnly>true</literalOnly>
+      <desc>no description</desc>
+    </property>
+    <property>
+      <name>rowStatePreserved</name>
+      <className>boolean</className>
+      <literalOnly>true</literalOnly>
+      <desc>Indicates whether the state for a component in each row should not be
+discarded before the datatable is rendered again</desc>
+      <longDesc>Indicates whether the state for a component in each row should not be
+discarded before the datatable is rendered again.
+
+This will only work reliable if the datamodel of the
+datatable did not change either by sorting, removing or
+adding rows. Default: false</longDesc>
+      <faceletsOnly>true</faceletsOnly>
+    </property>
+    <property>
+      <name>value</name>
+      <className>java.lang.Object</className>
+      <desc>no description</desc>
+    </property>
+  </component>
+  <component>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.component.JsfElement</className>
+    <parentClassName>jakarta.faces.component.UIPanel</parentClassName>
+    <sourceClassName>org.apache.myfaces.view.facelets.component._JsfElement</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.component.UIPanel</sourceClassParentClassName>
+    <name>jsf:element</name>
+    <type>oam.passthrough.Element</type>
+    <family>jakarta.faces.Panel</family>
+    <rendererType>jakarta.faces.passthrough.Element</rendererType>
+    <defaultEventName>click</defaultEventName>
+    <overrideDefaultEventName>true</overrideDefaultEventName>
+    <implements>jakarta.faces.component.behavior.ClientBehaviorHolder</implements>
+    <generatedComponentClass>true</generatedComponentClass>
+    <template>true</template>
+    <clientBehaviorHolder>true</clientBehaviorHolder>
+    <implementedInterfaces>
+      <interface name="jakarta.faces.component.behavior.ClientBehaviorHolder"/>
+    </implementedInterfaces>
+    <desc>no description</desc>
+    <longDesc></longDesc>
+    <property>
+      <name>onload</name>
+      <className>java.lang.String</className>
+      <desc>HTML: Script to be invoked when the page is loaded</desc>
+      <longDesc>HTML: Script to be invoked when the page is loaded</longDesc>
+      <generated>true</generated>
+      <clientEvent>load</clientEvent>
+    </property>
+    <property>
+      <name>onunload</name>
+      <className>java.lang.String</className>
+      <desc>HTML: Script to be invoked when the page is unloaded</desc>
+      <longDesc>HTML: Script to be invoked when the page is unloaded</longDesc>
+      <generated>true</generated>
+      <clientEvent>unload</clientEvent>
+    </property>
+    <property>
+      <name>onchange</name>
+      <className>java.lang.String</className>
+      <desc>HTML: Specifies a script to be invoked when the element is modified</desc>
+      <longDesc>HTML: Specifies a script to be invoked when the element is modified.</longDesc>
+      <generated>true</generated>
+      <clientEvent>change</clientEvent>
+    </property>
+    <property>
+      <name>onselect</name>
+      <className>java.lang.String</className>
+      <desc>HTML: Specifies a script to be invoked when the element is selected</desc>
+      <longDesc>HTML: Specifies a script to be invoked when the element is selected.</longDesc>
+      <generated>true</generated>
+      <clientEvent>select</clientEvent>
+    </property>
+    <property>
+      <name>onclick</name>
+      <className>java.lang.String</className>
+      <desc>HTML: Script to be invoked when the element is clicked</desc>
+      <longDesc>HTML: Script to be invoked when the element is clicked.</longDesc>
+      <generated>true</generated>
+      <clientEvent>click</clientEvent>
+    </property>
+    <property>
+      <name>ondblclick</name>
+      <className>java.lang.String</className>
+      <desc>HTML: Script to be invoked when the element is double-clicked</desc>
+      <longDesc>HTML: Script to be invoked when the element is double-clicked.</longDesc>
+      <generated>true</generated>
+      <clientEvent>dblclick</clientEvent>
+    </property>
+    <property>
+      <name>onkeydown</name>
+      <className>java.lang.String</className>
+      <desc>HTML: Script to be invoked when a key is pressed down over this element</desc>
+      <longDesc>HTML: Script to be invoked when a key is pressed down over this element.</longDesc>
+      <generated>true</generated>
+      <clientEvent>keydown</clientEvent>
+    </property>
+    <property>
+      <name>onkeypress</name>
+      <className>java.lang.String</className>
+      <desc>HTML: Script to be invoked when a key is pressed over this element</desc>
+      <longDesc>HTML: Script to be invoked when a key is pressed over this element.</longDesc>
+      <generated>true</generated>
+      <clientEvent>keypress</clientEvent>
+    </property>
+    <property>
+      <name>onkeyup</name>
+      <className>java.lang.String</className>
+      <desc>HTML: Script to be invoked when a key is released over this element</desc>
+      <longDesc>HTML: Script to be invoked when a key is released over this element.</longDesc>
+      <generated>true</generated>
+      <clientEvent>keyup</clientEvent>
+    </property>
+    <property>
+      <name>onmousedown</name>
+      <className>java.lang.String</className>
+      <desc>HTML: Script to be invoked when the pointing device is pressed over this element</desc>
+      <longDesc>HTML: Script to be invoked when the pointing device is pressed over this element.</longDesc>
+      <generated>true</generated>
+      <clientEvent>mousedown</clientEvent>
+    </property>
+    <property>
+      <name>onmousemove</name>
+      <className>java.lang.String</className>
+      <desc>HTML: Script to be invoked when the pointing device is moved while it is in this element</desc>
+      <longDesc>HTML: Script to be invoked when the pointing device is moved while it is in this element.</longDesc>
+      <generated>true</generated>
+      <clientEvent>mousemove</clientEvent>
+    </property>
+    <property>
+      <name>onmouseout</name>
+      <className>java.lang.String</className>
+      <desc>HTML: Script to be invoked when the pointing device is moves out of this element</desc>
+      <longDesc>HTML: Script to be invoked when the pointing device is moves out of this element.</longDesc>
+      <generated>true</generated>
+      <clientEvent>mouseout</clientEvent>
+    </property>
+    <property>
+      <name>onmouseover</name>
+      <className>java.lang.String</className>
+      <desc>HTML: Script to be invoked when the pointing device is moved into this element</desc>
+      <longDesc>HTML: Script to be invoked when the pointing device is moved into this element.</longDesc>
+      <generated>true</generated>
+      <clientEvent>mouseover</clientEvent>
+    </property>
+    <property>
+      <name>onmouseup</name>
+      <className>java.lang.String</className>
+      <desc>HTML: Script to be invoked when the pointing device is released over this element</desc>
+      <longDesc>HTML: Script to be invoked when the pointing device is released over this element.</longDesc>
+      <generated>true</generated>
+      <clientEvent>mouseup</clientEvent>
+    </property>
+    <property>
+      <name>style</name>
+      <className>java.lang.String</className>
+      <desc>HTML: CSS styling instructions</desc>
+      <longDesc>HTML: CSS styling instructions.</longDesc>
+      <generated>true</generated>
+    </property>
+    <property>
+      <name>styleClass</name>
+      <className>java.lang.String</className>
+      <desc>The CSS class for this element</desc>
+      <longDesc>The CSS class for this element.  Corresponds to the HTML 'class' attribute.</longDesc>
+      <generated>true</generated>
+    </property>
+    <property>
+      <name>onblur</name>
+      <className>java.lang.String</className>
+      <desc>HTML: Specifies a script to be invoked when the element loses focus</desc>
+      <longDesc>HTML: Specifies a script to be invoked when the element loses focus.</longDesc>
+      <generated>true</generated>
+      <clientEvent>blur</clientEvent>
+    </property>
+    <property>
+      <name>onfocus</name>
+      <className>java.lang.String</className>
+      <desc>HTML: Specifies a script to be invoked when the element receives focus</desc>
+      <longDesc>HTML: Specifies a script to be invoked when the element receives focus.</longDesc>
+      <generated>true</generated>
+      <clientEvent>focus</clientEvent>
+    </property>
+  </component>
+  <component>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.faces.html._HtmlOutputScript</className>
+    <parentClassName>jakarta.faces.component.UIOutput</parentClassName>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.faces.html._HtmlOutputScript</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.component.UIOutput</sourceClassParentClassName>
+    <rendererType>jakarta.faces.resource.Script</rendererType>
+    <configExcluded>true</configExcluded>
+    <desc>
+<![CDATA[
+<p>
+This tag is backed using a jakarta
+]]>
+    </desc>
+    <longDesc>
+<![CDATA[
+<p>
+This tag is backed using a jakarta.faces.component.UIOutput component instance.
+In other words, instances of this component class are created when it is resolved
+a Resource annotation, so there is no concrete class or specific tag handler for it,
+but there exists a concrete renderer for it.
+</p>
+]]>
+    </longDesc>
+    <property>
+      <name>library</name>
+      <className>java.lang.String</className>
+      <desc>no description</desc>
+      <generated>true</generated>
+    </property>
+    <property>
+      <name>name</name>
+      <className>java.lang.String</className>
+      <required>true</required>
+      <desc>no description</desc>
+      <generated>true</generated>
+    </property>
+    <property>
+      <name>target</name>
+      <className>java.lang.String</className>
+      <desc>no description</desc>
+      <generated>true</generated>
+    </property>
+  </component>
+  <component>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.faces.html._HtmlOutputStylesheet</className>
+    <parentClassName>jakarta.faces.component.UIOutput</parentClassName>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.faces.html._HtmlOutputStylesheet</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.component.UIOutput</sourceClassParentClassName>
+    <rendererType>jakarta.faces.resource.Stylesheet</rendererType>
+    <configExcluded>true</configExcluded>
+    <desc>
+<![CDATA[
+<p>
+This tag is backed using a jakarta
+]]>
+    </desc>
+    <longDesc>
+<![CDATA[
+<p>
+This tag is backed using a jakarta.faces.component.UIOutput component instance.
+In other words, instances of this component class are created when it is resolved
+a Resource annotation, so there is no concrete class or specific tag handler for it,
+but there exists a concrete renderer for it.
+</p>
+]]>
+    </longDesc>
+    <property>
+      <name>library</name>
+      <className>java.lang.String</className>
+      <desc>no description</desc>
+      <generated>true</generated>
+    </property>
+    <property>
+      <name>name</name>
+      <className>java.lang.String</className>
+      <required>true</required>
+      <desc>no description</desc>
+      <generated>true</generated>
+    </property>
+  </component>
+  <component>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.ui.ComponentRef</className>
+    <parentClassName>jakarta.faces.component.UIComponentBase</parentClassName>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.ui.ComponentRef</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.component.UIComponentBase</sourceClassParentClassName>
+    <type>facelets.ui.ComponentRef</type>
+    <family>facelets</family>
+    <desc>no description</desc>
+    <property>
+      <name>rendered</name>
+      <className>boolean</className>
+      <desc>no description</desc>
+      <tagExcluded>true</tagExcluded>
+    </property>
+  </component>
+  <component>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.ui.UIDebug</className>
+    <parentClassName>jakarta.faces.component.UIComponentBase</parentClassName>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.ui.UIDebug</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.component.UIComponentBase</sourceClassParentClassName>
+    <name>ui:debug</name>
+    <type>facelets.ui.Debug</type>
+    <family>facelets</family>
+    <desc>The debug tag will capture the component tree and variables when it is encoded, 
+storing the data for retrieval later</desc>
+    <longDesc>The debug tag will capture the component tree and variables when it is encoded, 
+storing the data for retrieval later. You may launch the debug window at any time 
+from your browser by pressing 'CTRL' + 'SHIFT' + 'D' (by default).
+
+The debug tag doesn't need to be used with the facelet.DEVELOPMENT parameter.
+The best place to put this tag is in your site's main template where it can be 
+enabled/disabled across your whole application. 
+
+If your application uses multiple windows, you might want to assign different 
+hot keys to each one.</longDesc>
+    <property>
+      <name>id</name>
+      <className>java.lang.String</className>
+      <desc>no description</desc>
+      <tagExcluded>true</tagExcluded>
+    </property>
+    <property>
+      <name>hotkey</name>
+      <className>java.lang.String</className>
+      <desc>The hot key to use in combination with 'CTRL' + 'SHIFT' to launch the debug window</desc>
+      <longDesc>The hot key to use in combination with 'CTRL' + 'SHIFT' to launch the debug window. 
+By default, when the debug tag is used, you may launch the debug window with 
+'CTRL' + 'SHIFT' + 'D'. This value cannot be an EL expression.</longDesc>
+    </property>
+    <property>
+      <name>binding</name>
+      <desc>no description</desc>
+      <tagExcluded>true</tagExcluded>
+      <generated>false</generated>
+    </property>
+  </component>
+  <component>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.ui._Component</className>
+    <parentClassName>jakarta.faces.component.UIComponentBase</parentClassName>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.ui._Component</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.component.UIComponentBase</sourceClassParentClassName>
+    <type>facelets.ui.ComponentRef</type>
+    <family>facelets</family>
+    <rendererType>jakarta.faces.resource.Script</rendererType>
+    <configExcluded>true</configExcluded>
+    <desc>The component tag and the composition tag behave exactly the same, except the component
+tag will insert a new UIComponent instance into the tree as the root of all the child 
+components/fragments it has</desc>
+    <longDesc>
+<![CDATA[
+The component tag and the composition tag behave exactly the same, except the component
+tag will insert a new UIComponent instance into the tree as the root of all the child 
+components/fragments it has.
+<p>
+The component class used for this tag is 
+org.apache.myfaces.view.facelets.tag.ui.ComponentRef and the 
+real java class that contains this description is not used on runtime.
+</p>
+]]>
+    </longDesc>
+    <property>
+      <name>rendered</name>
+      <className>boolean</className>
+      <desc>no description</desc>
+      <tagExcluded>true</tagExcluded>
+    </property>
+  </component>
+  <component>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.ui._Fragment</className>
+    <parentClassName>jakarta.faces.component.UIComponentBase</parentClassName>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.ui._Fragment</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.component.UIComponentBase</sourceClassParentClassName>
+    <type>facelets.ui.ComponentRef</type>
+    <family>facelets</family>
+    <rendererType>jakarta.faces.resource.Script</rendererType>
+    <configExcluded>true</configExcluded>
+    <desc>Just like composition has decorate as a non-trimming version of the same behavior,
+component has fragment</desc>
+    <longDesc>
+<![CDATA[
+Just like composition has decorate as a non-trimming version of the same behavior,
+component has fragment. This allows you to logically insert a UIComponent into the 
+tree and possibly bind this fragment to a JavaBean property or Map for management. 
+The fragment tag was also added to Facelets to get around some of the optimizations 
+used in handling text within your document. If you are using components such as 
+&lt;f:panelGrid/&gt;, which renders its children, you may want more control over the 
+building process that Facelets does and using a fragment tag will help guarantee 
+parent/child relationships for you.
+
+<p>
+The component class used for this tag is 
+org.apache.myfaces.view.facelets.tag.ui.ComponentRef and the 
+real java class that contains this description is not used on runtime.
+</p>
+]]>
+    </longDesc>
+    <property>
+      <name>rendered</name>
+      <className>boolean</className>
+      <desc>no description</desc>
+      <tagExcluded>true</tagExcluded>
+    </property>
+  </component>
   <converter>
     <modelId>myfaces-api</modelId>
     <className>jakarta.faces.convert.BigDecimalConverter</className>
@@ -8158,6 +8711,244 @@ property to true (including all rules related to this property).</longDesc>
       <generated>false</generated>
     </property>
   </validator>
+  <renderKit>
+    <renderKitId>HTML_BASIC</renderKitId>
+    <className>org.apache.myfaces.renderkit.html.HtmlRenderKitImpl</className>
+    <renderer>
+      <className>org.apache.myfaces.view.facelets.component.RepeatRenderer</className>
+      <componentFamily>facelets</componentFamily>
+      <rendererType>facelets.ui.Repeat</rendererType>
+      <description>no description</description>
+    </renderer>
+    <renderer>
+      <className>org.apache.myfaces.renderkit.html.HtmlButtonRenderer</className>
+      <componentFamily>jakarta.faces.Command</componentFamily>
+      <rendererType>jakarta.faces.Button</rendererType>
+      <description>no description</description>
+    </renderer>
+    <renderer>
+      <className>org.apache.myfaces.renderkit.html.HtmlLinkRenderer</className>
+      <componentFamily>jakarta.faces.Command</componentFamily>
+      <rendererType>jakarta.faces.Link</rendererType>
+      <description>no description</description>
+    </renderer>
+    <renderer>
+      <className>org.apache.myfaces.renderkit.html.HtmlCommandScriptRenderer</className>
+      <componentFamily>jakarta.faces.Command</componentFamily>
+      <rendererType>jakarta.faces.Script</rendererType>
+      <description>no description</description>
+    </renderer>
+    <renderer>
+      <className>org.apache.myfaces.renderkit.html.HtmlTableRenderer</className>
+      <componentFamily>jakarta.faces.Data</componentFamily>
+      <rendererType>jakarta.faces.Table</rendererType>
+      <description>no description</description>
+    </renderer>
+    <renderer>
+      <className>org.apache.myfaces.renderkit.html.HtmlFormRenderer</className>
+      <componentFamily>jakarta.faces.Form</componentFamily>
+      <rendererType>jakarta.faces.Form</rendererType>
+      <description>no description</description>
+    </renderer>
+    <renderer>
+      <className>org.apache.myfaces.renderkit.html.HtmlImageRenderer</className>
+      <componentFamily>jakarta.faces.Graphic</componentFamily>
+      <rendererType>jakarta.faces.Image</rendererType>
+      <description>no description</description>
+    </renderer>
+    <renderer>
+      <className>org.apache.myfaces.renderkit.html.HtmlInputFileRenderer</className>
+      <componentFamily>jakarta.faces.Input</componentFamily>
+      <rendererType>jakarta.faces.File</rendererType>
+      <description>no description</description>
+    </renderer>
+    <renderer>
+      <className>org.apache.myfaces.renderkit.html.HtmlHiddenRenderer</className>
+      <componentFamily>jakarta.faces.Input</componentFamily>
+      <rendererType>jakarta.faces.Hidden</rendererType>
+      <description>no description</description>
+    </renderer>
+    <renderer>
+      <className>org.apache.myfaces.renderkit.html.HtmlSecretRenderer</className>
+      <componentFamily>jakarta.faces.Input</componentFamily>
+      <rendererType>jakarta.faces.Secret</rendererType>
+      <description>no description</description>
+    </renderer>
+    <renderer>
+      <className>org.apache.myfaces.renderkit.html.HtmlTextRenderer</className>
+      <componentFamily>jakarta.faces.Input</componentFamily>
+      <rendererType>jakarta.faces.Text</rendererType>
+      <description>no description</description>
+    </renderer>
+    <renderer>
+      <className>org.apache.myfaces.renderkit.html.HtmlTextareaRenderer</className>
+      <componentFamily>jakarta.faces.Input</componentFamily>
+      <rendererType>jakarta.faces.Textarea</rendererType>
+      <description>no description</description>
+    </renderer>
+    <renderer>
+      <className>org.apache.myfaces.renderkit.html.HtmlMessagesRenderer</className>
+      <componentFamily>jakarta.faces.Messages</componentFamily>
+      <rendererType>jakarta.faces.Messages</rendererType>
+      <description>no description</description>
+    </renderer>
+    <renderer>
+      <className>org.apache.myfaces.renderkit.html.HtmlMessageRenderer</className>
+      <componentFamily>jakarta.faces.Message</componentFamily>
+      <rendererType>jakarta.faces.Message</rendererType>
+      <description>no description</description>
+    </renderer>
+    <renderer>
+      <className>org.apache.myfaces.renderkit.html.HtmlCompositeComponentRenderer</className>
+      <componentFamily>jakarta.faces.NamingContainer</componentFamily>
+      <rendererType>jakarta.faces.Composite</rendererType>
+      <description>no description</description>
+    </renderer>
+    <renderer>
+      <className>org.apache.myfaces.renderkit.html.HtmlOutcomeTargetButtonRenderer</className>
+      <componentFamily>jakarta.faces.OutcomeTarget</componentFamily>
+      <rendererType>jakarta.faces.Button</rendererType>
+      <description>no description</description>
+    </renderer>
+    <renderer>
+      <className>org.apache.myfaces.renderkit.html.HtmlLinkRenderer</className>
+      <componentFamily>jakarta.faces.OutcomeTarget</componentFamily>
+      <rendererType>jakarta.faces.Link</rendererType>
+      <description>no description</description>
+    </renderer>
+    <renderer>
+      <className>org.apache.myfaces.renderkit.html.HtmlBodyRenderer</className>
+      <componentFamily>jakarta.faces.Output</componentFamily>
+      <rendererType>jakarta.faces.Body</rendererType>
+      <description>Renderer used by h:body component</description>
+    </renderer>
+    <renderer>
+      <className>org.apache.myfaces.renderkit.html.HtmlCompositeFacetRenderer</className>
+      <componentFamily>jakarta.faces.Output</componentFamily>
+      <rendererType>jakarta.faces.CompositeFacet</rendererType>
+      <description>no description</description>
+    </renderer>
+    <renderer>
+      <className>org.apache.myfaces.renderkit.html.HtmlDoctypeRenderer</className>
+      <componentFamily>jakarta.faces.Output</componentFamily>
+      <rendererType>jakarta.faces.Doctype</rendererType>
+      <description>Rendered used by h:doctype tag</description>
+    </renderer>
+    <renderer>
+      <className>org.apache.myfaces.renderkit.html.HtmlFormatRenderer</className>
+      <componentFamily>jakarta.faces.Output</componentFamily>
+      <rendererType>jakarta.faces.Format</rendererType>
+      <description>no description</description>
+    </renderer>
+    <renderer>
+      <className>org.apache.myfaces.renderkit.html.HtmlHeadRenderer</className>
+      <componentFamily>jakarta.faces.Output</componentFamily>
+      <rendererType>jakarta.faces.Head</rendererType>
+      <description>Renderer used by h:head component</description>
+    </renderer>
+    <renderer>
+      <className>org.apache.myfaces.renderkit.html.HtmlLabelRenderer</className>
+      <componentFamily>jakarta.faces.Output</componentFamily>
+      <rendererType>jakarta.faces.Label</rendererType>
+      <description>no description</description>
+    </renderer>
+    <renderer>
+      <className>org.apache.myfaces.renderkit.html.HtmlLinkRenderer</className>
+      <componentFamily>jakarta.faces.Output</componentFamily>
+      <rendererType>jakarta.faces.Link</rendererType>
+      <description>no description</description>
+    </renderer>
+    <renderer>
+      <className>org.apache.myfaces.renderkit.html.HtmlTextRenderer</className>
+      <componentFamily>jakarta.faces.Output</componentFamily>
+      <rendererType>jakarta.faces.Text</rendererType>
+      <description>no description</description>
+    </renderer>
+    <renderer>
+      <className>org.apache.myfaces.renderkit.html.HtmlScriptRenderer</className>
+      <componentFamily>jakarta.faces.Output</componentFamily>
+      <rendererType>jakarta.faces.resource.Script</rendererType>
+      <description>Renderer used by h:outputScript component</description>
+    </renderer>
+    <renderer>
+      <className>org.apache.myfaces.renderkit.html.HtmlStylesheetRenderer</className>
+      <componentFamily>jakarta.faces.Output</componentFamily>
+      <rendererType>jakarta.faces.resource.Stylesheet</rendererType>
+      <description>Renderer used by h:outputStylesheet component</description>
+    </renderer>
+    <renderer>
+      <className>org.apache.myfaces.push.WebsocketInitRenderer</className>
+      <componentFamily>jakarta.faces.Output</componentFamily>
+      <rendererType>org.apache.myfaces.WebsocketInit</rendererType>
+      <description>no description</description>
+    </renderer>
+    <renderer>
+      <className>org.apache.myfaces.renderkit.html.HtmlGridRenderer</className>
+      <componentFamily>jakarta.faces.Panel</componentFamily>
+      <rendererType>jakarta.faces.Grid</rendererType>
+      <description>X-CHECKED: tlddoc h:panelGrid 1</description>
+    </renderer>
+    <renderer>
+      <className>org.apache.myfaces.renderkit.html.HtmlGroupRenderer</className>
+      <componentFamily>jakarta.faces.Panel</componentFamily>
+      <rendererType>jakarta.faces.Group</rendererType>
+      <description>no description</description>
+    </renderer>
+    <renderer>
+      <className>org.apache.myfaces.view.facelets.component.JsfElementRenderer</className>
+      <componentFamily>jakarta.faces.Panel</componentFamily>
+      <rendererType>jakarta.faces.passthrough.Element</rendererType>
+      <description>no description</description>
+    </renderer>
+    <renderer>
+      <className>org.apache.myfaces.push.WebsocketComponentRenderer</className>
+      <componentFamily>jakarta.faces.Script</componentFamily>
+      <rendererType>jakarta.faces.Websocket</rendererType>
+      <description>no description</description>
+    </renderer>
+    <renderer>
+      <className>org.apache.myfaces.renderkit.html.HtmlCheckboxRenderer</className>
+      <componentFamily>jakarta.faces.SelectBoolean</componentFamily>
+      <rendererType>jakarta.faces.Checkbox</rendererType>
+      <description>no description</description>
+    </renderer>
+    <renderer>
+      <className>org.apache.myfaces.renderkit.html.HtmlCheckboxRenderer</className>
+      <componentFamily>jakarta.faces.SelectMany</componentFamily>
+      <rendererType>jakarta.faces.Checkbox</rendererType>
+      <description>no description</description>
+    </renderer>
+    <renderer>
+      <className>org.apache.myfaces.renderkit.html.HtmlListboxRenderer</className>
+      <componentFamily>jakarta.faces.SelectMany</componentFamily>
+      <rendererType>jakarta.faces.Listbox</rendererType>
+      <description>no description</description>
+    </renderer>
+    <renderer>
+      <className>org.apache.myfaces.renderkit.html.HtmlMenuRenderer</className>
+      <componentFamily>jakarta.faces.SelectMany</componentFamily>
+      <rendererType>jakarta.faces.Menu</rendererType>
+      <description>no description</description>
+    </renderer>
+    <renderer>
+      <className>org.apache.myfaces.renderkit.html.HtmlListboxRenderer</className>
+      <componentFamily>jakarta.faces.SelectOne</componentFamily>
+      <rendererType>jakarta.faces.Listbox</rendererType>
+      <description>no description</description>
+    </renderer>
+    <renderer>
+      <className>org.apache.myfaces.renderkit.html.HtmlMenuRenderer</className>
+      <componentFamily>jakarta.faces.SelectOne</componentFamily>
+      <rendererType>jakarta.faces.Menu</rendererType>
+      <description>no description</description>
+    </renderer>
+    <renderer>
+      <className>org.apache.myfaces.renderkit.html.HtmlRadioRenderer</className>
+      <componentFamily>jakarta.faces.SelectOne</componentFamily>
+      <rendererType>jakarta.faces.Radio</rendererType>
+      <description>no description</description>
+    </renderer>
+  </renderKit>
   <faceletTag>
     <modelId>myfaces-api</modelId>
     <className>jakarta.faces.view.facelets.FaceletsAttachedObjectHandler</className>
@@ -8216,6 +9007,1386 @@ set/create Validator is the passed UIComponent's parent is null, signifying that
 tree.</p>
 ]]>
     </longDesc>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.composite.AttachedObjectTargetHandler</className>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.composite.AttachedObjectTargetHandler</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.view.facelets.TagHandler</sourceClassParentClassName>
+    <bodyContent>JSP</bodyContent>
+    <desc>composite:actionSource, composite:valueHolder and composite:editableValueHolder
+do the same: register an AttachedObjectTarget on the "targetList" mentioned on
+ViewDeclarationLanguage</desc>
+    <longDesc>composite:actionSource, composite:valueHolder and composite:editableValueHolder
+do the same: register an AttachedObjectTarget on the "targetList" mentioned on
+ViewDeclarationLanguage.retargetAttachedObjects. AttachedObjectTargetHandler group the
+common behavior</longDesc>
+    <attribute>
+      <name>name</name>
+      <className>jakarta.el.ValueExpression</className>
+      <required>true</required>
+      <desc>Indicate the name of the attribute that the component should expose
+to page authors</desc>
+      <longDesc>Indicate the name of the attribute that the component should expose
+to page authors.</longDesc>
+      <deferredValueType>java.lang.String</deferredValueType>
+    </attribute>
+    <attribute>
+      <name>targets</name>
+      <className>jakarta.el.ValueExpression</className>
+      <desc>no description</desc>
+      <longDesc></longDesc>
+      <deferredValueType>java.lang.String</deferredValueType>
+    </attribute>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.composite.ActionSourceHandler</className>
+    <parentClassName>org.apache.myfaces.view.facelets.tag.composite.AttachedObjectTargetHandler</parentClassName>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.composite.ActionSourceHandler</sourceClassName>
+    <sourceClassParentClassName>org.apache.myfaces.view.facelets.tag.composite.AttachedObjectTargetHandler</sourceClassParentClassName>
+    <name>composite:actionSource</name>
+    <bodyContent>JSP</bodyContent>
+    <desc>no description</desc>
+    <longDesc></longDesc>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.composite.AttributeHandler</className>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.composite.AttributeHandler</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.view.facelets.TagHandler</sourceClassParentClassName>
+    <name>composite:attribute</name>
+    <bodyContent>JSP</bodyContent>
+    <desc>no description</desc>
+    <longDesc></longDesc>
+    <attribute>
+      <name>name</name>
+      <className>jakarta.el.ValueExpression</className>
+      <required>true</required>
+      <desc>no description</desc>
+      <deferredValueType>java.lang.String</deferredValueType>
+    </attribute>
+    <attribute>
+      <name>targets</name>
+      <className>jakarta.el.ValueExpression</className>
+      <desc>no description</desc>
+      <deferredValueType>java.lang.String</deferredValueType>
+    </attribute>
+    <attribute>
+      <name>default</name>
+      <className>jakarta.el.ValueExpression</className>
+      <desc>If this property is set and the attribute does not have any
+value (null), the value set on this property is returned as default
+instead null</desc>
+      <longDesc>If this property is set and the attribute does not have any
+value (null), the value set on this property is returned as default
+instead null.</longDesc>
+      <deferredValueType>java.lang.String</deferredValueType>
+    </attribute>
+    <attribute>
+      <name>displayName</name>
+      <className>jakarta.el.ValueExpression</className>
+      <desc>Only available if ProjectStage is Development</desc>
+      <longDesc>Only available if ProjectStage is Development.</longDesc>
+      <deferredValueType>java.lang.String</deferredValueType>
+    </attribute>
+    <attribute>
+      <name>required</name>
+      <className>jakarta.el.ValueExpression</className>
+      <desc>
+<![CDATA[
+Indicate if the attribute is required or not
+<p>
+Myfaces specific feature: this attribute is checked only if project stage is
+not ProjectStage
+]]>
+      </desc>
+      <longDesc>
+<![CDATA[
+Indicate if the attribute is required or not
+<p>
+Myfaces specific feature: this attribute is checked only if project stage is
+not ProjectStage.Production when a composite component is created.</p>
+]]>
+      </longDesc>
+      <deferredValueType>boolean</deferredValueType>
+    </attribute>
+    <attribute>
+      <name>preferred</name>
+      <className>jakarta.el.ValueExpression</className>
+      <desc>Only available if ProjectStage is Development</desc>
+      <longDesc>Only available if ProjectStage is Development.</longDesc>
+      <deferredValueType>boolean</deferredValueType>
+    </attribute>
+    <attribute>
+      <name>expert</name>
+      <className>jakarta.el.ValueExpression</className>
+      <desc>Only available if ProjectStage is Development</desc>
+      <longDesc>Only available if ProjectStage is Development.</longDesc>
+      <deferredValueType>boolean</deferredValueType>
+    </attribute>
+    <attribute>
+      <name>shortDescription</name>
+      <className>jakarta.el.ValueExpression</className>
+      <desc>Only available if ProjectStage is Development</desc>
+      <longDesc>Only available if ProjectStage is Development.</longDesc>
+      <deferredValueType>java.lang.String</deferredValueType>
+    </attribute>
+    <attribute>
+      <name>method-signature</name>
+      <className>jakarta.el.ValueExpression</className>
+      <desc>no description</desc>
+      <deferredValueType>java.lang.String</deferredValueType>
+    </attribute>
+    <attribute>
+      <name>type</name>
+      <className>jakarta.el.ValueExpression</className>
+      <desc>no description</desc>
+      <deferredValueType>java.lang.String</deferredValueType>
+    </attribute>
+    <attribute>
+      <name>hidden</name>
+      <className>jakarta.el.ValueExpression</className>
+      <desc>The "hidden" flag is used to identify features that are intended only 
+for tool use, and which should not be exposed to humans</desc>
+      <longDesc>The "hidden" flag is used to identify features that are intended only 
+for tool use, and which should not be exposed to humans.
+Only available if ProjectStage is Development.</longDesc>
+      <deferredValueType>boolean</deferredValueType>
+    </attribute>
+    <attribute>
+      <name>targetAttributeName</name>
+      <className>jakarta.el.ValueExpression</className>
+      <desc>no description</desc>
+      <deferredValueType>java.lang.String</deferredValueType>
+    </attribute>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.composite.ClientBehaviorHandler</className>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.composite.ClientBehaviorHandler</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.view.facelets.TagHandler</sourceClassParentClassName>
+    <name>composite:clientBehavior</name>
+    <bodyContent>JSP</bodyContent>
+    <desc>no description</desc>
+    <longDesc></longDesc>
+    <attribute>
+      <name>event</name>
+      <className>jakarta.el.ValueExpression</className>
+      <required>true</required>
+      <desc>This attribute is used as the target event 
+name, so client behaviors pointing to "name" 
+will be attached on the related components 
+identified by "targets" attribute and on 
+the event name this attribute holds</desc>
+      <longDesc>This attribute is used as the target event 
+name, so client behaviors pointing to "name" 
+will be attached on the related components 
+identified by "targets" attribute and on 
+the event name this attribute holds. In other
+words, this is the "real" event name.</longDesc>
+      <deferredValueType>java.lang.String</deferredValueType>
+    </attribute>
+    <attribute>
+      <name>name</name>
+      <className>jakarta.el.ValueExpression</className>
+      <required>true</required>
+      <desc>This attribute represents the source event name 
+that is used when instances of the composite 
+component are used</desc>
+      <longDesc>This attribute represents the source event name 
+that is used when instances of the composite 
+component are used. In other
+words, this is the "logical" event name.</longDesc>
+      <deferredValueType>java.lang.String</deferredValueType>
+    </attribute>
+    <attribute>
+      <name>default</name>
+      <className>jakarta.el.ValueExpression</className>
+      <desc>Indicate this clientBehavior description is the one
+that has to be taken by default</desc>
+      <longDesc>Indicate this clientBehavior description is the one
+that has to be taken by default. There should be only
+one clientBehavior with this property set to true in
+a composite component interface description.</longDesc>
+      <deferredValueType>boolean</deferredValueType>
+    </attribute>
+    <attribute>
+      <name>targets</name>
+      <className>jakarta.el.ValueExpression</className>
+      <desc>Contains a list of clientIds separated by spaces that 
+identify the component(s) that will be used to attach 
+client behaviors from the composite component</desc>
+      <longDesc>Contains a list of clientIds separated by spaces that 
+identify the component(s) that will be used to attach 
+client behaviors from the composite component.</longDesc>
+      <deferredValueType>java.lang.String</deferredValueType>
+    </attribute>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.composite.EditableValueHolderHandler</className>
+    <parentClassName>org.apache.myfaces.view.facelets.tag.composite.AttachedObjectTargetHandler</parentClassName>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.composite.EditableValueHolderHandler</sourceClassName>
+    <sourceClassParentClassName>org.apache.myfaces.view.facelets.tag.composite.AttachedObjectTargetHandler</sourceClassParentClassName>
+    <name>composite:editableValueHolder</name>
+    <bodyContent>JSP</bodyContent>
+    <desc>no description</desc>
+    <longDesc></longDesc>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.composite.ExtensionHandler</className>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.composite.ExtensionHandler</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.view.facelets.TagHandler</sourceClassParentClassName>
+    <name>composite:extension</name>
+    <bodyContent>JSP</bodyContent>
+    <desc>This tag is deprecated since 4</desc>
+    <longDesc>This tag is deprecated since 4.1 with plans to remove it in Faces 5.0</longDesc>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.composite.FacetHandler</className>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.composite.FacetHandler</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.view.facelets.TagHandler</sourceClassParentClassName>
+    <name>composite:facet</name>
+    <bodyContent>JSP</bodyContent>
+    <desc>Define the facets used by this composite component</desc>
+    <longDesc>
+<![CDATA[
+Define the facets used by this composite component.
+<p>
+This tag is used inside composite:interface tag. All facets
+should be saved under the key UIComponent.FACETS_KEY on the
+bean descriptor map as a Map&lt;String, PropertyDescriptor&gt;
+</p>
+]]>
+    </longDesc>
+    <attribute>
+      <name>name</name>
+      <className>jakarta.el.ValueExpression</className>
+      <desc>no description</desc>
+      <longDesc></longDesc>
+      <deferredValueType>java.lang.String</deferredValueType>
+    </attribute>
+    <attribute>
+      <name>displayName</name>
+      <className>jakarta.el.ValueExpression</className>
+      <desc>Only available if ProjectStage is Development</desc>
+      <longDesc>Only available if ProjectStage is Development.</longDesc>
+      <deferredValueType>java.lang.String</deferredValueType>
+    </attribute>
+    <attribute>
+      <name>required</name>
+      <className>jakarta.el.ValueExpression</className>
+      <desc>
+<![CDATA[
+Indicate if the attribute is required or not
+<p>
+Myfaces specific feature: this attribute is checked only if project stage is
+not ProjectStage
+]]>
+      </desc>
+      <longDesc>
+<![CDATA[
+Indicate if the attribute is required or not
+<p>
+Myfaces specific feature: this attribute is checked only if project stage is
+not ProjectStage.Production when a composite component is created.
+</p>
+]]>
+      </longDesc>
+      <deferredValueType>boolean</deferredValueType>
+    </attribute>
+    <attribute>
+      <name>preferred</name>
+      <className>jakarta.el.ValueExpression</className>
+      <desc>Only available if ProjectStage is Development</desc>
+      <longDesc>Only available if ProjectStage is Development.</longDesc>
+      <deferredValueType>boolean</deferredValueType>
+    </attribute>
+    <attribute>
+      <name>expert</name>
+      <className>jakarta.el.ValueExpression</className>
+      <desc>Only available if ProjectStage is Development</desc>
+      <longDesc>Only available if ProjectStage is Development.</longDesc>
+      <deferredValueType>boolean</deferredValueType>
+    </attribute>
+    <attribute>
+      <name>shortDescription</name>
+      <className>jakarta.el.ValueExpression</className>
+      <desc>Only available if ProjectStage is Development</desc>
+      <longDesc>Only available if ProjectStage is Development.</longDesc>
+      <deferredValueType>java.lang.String</deferredValueType>
+    </attribute>
+    <attribute>
+      <name>hidden</name>
+      <className>jakarta.el.ValueExpression</className>
+      <desc>The "hidden" flag is used to identify features that are intended only 
+for tool use, and which should not be exposed to humans</desc>
+      <longDesc>The "hidden" flag is used to identify features that are intended only 
+for tool use, and which should not be exposed to humans.
+Only available if ProjectStage is Development.</longDesc>
+      <deferredValueType>boolean</deferredValueType>
+    </attribute>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.composite.ImplementationHandler</className>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.composite.ImplementationHandler</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.view.facelets.TagHandler</sourceClassParentClassName>
+    <name>composite:implementation</name>
+    <bodyContent>JSP</bodyContent>
+    <desc>no description</desc>
+    <longDesc></longDesc>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.composite.InsertChildrenHandler</className>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.composite.InsertChildrenHandler</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.view.facelets.TagHandler</sourceClassParentClassName>
+    <name>composite:insertChildren</name>
+    <bodyContent>JSP</bodyContent>
+    <desc>no description</desc>
+    <longDesc></longDesc>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.composite.InsertFacetHandler</className>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.composite.InsertFacetHandler</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.view.facelets.TagHandler</sourceClassParentClassName>
+    <name>composite:insertFacet</name>
+    <bodyContent>JSP</bodyContent>
+    <desc>Insert or move the facet from the composite component body to the expected location</desc>
+    <longDesc>Insert or move the facet from the composite component body to the expected location.</longDesc>
+    <attribute>
+      <name>name</name>
+      <className>jakarta.el.ValueExpression</className>
+      <required>true</required>
+      <desc>The name that identify the current facet</desc>
+      <longDesc>The name that identify the current facet.</longDesc>
+      <deferredValueType>java.lang.String</deferredValueType>
+    </attribute>
+    <attribute>
+      <name>required</name>
+      <className>jakarta.el.ValueExpression</className>
+      <desc>Define if the facet to be inserted is required or not for every instance of
+this composite component</desc>
+      <longDesc>Define if the facet to be inserted is required or not for every instance of
+this composite component.</longDesc>
+      <deferredValueType>boolean</deferredValueType>
+    </attribute>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.composite.InterfaceHandler</className>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.composite.InterfaceHandler</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.view.facelets.TagHandler</sourceClassParentClassName>
+    <name>composite:interface</name>
+    <bodyContent>JSP</bodyContent>
+    <desc>no description</desc>
+    <longDesc></longDesc>
+    <attribute>
+      <name>name</name>
+      <className>jakarta.el.ValueExpression</className>
+      <desc>no description</desc>
+      <longDesc></longDesc>
+      <deferredValueType>java.lang.String</deferredValueType>
+    </attribute>
+    <attribute>
+      <name>componentType</name>
+      <className>jakarta.el.ValueExpression</className>
+      <desc>no description</desc>
+      <longDesc></longDesc>
+      <deferredValueType>java.lang.String</deferredValueType>
+    </attribute>
+    <attribute>
+      <name>displayName</name>
+      <className>jakarta.el.ValueExpression</className>
+      <desc>Only available if ProjectStage is Development</desc>
+      <longDesc>Only available if ProjectStage is Development.</longDesc>
+      <deferredValueType>java.lang.String</deferredValueType>
+    </attribute>
+    <attribute>
+      <name>preferred</name>
+      <className>jakarta.el.ValueExpression</className>
+      <desc>Only available if ProjectStage is Development</desc>
+      <longDesc>Only available if ProjectStage is Development.</longDesc>
+      <deferredValueType>boolean</deferredValueType>
+    </attribute>
+    <attribute>
+      <name>expert</name>
+      <className>jakarta.el.ValueExpression</className>
+      <desc>Only available if ProjectStage is Development</desc>
+      <longDesc>Only available if ProjectStage is Development.</longDesc>
+      <deferredValueType>boolean</deferredValueType>
+    </attribute>
+    <attribute>
+      <name>shortDescription</name>
+      <className>jakarta.el.ValueExpression</className>
+      <desc>Only available if ProjectStage is Development</desc>
+      <longDesc>Only available if ProjectStage is Development.</longDesc>
+      <deferredValueType>java.lang.String</deferredValueType>
+    </attribute>
+    <attribute>
+      <name>hidden</name>
+      <className>jakarta.el.ValueExpression</className>
+      <desc>The "hidden" flag is used to identify features that are intended only 
+for tool use, and which should not be exposed to humans</desc>
+      <longDesc>The "hidden" flag is used to identify features that are intended only 
+for tool use, and which should not be exposed to humans.
+Only available if ProjectStage is Development.</longDesc>
+      <deferredValueType>boolean</deferredValueType>
+    </attribute>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.composite.RenderFacetHandler</className>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.composite.RenderFacetHandler</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.view.facelets.ComponentHandler</sourceClassParentClassName>
+    <name>composite:renderFacet</name>
+    <bodyContent>JSP</bodyContent>
+    <desc>Render the facet defined on the composite component body to the current location</desc>
+    <longDesc>Render the facet defined on the composite component body to the current location</longDesc>
+    <attribute>
+      <name>name</name>
+      <className>jakarta.el.ValueExpression</className>
+      <required>true</required>
+      <desc>The name that identify the current facet</desc>
+      <longDesc>The name that identify the current facet.</longDesc>
+      <deferredValueType>java.lang.String</deferredValueType>
+    </attribute>
+    <attribute>
+      <name>required</name>
+      <className>jakarta.el.ValueExpression</className>
+      <desc>Define if the facet to be inserted is required or not for every instance of
+this composite component</desc>
+      <longDesc>Define if the facet to be inserted is required or not for every instance of
+this composite component.</longDesc>
+      <deferredValueType>boolean</deferredValueType>
+    </attribute>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.composite.ValueHolderHandler</className>
+    <parentClassName>org.apache.myfaces.view.facelets.tag.composite.AttachedObjectTargetHandler</parentClassName>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.composite.ValueHolderHandler</sourceClassName>
+    <sourceClassParentClassName>org.apache.myfaces.view.facelets.tag.composite.AttachedObjectTargetHandler</sourceClassParentClassName>
+    <name>composite:valueHolder</name>
+    <bodyContent>JSP</bodyContent>
+    <desc>no description</desc>
+    <longDesc></longDesc>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.faces.JsfElementHandler</className>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.faces.JsfElementHandler</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.view.facelets.ComponentHandler</sourceClassParentClassName>
+    <name>jsf:element</name>
+    <bodyContent>JSP</bodyContent>
+    <desc>no description</desc>
+    <longDesc></longDesc>
+    <componentClass>org.apache.myfaces.view.facelets.component.JsfElement</componentClass>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.faces.core.ActionListenerHandler</className>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.faces.core.ActionListenerHandler</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.view.facelets.TagHandler</sourceClassParentClassName>
+    <name>f:actionListener</name>
+    <bodyContent>empty</bodyContent>
+    <desc>Register an ActionListener instance on the UIComponent associated with the closest parent UIComponent custom action</desc>
+    <longDesc>Register an ActionListener instance on the UIComponent associated with the closest parent UIComponent custom action.
+
+See jakarta.faces.event.ActionListener
+See jakarta.faces.component.ActionSource</longDesc>
+    <attribute>
+      <name>for</name>
+      <className>java.lang.String</className>
+      <desc>no description</desc>
+    </attribute>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.faces.core.AjaxHandler</className>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.faces.core.AjaxHandler</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.view.facelets.TagHandler</sourceClassParentClassName>
+    <name>f:ajax</name>
+    <bodyContent>JSP</bodyContent>
+    <desc>This tag creates an instance of AjaxBehavior, and associates it with the nearest 
+parent UIComponent that implements ClientBehaviorHolder interface</desc>
+    <longDesc>
+<![CDATA[
+This tag creates an instance of AjaxBehavior, and associates it with the nearest 
+parent UIComponent that implements ClientBehaviorHolder interface. This tag can
+be used on single or composite components.
+<p>
+Unless otherwise specified, all attributes accept static values or EL expressions.
+</p>
+<p>
+According to the documentation, the tag handler implementing this tag should meet
+the following conditions:  
+</p>
+<ul>
+<li>Since this tag attach objects to UIComponent instances, and those instances 
+implements Behavior interface, this component should implement 
+BehaviorHolderAttachedObjectHandler interface.</li>
+<li>f:ajax does not support binding property. In theory we should do something similar
+to f:convertDateTime tag does: extends from ConverterHandler and override setAttributes
+method, but in this case BehaviorTagHandlerDelegate has binding property defined, so
+if we extend from BehaviorHandler we add binding support to f:ajax.</li>
+<li>This tag works as a attached object handler, but note on the api there is no component
+to define a target for a behavior. See comment inside apply() method.</li>
+</ul>
+]]>
+    </longDesc>
+    <attribute>
+      <name>disabled</name>
+      <className>jakarta.el.ValueExpression</className>
+      <desc>no description</desc>
+      <deferredValueType>java.lang.Boolean</deferredValueType>
+    </attribute>
+    <attribute>
+      <name>event</name>
+      <className>jakarta.el.ValueExpression</className>
+      <desc>no description</desc>
+      <deferredValueType>java.lang.String</deferredValueType>
+    </attribute>
+    <attribute>
+      <name>execute</name>
+      <className>jakarta.el.ValueExpression</className>
+      <desc>no description</desc>
+      <deferredValueType>java.lang.Object</deferredValueType>
+    </attribute>
+    <attribute>
+      <name>immediate</name>
+      <className>jakarta.el.ValueExpression</className>
+      <desc>no description</desc>
+      <deferredValueType>java.lang.Boolean</deferredValueType>
+    </attribute>
+    <attribute>
+      <name>listener</name>
+      <className>jakarta.el.MethodExpression</className>
+      <desc>no description</desc>
+      <deferredMethodSignature>public void m(jakarta.faces.event.AjaxBehaviorEvent evt) " + "throws jakarta.faces.event.AbortProcessingException</deferredMethodSignature>
+    </attribute>
+    <attribute>
+      <name>onevent</name>
+      <className>jakarta.el.ValueExpression</className>
+      <desc>no description</desc>
+      <deferredValueType>java.lang.String</deferredValueType>
+    </attribute>
+    <attribute>
+      <name>onerror</name>
+      <className>jakarta.el.ValueExpression</className>
+      <desc>no description</desc>
+      <deferredValueType>java.lang.String</deferredValueType>
+    </attribute>
+    <attribute>
+      <name>render</name>
+      <className>jakarta.el.ValueExpression</className>
+      <desc>no description</desc>
+      <deferredValueType>java.lang.Object</deferredValueType>
+    </attribute>
+    <attribute>
+      <name>delay</name>
+      <className>jakarta.el.ValueExpression</className>
+      <desc>no description</desc>
+      <deferredValueType>java.lang.String</deferredValueType>
+    </attribute>
+    <attribute>
+      <name>resetValues</name>
+      <className>jakarta.el.ValueExpression</className>
+      <desc>no description</desc>
+      <deferredValueType>java.lang.Boolean</deferredValueType>
+    </attribute>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.faces.core.AttributeHandler</className>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.faces.core.AttributeHandler</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.view.facelets.TagHandler</sourceClassParentClassName>
+    <name>f:attribute</name>
+    <bodyContent>empty</bodyContent>
+    <desc>Sets the specified name and attribute on the parent UIComponent</desc>
+    <longDesc>Sets the specified name and attribute on the parent UIComponent. If the "value" specified is not a literal, it will
+instead set the ValueExpression on the UIComponent. 
+
+See jakarta.faces.component.UIComponent#getAttributes()
+See jakarta.faces.component.UIComponent#setValueExpression(java.lang.String, jakarta.el.ValueExpression)</longDesc>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.faces.core.AttributesHandler</className>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.faces.core.AttributesHandler</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.view.facelets.TagHandler</sourceClassParentClassName>
+    <name>f:attributes</name>
+    <bodyContent>empty</bodyContent>
+    <desc>no description</desc>
+    <longDesc></longDesc>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.faces.core.ConvertDateTimeHandler</className>
+    <parentClassName>jakarta.faces.view.facelets.ConverterHandler</parentClassName>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.faces.core.ConvertDateTimeHandler</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.view.facelets.ConverterHandler</sourceClassParentClassName>
+    <name>f:convertDateTime</name>
+    <bodyContent>empty</bodyContent>
+    <desc>Register a DateTimeConverter instance on the UIComponent associated with the closest parent UIComponent custom
+action</desc>
+    <longDesc>Register a DateTimeConverter instance on the UIComponent associated with the closest parent UIComponent custom
+action.</longDesc>
+    <converterClass>jakarta.faces.convert.DateTimeConverter</converterClass>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.faces.core.ConvertDelegateHandler</className>
+    <parentClassName>jakarta.faces.view.facelets.ConverterHandler</parentClassName>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.faces.core.ConvertDelegateHandler</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.view.facelets.ConverterHandler</sourceClassParentClassName>
+    <name>f:converter</name>
+    <bodyContent>empty</bodyContent>
+    <desc>Register a named Converter instance on the UIComponent associated with the closest parent UIComponent custom action</desc>
+    <longDesc>Register a named Converter instance on the UIComponent associated with the closest parent UIComponent custom action.</longDesc>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.faces.core.ConvertNumberHandler</className>
+    <parentClassName>jakarta.faces.view.facelets.ConverterHandler</parentClassName>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.faces.core.ConvertNumberHandler</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.view.facelets.ConverterHandler</sourceClassParentClassName>
+    <name>f:convertNumber</name>
+    <bodyContent>empty</bodyContent>
+    <desc>Register a NumberConverter instance on the UIComponent associated with the closest parent UIComponent custom action</desc>
+    <longDesc>Register a NumberConverter instance on the UIComponent associated with the closest parent UIComponent custom action.</longDesc>
+    <converterClass>jakarta.faces.convert.NumberConverter</converterClass>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.faces.core.EventHandler</className>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.faces.core.EventHandler</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.view.facelets.TagHandler</sourceClassParentClassName>
+    <name>f:event</name>
+    <bodyContent>empty</bodyContent>
+    <desc>Registers a listener for a given system event class on the UIComponent associated with this tag</desc>
+    <longDesc>Registers a listener for a given system event class on the UIComponent associated with this tag.</longDesc>
+    <attribute>
+      <name>listener</name>
+      <className>jakarta.el.MethodExpression</className>
+      <desc>no description</desc>
+      <deferredMethodSignature>public void listener(jakarta.faces.event.ComponentSystemEvent evt) " + "throws jakarta.faces.event.AbortProcessingException</deferredMethodSignature>
+    </attribute>
+    <attribute>
+      <name>type</name>
+      <className>jakarta.el.ValueExpression</className>
+      <desc>no description</desc>
+      <deferredValueType>java.lang.String</deferredValueType>
+    </attribute>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.faces.core.FacetHandler</className>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.faces.core.FacetHandler</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.view.facelets.TagHandler</sourceClassParentClassName>
+    <name>f:facet</name>
+    <bodyContent>JSP</bodyContent>
+    <desc>Register a named facet on the UIComponent associated with the closest parent UIComponent custom action</desc>
+    <longDesc>Register a named facet on the UIComponent associated with the closest parent UIComponent custom action.</longDesc>
+    <tagClass>jakarta.faces.webapp.FacetTag</tagClass>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.faces.core.LoadBundleHandler</className>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.faces.core.LoadBundleHandler</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.view.facelets.TagHandler</sourceClassParentClassName>
+    <name>f:loadBundle</name>
+    <bodyContent>empty</bodyContent>
+    <desc>Load a resource bundle localized for the Locale of the current view, and expose it (as a Map) in the request
+attributes of the current request</desc>
+    <longDesc>Load a resource bundle localized for the Locale of the current view, and expose it (as a Map) in the request
+attributes of the current request.</longDesc>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.faces.core.PassThroughAttributeHandler</className>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.faces.core.PassThroughAttributeHandler</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.view.facelets.TagHandler</sourceClassParentClassName>
+    <name>f:passThroughAttribute</name>
+    <bodyContent>empty</bodyContent>
+    <desc>no description</desc>
+    <longDesc></longDesc>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.faces.core.PassThroughAttributesHandler</className>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.faces.core.PassThroughAttributesHandler</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.view.facelets.TagHandler</sourceClassParentClassName>
+    <name>f:passThroughAttributes</name>
+    <bodyContent>empty</bodyContent>
+    <desc>no description</desc>
+    <longDesc></longDesc>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.faces.core.PhaseListenerHandler</className>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.faces.core.PhaseListenerHandler</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.view.facelets.TagHandler</sourceClassParentClassName>
+    <name>f:phaseListener</name>
+    <bodyContent>empty</bodyContent>
+    <desc>no description</desc>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.faces.core.ResetValuesActionListenerHandler</className>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.faces.core.ResetValuesActionListenerHandler</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.view.facelets.TagHandler</sourceClassParentClassName>
+    <name>f:resetValues</name>
+    <bodyContent>empty</bodyContent>
+    <desc>no description</desc>
+    <longDesc></longDesc>
+    <attribute>
+      <name>for</name>
+      <className>java.lang.String</className>
+      <desc>no description</desc>
+    </attribute>
+    <attribute>
+      <name>render</name>
+      <className>jakarta.el.ValueExpression</className>
+      <desc>no description</desc>
+      <deferredValueType>java.lang.Object</deferredValueType>
+    </attribute>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.faces.core.SelectItemGroupHandler</className>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.faces.core.SelectItemGroupHandler</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.view.facelets.ComponentHandler</sourceClassParentClassName>
+    <name>f:selectItemGroup</name>
+    <bodyContent>empty</bodyContent>
+    <desc>no description</desc>
+    <componentClass>jakarta.faces.component.UISelectItemGroup</componentClass>
+    <attribute>
+      <name>noSelectionValue</name>
+      <className>jakarta.el.ValueExpression</className>
+      <desc>Is either an EL expression pointing to the element in the value collection
+whose value should be marked as a "no selection" item, or a literal string
+that exactly matches the value of the item in the collection that must be 
+marked as the "no selection" item</desc>
+      <longDesc>Is either an EL expression pointing to the element in the value collection
+whose value should be marked as a "no selection" item, or a literal string
+that exactly matches the value of the item in the collection that must be 
+marked as the "no selection" item. If the user selects such an item and 
+the field is marked as required, then it will not pass validation.</longDesc>
+      <deferredValueType>java.lang.Boolean</deferredValueType>
+    </attribute>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.faces.core.SelectItemGroupsHandler</className>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.faces.core.SelectItemGroupsHandler</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.view.facelets.ComponentHandler</sourceClassParentClassName>
+    <name>f:selectItemGroups</name>
+    <bodyContent>empty</bodyContent>
+    <desc>no description</desc>
+    <componentClass>jakarta.faces.component.UISelectItemGroups</componentClass>
+    <attribute>
+      <name>noSelectionValue</name>
+      <className>jakarta.el.ValueExpression</className>
+      <desc>Is either an EL expression pointing to the element in the value collection
+whose value should be marked as a "no selection" item, or a literal string
+that exactly matches the value of the item in the collection that must be 
+marked as the "no selection" item</desc>
+      <longDesc>Is either an EL expression pointing to the element in the value collection
+whose value should be marked as a "no selection" item, or a literal string
+that exactly matches the value of the item in the collection that must be 
+marked as the "no selection" item. If the user selects such an item and 
+the field is marked as required, then it will not pass validation.</longDesc>
+      <deferredValueType>java.lang.Boolean</deferredValueType>
+    </attribute>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.faces.core.SelectItemsHandler</className>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.faces.core.SelectItemsHandler</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.view.facelets.ComponentHandler</sourceClassParentClassName>
+    <name>f:selectItems</name>
+    <bodyContent>empty</bodyContent>
+    <desc>no description</desc>
+    <componentClass>jakarta.faces.component.UISelectItems</componentClass>
+    <attribute>
+      <name>noSelectionValue</name>
+      <className>jakarta.el.ValueExpression</className>
+      <desc>Is either an EL expression pointing to the element in the value collection
+whose value should be marked as a "no selection" item, or a literal string
+that exactly matches the value of the item in the collection that must be 
+marked as the "no selection" item</desc>
+      <longDesc>Is either an EL expression pointing to the element in the value collection
+whose value should be marked as a "no selection" item, or a literal string
+that exactly matches the value of the item in the collection that must be 
+marked as the "no selection" item. If the user selects such an item and 
+the field is marked as required, then it will not pass validation.</longDesc>
+      <deferredValueType>java.lang.Boolean</deferredValueType>
+    </attribute>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.faces.core.SetPropertyActionListenerHandler</className>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.faces.core.SetPropertyActionListenerHandler</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.view.facelets.TagHandler</sourceClassParentClassName>
+    <name>f:setPropertyActionListener</name>
+    <bodyContent>empty</bodyContent>
+    <desc>no description</desc>
+    <attribute>
+      <name>for</name>
+      <className>java.lang.String</className>
+      <desc>no description</desc>
+    </attribute>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.faces.core.ValidateDelegateHandler</className>
+    <parentClassName>jakarta.faces.view.facelets.ValidatorHandler</parentClassName>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.faces.core.ValidateDelegateHandler</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.view.facelets.ValidatorHandler</sourceClassParentClassName>
+    <name>f:validator</name>
+    <bodyContent>empty</bodyContent>
+    <desc>Register a named Validator instance on the UIComponent associated with the closest parent UIComponent custom
+action</desc>
+    <longDesc>Register a named Validator instance on the UIComponent associated with the closest parent UIComponent custom
+action.</longDesc>
+    <attribute>
+      <name>disabled</name>
+      <desc>no description</desc>
+      <longDesc>no description</longDesc>
+      <deferredValueType>java.lang.Boolean</deferredValueType>
+    </attribute>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.faces.core.ValueChangeListenerHandler</className>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.faces.core.ValueChangeListenerHandler</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.view.facelets.TagHandler</sourceClassParentClassName>
+    <name>f:valueChangeListener</name>
+    <bodyContent>empty</bodyContent>
+    <desc>Register an ValueChangeListener instance on the UIComponent associated with the closest parent UIComponent custom
+action</desc>
+    <longDesc>Register an ValueChangeListener instance on the UIComponent associated with the closest parent UIComponent custom
+action.</longDesc>
+    <attribute>
+      <name>for</name>
+      <className>java.lang.String</className>
+      <desc>no description</desc>
+    </attribute>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.faces.core.ViewHandler</className>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.faces.core.ViewHandler</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.view.facelets.TagHandler</sourceClassParentClassName>
+    <name>f:view</name>
+    <bodyContent>empty</bodyContent>
+    <desc>Container for all JavaServer Faces core and custom component actions used on a page</desc>
+    <longDesc>Container for all JavaServer Faces core and custom component actions used on a page.</longDesc>
+    <componentClass>jakarta.faces.component.UIViewRoot</componentClass>
+    <attribute>
+      <name>locale</name>
+      <desc>no description</desc>
+    </attribute>
+    <attribute>
+      <name>renderKitId</name>
+      <desc>no description</desc>
+    </attribute>
+    <attribute>
+      <name>contentType</name>
+      <desc>no description</desc>
+    </attribute>
+    <attribute>
+      <name>encoding</name>
+      <desc>no description</desc>
+    </attribute>
+    <attribute>
+      <name>beforePhase</name>
+      <desc>no description</desc>
+    </attribute>
+    <attribute>
+      <name>afterPhase</name>
+      <desc>no description</desc>
+    </attribute>
+    <attribute>
+      <name>transient</name>
+      <desc>no description</desc>
+    </attribute>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.faces.core.ViewMetadataHandler</className>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.faces.core.ViewMetadataHandler</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.view.facelets.TagHandler</sourceClassParentClassName>
+    <name>f:metadata</name>
+    <bodyContent>JSP</bodyContent>
+    <desc>Defines the view metadata</desc>
+    <longDesc>Defines the view metadata. It is expected that this tag contains only
+one or many f:viewParam tags.</longDesc>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.faces.core.WebsocketHandler</className>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.faces.core.WebsocketHandler</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.view.facelets.ComponentHandler</sourceClassParentClassName>
+    <name>f:websocket</name>
+    <bodyContent>empty</bodyContent>
+    <desc>no description</desc>
+    <attribute>
+      <name>channel</name>
+      <className>jakarta.el.ValueExpression</className>
+      <desc>no description</desc>
+      <deferredValueType>java.lang.String</deferredValueType>
+    </attribute>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.faces.html.HtmlOutputScriptHandler</className>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.faces.html.HtmlOutputScriptHandler</sourceClassName>
+    <sourceClassParentClassName>org.apache.myfaces.view.facelets.tag.faces.html.HtmlComponentHandler</sourceClassParentClassName>
+    <name>h:outputScript</name>
+    <bodyContent>JSP</bodyContent>
+    <desc>no description</desc>
+    <longDesc></longDesc>
+    <componentClass>org.apache.myfaces.view.facelets.tag.faces.html._HtmlOutputScript</componentClass>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.faces.html.HtmlOutputStylesheetHandler</className>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.faces.html.HtmlOutputStylesheetHandler</sourceClassName>
+    <sourceClassParentClassName>org.apache.myfaces.view.facelets.tag.faces.html.HtmlComponentHandler</sourceClassParentClassName>
+    <name>h:outputStylesheet</name>
+    <bodyContent>JSP</bodyContent>
+    <desc>no description</desc>
+    <longDesc></longDesc>
+    <componentClass>org.apache.myfaces.view.facelets.tag.faces.html._HtmlOutputStylesheet</componentClass>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.jstl.core.CatchHandler</className>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.jstl.core.CatchHandler</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.view.facelets.TagHandler</sourceClassParentClassName>
+    <name>c:catch</name>
+    <bodyContent>JSP</bodyContent>
+    <desc>Catches any Throwable that occurs in its body and optionally 
+exposes it</desc>
+    <longDesc>Catches any Throwable that occurs in its body and optionally 
+exposes it.</longDesc>
+    <attribute>
+      <name>var</name>
+      <className>java.lang.String</className>
+      <desc>Name of the exported scoped variable for the
+exception thrown from a nested action</desc>
+      <longDesc>Name of the exported scoped variable for the
+exception thrown from a nested action. The type of the
+scoped variable is the type of the exception thrown.</longDesc>
+    </attribute>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.jstl.core.ChooseHandler</className>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.jstl.core.ChooseHandler</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.view.facelets.TagHandler</sourceClassParentClassName>
+    <name>c:choose</name>
+    <bodyContent>JSP</bodyContent>
+    <desc>
+<![CDATA[
+Simple conditional tag that establishes a context for
+mutually exclusive conditional operations, marked by
+&lt;when&gt; and &lt;otherwise&gt;
+]]>
+    </desc>
+    <longDesc>
+<![CDATA[
+Simple conditional tag that establishes a context for
+mutually exclusive conditional operations, marked by
+&lt;when&gt; and &lt;otherwise&gt;
+]]>
+    </longDesc>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.jstl.core.ChooseOtherwiseHandler</className>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.jstl.core.ChooseOtherwiseHandler</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.view.facelets.TagHandler</sourceClassParentClassName>
+    <name>c:otherwise</name>
+    <bodyContent>JSP</bodyContent>
+    <desc>
+<![CDATA[
+Subtag of &lt;choose&gt; that follows &lt;when&gt; tags
+and runs only if all of the prior conditions evaluated to
+'false'
+]]>
+    </desc>
+    <longDesc>
+<![CDATA[
+Subtag of &lt;choose&gt; that follows &lt;when&gt; tags
+and runs only if all of the prior conditions evaluated to
+'false'
+]]>
+    </longDesc>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.jstl.core.ChooseWhenHandler</className>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.jstl.core.ChooseWhenHandler</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.view.facelets.TagHandler</sourceClassParentClassName>
+    <name>c:when</name>
+    <bodyContent>JSP</bodyContent>
+    <desc>
+<![CDATA[
+Subtag of &lt;choose&gt; that includes its body if its
+condition evalutes to 'true'
+]]>
+    </desc>
+    <longDesc>
+<![CDATA[
+Subtag of &lt;choose&gt; that includes its body if its
+condition evalutes to 'true'
+]]>
+    </longDesc>
+    <attribute>
+      <name>test</name>
+      <className>boolean</className>
+      <required>true</required>
+      <desc>The test condition that determines whether or not the
+body content should be processed</desc>
+      <longDesc>The test condition that determines whether or not the
+body content should be processed.</longDesc>
+    </attribute>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.jstl.core.ForEachHandler</className>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.jstl.core.ForEachHandler</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.view.facelets.TagHandler</sourceClassParentClassName>
+    <name>c:forEach</name>
+    <bodyContent>JSP</bodyContent>
+    <desc>The basic iteration tag, accepting many different
+collection types and supporting subsetting and other
+functionality</desc>
+    <longDesc>The basic iteration tag, accepting many different
+collection types and supporting subsetting and other
+functionality</longDesc>
+    <attribute>
+      <name>begin</name>
+      <className>int</className>
+      <desc>If items specified:
+Iteration begins at the item located at the
+specified index</desc>
+      <longDesc>If items specified:
+Iteration begins at the item located at the
+specified index. First item of the collection has
+index 0.
+If items not specified:
+Iteration begins with index set at the value
+specified.</longDesc>
+    </attribute>
+    <attribute>
+      <name>end</name>
+      <className>int</className>
+      <desc>If items specified:
+Iteration ends at the item located at the
+specified index (inclusive)</desc>
+      <longDesc>If items specified:
+Iteration ends at the item located at the
+specified index (inclusive).
+If items not specified:
+Iteration ends when index reaches the value
+specified.</longDesc>
+    </attribute>
+    <attribute>
+      <name>items</name>
+      <className>jakarta.el.ValueExpression</className>
+      <desc>Collection of items to iterate over</desc>
+      <longDesc>Collection of items to iterate over.</longDesc>
+    </attribute>
+    <attribute>
+      <name>step</name>
+      <className>int</className>
+      <desc>Iteration will only process every step items of
+the collection, starting with the first one</desc>
+      <longDesc>Iteration will only process every step items of
+the collection, starting with the first one.</longDesc>
+    </attribute>
+    <attribute>
+      <name>var</name>
+      <className>java.lang.String</className>
+      <desc>Name of the exported scoped variable for the
+current item of the iteration</desc>
+      <longDesc>Name of the exported scoped variable for the
+current item of the iteration. This scoped
+variable has nested visibility. Its type depends
+on the object of the underlying collection.</longDesc>
+    </attribute>
+    <attribute>
+      <name>varStatus</name>
+      <className>java.lang.String</className>
+      <desc>Name of the exported scoped variable for the
+status of the iteration</desc>
+      <longDesc>Name of the exported scoped variable for the
+status of the iteration.</longDesc>
+    </attribute>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.jstl.core.IfHandler</className>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.jstl.core.IfHandler</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.view.facelets.TagHandler</sourceClassParentClassName>
+    <name>c:if</name>
+    <bodyContent>JSP</bodyContent>
+    <desc>Simple conditional tag, which evalutes its body if the
+supplied condition is true and optionally exposes a Boolean
+scripting variable representing the evaluation of this condition</desc>
+    <longDesc>Simple conditional tag, which evalutes its body if the
+supplied condition is true and optionally exposes a Boolean
+scripting variable representing the evaluation of this condition</longDesc>
+    <attribute>
+      <name>test</name>
+      <className>boolean</className>
+      <required>true</required>
+      <desc>The test condition that determines whether or
+not the body content should be processed</desc>
+      <longDesc>The test condition that determines whether or
+not the body content should be processed.</longDesc>
+    </attribute>
+    <attribute>
+      <name>var</name>
+      <className>java.lang.String</className>
+      <desc>Name of the exported scoped variable for the
+resulting value of the test condition</desc>
+      <longDesc>Name of the exported scoped variable for the
+resulting value of the test condition. The type
+of the scoped variable is Boolean.</longDesc>
+    </attribute>
+    <attribute>
+      <name>scope</name>
+      <className>java.lang.String</className>
+      <desc>Scope for var.</desc>
+      <longDesc>Scope for var.</longDesc>
+    </attribute>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.jstl.core.SetHandler</className>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.jstl.core.SetHandler</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.view.facelets.TagHandler</sourceClassParentClassName>
+    <name>c:set</name>
+    <bodyContent>JSP</bodyContent>
+    <desc>Simplified implementation of c:set
+
+Sets the result of an expression evaluation in a 'scope'</desc>
+    <longDesc>Simplified implementation of c:set
+
+Sets the result of an expression evaluation in a 'scope'</longDesc>
+    <attribute>
+      <name>var</name>
+      <className>java.lang.String</className>
+      <desc>Name of the exported scoped variable to hold the value
+specified in the action</desc>
+      <longDesc>Name of the exported scoped variable to hold the value
+specified in the action. The type of the scoped variable is
+whatever type the value expression evaluates to.</longDesc>
+    </attribute>
+    <attribute>
+      <name>value</name>
+      <className>jakarta.el.ValueExpression</className>
+      <desc>Expression to be evaluated</desc>
+      <longDesc>Expression to be evaluated.</longDesc>
+      <deferredValueType>java.lang.Object</deferredValueType>
+    </attribute>
+    <attribute>
+      <name>scope</name>
+      <className>java.lang.String</className>
+      <desc>no description</desc>
+    </attribute>
+    <attribute>
+      <name>target</name>
+      <className>java.lang.String</className>
+      <desc>no description</desc>
+    </attribute>
+    <attribute>
+      <name>property</name>
+      <className>java.lang.String</className>
+      <desc>no description</desc>
+    </attribute>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.ui.ComponentRefHandler</className>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.ui.ComponentRefHandler</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.view.facelets.ComponentHandler</sourceClassParentClassName>
+    <name>ui:component</name>
+    <bodyContent>JSP</bodyContent>
+    <desc>no description</desc>
+    <componentClass>org.apache.myfaces.view.facelets.tag.ui._Component</componentClass>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.ui.ComponentRefHandler</className>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.ui.ComponentRefHandler</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.view.facelets.ComponentHandler</sourceClassParentClassName>
+    <name>ui:fragment</name>
+    <bodyContent>JSP</bodyContent>
+    <desc>no description</desc>
+    <componentClass>org.apache.myfaces.view.facelets.tag.ui._Fragment</componentClass>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.ui.CompositionHandler</className>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.ui.CompositionHandler</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.view.facelets.TagHandler</sourceClassParentClassName>
+    <name>ui:composition</name>
+    <bodyContent>JSP</bodyContent>
+    <desc>no description</desc>
+    <longDesc></longDesc>
+    <attribute>
+      <name>template</name>
+      <className>jakarta.el.ValueExpression</className>
+      <desc>The resolvable URI of the template to use</desc>
+      <longDesc>The resolvable URI of the template to use. The content within the composition tag will 
+be used in populating the template specified.</longDesc>
+      <deferredValueType>java.lang.String</deferredValueType>
+    </attribute>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.ui.DecorateHandler</className>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.ui.DecorateHandler</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.view.facelets.TagHandler</sourceClassParentClassName>
+    <name>ui:decorate</name>
+    <bodyContent>JSP</bodyContent>
+    <desc>The decorate tag acts the same as a composition tag, but it will not trim 
+everything outside of it</desc>
+    <longDesc>The decorate tag acts the same as a composition tag, but it will not trim 
+everything outside of it. This is useful in cases where you have a list of 
+items in a document, which you would like to be decorated or framed.
+ 
+The sum of it all is that you can take any element in the document and decorate 
+it with some external logic as provided by the template.</longDesc>
+    <attribute>
+      <name>template</name>
+      <className>jakarta.el.ValueExpression</className>
+      <desc>The resolvable URI of the template to use</desc>
+      <longDesc>The resolvable URI of the template to use. The content within the decorate tag 
+will be used in populating the template specified.</longDesc>
+      <deferredValueType>java.lang.String</deferredValueType>
+    </attribute>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.ui.DefineHandler</className>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.ui.DefineHandler</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.view.facelets.TagHandler</sourceClassParentClassName>
+    <name>ui:define</name>
+    <bodyContent>JSP</bodyContent>
+    <desc>The define tag can be used within tags that allow templating</desc>
+    <longDesc>The define tag can be used within tags that allow templating. 
+This includes composition and decorate tags.</longDesc>
+    <attribute>
+      <name>name</name>
+      <className>jakarta.el.ValueExpression</className>
+      <required>true</required>
+      <desc>The literal name for this definition</desc>
+      <longDesc>
+<![CDATA[
+The literal name for this definition. This name will match up with 
+a &lt;ui:insert/&gt; tag in a target template.
+]]>
+      </longDesc>
+      <deferredValueType>java.lang.String</deferredValueType>
+    </attribute>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.ui.IncludeHandler</className>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.ui.IncludeHandler</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.view.facelets.TagHandler</sourceClassParentClassName>
+    <name>ui:include</name>
+    <bodyContent>JSP</bodyContent>
+    <desc>The include tag can point at any Facelet which might use the composition tag,
+component tag, or simply be straight XHTML/XML</desc>
+    <longDesc>
+<![CDATA[
+The include tag can point at any Facelet which might use the composition tag,
+component tag, or simply be straight XHTML/XML. It should be noted that the 
+src path does allow relative path names, but they will always be resolved 
+against the original Facelet requested. 
+
+The include tag can be used in conjunction with multiple &lt;ui:param/&gt; 
+tags to pass EL expressions/values to the target page.
+]]>
+    </longDesc>
+    <attribute>
+      <name>src</name>
+      <className>jakarta.el.ValueExpression</className>
+      <required>true</required>
+      <desc>A literal or EL expression that specifies the target Facelet that you 
+would like to include into your document</desc>
+      <longDesc>A literal or EL expression that specifies the target Facelet that you 
+would like to include into your document.</longDesc>
+      <deferredValueType>java.lang.String</deferredValueType>
+    </attribute>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.ui.InsertHandler</className>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.ui.InsertHandler</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.view.facelets.TagHandler</sourceClassParentClassName>
+    <name>ui:insert</name>
+    <bodyContent>JSP</bodyContent>
+    <desc>The insert tag is used within your templates to declare spots of replicable data</desc>
+    <longDesc>The insert tag is used within your templates to declare spots of replicable data.</longDesc>
+    <attribute>
+      <name>name</name>
+      <className>jakarta.el.ValueExpression</className>
+      <required>true</required>
+      <desc>
+<![CDATA[
+The optional name attribute matches the associated &lt;ui:define/&gt; 
+tag in this template's client
+]]>
+      </desc>
+      <longDesc>
+<![CDATA[
+The optional name attribute matches the associated &lt;ui:define/&gt; 
+tag in this template's client. If no name is specified, it's expected 
+that the whole template client will be inserted.
+]]>
+      </longDesc>
+      <deferredValueType>java.lang.String</deferredValueType>
+    </attribute>
+  </faceletTag>
+  <faceletTag>
+    <modelId>myfaces-impl</modelId>
+    <className>org.apache.myfaces.view.facelets.tag.ui.ParamHandler</className>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.ui.ParamHandler</sourceClassName>
+    <sourceClassParentClassName>jakarta.faces.view.facelets.TagHandler</sourceClassParentClassName>
+    <name>ui:param</name>
+    <bodyContent>JSP</bodyContent>
+    <desc>no description</desc>
+    <longDesc></longDesc>
+    <attribute>
+      <name>name</name>
+      <className>jakarta.el.ValueExpression</className>
+      <required>true</required>
+      <desc>The name of the variable to pass to the included Facelet</desc>
+      <longDesc>The name of the variable to pass to the included Facelet.</longDesc>
+      <deferredValueType>java.lang.String</deferredValueType>
+    </attribute>
+    <attribute>
+      <name>value</name>
+      <className>jakarta.el.ValueExpression</className>
+      <required>true</required>
+      <desc>The literal or EL expression value to assign to the named variable</desc>
+      <longDesc>The literal or EL expression value to assign to the named variable.</longDesc>
+      <deferredValueType>java.lang.String</deferredValueType>
+    </attribute>
   </faceletTag>
   <webConfig>
     <modelId>myfaces-api</modelId>
@@ -8606,4 +10777,1404 @@ If this parameter is not specified, this automatic mapping is not enabled.
       <tags>performance</tags>
     </webConfigParam>
   </webConfig>
+  <webConfig>
+    <modelId>myfaces-impl</modelId>
+    <webConfigParam>
+      <name>org.apache.myfaces.USE_ENCRYPTION</name>
+      <fieldName>USE_ENCRYPTION</fieldName>
+      <desc>Indicate if the view state is encrypted or not</desc>
+      <longDesc>Indicate if the view state is encrypted or not. By default, encryption is enabled.</longDesc>
+      <defaultValue>true</defaultValue>
+      <expectedValues>true,false</expectedValues>
+      <sourceClassName>org.apache.myfaces.application.viewstate.StateUtils</sourceClassName>
+      <since>1.1</since>
+      <group>state</group>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.SECRET</name>
+      <fieldName>INIT_SECRET</fieldName>
+      <desc>Defines the secret (Base64 encoded) used to initialize the secret key
+for encryption algorithm</desc>
+      <longDesc>Defines the secret (Base64 encoded) used to initialize the secret key
+for encryption algorithm. See MyFaces wiki/web site documentation 
+for instructions on how to configure an application for 
+different encryption strengths.</longDesc>
+      <sourceClassName>org.apache.myfaces.application.viewstate.StateUtils</sourceClassName>
+      <since>1.1</since>
+      <group>state</group>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.ALGORITHM</name>
+      <fieldName>INIT_ALGORITHM</fieldName>
+      <desc>Indicate the encryption algorithm used for encrypt the view state</desc>
+      <longDesc>Indicate the encryption algorithm used for encrypt the view state.</longDesc>
+      <defaultValue>AES</defaultValue>
+      <sourceClassName>org.apache.myfaces.application.viewstate.StateUtils</sourceClassName>
+      <since>1.1</since>
+      <group>state</group>
+      <tags>performance</tags>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.SECRET.CACHE</name>
+      <fieldName>INIT_SECRET_KEY_CACHE</fieldName>
+      <desc>If is set to "false", the secret key used for encryption algorithm is not cached</desc>
+      <longDesc>If is set to "false", the secret key used for encryption algorithm is not cached. This is used
+when the returned SecretKey for encryption algorithm is not thread safe.</longDesc>
+      <sourceClassName>org.apache.myfaces.application.viewstate.StateUtils</sourceClassName>
+      <since>1.1</since>
+      <group>state</group>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.ALGORITHM.IV</name>
+      <fieldName>INIT_ALGORITHM_IV</fieldName>
+      <desc>Defines the initialization vector (Base64 encoded) used for the encryption algorithm</desc>
+      <longDesc>Defines the initialization vector (Base64 encoded) used for the encryption algorithm</longDesc>
+      <sourceClassName>org.apache.myfaces.application.viewstate.StateUtils</sourceClassName>
+      <since>1.1</since>
+      <group>state</group>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.ALGORITHM.PARAMETERS</name>
+      <fieldName>INIT_ALGORITHM_PARAM</fieldName>
+      <desc>Defines the default mode and padding used for the encryption algorithm</desc>
+      <longDesc>Defines the default mode and padding used for the encryption algorithm</longDesc>
+      <defaultValue>ECB/PKCS5Padding</defaultValue>
+      <sourceClassName>org.apache.myfaces.application.viewstate.StateUtils</sourceClassName>
+      <since>1.1</since>
+      <group>state</group>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.SERIAL_FACTORY</name>
+      <fieldName>SERIAL_FACTORY</fieldName>
+      <desc>Defines the factory class name using for serialize/deserialize the view state returned 
+by state manager into a byte array</desc>
+      <longDesc>Defines the factory class name using for serialize/deserialize the view state returned 
+by state manager into a byte array. The expected class must implement
+{@link org.apache.myfaces.spi.SerialFactory} interface.</longDesc>
+      <sourceClassName>org.apache.myfaces.application.viewstate.StateUtils</sourceClassName>
+      <since>1.1</since>
+      <group>state</group>
+      <tags>performance</tags>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.COMPRESS_STATE_IN_CLIENT</name>
+      <fieldName>COMPRESS_STATE_IN_CLIENT</fieldName>
+      <desc>Indicate if the view state should be compressed before encrypted(optional) and encoded</desc>
+      <longDesc>Indicate if the view state should be compressed before encrypted(optional) and encoded</longDesc>
+      <defaultValue>false</defaultValue>
+      <expectedValues>true,false</expectedValues>
+      <sourceClassName>org.apache.myfaces.application.viewstate.StateUtils</sourceClassName>
+      <since>1.1</since>
+      <group>state</group>
+      <tags>performance</tags>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.MAC_ALGORITHM</name>
+      <fieldName>INIT_MAC_ALGORITHM</fieldName>
+      <desc>Indicate the algorithm used to calculate the Message Authentication Code that is
+added to the view state</desc>
+      <longDesc>Indicate the algorithm used to calculate the Message Authentication Code that is
+added to the view state.</longDesc>
+      <defaultValue>HmacSHA256</defaultValue>
+      <sourceClassName>org.apache.myfaces.application.viewstate.StateUtils</sourceClassName>
+      <group>state</group>
+      <tags>performance</tags>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.MAC_SECRET</name>
+      <fieldName>INIT_MAC_SECRET</fieldName>
+      <desc>Define the initialization code that are used to initialize the secret key used
+on the Message Authentication Code algorithm</desc>
+      <longDesc>Define the initialization code that are used to initialize the secret key used
+on the Message Authentication Code algorithm</longDesc>
+      <sourceClassName>org.apache.myfaces.application.viewstate.StateUtils</sourceClassName>
+      <group>state</group>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.MAC_SECRET.CACHE</name>
+      <fieldName>INIT_MAC_SECRET_KEY_CACHE</fieldName>
+      <desc>If is set to "false", the secret key used for MAC algorithm is not cached</desc>
+      <longDesc>If is set to "false", the secret key used for MAC algorithm is not cached. This is used
+when the returned SecretKey for mac algorithm is not thread safe.</longDesc>
+      <sourceClassName>org.apache.myfaces.application.viewstate.StateUtils</sourceClassName>
+      <group>state</group>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.CONFIG_REFRESH_PERIOD</name>
+      <fieldName>CONFIG_REFRESH_PERIOD</fieldName>
+      <desc>Set the time in seconds that check for updates of web</desc>
+      <longDesc>Set the time in seconds that check for updates of web.xml and faces-config descriptors and 
+refresh the configuration.
+This param is valid only if project stage is not production. Set this param to 0 disable this feature.</longDesc>
+      <defaultValue>2</defaultValue>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>1.1</since>
+      <classType>java.lang.Long</classType>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.RENDER_VIEWSTATE_ID</name>
+      <fieldName>RENDER_VIEWSTATE_ID</fieldName>
+      <desc>Define if the input field that should store the state (jakarta</desc>
+      <longDesc>
+<![CDATA[
+Define if the input field that should store the state (jakarta.faces.ViewState) should render 
+id="jakarta.faces.ViewState".
+
+Faces API 1.2 defines a "jakarta.faces.ViewState" client parameter, that must be rendered as both the "name"
+and the "id" attribute of the hidden input that is rendered for the purpose of state saving
+(see ResponseStateManager.VIEW_STATE_PARAM).
+Actually this causes duplicate id attributes and thus invalid XHTML pages when multiple forms are rendered on
+one page. With the org.apache.myfaces.RENDER_VIEWSTATE_ID context parameter you can tune this behaviour.
+<br/>Set it to
+<ul><li>true - to render Faces 1.2 compliant id attributes (that might cause invalid XHTML), or</li>
+<li>false - to omit rendering of the id attribute (which is only needed for very special 
+AJAX/Javascript components)</li></ul>
+Default value is: true (for backwards compatibility and Faces 1.2 compliancy)
+]]>
+      </longDesc>
+      <defaultValue>true</defaultValue>
+      <expectedValues>true, false, on, off, yes, no</expectedValues>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>1.1</since>
+      <group>state</group>
+      <ignoreUpperLowerCase>true</ignoreUpperLowerCase>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.STRICT_XHTML_LINKS</name>
+      <fieldName>STRICT_XHTML_LINKS</fieldName>
+      <desc><![CDATA[Use "&amp;amp;" entity instead a plain "&amp;" character within HTML]]></desc>
+      <longDesc>
+<![CDATA[
+Use "&amp;amp;" entity instead a plain "&amp;" character within HTML.
+<p>W3C recommends to use the "&amp;amp;" entity instead of a plain "&amp;" character within HTML.
+This also applies to attribute values and thus to the "href" attribute of &lt;a&gt; elements as well.
+Even more, when XHTML is used as output the usage of plain "&amp;" characters is forbidden and would lead to
+invalid XML code.
+Therefore, since version 1.1.6 MyFaces renders the correct "&amp;amp;" entity for links.</p>
+<p>The init parameter
+org.apache.myfaces.STRICT_XHTML_LINKS makes it possible to restore the old behaviour and to make MyFaces
+"bug compatible" to the Sun RI which renders plain "&amp;" chars in links as well.</p>
+<p>
+See: <a href="http://www.w3.org/TR/html401/charset.html#h-5.3.2">HTML 4.01 Specification</a>
+See: <a href="http://issues.apache.org/jira/browse/MYFACES-1774">Jira: MYFACES-1774</a>
+</p>
+]]>
+      </longDesc>
+      <defaultValue>true</defaultValue>
+      <expectedValues>true, false, on, off, yes, no</expectedValues>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>1.1.6</since>
+      <group>render</group>
+      <ignoreUpperLowerCase>true</ignoreUpperLowerCase>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.RENDER_CLEAR_JAVASCRIPT_FOR_BUTTON</name>
+      <fieldName>RENDER_CLEAR_JAVASCRIPT_FOR_BUTTON</fieldName>
+      <desc>This param renders the clear javascript on button necessary only for
+compatibility with hidden fields feature of myfaces</desc>
+      <longDesc>This param renders the clear javascript on button necessary only for
+compatibility with hidden fields feature of myfaces. This is done 
+because jsf ri does not render javascript on onclick method for button,
+so myfaces should do this.</longDesc>
+      <defaultValue>false</defaultValue>
+      <expectedValues>true, false, on, off, yes, no</expectedValues>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>1.2.3</since>
+      <group>render</group>
+      <ignoreUpperLowerCase>true</ignoreUpperLowerCase>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.REFRESH_TRANSIENT_BUILD_ON_PSS</name>
+      <fieldName>REFRESH_TRANSIENT_BUILD_ON_PSS</fieldName>
+      <desc>Indicate if the facelet associated to the view should be reapplied when the view is refreshed</desc>
+      <longDesc>
+<![CDATA[
+Indicate if the facelet associated to the view should be reapplied when the view is refreshed.
+ Default mode is "auto".
+
+<p>This param is only valid when partial state saving is on.
+If this is set as true, the tag-handlers are always reapplied before render view, like in facelets 1.1.x, 
+allowing c:if work correctly to "toggle" components based on a value changed on invoke application phase. 
+If the param is set as "auto", the implementation check if c:if, c:forEach, 
+c:choose and ui:include with src=ELExpression is used on the page and if that so, mark the view
+to be refreshed.</p>
+]]>
+      </longDesc>
+      <defaultValue>auto</defaultValue>
+      <expectedValues>true,false,auto</expectedValues>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.0</since>
+      <group>state</group>
+      <tags>performance</tags>
+      <ignoreUpperLowerCase>true</ignoreUpperLowerCase>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.REFRESH_TRANSIENT_BUILD_ON_PSS_PRESERVE_STATE</name>
+      <fieldName>REFRESH_TRANSIENT_BUILD_ON_PSS_PRESERVE_STATE</fieldName>
+      <desc>Enable or disable a special mode that enable full state for parent components containing c:if, c:forEach, 
+c:choose and ui:include with src=ELExpression</desc>
+      <longDesc>
+<![CDATA[
+Enable or disable a special mode that enable full state for parent components containing c:if, c:forEach, 
+c:choose and ui:include with src=ELExpression. By default is disabled(false).
+
+<p>This param is only valid when partial state saving is on.
+If this is set as true, parent components containing  c:if, c:forEach, 
+c:choose and ui:include with src=ELExpression are marked to be restored fully, so state
+is preserved between request.</p>
+]]>
+      </longDesc>
+      <defaultValue>false</defaultValue>
+      <expectedValues>true, false, on, off, yes, no</expectedValues>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.0</since>
+      <group>state</group>
+      <tags>performance</tags>
+      <ignoreUpperLowerCase>true</ignoreUpperLowerCase>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.VALIDATE_XML</name>
+      <fieldName>VALIDATE_XML</fieldName>
+      <desc>
+<![CDATA[
+If set to <code>true</code>, tag library XML files and faces config XML files using schema 
+will be validated during application start up
+]]>
+      </desc>
+      <longDesc>
+<![CDATA[
+If set to <code>true</code>, tag library XML files and faces config XML files using schema 
+will be validated during application start up
+]]>
+      </longDesc>
+      <expectedValues>true, false, on, off, yes, no</expectedValues>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.0</since>
+      <ignoreUpperLowerCase>true</ignoreUpperLowerCase>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.WRAP_SCRIPT_CONTENT_WITH_XML_COMMENT_TAG</name>
+      <fieldName>WRAP_SCRIPT_CONTENT_WITH_XML_COMMENT_TAG</fieldName>
+      <desc>Wrap content inside script with xml comment to prevent old browsers to display it</desc>
+      <longDesc>Wrap content inside script with xml comment to prevent old browsers to display it. By default it is true.</longDesc>
+      <defaultValue>false</defaultValue>
+      <expectedValues>true, false, on, off, yes, no</expectedValues>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.0.1</since>
+      <group>render</group>
+      <ignoreUpperLowerCase>true</ignoreUpperLowerCase>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.DEBUG_PHASE_LISTENER</name>
+      <fieldName>DEBUG_PHASE_LISTENER</fieldName>
+      <desc>Enable/disable DebugPhaseListener feature, with provide useful information about ValueHolder 
+variables (submittedValue, localValue, value)</desc>
+      <longDesc>Enable/disable DebugPhaseListener feature, with provide useful information about ValueHolder 
+variables (submittedValue, localValue, value).
+Note evaluate those getters for each component could cause some unwanted side effects when 
+using "access" type scopes like on MyFaces CODI.
+This param only has effect when project stage is Development.</longDesc>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.0.8</since>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.STRICT_JSF_2_CC_EL_RESOLVER</name>
+      <fieldName>STRICT_JSF_2_CC_EL_RESOLVER</fieldName>
+      <desc>Change default getType() behavior for composite component EL resolver, from return null 
+(see Faces 2_0 spec section 5_6_2_2) to
+use the metadata information added by composite:attribute, ensuring components working with 
+chained EL expressions to find the
+right type when a getType() is called over the source EL expression</desc>
+      <longDesc>Change default getType() behavior for composite component EL resolver, from return null 
+(see Faces 2_0 spec section 5_6_2_2) to
+use the metadata information added by composite:attribute, ensuring components working with 
+chained EL expressions to find the
+right type when a getType() is called over the source EL expression.
+
+To ensure strict compatibility with the spec set this param to true (by default is false, 
+so the change is enabled by default).</longDesc>
+      <defaultValue>false</defaultValue>
+      <expectedValues>true, false</expectedValues>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.0.10</since>
+      <group>EL</group>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.DEFAULT_RESPONSE_WRITER_CONTENT_TYPE_MODE</name>
+      <fieldName>DEFAULT_RESPONSE_WRITER_CONTENT_TYPE_MODE</fieldName>
+      <desc>Define the default content type that the default ResponseWriter generates, when no match can be derived from
+HTTP Accept Header</desc>
+      <longDesc>Define the default content type that the default ResponseWriter generates, when no match can be derived from
+HTTP Accept Header.</longDesc>
+      <defaultValue>text/html</defaultValue>
+      <expectedValues>text/html, application/xhtml+xml</expectedValues>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.0.11,2.1.5</since>
+      <group>render</group>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.VIEW_UNIQUE_IDS_CACHE_ENABLED</name>
+      <fieldName>VIEW_UNIQUE_IDS_CACHE_ENABLED</fieldName>
+      <desc>Enable or disable a cache used to 'remember' the generated facelets unique ids " + "and reduce the impact over memory usage.</desc>
+      <longDesc>Enable or disable a cache used to "remember" the generated facelets unique ids and reduce 
+the impact on memory usage, only active if jakarta.faces.FACELETS_REFRESH_PERIOD is -1 (no refresh).</longDesc>
+      <defaultValue>true</defaultValue>
+      <expectedValues>true, false</expectedValues>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.0.13, 2.1.7</since>
+      <group>viewhandler</group>
+      <tags>performance</tags>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.COMPONENT_UNIQUE_IDS_CACHE_SIZE</name>
+      <fieldName>COMPONENT_UNIQUE_IDS_CACHE_SIZE</fieldName>
+      <desc>Set the size of the cache used to store strings generated using SectionUniqueIdCounter
+for component ids</desc>
+      <longDesc>Set the size of the cache used to store strings generated using SectionUniqueIdCounter
+for component ids. If this is set to 0, no cache is used. By default is set to 200.</longDesc>
+      <defaultValue>100</defaultValue>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.0.13, 2.1.7</since>
+      <group>viewhandler</group>
+      <tags>performance</tags>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.STRICT_JSF_2_VIEW_NOT_FOUND</name>
+      <fieldName>STRICT_JSF_2_VIEW_NOT_FOUND</fieldName>
+      <desc>If this param is set to true, a check will be done in Restore View Phase to check
+if the viewId exists or not and if it does not exists, a 404 response will be thrown</desc>
+      <longDesc>If this param is set to true, a check will be done in Restore View Phase to check
+if the viewId exists or not and if it does not exists, a 404 response will be thrown.
+
+This is applicable in cases where all the views in the application are generated by a 
+ViewDeclarationLanguage implementation.</longDesc>
+      <defaultValue>false</defaultValue>
+      <expectedValues>true,false</expectedValues>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.1.13</since>
+      <group>viewhandler</group>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.EARLY_FLUSH_ENABLED</name>
+      <fieldName>EARLY_FLUSH_ENABLED</fieldName>
+      <desc>Enable or disable an early flush which allows to send e.g. the HTML-Head to the client " + "while the rest gets rendered. It's a well known technique to reduce the time for loading a page.</desc>
+      <defaultValue>false</defaultValue>
+      <expectedValues>true, false</expectedValues>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.2.0</since>
+      <group>render</group>
+      <tags>performance</tags>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.STRICT_JSF_2_FACELETS_COMPATIBILITY</name>
+      <fieldName>STRICT_JSF_2_FACELETS_COMPATIBILITY</fieldName>
+      <desc>This param makes components like c:set, ui:param and templating components like ui:decorate,
+ui:composition and ui:include to behave like the ones provided originally in facelets 1_1_x</desc>
+      <longDesc>This param makes components like c:set, ui:param and templating components like ui:decorate,
+ui:composition and ui:include to behave like the ones provided originally in facelets 1_1_x. 
+See MYFACES-3810 for details.</longDesc>
+      <defaultValue>false</defaultValue>
+      <expectedValues>true,false</expectedValues>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.2.0</since>
+      <group>viewhandler</group>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.RENDER_FORM_VIEW_STATE_AT_BEGIN</name>
+      <fieldName>RENDER_FORM_VIEW_STATE_AT_BEGIN</fieldName>
+      <desc>This param makes h:form component to render the view state and other hidden fields
+at the beginning of the form</desc>
+      <longDesc>This param makes h:form component to render the view state and other hidden fields
+at the beginning of the form. This also includes component resources with target="form",
+but it does not include legacy 1.1 myfaces specific hidden field adition.</longDesc>
+      <defaultValue>false</defaultValue>
+      <expectedValues>true,false</expectedValues>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.2.4</since>
+      <group>render</group>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.FLASH_SCOPE_DISABLED</name>
+      <fieldName>FLASH_SCOPE_DISABLED</fieldName>
+      <desc>Defines whether flash scope is disabled, preventing add the Flash cookie to the response</desc>
+      <longDesc>
+<![CDATA[
+Defines whether flash scope is disabled, preventing add the Flash cookie to the response. 
+
+<p>This is useful for applications that does not require to use flash scope, and instead uses other scopes.</p>
+]]>
+      </longDesc>
+      <defaultValue>false</defaultValue>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.0.5</since>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.NUMBER_OF_VIEWS_IN_SESSION</name>
+      <fieldName>NUMBER_OF_VIEWS_IN_SESSION</fieldName>
+      <desc>Defines the amount (default = 20) of the latest views are stored in session</desc>
+      <longDesc>
+<![CDATA[
+Defines the amount (default = 20) of the latest views are stored in session.
+
+<p>Only applicable if state saving method is "server" (= default).
+</p>
+]]>
+      </longDesc>
+      <defaultValue>20</defaultValue>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>1.1</since>
+      <group>state</group>
+      <tags>performance</tags>
+      <classType>java.lang.Integer</classType>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.NUMBER_OF_SEQUENTIAL_VIEWS_IN_SESSION</name>
+      <fieldName>NUMBER_OF_SEQUENTIAL_VIEWS_IN_SESSION</fieldName>
+      <desc>Indicates the amount of views (default is not active) that should be stored in session between sequential
+POST or POST-REDIRECT-GET if org</desc>
+      <longDesc>
+<![CDATA[
+Indicates the amount of views (default is not active) that should be stored in session between sequential
+POST or POST-REDIRECT-GET if org.apache.myfaces.USE_FLASH_SCOPE_PURGE_VIEWS_IN_SESSION is true.
+
+<p>Only applicable if state saving method is "server" (= default). For example, if this param has value = 2 and 
+in your custom webapp there is a form that is clicked 3 times, only 2 views
+will be stored and the third one (the one stored the first time) will be
+removed from session, even if the view can
+store more sessions org.apache.myfaces.NUMBER_OF_VIEWS_IN_SESSION.
+This feature becomes useful for multi-window applications.
+where without this feature a window can swallow all view slots so
+the other ones will throw ViewExpiredException.</p>
+]]>
+      </longDesc>
+      <defaultValue>4</defaultValue>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.0.6</since>
+      <group>state</group>
+      <tags>performance</tags>
+      <classType>java.lang.Integer</classType>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.NUMBER_OF_FLASH_TOKENS_IN_SESSION</name>
+      <fieldName>NUMBER_OF_FLASH_TOKENS_IN_SESSION</fieldName>
+      <desc>Indicate the max number of flash tokens stored into session</desc>
+      <longDesc>Indicate the max number of flash tokens stored into session. It is only active when 
+jakarta.faces.CLIENT_WINDOW_MODE is enabled and jakarta.faces.STATE_SAVING_METHOD is set
+to "server". Each flash token is associated to one client window id at
+the same time, so this param is related to the limit of active client windows per session. 
+By default is the same number as in 
+(org.apache.myfaces.NUMBER_OF_VIEWS_IN_SESSION / 
+org.apache.myfaces.NUMBER_OF_SEQUENTIAL_VIEWS_IN_SESSION) + 1 = 6.</longDesc>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.2.6</since>
+      <group>state</group>
+      <tags>performance</tags>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.SUPPORT_EL_3_IMPORT_HANDLER</name>
+      <fieldName>SUPPORT_EL_3_IMPORT_HANDLER</fieldName>
+      <desc>This parameter specifies whether or not the ImportHandler will be supported</desc>
+      <longDesc>This parameter specifies whether or not the ImportHandler will be supported</longDesc>
+      <defaultValue>false</defaultValue>
+      <expectedValues>true,false</expectedValues>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.2.9</since>
+      <group>EL</group>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.STRICT_JSF_2_ORIGIN_HEADER_APP_PATH</name>
+      <fieldName>STRICT_JSF_2_ORIGIN_HEADER_APP_PATH</fieldName>
+      <desc>This parameter specifies whether or not the Origin header app path should be checked</desc>
+      <longDesc>This parameter specifies whether or not the Origin header app path should be checked</longDesc>
+      <defaultValue>false</defaultValue>
+      <expectedValues>true,false</expectedValues>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.3</since>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.STRICT_JSF_2_ALLOW_SLASH_LIBRARY_NAME</name>
+      <fieldName>STRICT_JSF_2_ALLOW_SLASH_LIBRARY_NAME</fieldName>
+      <desc>Allow slash in the library name of a Resource</desc>
+      <longDesc>Allow slash in the library name of a Resource.</longDesc>
+      <defaultValue>false</defaultValue>
+      <expectedValues>true, false</expectedValues>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.1.6, 2.0.12</since>
+      <group>resources</group>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.RESOURCE_BUFFER_SIZE</name>
+      <fieldName>RESOURCE_BUFFER_SIZE</fieldName>
+      <desc>Define the default buffer size that is used between Resource</desc>
+      <longDesc>Define the default buffer size that is used between Resource.getInputStream() and 
+httpServletResponse.getOutputStream() when rendering resources using the default
+ResourceHandler.</longDesc>
+      <defaultValue>2048</defaultValue>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.1.10, 2.0.16</since>
+      <group>resources</group>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.VALIDATE</name>
+      <fieldName>VALIDATE</fieldName>
+      <desc>Validate if the managed beans and navigations rules are correct</desc>
+      <longDesc>
+<![CDATA[
+Validate if the managed beans and navigations rules are correct.
+
+<p>For example, it checks if the managed bean classes really exists, or if the 
+navigation rules points to existing view files.</p>
+]]>
+      </longDesc>
+      <defaultValue>false</defaultValue>
+      <expectedValues>true, false</expectedValues>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.0</since>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.annotation.USE_CDI_FOR_ANNOTATION_SCANNING</name>
+      <fieldName>USE_CDI_FOR_ANNOTATION_SCANNING</fieldName>
+      <desc>Defines if CDI should be used for annotation scanning to improve the startup performance</desc>
+      <longDesc>Defines if CDI should be used for annotation scanning to improve the startup performance.</longDesc>
+      <defaultValue>false</defaultValue>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.2.9</since>
+      <tags>performance</tags>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.RESOURCE_HANDLER_CACHE_SIZE</name>
+      <fieldName>RESOURCE_HANDLER_CACHE_SIZE</fieldName>
+      <desc>Controls the size of the cache used to check if a resource exists or not</desc>
+      <longDesc>
+<![CDATA[
+Controls the size of the cache used to check if a resource exists or not. 
+
+<p>See org.apache.myfaces.RESOURCE_HANDLER_CACHE_ENABLED for details.</p>
+]]>
+      </longDesc>
+      <defaultValue>500</defaultValue>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.0.2</since>
+      <group>resources</group>
+      <tags>performance</tags>
+      <classType>java.lang.Integer</classType>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.RESOURCE_HANDLER_CACHE_ENABLED</name>
+      <fieldName>RESOURCE_HANDLER_CACHE_ENABLED</fieldName>
+      <desc>Enable or disable the cache used to "remember" if a resource handled by 
+the default ResourceHandler exists or not</desc>
+      <longDesc>Enable or disable the cache used to "remember" if a resource handled by 
+the default ResourceHandler exists or not.</longDesc>
+      <defaultValue>true</defaultValue>
+      <expectedValues>true,false</expectedValues>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.0.2</since>
+      <group>resources</group>
+      <tags>performance</tags>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.annotation.SCAN_PACKAGES</name>
+      <fieldName>SCAN_PACKAGES</fieldName>
+      <desc>Servlet context init parameter which defines which packages to scan
+for beans, separated by commas</desc>
+      <longDesc>Servlet context init parameter which defines which packages to scan
+for beans, separated by commas.</longDesc>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.0</since>
+    </webConfigParam>
+    <webConfigParam>
+      <name>jakarta.faces.WEBSOCKET_ENDPOINT_PORT</name>
+      <fieldName>WEBSOCKET_ENDPOINT_PORT</fieldName>
+      <desc>Indicates the port used for websocket connections</desc>
+      <longDesc>Indicates the port used for websocket connections.</longDesc>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.3</since>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.WEBSOCKET_MAX_IDLE_TIMEOUT</name>
+      <fieldName>WEBSOCKET_MAX_IDLE_TIMEOUT</fieldName>
+      <desc>no description</desc>
+      <defaultValue>300000</defaultValue>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.RANDOM_KEY_IN_WEBSOCKET_SESSION_TOKEN</name>
+      <fieldName>RANDOM_KEY_IN_WEBSOCKET_SESSION_TOKEN</fieldName>
+      <desc>Defines how to generate the csrf session token</desc>
+      <longDesc>Defines how to generate the csrf session token.</longDesc>
+      <defaultValue>secureRandom</defaultValue>
+      <expectedValues>secureRandom, random</expectedValues>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.2.0</since>
+      <group>state</group>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.CLIENT_VIEW_STATE_TIMEOUT</name>
+      <fieldName>CLIENT_VIEW_STATE_TIMEOUT</fieldName>
+      <desc>Define the time in minutes where the view state is valid when
+client side state saving is used</desc>
+      <longDesc>Define the time in minutes where the view state is valid when
+client side state saving is used. By default it is set to 0
+(infinite).</longDesc>
+      <defaultValue>0</defaultValue>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.1.9, 2.0.15</since>
+      <group>state</group>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.RANDOM_KEY_IN_VIEW_STATE_SESSION_TOKEN</name>
+      <fieldName>RANDOM_KEY_IN_VIEW_STATE_SESSION_TOKEN</fieldName>
+      <desc>Adds a random key to the generated view state session token</desc>
+      <longDesc>Adds a random key to the generated view state session token.</longDesc>
+      <defaultValue>secureRandom</defaultValue>
+      <expectedValues>secureRandom, random</expectedValues>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.1.9, 2.0.15</since>
+      <group>state</group>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.RANDOM_KEY_IN_VIEW_STATE_SESSION_TOKEN_LENGTH</name>
+      <fieldName>RANDOM_KEY_IN_VIEW_STATE_SESSION_TOKEN_LENGTH</fieldName>
+      <desc>Set the default length of the random key added to the view state session token</desc>
+      <longDesc>Set the default length of the random key added to the view state session token.
+By default is 8.</longDesc>
+      <defaultValue>8</defaultValue>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.1.9, 2.0.15</since>
+      <group>state</group>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.RANDOM_KEY_IN_VIEW_STATE_SESSION_TOKEN_SECURE_RANDOM_CLASS</name>
+      <fieldName>RANDOM_KEY_IN_VIEW_STATE_SESSION_TOKEN_SECURE_RANDOM_CLASS</fieldName>
+      <desc>Sets the random class to initialize the secure random id generator</desc>
+      <longDesc>Sets the random class to initialize the secure random id generator. 
+By default it uses java.security.SecureRandom</longDesc>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.1.9, 2.0.15</since>
+      <group>state</group>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.RANDOM_KEY_IN_VIEW_STATE_SESSION_TOKEN_SECURE_RANDOM_PROVIDER</name>
+      <fieldName>RANDOM_KEY_IN_VIEW_STATE_SESSION_TOKEN_SECURE_RANDOM_PROVIDER</fieldName>
+      <desc>Sets the random provider to initialize the secure random id generator</desc>
+      <longDesc>Sets the random provider to initialize the secure random id generator.</longDesc>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.1.9, 2.0.15</since>
+      <group>state</group>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.RANDOM_KEY_IN_VIEW_STATE_SESSION_TOKEN_SECURE_RANDOM_ALGORITHM</name>
+      <fieldName>RANDOM_KEY_IN_VIEW_STATE_SESSION_TOKEN_SECURE_RANDOM_ALGORITHM</fieldName>
+      <desc>Sets the random algorithm to initialize the secure random id generator</desc>
+      <longDesc>Sets the random algorithm to initialize the secure random id generator. 
+By default is SHA1PRNG</longDesc>
+      <defaultValue>SHA1PRNG</defaultValue>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.1.9, 2.0.15</since>
+      <group>state</group>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.RANDOM_KEY_IN_CSRF_SESSION_TOKEN</name>
+      <fieldName>RANDOM_KEY_IN_CSRF_SESSION_TOKEN</fieldName>
+      <desc>Defines how to generate the csrf session token</desc>
+      <longDesc>Defines how to generate the csrf session token.</longDesc>
+      <defaultValue>secureRandom</defaultValue>
+      <expectedValues>secureRandom, random</expectedValues>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.2.0</since>
+      <group>state</group>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.COMPRESS_STATE_IN_SESSION</name>
+      <fieldName>COMPRESS_STATE_IN_SESSION</fieldName>
+      <desc>Indicates that the serialized state will be compressed before it is written to the session</desc>
+      <longDesc>
+<![CDATA[
+Indicates that the serialized state will be compressed before it is written to the session. By default true.
+
+Only applicable if state saving method is "server" (= default) and if
+<code>jakarta.faces.SERIALIZE_SERVER_STATE</code> is <code>true</code>.
+If <code>true</code> (default) the serialized state will be compressed before it is written to the session.
+If <code>false</code> the state will not be compressed.
+]]>
+      </longDesc>
+      <defaultValue>true</defaultValue>
+      <expectedValues>true,false</expectedValues>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>1.1</since>
+      <group>state</group>
+      <tags>performance</tags>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.USE_FLASH_SCOPE_PURGE_VIEWS_IN_SESSION</name>
+      <fieldName>USE_FLASH_SCOPE_PURGE_VIEWS_IN_SESSION</fieldName>
+      <desc>Allow use flash scope to keep track of the views used in session and the previous ones,
+so server side state saving can delete old views even if POST-REDIRECT-GET pattern is used</desc>
+      <longDesc>
+<![CDATA[
+Allow use flash scope to keep track of the views used in session and the previous ones,
+so server side state saving can delete old views even if POST-REDIRECT-GET pattern is used.
+
+<p>
+Only applicable if state saving method is "server" (= default).
+The default value is false.</p>
+]]>
+      </longDesc>
+      <defaultValue>false</defaultValue>
+      <expectedValues>true, false</expectedValues>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.0.6</since>
+      <group>state</group>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.AUTOCOMPLETE_OFF_VIEW_STATE</name>
+      <fieldName>AUTOCOMPLETE_OFF_VIEW_STATE</fieldName>
+      <desc>Add autocomplete="off" to the view state hidden field</desc>
+      <longDesc>Add autocomplete="off" to the view state hidden field. Enabled by default.</longDesc>
+      <defaultValue>false</defaultValue>
+      <expectedValues>true, false</expectedValues>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.2.8, 2.1.18, 2.0.24</since>
+      <group>state</group>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.RESOURCE_MAX_TIME_EXPIRES</name>
+      <fieldName>RESOURCE_MAX_TIME_EXPIRES</fieldName>
+      <desc>Set the max time in miliseconds set on the "Expires" header for a resource rendered by 
+the default ResourceHandler</desc>
+      <longDesc>Set the max time in miliseconds set on the "Expires" header for a resource rendered by 
+the default ResourceHandler.
+(default to one week in miliseconds or 604800000)</longDesc>
+      <defaultValue>604800000</defaultValue>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.0</since>
+      <group>resources</group>
+      <tags>performance</tags>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.LAZY_LOAD_CONFIG_OBJECTS</name>
+      <fieldName>LAZY_LOAD_CONFIG_OBJECTS</fieldName>
+      <desc>Indicate if the classes associated to components, converters, validators or behaviors
+should be loaded as soon as they are added to the current application instance or instead
+loaded in a lazy way</desc>
+      <longDesc>Indicate if the classes associated to components, converters, validators or behaviors
+should be loaded as soon as they are added to the current application instance or instead
+loaded in a lazy way.</longDesc>
+      <defaultValue>true</defaultValue>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.0</since>
+      <tags>performance</tags>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.EL_RESOLVER_COMPARATOR</name>
+      <fieldName>EL_RESOLVER_COMPARATOR</fieldName>
+      <desc><![CDATA[The Class of an Comparator&lt;ELResolver&gt; implementation.]]></desc>
+      <longDesc>
+<![CDATA[
+Define a custom comparator class used to sort the ELResolvers.
+
+<p>This is useful when it is necessary to put an ELResolver on top of other resolvers. Note set
+this param override the default ordering described by Faces spec section 5. 
+</p>
+]]>
+      </longDesc>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>1.2.10, 2.0.2</since>
+      <group>EL</group>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.EL_RESOLVER_PREDICATE</name>
+      <fieldName>EL_RESOLVER_PREDICATE</fieldName>
+      <desc><![CDATA[The Class of an java.util.function.Predicate&lt;ELResolver&gt; implementation." + "If used and returns false for a ELResolver instance, such resolver will not be installed in " + "ELResolvers chain. Use with caution - can break functionality defined in Faces specification " + "'ELResolver Instances Provided by Faces']]></desc>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.1.0</since>
+      <group>EL</group>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.VIEWID_CACHE_SIZE</name>
+      <fieldName>VIEWID_CACHE_SIZE</fieldName>
+      <desc>Controls the size of the viewId related caches: " + "VIEWID_EXISTS_CACHE_ENABLED, VIEWID_PROTECTED_CACHE_ENABLED, VIEWID_DERIVE_CACHE_ENABLED</desc>
+      <defaultValue>500</defaultValue>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.0.2</since>
+      <group>viewhandler</group>
+      <tags>performance</tags>
+      <classType>java.lang.Integer</classType>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.VIEWID_EXISTS_CACHE_ENABLED</name>
+      <fieldName>VIEWID_EXISTS_CACHE_ENABLED</fieldName>
+      <desc>Enable or disable the cache used to 'remember' if a view exists or not and reduce the impact " + "of sucesive calls to ExternalContext.getResource().</desc>
+      <defaultValue>true</defaultValue>
+      <expectedValues>true, false</expectedValues>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.0.2</since>
+      <group>viewhandler</group>
+      <tags>performance</tags>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.VIEWID_PROTECTED_CACHE_ENABLED</name>
+      <fieldName>VIEWID_PROTECTED_CACHE_ENABLED</fieldName>
+      <desc>Enable or disable the cache used to 'remember' if a view is protected or not.</desc>
+      <defaultValue>true</defaultValue>
+      <expectedValues>true, false</expectedValues>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.3-next</since>
+      <group>viewhandler</group>
+      <tags>performance</tags>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.VIEWID_DERIVE_CACHE_ENABLED</name>
+      <fieldName>VIEWID_DERIVE_CACHE_ENABLED</fieldName>
+      <desc>Enable or disable the cache used to 'remember' the derived viewId from the rawViewId.</desc>
+      <defaultValue>true</defaultValue>
+      <expectedValues>true, false</expectedValues>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.3-next</since>
+      <group>viewhandler</group>
+      <tags>performance</tags>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.validator.BEAN_BEFORE_JSF_VALIDATION</name>
+      <fieldName>BEAN_BEFORE_JSF_VALIDATION</fieldName>
+      <desc>Enforce f:validateBean to be called first before any Faces validator</desc>
+      <longDesc>Enforce f:validateBean to be called first before any Faces validator.</longDesc>
+      <defaultValue>false</defaultValue>
+      <expectedValues>true, false</expectedValues>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.2.10</since>
+      <group>validation</group>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.FACES_INIT_PLUGINS</name>
+      <fieldName>FACES_INIT_PLUGINS</fieldName>
+      <desc>comma delimited list of plugin classes which can be hooked into myfaces</desc>
+      <longDesc>comma delimited list of plugin classes which can be hooked into myfaces</longDesc>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.0</since>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.INITIALIZE_SKIP_JAR_FACES_CONFIG_SCAN</name>
+      <fieldName>INITIALIZE_SKIP_JAR_FACES_CONFIG_SCAN</fieldName>
+      <desc>If the flag is true, the algoritm skip jar scanning for faces-config files to check if the current
+application requires FacesServlet to be added dynamically (servlet spec 3)</desc>
+      <longDesc>If the flag is true, the algoritm skip jar scanning for faces-config files to check if the current
+application requires FacesServlet to be added dynamically (servlet spec 3). This param can be set using 
+a system property with the same name too.</longDesc>
+      <defaultValue>false</defaultValue>
+      <expectedValues>true, false</expectedValues>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.2.10</since>
+      <tags>performance</tags>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.INITIALIZE_ALWAYS_STANDALONE</name>
+      <fieldName>INITIALIZE_ALWAYS_STANDALONE</fieldName>
+      <desc>If this param is set to true, the check for faces servlet mapping is not done</desc>
+      <longDesc>If this param is set to true, the check for faces servlet mapping is not done</longDesc>
+      <defaultValue>false</defaultValue>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.0.3</since>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.EXPRESSION_FACTORY</name>
+      <fieldName>EXPRESSION_FACTORY</fieldName>
+      <desc>This parameter specifies the ExpressionFactory implementation to use</desc>
+      <longDesc>This parameter specifies the ExpressionFactory implementation to use.</longDesc>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>1.2.7</since>
+      <group>EL</group>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.CHECK_ID_PRODUCTION_MODE</name>
+      <fieldName>CHECK_ID_PRODUCTION_MODE</fieldName>
+      <desc>Define how duplicate ids are checked when ProjectStage is Production, by default (auto) it only check ids of
+components that does not encapsulate markup (like facelets UILeaf)</desc>
+      <longDesc>
+<![CDATA[
+Define how duplicate ids are checked when ProjectStage is Production, by default (auto) it only check ids of
+components that does not encapsulate markup (like facelets UILeaf).
+ 
+<ul>
+<li>true: check all ids, including ids for components that are transient and encapsulate markup.</li>
+<li>auto: (default) check ids of components that does not encapsulate markup (like facelets UILeaf). 
+Note ids of UILeaf instances are generated by facelets vdl, start with "j_id", are never rendered 
+into the response and UILeaf instances are never used as a target for listeners, so in practice 
+there is no need to check such ids. This reduce the overhead associated with generate client ids.</li>
+<li>false: do not do any check when ProjectStage is Production</li>
+</ul>
+<p> According to specification, identifiers must be unique within the scope of the nearest ancestor to 
+the component that is a naming container.</p>
+]]>
+      </longDesc>
+      <defaultValue>auto</defaultValue>
+      <expectedValues>true, auto, false</expectedValues>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.0.12, 2.1.6</since>
+      <group>state</group>
+      <tags>performance</tags>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.MARK_INITIAL_STATE_WHEN_APPLY_BUILD_VIEW</name>
+      <fieldName>MARK_INITIAL_STATE_WHEN_APPLY_BUILD_VIEW</fieldName>
+      <desc>no description</desc>
+      <defaultValue>false</defaultValue>
+      <expectedValues>true, false</expectedValues>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.1</since>
+      <tags>performance</tags>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.CACHE_EL_EXPRESSIONS</name>
+      <fieldName>CACHE_EL_EXPRESSIONS</fieldName>
+      <desc>Indicates if expressions generated by facelets should be cached or not</desc>
+      <longDesc>
+<![CDATA[
+Indicates if expressions generated by facelets should be cached or not.
+Default is noCache. There there are four modes:
+
+<ul>
+<li>alwaysRecompile (since 2.1.12): Only does not cache when the expression contains
+a variable resolved using VariableMapper</li>
+<li>always: Only does not cache when expressions are inside user tags or the
+expression contains a variable resolved using VariableMapper</li>
+<li>allowCset: Like always, but does not allow cache when ui:param
+was used on the current template context</li>
+<li>strict: Like allowCset, but does not allow cache when c:set with
+var and value properties only is used on the current page context</li>
+<li>noCache: All expression are created each time the view is built</li>
+</ul>
+]]>
+      </longDesc>
+      <defaultValue>noCache</defaultValue>
+      <expectedValues>noCache, strict, allowCset, always, alwaysRecompile</expectedValues>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.0.8</since>
+      <group>EL</group>
+      <tags>performance</tags>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.WRAP_TAG_EXCEPTIONS_AS_CONTEXT_AWARE</name>
+      <fieldName>WRAP_TAG_EXCEPTIONS_AS_CONTEXT_AWARE</fieldName>
+      <desc>Wrap exception caused by calls to EL expressions, so information like
+the location, expression string and tag name can be retrieved by
+the ExceptionHandler implementation and used to output meaningful information about itself</desc>
+      <longDesc>
+<![CDATA[
+Wrap exception caused by calls to EL expressions, so information like
+the location, expression string and tag name can be retrieved by
+the ExceptionHandler implementation and used to output meaningful information about itself.
+
+<p>Note in some cases this will wrap the original jakarta.el.ELException,
+so the information will not be on the stack trace unless ExceptionHandler
+retrieve checking if the exception implements ContextAware interface and calling getWrapped() method.
+</p>
+]]>
+      </longDesc>
+      <defaultValue>true</defaultValue>
+      <expectedValues>true, false</expectedValues>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.0.9, 2.1.3</since>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.RESOURCE_CACHE_LAST_MODIFIED</name>
+      <fieldName>RESOURCE_CACHE_LAST_MODIFIED</fieldName>
+      <desc>Defines if the last-modified should be cached of the resources when the ProjectStage is Production</desc>
+      <longDesc>Defines if the last-modified should be cached of the resources when the ProjectStage is Production.
+If the cache is disabled, each last-modified request will read the last-modified from the file.</longDesc>
+      <defaultValue>true</defaultValue>
+      <expectedValues>true, false</expectedValues>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.3-next</since>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.LOG_WEB_CONTEXT_PARAMS</name>
+      <fieldName>LOG_WEB_CONTEXT_PARAMS</fieldName>
+      <desc>Indicate if INFO logging of all the web config params should be done before initialize the webapp</desc>
+      <longDesc>
+<![CDATA[
+Indicate if INFO logging of all the web config params should be done before initialize the webapp. 
+<p>
+If is set to "dev-only" mode, web config params are only logged in "Development" mode. 
+If is set to "true", web config params are only logged in "Production" and "Development" mode. 
+If is set to "false" mode, info logging does not occur in any mode.
+</p>
+]]>
+      </longDesc>
+      <defaultValue>dev-only</defaultValue>
+      <expectedValues>true, dev-only, false</expectedValues>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.FACES_INITIALIZER</name>
+      <fieldName>FACES_INITIALIZER</fieldName>
+      <desc>Class name of a custom FacesInitializer implementation.</desc>
+      <longDesc>
+<![CDATA[
+Indicate the class implementing FacesInitializer interface that will
+be used to setup MyFaces Core contexts.
+<p>This is used when some custom task must be done specifically when
+a myfaces web context is initialized or destroyed, or when MyFaces should
+be initialized in some custom environment. 
+</p>
+]]>
+      </longDesc>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.0.1</since>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.spi.InjectionProvider</name>
+      <fieldName>INJECTION_PROVIDER</fieldName>
+      <desc>Define the class implementing InjectionProvider interface to handle dependendy injection,
+PostConstruct and PreDestroy callbacks</desc>
+      <longDesc>
+<![CDATA[
+Define the class implementing InjectionProvider interface to handle dependendy injection,
+PostConstruct and PreDestroy callbacks.
+
+<p>This also can be configured using a SPI entry (/META-INF/services/...).</p>
+]]>
+      </longDesc>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.2</since>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.WEBSOCKET_MAX_CONNECTIONS</name>
+      <fieldName>WEBSOCKET_MAX_CONNECTIONS</fieldName>
+      <desc>no description</desc>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.3</since>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.RENDER_CLIENTBEHAVIOR_SCRIPTS_AS_STRING</name>
+      <fieldName>RENDER_CLIENTBEHAVIOR_SCRIPTS_AS_STRING</fieldName>
+      <desc>Defines if the clientbehavior scripts are passed as string or function to the faces</desc>
+      <longDesc>Defines if the clientbehavior scripts are passed as string or function to the faces.util.chain.
+"As string" is actually the default behavior of both MyFaces (until 2.3-next) and Mojarra.
+"As function" is quite usefull for CSP as no string needs to be evaluated as function.
+
+Our faces.util.chain supports both of course.</longDesc>
+      <defaultValue>false</defaultValue>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.3-next</since>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.ALWAYS_FORCE_SESSION_CREATION</name>
+      <fieldName>ALWAYS_FORCE_SESSION_CREATION</fieldName>
+      <desc>Defines if a session should be created (if one does not exist) before response rendering</desc>
+      <longDesc>Defines if a session should be created (if one does not exist) before response rendering.
+When this parameter is set to true, a session will be created even when client side state 
+saving or stateless views are used, which can lead to unintended resource consumption.
+When this parameter is set to false, a session will only be created before response 
+rendering if a view is not transient and server side state saving is in use.</longDesc>
+      <defaultValue>false</defaultValue>
+      <expectedValues>true,false</expectedValues>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.3.6</since>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.RESOURCE_BUNDLE_CONTROL</name>
+      <fieldName>RESOURCE_BUNDLE_CONTROL</fieldName>
+      <desc>Defines the {@link java</desc>
+      <longDesc>Defines the {@link java.util.ResourceBundle.Control} to use for all
+{@link java.util.ResourceBundle#getBundle(java.lang.String)} calls.</longDesc>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>2.3-next</since>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.EL_RESOLVER_TRACING</name>
+      <fieldName>EL_RESOLVER_TRACING</fieldName>
+      <desc>Defines if ELResolvers should be traced on each request and logged</desc>
+      <longDesc>Defines if ELResolvers should be traced on each request and logged. Only active on Development ProjectStage.</longDesc>
+      <defaultValue>false</defaultValue>
+      <sourceClassName>org.apache.myfaces.config.webparameters.MyfacesConfig</sourceClassName>
+      <since>4.0</since>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.ERROR_TEMPLATE_RESOURCE</name>
+      <fieldName>ERROR_TEMPLATE_RESOURCE</fieldName>
+      <desc>Indicate the template name used to render the default error page used by MyFaces specific 
+error handler implementation</desc>
+      <longDesc>
+<![CDATA[
+Indicate the template name used to render the default error page used by MyFaces specific 
+error handler implementation. 
+
+<p>See org.apache.myfaces.ERROR_HANDLING for details about
+how to enable/disable it.</p>
+]]>
+      </longDesc>
+      <defaultValue>META-INF/rsc/myfaces-dev-error.xml</defaultValue>
+      <sourceClassName>org.apache.myfaces.renderkit.ErrorPageWriter</sourceClassName>
+      <since>1.2.4</since>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.DEBUG_TEMPLATE_RESOURCE</name>
+      <fieldName>DEBUG_TEMPLATE_RESOURCE</fieldName>
+      <desc>Indicate the template name used to render the default debug page (see ui:debug tag)</desc>
+      <longDesc>Indicate the template name used to render the default debug page (see ui:debug tag).</longDesc>
+      <defaultValue>META-INF/rsc/myfaces-dev-debug.xml</defaultValue>
+      <sourceClassName>org.apache.myfaces.renderkit.ErrorPageWriter</sourceClassName>
+      <since>1.2.4</since>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.ERROR_HANDLING</name>
+      <fieldName>ERROR_HANDLING_PARAMETER</fieldName>
+      <desc>Indicate if myfaces is responsible to handle errors</desc>
+      <longDesc>Indicate if myfaces is responsible to handle errors. 
+See https://cwiki.apache.org/confluence/display/MYFACES/Handling+Server+Errors for details.</longDesc>
+      <defaultValue>false, on Development Project stage: true</defaultValue>
+      <expectedValues>true,false</expectedValues>
+      <sourceClassName>org.apache.myfaces.renderkit.ErrorPageWriter</sourceClassName>
+      <since>1.2.4</since>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.TEMPORAL_RESOURCEHANDLER_CACHE_ENABLED</name>
+      <fieldName>INIT_PARAM_TEMPORAL_RESOURCEHANDLER_CACHE_ENABLED</fieldName>
+      <desc>If this param is set to true (default false), a temporal directory is created and
+all files handled by this ResourceLoader are cached there, avoiding the problem
+described on MYFACES-3586</desc>
+      <longDesc>If this param is set to true (default false), a temporal directory is created and
+all files handled by this ResourceLoader are cached there, avoiding the problem
+described on MYFACES-3586. (Performance improvement in Resource loading - 
+HIGH CPU inflating bytes in ResourceHandlerImpl.handleResourceRequest).</longDesc>
+      <defaultValue>false</defaultValue>
+      <expectedValues>true, false</expectedValues>
+      <sourceClassName>org.apache.myfaces.resource.TempDirFileCacheResourceLoader</sourceClassName>
+      <since>2.1.11</since>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.SERVICE_PROVIDER_FINDER</name>
+      <fieldName>SERVICE_PROVIDER_FINDER_PARAM</fieldName>
+      <desc>Class name of a custom ServiceProviderFinder implementation.</desc>
+      <longDesc>
+<![CDATA[
+Define the class name of a custom ServiceProviderFinder implementation.
+
+<p>This class is used to override the default SPI scanning algorithm, that relies on the thread
+context class loader to locate entries under META-INF/services folder.
+</p>
+]]>
+      </longDesc>
+      <sourceClassName>org.apache.myfaces.spi.ServiceProviderFinderFactory</sourceClassName>
+      <since>2.0.3</since>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.RANDOM_KEY_IN_CSRF_SESSION_TOKEN_LENGTH</name>
+      <fieldName>RANDOM_KEY_IN_CSRF_SESSION_TOKEN_LENGTH_PARAM</fieldName>
+      <desc>Set the default length of the random key used for the csrf session token</desc>
+      <longDesc>Set the default length of the random key used for the csrf session token.
+By default is 16.</longDesc>
+      <defaultValue>16</defaultValue>
+      <sourceClassName>org.apache.myfaces.util.token.CsrfSessionTokenFactory</sourceClassName>
+      <since>2.2.0</since>
+      <group>state</group>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.RANDOM_KEY_IN_CSRF_SESSION_TOKEN_SECURE_RANDOM_CLASS</name>
+      <fieldName>RANDOM_KEY_IN_CSRF_SESSION_TOKEN_SECURE_RANDOM_CLASS_PARAM</fieldName>
+      <desc>Sets the random class to initialize the secure random id generator</desc>
+      <longDesc>Sets the random class to initialize the secure random id generator. 
+By default it uses java.security.SecureRandom</longDesc>
+      <sourceClassName>org.apache.myfaces.util.token.CsrfSessionTokenFactorySecureRandom</sourceClassName>
+      <since>2.2.0</since>
+      <group>state</group>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.RANDOM_KEY_IN_CSRF_SESSION_TOKEN_SECURE_RANDOM_PROVIDER</name>
+      <fieldName>RANDOM_KEY_IN_CSRF_SESSION_TOKEN_SECURE_RANDOM_PROVIDER_PARAM</fieldName>
+      <desc>Sets the random provider to initialize the secure random id generator</desc>
+      <longDesc>Sets the random provider to initialize the secure random id generator.</longDesc>
+      <sourceClassName>org.apache.myfaces.util.token.CsrfSessionTokenFactorySecureRandom</sourceClassName>
+      <since>2.2.0</since>
+      <group>state</group>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.RANDOM_KEY_IN_CSRF_SESSION_TOKEN_SECURE_RANDOM_ALGORITM</name>
+      <fieldName>RANDOM_KEY_IN_CSRF_SESSION_TOKEN_SECURE_RANDOM_ALGORITM_PARAM</fieldName>
+      <desc>Sets the random algorithm to initialize the secure random id generator</desc>
+      <longDesc>Sets the random algorithm to initialize the secure random id generator. 
+By default is SHA1PRNG</longDesc>
+      <defaultValue>SHA1PRNG</defaultValue>
+      <sourceClassName>org.apache.myfaces.util.token.CsrfSessionTokenFactorySecureRandom</sourceClassName>
+      <since>2.2.0</since>
+      <group>state</group>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.VIEW_POOL_MAX_POOL_SIZE</name>
+      <fieldName>INIT_PARAM_VIEW_POOL_MAX_POOL_SIZE</fieldName>
+      <desc>Defines the number of views to be hold per each view metadata definition</desc>
+      <longDesc>Defines the number of views to be hold per each view metadata definition.
+By default is 5. 
+
+Usually a view is defined by its viewId, locale, renderKitId
+and active contracts. If a view shares the same values for these parameters
+belongs to the same group that can be pooled.</longDesc>
+      <defaultValue>5</defaultValue>
+      <sourceClassName>org.apache.myfaces.view.facelets.pool.ViewPool</sourceClassName>
+      <tags>performance</tags>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.VIEW_POOL_MAX_DYNAMIC_PARTIAL_LIMIT</name>
+      <fieldName>INIT_PARAM_VIEW_POOL_MAX_DYNAMIC_PARTIAL_LIMIT</fieldName>
+      <desc>Defines the limit of the views that cannot be reused partially</desc>
+      <longDesc>Defines the limit of the views that cannot be reused partially.</longDesc>
+      <defaultValue>2</defaultValue>
+      <sourceClassName>org.apache.myfaces.view.facelets.pool.ViewPool</sourceClassName>
+      <tags>performance</tags>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.VIEW_POOL_ENTRY_MODE</name>
+      <fieldName>INIT_PARAM_VIEW_POOL_ENTRY_MODE</fieldName>
+      <desc>Defines the type of memory reference that is used to hold the view into memory</desc>
+      <longDesc>Defines the type of memory reference that is used to hold the view into memory. By
+default a "soft" reference is used.</longDesc>
+      <defaultValue>soft</defaultValue>
+      <expectedValues>weak,soft</expectedValues>
+      <sourceClassName>org.apache.myfaces.view.facelets.pool.ViewPool</sourceClassName>
+      <tags>performance</tags>
+    </webConfigParam>
+    <webConfigParam>
+      <name>org.apache.myfaces.VIEW_POOL_DEFERRED_NAVIGATION</name>
+      <fieldName>INIT_PARAM_VIEW_POOL_DEFERRED_NAVIGATION</fieldName>
+      <desc>Defines if the view pool uses deferred navigation to recycle views when navigation
+is performed</desc>
+      <longDesc>Defines if the view pool uses deferred navigation to recycle views when navigation
+is performed. The difference is a normal navigation is not done when the broadcast is
+done but at the end of invoke application phase.</longDesc>
+      <defaultValue>false</defaultValue>
+      <expectedValues>true, false</expectedValues>
+      <sourceClassName>org.apache.myfaces.view.facelets.pool.ViewPool</sourceClassName>
+      <tags>performance</tags>
+    </webConfigParam>
+  </webConfig>
+  <faceletFunction>
+    <modelId>myfaces-impl</modelId>
+    <name>fn:contains</name>
+    <desc>no description</desc>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.jstl.fn.JstlFunction</sourceClassName>
+    <signature>boolean contains( java.lang.String, java.lang.String)</signature>
+    <declaredSignature>boolean contains(java.lang.String name, java.lang.String searchString)</declaredSignature>
+  </faceletFunction>
+  <faceletFunction>
+    <modelId>myfaces-impl</modelId>
+    <name>fn:containsIgnoreCase</name>
+    <desc>no description</desc>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.jstl.fn.JstlFunction</sourceClassName>
+    <signature>boolean containsIgnoreCase( java.lang.String, java.lang.String)</signature>
+    <declaredSignature>boolean containsIgnoreCase(java.lang.String name, java.lang.String searchString)</declaredSignature>
+  </faceletFunction>
+  <faceletFunction>
+    <modelId>myfaces-impl</modelId>
+    <name>fn:endsWith</name>
+    <desc>no description</desc>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.jstl.fn.JstlFunction</sourceClassName>
+    <signature>boolean endsWith( java.lang.String, java.lang.String)</signature>
+    <declaredSignature>boolean endsWith(java.lang.String name, java.lang.String searchString)</declaredSignature>
+  </faceletFunction>
+  <faceletFunction>
+    <modelId>myfaces-impl</modelId>
+    <name>fn:escapeXml</name>
+    <desc>no description</desc>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.jstl.fn.JstlFunction</sourceClassName>
+    <signature>java.lang.String escapeXml( java.lang.String)</signature>
+    <declaredSignature>java.lang.String escapeXml(java.lang.String value)</declaredSignature>
+  </faceletFunction>
+  <faceletFunction>
+    <modelId>myfaces-impl</modelId>
+    <name>fn:indexOf</name>
+    <desc>no description</desc>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.jstl.fn.JstlFunction</sourceClassName>
+    <signature>int indexOf( java.lang.String, java.lang.String)</signature>
+    <declaredSignature>int indexOf(java.lang.String name, java.lang.String searchString)</declaredSignature>
+  </faceletFunction>
+  <faceletFunction>
+    <modelId>myfaces-impl</modelId>
+    <name>fn:join</name>
+    <desc>no description</desc>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.jstl.fn.JstlFunction</sourceClassName>
+    <signature>java.lang.String join( java.lang.String, java.lang.String)</signature>
+    <declaredSignature>java.lang.String join(java.lang.String[] a, java.lang.String delim)</declaredSignature>
+  </faceletFunction>
+  <faceletFunction>
+    <modelId>myfaces-impl</modelId>
+    <name>fn:length</name>
+    <desc>no description</desc>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.jstl.fn.JstlFunction</sourceClassName>
+    <signature>int length( java.lang.Object)</signature>
+    <declaredSignature>int length(java.lang.Object obj)</declaredSignature>
+  </faceletFunction>
+  <faceletFunction>
+    <modelId>myfaces-impl</modelId>
+    <name>fn:replace</name>
+    <desc>no description</desc>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.jstl.fn.JstlFunction</sourceClassName>
+    <signature>java.lang.String replace( java.lang.String, java.lang.String, java.lang.String)</signature>
+    <declaredSignature>java.lang.String replace(java.lang.String value, java.lang.String a, java.lang.String b)</declaredSignature>
+  </faceletFunction>
+  <faceletFunction>
+    <modelId>myfaces-impl</modelId>
+    <name>fn:split</name>
+    <desc>no description</desc>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.jstl.fn.JstlFunction</sourceClassName>
+    <signature>java.lang.String split( java.lang.String, java.lang.String)</signature>
+    <declaredSignature>java.lang.String[] split(java.lang.String value, java.lang.String d)</declaredSignature>
+  </faceletFunction>
+  <faceletFunction>
+    <modelId>myfaces-impl</modelId>
+    <name>fn:startsWith</name>
+    <desc>no description</desc>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.jstl.fn.JstlFunction</sourceClassName>
+    <signature>boolean startsWith( java.lang.String, java.lang.String)</signature>
+    <declaredSignature>boolean startsWith(java.lang.String value, java.lang.String p)</declaredSignature>
+  </faceletFunction>
+  <faceletFunction>
+    <modelId>myfaces-impl</modelId>
+    <name>fn:substring</name>
+    <desc>no description</desc>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.jstl.fn.JstlFunction</sourceClassName>
+    <signature>java.lang.String substring( java.lang.String, int, int)</signature>
+    <declaredSignature>java.lang.String substring(java.lang.String v, int s, int e)</declaredSignature>
+  </faceletFunction>
+  <faceletFunction>
+    <modelId>myfaces-impl</modelId>
+    <name>fn:substringAfter</name>
+    <desc>no description</desc>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.jstl.fn.JstlFunction</sourceClassName>
+    <signature>java.lang.String substringAfter( java.lang.String, java.lang.String)</signature>
+    <declaredSignature>java.lang.String substringAfter(java.lang.String v, java.lang.String p)</declaredSignature>
+  </faceletFunction>
+  <faceletFunction>
+    <modelId>myfaces-impl</modelId>
+    <name>fn:substringBefore</name>
+    <desc>no description</desc>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.jstl.fn.JstlFunction</sourceClassName>
+    <signature>java.lang.String substringBefore( java.lang.String, java.lang.String)</signature>
+    <declaredSignature>java.lang.String substringBefore(java.lang.String v, java.lang.String s)</declaredSignature>
+  </faceletFunction>
+  <faceletFunction>
+    <modelId>myfaces-impl</modelId>
+    <name>fn:toLowerCase</name>
+    <desc>no description</desc>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.jstl.fn.JstlFunction</sourceClassName>
+    <signature>java.lang.String toLowerCase( java.lang.String)</signature>
+    <declaredSignature>java.lang.String toLowerCase(java.lang.String v)</declaredSignature>
+  </faceletFunction>
+  <faceletFunction>
+    <modelId>myfaces-impl</modelId>
+    <name>fn:toUpperCase</name>
+    <desc>no description</desc>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.jstl.fn.JstlFunction</sourceClassName>
+    <signature>java.lang.String toUpperCase( java.lang.String)</signature>
+    <declaredSignature>java.lang.String toUpperCase(java.lang.String v)</declaredSignature>
+  </faceletFunction>
+  <faceletFunction>
+    <modelId>myfaces-impl</modelId>
+    <name>fn:trim</name>
+    <desc>no description</desc>
+    <sourceClassName>org.apache.myfaces.view.facelets.tag.jstl.fn.JstlFunction</sourceClassName>
+    <signature>java.lang.String trim( java.lang.String)</signature>
+    <declaredSignature>java.lang.String trim(java.lang.String v)</declaredSignature>
+  </faceletFunction>
 </model>

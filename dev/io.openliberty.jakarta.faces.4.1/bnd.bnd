@@ -40,14 +40,6 @@ publish.wlp.jar.suffix: dev/api/spec
 
 # Use this format (4.1.0.RC#) once we have an official release and not an RC Version
 -buildpath: \
-<<<<<<< HEAD
-    org.apache.myfaces.core:myfaces-api;strategy=exact;version=4.1.0.RC3,\
-    io.openliberty.jakarta.expressionLanguage.6.0;version=latest
-    # org.apache.myfaces.buildtools:myfaces-builder-annotations;version=1.0.9;strategy=exact, \
-    # io.openliberty.jakarta.servlet.6.1;version=latest, \
-    # io.openliberty.jakarta.cdi.4.1;version=latest
-=======
     io.openliberty.jakarta.expressionLanguage.6.0;version=latest,\
-    myfaces-api-4.1.0-RC3-SNAPSHOT.jar;version=file
->>>>>>> 80d93d0f925 (Update Faces 4.1 API with RC3 Snapshot)
+    myfaces-api-4.1.0-RC4-SNAPSHOT.jar;version=file
 
