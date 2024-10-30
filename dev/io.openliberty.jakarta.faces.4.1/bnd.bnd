@@ -40,5 +40,5 @@ publish.wlp.jar.suffix: dev/api/spec
 # Use this format (4.1.0.RC#) once we have an official release and not an RC Version
 -buildpath: \
     io.openliberty.jakarta.expressionLanguage.6.0;version=latest,\
-    myfaces-api-4.1.0-RC3-SNAPSHOT.jar;version=file
+    myfaces-api-4.1.0-RC3.jar;version=file
 
