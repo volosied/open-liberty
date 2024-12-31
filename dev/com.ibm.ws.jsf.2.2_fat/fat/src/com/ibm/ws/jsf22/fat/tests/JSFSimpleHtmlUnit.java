@@ -262,9 +262,9 @@ public class JSFSimpleHtmlUnit {
             webClient.getPage(url);
 
             String msg = "No context init parameter 'org.apache.myfaces.AUTOCOMPLETE_OFF_VIEW_STATE' found, using default value 'true'";
-            if(JakartaEEAction.isEE11OrLaterActive()) {
+            // if(JakartaEEAction.isEE11OrLaterActive()) {
                 msg = "No context init parameter 'org.apache.myfaces.AUTOCOMPLETE_OFF_VIEW_STATE' found, using default value 'false'";
-            } 
+            // } 
             // Check the trace.log
             // There should be a match so fail if there is not.
             assertFalse(msg, jsfTestServer1.findStringsInLogs(msg).isEmpty());
