@@ -205,6 +205,7 @@ public abstract class HtmlMessageRendererBase
                                             boolean wrapSpan)
             throws IOException
     {
+        log.fine("Entered renderSingleFacesMessage");
         // determine style and style class
         String[] styleAndClass = HtmlMessageRendererBase.getStyleAndStyleClass(
                 message, facesMessage.getSeverity());
@@ -337,6 +338,8 @@ public abstract class HtmlMessageRendererBase
         
         // note that this FacesMessage already has been rendered 
         facesMessage.rendered();
+
+        log.fine("Exited renderSingleFacesMessage");
     }
 
 

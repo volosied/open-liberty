@@ -67,6 +67,7 @@ public abstract class HtmlMessagesRendererBase extends HtmlMessageRendererBase
                                   UIComponent messages, boolean alwaysRenderSpan, 
                                   boolean renderDivWhenNoMessagesAndIdSet) throws IOException
     {
+        log.fine("Entered renderMessages.");
         // check the for attribute
         String forAttr = getFor(messages);
         String clientId = null;
@@ -92,8 +93,15 @@ public abstract class HtmlMessagesRendererBase extends HtmlMessageRendererBase
         MessagesIterator messagesIterator = new MessagesIterator(facesContext,
                 isGlobalOnly(messages), isRedisplay(messages), clientId);
 
+        
         if (messagesIterator.hasNext())
         {
+            log.fine("Messages found, about to render...");
+            try {
+                throw new RuntimeException();
+            } catch (Exception e) {
+                log.log(Level.FINE, "Stack dump for debug", e);
+            }
             String layout = getLayout(messages);
             if (layout == null)
             {
@@ -119,6 +127,7 @@ public abstract class HtmlMessagesRendererBase extends HtmlMessageRendererBase
         }
         else
         {
+            log.fine("No messages to render.");
             if (renderDivWhenNoMessagesAndIdSet && shouldRenderId(facesContext, messages))
             {
                 ResponseWriter writer = facesContext.getResponseWriter();
@@ -153,6 +162,7 @@ public abstract class HtmlMessagesRendererBase extends HtmlMessageRendererBase
                 writer.endElement(HTML.SPAN_ELEM);
             }
         }
+        log.fine("Exited renderMessages.");
     }
 
 

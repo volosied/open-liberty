@@ -28,6 +28,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.myfaces.core.api.shared.lang.Assert;
 
 /**
@@ -59,6 +61,9 @@ import org.apache.myfaces.core.api.shared.lang.Assert;
  */
 public class FacesMessage implements Serializable
 {
+
+    private static final Logger log = Logger.getLogger(FacesMessage.class.getName());
+
     private static final long serialVersionUID = 4851488727794169661L;
 
     /**
@@ -122,6 +127,7 @@ public class FacesMessage implements Serializable
      */
     public FacesMessage()
     {
+        log.fine("Created FacesMessage " + this);
         severity = SEVERITY_INFO;
         rendered = false;
     }
@@ -132,6 +138,7 @@ public class FacesMessage implements Serializable
      */
     public FacesMessage(String summary)
     {
+        log.fine("Created FacesMessage " + this);
         this.summary = summary;
         this.severity = SEVERITY_INFO;
         this.rendered = false;
@@ -147,6 +154,7 @@ public class FacesMessage implements Serializable
      */
     public FacesMessage(String summary, String detail)
     {
+        log.fine("Created FacesMessage " + this);
         this.summary = summary;
         this.detail = detail;
         this.severity = SEVERITY_INFO;
@@ -166,7 +174,8 @@ public class FacesMessage implements Serializable
     public FacesMessage(FacesMessage.Severity severity, String summary, String detail)
     {
         Assert.notNull(severity, "severity");
-
+        log.fine("Created FacesMessage " + this);
+        
         this.severity = severity;
         this.summary = summary;
         this.detail = detail;
@@ -244,6 +253,12 @@ public class FacesMessage implements Serializable
 
     public void rendered()
     {
+        log.fine("Setting rendered to true for " + this);
+        try {
+            throw new RuntimeException();
+        } catch (Exception e) {
+            log.log(Level.FINE, "Stack dump for debug", e);
+        }
         this.rendered = true;
     }
 
