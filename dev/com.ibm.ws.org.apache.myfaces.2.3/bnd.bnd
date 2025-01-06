@@ -126,7 +126,7 @@ Import-Package: \
   *
 
 -buildpath: \
- ./myfaces-impl-2.3.11-SNAPSHOT.jar;version=file, \
+ ./myfaces-impl-2.3.11.jar;version=file, \
   org.apache.myfaces.buildtools:myfaces-builder-annotations;version=1.0.9,\
   com.ibm.ws.jsf.shared;version=latest,\
   com.ibm.websphere.javaee.jsf.2.3;version=latest,\
