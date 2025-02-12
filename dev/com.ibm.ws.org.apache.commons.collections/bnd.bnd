@@ -10,6 +10,8 @@
 # Contributors:
 #     IBM Corporation - initial API and implementation
 #*******************************************************************************
--include= jar:${fileuri;${repo;commons-collections:commons-collections;3.2.2;EXACT}}!/META-INF/MANIFEST.MF,bnd.overrides
 
--buildpath: commons-collections:commons-collections;strategy=exact;version=3.2.2
+Export-Package: \
+    org.apache.commons.collections4.*;version="4.4"
+
+-buildpath: ./commons-collections4-4.4.jar;version=file
