@@ -26,10 +26,10 @@ instrument.ffdc: false
 instrument.classesExcludes: \
   org/**/*.class
 
+  Comment:  @${repo;org.apache.myfaces.core:myfaces-impl;4.1.0;EXACT}!/META-INF/**, \
+  Comment:  @${repo;io.openliberty.jakarta.faces.4.1}!/META-INF/resources/**, \
+  Comment:  @${repo;io.openliberty.jakarta.faces.4.1}!/META-INF/internal-resources/**, \
 Include-Resource: \
-  @${repo;org.apache.myfaces.core:myfaces-impl;4.1.0;EXACT}!/META-INF/**, \
-  @${repo;io.openliberty.jakarta.faces.4.1}!/META-INF/resources/**, \
-  @${repo;io.openliberty.jakarta.faces.4.1}!/META-INF/internal-resources/**, \
   META-INF=@src/META-INF
 
 Service-Component: \
@@ -117,8 +117,8 @@ Import-Package: \
   *
 
 -buildpath: \
-  org.apache.myfaces.core:myfaces-impl;strategy=exact;version=${Implementation-Version}, \
-  org.apache.myfaces.core:myfaces-api;strategy=exact;version=${Implementation-Version}, \
+  io.openliberty.jakarta.faces.4.1;version=latest,\
+  myfaces-impl-4.1.1.jar;version=file, \
   io.openliberty.jakarta.faces.4.1;version=latest,\
   com.ibm.ws.classloading;version=latest,\
   com.ibm.ws.webcontainer.jakarta;version=latest,\
