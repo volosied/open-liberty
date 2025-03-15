@@ -30,6 +30,8 @@ instrument.classesExcludes: \
   Comment:  @${repo;io.openliberty.jakarta.faces.4.1}!/META-INF/resources/**, \
   Comment:  @${repo;io.openliberty.jakarta.faces.4.1}!/META-INF/internal-resources/**, \
 Include-Resource: \
+  @${repo;io.openliberty.jakarta.faces.4.1}!/META-INF/resources/**, \
+  @${repo;io.openliberty.jakarta.faces.4.1}!/META-INF/internal-resources/**, \
   META-INF=@src/META-INF
 
 Service-Component: \
