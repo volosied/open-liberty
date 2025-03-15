@@ -26,12 +26,8 @@ instrument.ffdc: false
 instrument.classesExcludes: \
   org/**/*.class
 
-  Comment:  @${repo;org.apache.myfaces.core:myfaces-impl;4.1.0;EXACT}!/META-INF/**, \
-  Comment:  @${repo;io.openliberty.jakarta.faces.4.1}!/META-INF/resources/**, \
-  Comment:  @${repo;io.openliberty.jakarta.faces.4.1}!/META-INF/internal-resources/**, \
 Include-Resource: \
   @${repo;io.openliberty.jakarta.faces.4.1}!/META-INF/resources/**, \
-  @${repo;io.openliberty.jakarta.faces.4.1}!/META-INF/internal-resources/**, \
   META-INF=@src/META-INF
 
 Service-Component: \
