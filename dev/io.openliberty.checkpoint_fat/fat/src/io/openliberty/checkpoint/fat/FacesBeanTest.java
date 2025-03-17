@@ -15,6 +15,10 @@ package io.openliberty.checkpoint.fat;
 import static io.openliberty.checkpoint.fat.FATSuite.getTestMethod;
 import static io.openliberty.checkpoint.fat.FATSuite.getTestMethodNameOnly;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import java.io.BufferedReader;
+import java.net.HttpURLConnection;
 
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.After;
@@ -25,6 +29,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
+
+import com.ibm.websphere.simplicity.log.Log;
 
 import com.ibm.websphere.simplicity.ShrinkHelper;
 import com.ibm.websphere.simplicity.ShrinkHelper.DeployOptions;
@@ -49,6 +55,8 @@ public class FacesBeanTest extends FATServletClient {
 
     @Rule
     public TestName testName = new TestName();
+
+    protected static final Class<?> c = FacesBeanTest.class;
 
     // TODO additional work needed to run this test on EE10/MP6
     @ClassRule
@@ -90,16 +98,59 @@ public class FacesBeanTest extends FATServletClient {
 
     @Test
     public void testFacesBeanCdi() throws Exception {
-        HttpUtils.findStringInReadyUrl(facesBeanServer, '/' + FACES_APP_NAME + "/TestBean.jsf",
-                                       "CDI Bean value:",
-                                       ":CDIBean::PostConstructCalled::EJB-injected::Resource-injected:");
+        // Doc: getHttpConnection(URL url, int expectedResponseCode, int connectionTimeout) 
+        HttpURLConnection conn = HttpUtils.getHttpConnection(facesBeanServer, '/' + FACES_APP_NAME + "/TestBean.jsf",
+            200, 30);
+
+        String bodyResponse = readConnection(conn);
+
+        Log.info(c, testName.getMethod(), bodyResponse);
+
+        assertTrue("Message #1 Not Found!",bodyResponse.contains(":CDIBean::PostConstructCalled::EJB-injected::Resource-injected:"));
+        
+        // Original Test
+        // HttpUtils.findStringInReadyUrl(facesBeanServer, '/' + FACES_APP_NAME + "/TestBean.jsf",
+        //                                "CDI Bean value:",
+        //                                ":CDIBean::PostConstructCalled::EJB-injected::Resource-injected:");
     }
 
     @Test
     public void testFacesBean() throws Exception {
-        HttpUtils.findStringInReadyUrl(facesBeanServer, '/' + FACES_APP_NAME + "/TestBean.jsf",
-                                       "JSF Bean value:",
-                                       ":JSFBean::PostConstructCalled::EJB-injected:");
+        // Doc: getHttpConnection(URL url, int expectedResponseCode, int connectionTimeout) 
+        HttpURLConnection conn = HttpUtils.getHttpConnection(facesBeanServer, '/' + FACES_APP_NAME + "/TestBean.jsf",
+            200, 30);
+
+        String bodyResponse = readConnection(conn);
+
+        Log.info(c, testName.getMethod(), bodyResponse);
+
+        assertTrue("Message #1 Not Found!",bodyResponse.contains(":JSFBean::PostConstructCalled::EJB-injected::Resource-injected:"));
+        
+        // HttpUtils.findStringInReadyUrl(facesBeanServer, '/' + FACES_APP_NAME + "/TestBean.jsf",
+        //                                "JSF Bean value:",
+        //                                ":JSFBean::PostConstructCalled::EJB-injected:");
+    }
+
+
+    /*
+     * Copied from OpenAPIConnection
+     */
+    private String readConnection(HttpURLConnection connection) throws Exception {
+        BufferedReader output = HttpUtils.getResponseBody(connection);
+        StringBuilder contents = new StringBuilder();
+
+        for (int i = 0; i != -1; i = output.read()) {
+            char c = (char) i;
+            if (!Character.isISOControl(c)) {
+                contents.append((char) i);
+            }
+            if (c == '\n') {
+                contents.append('\n');
+            }
+        }
+
+        String urlContent = contents.toString();
+        return urlContent;
     }
 
     static enum TestMethod {
