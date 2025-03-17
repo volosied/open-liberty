@@ -16,38 +16,33 @@ import java.io.Serializable;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.annotation.Resource;
 import javax.ejb.EJB;
-import javax.enterprise.concurrent.ManagedExecutorService;
-import javax.enterprise.context.SessionScoped;
-import javax.inject.Named;
+import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ManagedBean;
 
-@Named("cdiBean")
+@ManagedBean(name="jsfSessionScopedBean", eager=true)
 @SessionScoped
-public class CDIBean implements Serializable {
+public class JSFSessionScopedBean implements Serializable {
+
     private static final long serialVersionUID = 1L;
     private String data = ":" + getClass().getSimpleName() + ":";
 
+    // Mojarra does not support @EJB, but MyFaces does
     @EJB
     TestEJB ejb;
 
-    @Resource
-    ManagedExecutorService defaultExec;
-
     @PostConstruct
     public void start() {
-        System.out.println("CDIBean postConstruct called");
+        System.out.println("JSFSessionScopedBean postConstruct called");
         this.data += ":PostConstructCalled:";
         if (ejb != null && ejb.verifyPostConstruct())
             this.data += ":EJB-injected:";
-        if (defaultExec != null)
-            this.data += ":Resource-injected:";
-        System.out.println("CDIBean data is: " + data);
+        System.out.println("JSFSessionScopedBean data is: " + data);
     }
 
     @PreDestroy
     public void stop() {
-        System.out.println("CDIBean preDestroy called.");
+        System.out.println("JSFSessionScopedBean preDestroy called.");
     }
 
     public void setData(String newData) {

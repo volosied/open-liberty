@@ -19,7 +19,14 @@
     <title>Bean CDI injection Test Page</title>
 </h:head>
 <h:body>
-    <p>CDI Bean value: <h:outputText id="cdiBeanValue" value="#{cdiBean.data}" /></p>
-    <p>JSF Bean value: <h:outputText id="jsfBeanValue" value="#{jsfBean.data}" /> </p>
+    <p>CDI Bean value: <h:outputText id="cdiApplicatonScopedBean" value="#{cdiApplicatonScopedBean.data}" /></p>
+    <p>CDI Bean value: <h:outputText id="cdiRequestScopedBean" value="#{cdiRequestScopedBean.data}" /></p>
+    <p>CDI Bean value: <h:outputText id="cdiSessionScopedBean" value="#{cdiSessionScopedBean.data}" /></p>
+    <p>CDI Bean value: <h:outputText id="cdiViewScopedBean" value="#{cdiViewScopedBean.data}" /></p>
+    <br/>
+    <p>JSF Bean value: <h:outputText id="jsfApplicationScopedBean" value="#{jsfApplicationScopedBean.data}" /> </p>
+    <p>JSF Bean value: <h:outputText id="jsfRequestScopedBean" value="#{jsfRequestScopedBean.data}" /> </p>
+    <p>JSF Bean value: <h:outputText id="jsfSessionScopedBean" value="#{jsfSessionScopedBean.data}" /> </p>
+    <p>JSF Bean value: <h:outputText id="jsfViewScopedBean" value="#{jsfViewScopedBean.data}" /> </p>
 </h:body>
 </html>
