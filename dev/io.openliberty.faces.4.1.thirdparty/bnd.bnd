@@ -40,4 +40,4 @@ publish.wlp.jar.suffix: dev/api/third-party
 
 -fixupmessages.missingexport: "Used bundle version * for exported package";is:=ignore
 
--buildpath: myfaces-impl-4.1.1.jar;version=file
+-buildpath: myfaces-impl-4.1.2-SNAPSHOT.jar;version=file
