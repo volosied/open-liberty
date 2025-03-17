@@ -116,7 +116,7 @@ Import-Package: \
 
 -buildpath: \
   io.openliberty.jakarta.faces.4.1;version=latest,\
-  myfaces-impl-4.1.1.jar;version=file, \
+  myfaces-impl-4.1.2-SNAPSHOT.jar;version=file, \
   io.openliberty.jakarta.faces.4.1;version=latest,\
   com.ibm.ws.classloading;version=latest,\
   com.ibm.ws.webcontainer.jakarta;version=latest,\
