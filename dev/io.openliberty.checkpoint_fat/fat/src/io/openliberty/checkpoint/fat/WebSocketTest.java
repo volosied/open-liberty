@@ -12,6 +12,8 @@
  *******************************************************************************/
 package io.openliberty.checkpoint.fat;
 
+import static org.junit.Assert.assertNotNull;
+
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.After;
@@ -36,6 +38,12 @@ import webSocketTest.AlternateEndpoint;
 import webSocketTest.DefaultEndpoint;
 import webSocketTest.SocketClient;
 import webSocketTest.SocketStartup;
+
+import org.asynchttpclient.Dsl;
+import org.asynchttpclient.ws.WebSocketUpgradeHandler;
+import org.asynchttpclient.ws.WebSocketListener;
+import org.asynchttpclient.ws.WebSocket;
+
 
 @RunWith(FATRunner.class)
 @CheckpointTest
@@ -104,6 +112,55 @@ public class WebSocketTest {
         server.findStringsInLogs("message received alternate Server: data 2");
         server.findStringsInLogs("MESSAGE CLIENT: data 3");
         server.findStringsInLogs("message received alternate Server: data 3");
+    }
+
+    @Test
+    public void testEcho() throws Exception {
+        WebSocketUpgradeHandler.Builder upgradeHandlerBuilder = new WebSocketUpgradeHandler.Builder();
+        WebSocketUpgradeHandler wsHandler = upgradeHandlerBuilder
+                .addWebSocketListener(new WebSocketListener() {
+                    @Override
+                    public void onOpen(WebSocket websocket) {
+                        // WebSocket connection opened
+                        LOG.info("Opened Websocket");
+                    }
+
+                    @Override
+                    public void onClose(WebSocket websocket, int code, String reason) {
+                        // WebSocket connection closed
+                        LOG.info("Closed Websocket");                       
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+                        // WebSocket connection error
+                        LOG.info("Session Error Occurred: " + t);
+                    }
+
+                    @Override
+                    public void onTextFrame(String payload, boolean finalFragment, int rsv){
+                        // Log message
+                        LOG.info("Debugging: " + payload);
+                    }
+                }).build();
+
+        WebSocket webSocketClient = Dsl.asyncHttpClient()
+                .prepareGet("ws://" + 
+                            server.getHostname() + ":" + 
+                            server.getHttpDefaultPort() + "/" +
+                            APP_NAME +
+                            "/echo")
+                .setRequestTimeout(5000)
+                .execute(wsHandler)
+                .get();
+        
+        if (webSocketClient.isOpen()) {
+            LOG.info("sending message");
+            webSocketClient.sendTextFrame("test message");
+        }
+
+        String wsocMessage = server.waitForStringInLog("echo: test message", server.getConsoleLogFile());
+        assertNotNull("The following String was not found in the log: ", wsocMessage);
     }
 
     @After

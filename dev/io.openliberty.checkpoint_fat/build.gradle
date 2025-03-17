@@ -74,6 +74,13 @@ dependencies {
   requiredLibs project(':com.ibm.ws.microprofile.openapi')
   requiredLibs project(':io.openliberty.org.eclipse.microprofile')
   requiredLibs project(path: ':com.ibm.websphere.org.eclipse.microprofile', configuration: 'openapi10')
+  // dependencies below are for websockets 
+  requiredLibs "org.asynchttpclient:async-http-client:2.12.3",
+  "org.asynchttpclient:async-http-client-netty-utils:2.12.3",
+  "com.typesafe.netty:netty-reactive-streams:2.0.4",
+  "org.reactivestreams:reactive-streams:1.0.4",
+  'junit:junit:4.12',
+  project(":io.openliberty.io.netty")
 }
 
 autoFVT {
