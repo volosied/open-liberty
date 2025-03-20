@@ -43,7 +43,7 @@ publish.wlp.jar.suffix: dev/api/spec
 # If using RC, then use a format such as 4.1.0.RC#
 #    org.apache.myfaces.core:myfaces-api;strategy=exact;version=${Implementation-Version},\
 -buildpath: \
-    myfaces-api-4.1.2-SNAPSHOT.jar;version=file, \
+    myfaces-api-4.1.1-SNAPSHOT.jar;version=file, \
     io.openliberty.jakarta.expressionLanguage.6.0;version=latest
     # org.apache.myfaces.buildtools:myfaces-builder-annotations;version=1.0.9;strategy=exact, \
     # io.openliberty.jakarta.servlet.6.1;version=latest, \
