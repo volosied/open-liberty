@@ -17,7 +17,7 @@ Require-Capability: osgi.ee; filter:="(&(osgi.ee=JavaSE)(version=17))"
 
 Bundle-SymbolicName: io.openliberty.jakarta.faces.4.1; singleton:=true
 Bundle-Description:  Jakarta Faces, MyFaces 4.1 API
-Implementation-Version: 4.1.1
+Implementation-Version: 4.1.2
 
 Export-Package: \
     jakarta.faces.*; version=${Implementation-Version}
@@ -31,14 +31,14 @@ DynamicImport-Package: \
 
 #  Use META-INF=@src/META-INF for JS overlays
 -includeresource: \
-    @\${repo;org.apache.myfaces.core:myfaces-api;${Implementation-Version};EXACT}!/!(META-INF/maven/*|module-info.class)
+    META-INF=@src/META-INF 
 
 instrument.disabled: true
 
 publish.wlp.jar.suffix: dev/api/spec
 
 -buildpath: \
-    org.apache.myfaces.core:myfaces-api;strategy=exact;version=${Implementation-Version},\
+    myfaces-api-4.1.2.jar;version=file, \
     io.openliberty.jakarta.expressionLanguage.6.0;version=latest
     # org.apache.myfaces.buildtools:myfaces-builder-annotations;version=1.0.9;strategy=exact, \
     # io.openliberty.jakarta.servlet.6.1;version=latest, \
