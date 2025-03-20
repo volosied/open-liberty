@@ -27,6 +27,7 @@ instrument.classesExcludes: \
   org/**/*.class
 
 Include-Resource: \
+  @${repo;io.openliberty.jakarta.faces.4.0}!/META-INF/resources/**, \
   META-INF=@src/META-INF
 
 Service-Component: \
