@@ -1,0 +1,65 @@
+// ------------------------------------------------------------------
+// Transitive dependencies of this project determined from the
+// maven pom organized by organization.
+// ------------------------------------------------------------------
+
+Apache MyFaces JSF-3.0 Core Impl
+
+
+From: 'an unknown organization'
+  - tomcat-annotations-api (https://tomcat.apache.org/) org.apache.tomcat:tomcat-annotations-api:jar:10.0.0-M4
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - tomcat-api (https://tomcat.apache.org/) org.apache.tomcat:tomcat-api:jar:10.0.0-M4
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - tomcat-catalina (https://tomcat.apache.org/) org.apache.tomcat:tomcat-catalina:jar:10.0.0-M4
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - tomcat-coyote (https://tomcat.apache.org/) org.apache.tomcat:tomcat-coyote:jar:10.0.0-M4
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - tomcat-jaspic-api (https://tomcat.apache.org/) org.apache.tomcat:tomcat-jaspic-api:jar:10.0.0-M4
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - tomcat-jni (https://tomcat.apache.org/) org.apache.tomcat:tomcat-jni:jar:10.0.0-M4
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - tomcat-juli (https://tomcat.apache.org/) org.apache.tomcat:tomcat-juli:jar:10.0.0-M4
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - tomcat-util (https://tomcat.apache.org/) org.apache.tomcat:tomcat-util:jar:10.0.0-M4
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - tomcat-util-scan (https://tomcat.apache.org/) org.apache.tomcat:tomcat-util-scan:jar:10.0.0-M4
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+From: 'Eclipse Foundation' (https://www.eclipse.org)
+  - Jakarta Enterprise Beans (https://github.com/eclipse-ee4j/ejb-api) jakarta.ejb:jakarta.ejb-api:jar:4.0.0-RC2
+    License: EPL 2.0  (http://www.eclipse.org/legal/epl-2.0)    License: GPL2 w/ CPE  (https://www.gnu.org/software/classpath/license.html)
+  - Jakarta Persistence API (https://github.com/eclipse-ee4j/jpa-api) jakarta.persistence:jakarta.persistence-api:jar:3.0.0-RC2
+    License: Eclipse Public License v. 2.0  (http://www.eclipse.org/legal/epl-2.0)    License: Eclipse Distribution License v. 1.0  (http://www.eclipse.org/org/documents/edl-v10.php)
+  - Jakarta Bean Validation API (https://beanvalidation.org) jakarta.validation:jakarta.validation-api:jar:3.0.0-M1
+    License: Apache License 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+From: 'EE4J Community' (https://github.com/eclipse-ee4j)
+  - javax.transaction API (https://projects.eclipse.org/projects/ee4j.jta) jakarta.transaction:jakarta.transaction-api:jar:2.0.0-RC1
+    License: EPL 2.0  (http://www.eclipse.org/legal/epl-2.0)    License: GPL2 w/ CPE  (https://www.gnu.org/software/classpath/license.html)
+
+From: 'Google' (http://www.google.com/)
+  - Guice (http://code.google.com/p/google-guice/) com.google.code.guice:guice:pom:1.0
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+From: 'The Apache Software Foundation' (http://www.apache.org/)
+  - Apache Commons Collections (http://commons.apache.org/collections/) commons-collections:commons-collections:jar:3.2.2
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Commons Digester (http://commons.apache.org/digester/) commons-digester:commons-digester:jar:2.1
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Commons Logging (http://commons.apache.org/logging) commons-logging:commons-logging:jar:1.1.1
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+From: 'The Apache Software Foundation' (https://www.apache.org/)
+  - Apache Commons BeanUtils (https://commons.apache.org/proper/commons-beanutils/) commons-beanutils:commons-beanutils:jar:1.9.4
+    License: Apache License, Version 2.0  (https://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Apache MyFaces JSF-3.0 Core API (http://myfaces.apache.org/#/core30) org.apache.myfaces.core:myfaces-api:jar:3.0.3-SNAPSHOT
+    License: Apache License, Version 2.0  (https://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Apache MyFaces JSF-3.0 Core Shared (http://myfaces.apache.org/#/core30/myfaces-impl-shared) org.apache.myfaces.core.internal:myfaces-impl-shared:jar:3.0.3-SNAPSHOT
+    License: Apache License, Version 2.0  (https://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Apache MyFaces JSF-3.0 Core Shared Public (http://myfaces.apache.org/#/core30/myfaces-impl-shared-public) org.apache.myfaces.core.internal:myfaces-impl-shared-public:jar:3.0.3-SNAPSHOT
+    License: Apache License, Version 2.0  (https://www.apache.org/licenses/LICENSE-2.0.txt)
+
+
+
+
