@@ -16,26 +16,16 @@ fat.test.container.images: \
 
 src: \
     fat/src,\
-    test-applications/TestJSF2.2.war/src,\
-    test-applications/TestJSFEL.war/src,\
-    test-applications/TestJSF22ViewAction.war/src,\
-    test-applications/JSF22FaceletsResourceResolverAnnotation.war/src,\
-    test-applications/JSF22FlashEvents.war/src,\
-    test-applications/TestResourceContractsFromJar.war/src,\
-    test-applications/JSF22BackwardCompatibilityTests.war/src,\
-    test-applications/JSF22TestResources.war/src,\
-    test-applications/JSF22HTML5.war/src,\
-    test-applications/JSF22SimpleHTML.war/src,\
-    test-applications/JSF22ActionListener.war/src,\
-    test-applications/JSF22InputFile.war/src,\
-    test-applications/JSF22ComponentTester.war/src,\
-    test-applications/JSF22ClientWindow.war/src,\
-    test-applications/JSF22ClientWindowFaces40.war/src,\
-    test-applications/JSF22ComponentRenderer.war/src,\
-    test-applications/JSF22FacesFlows.war/src,\
-    test-applications/JSF22AppConfigPop.jar/src,\
-    test-applications/JSF22AppConfigPop.war/src,\
-    test-applications/JSF22LocalizationTester.war/src
+	test-applications/CDIIntegrationTest.war/src, \
+	test-applications/CDIManagedProperty.war/src, \
+	test-applications/ConvertDateTime.war/src, \
+	test-applications/ConverterValidatorBehaviorInjectionTarget.war/src, \
+	test-applications/ELImplicitObjectsViaCDI.war/src, \
+	test-applications/ELImplicitObjectsViaCDI.war/src, \
+	test-applications/ELImplicitObjectsViaCDIErrorApp.war/src, \
+	test-applications/JSF22ClientWindow.war/src, \
+	test-applications/JSF22ClientWindowFaces40.war/src, \
+	test-applications/PostRenderViewEvent.war/src
 
 fat.project: true
 
@@ -64,7 +54,6 @@ tested.features: \
 
 
 -buildpath: \
-    com.google.guava:guava;version=latest,\
     com.ibm.websphere.appserver.thirdparty.jsf-2.2;version=latest,\
     com.ibm.websphere.javaee.annotation.1.2;version=latest,\
     com.ibm.websphere.javaee.cdi.1.2;version=latest,\
@@ -86,11 +75,4 @@ tested.features: \
     net.sourceforge.htmlunit:neko-htmlunit;strategy=exact;version=2.44.0,\
     net.sourceforge.htmlunit:webdriver;version=2.6,\
     org.brotli:dec;version=0.1.2,\
-    org.seleniumhq.selenium:selenium-api;version=4.8.3,\
-    org.seleniumhq.selenium:selenium-chrome-driver;version=4.8.3,\
-    org.seleniumhq.selenium:selenium-chromium-driver;version=4.8.3,\
-    org.seleniumhq.selenium:selenium-remote-driver;version=4.8.3,\
-    org.seleniumhq.selenium:selenium-support;version=4.8.3,\
-    org.seleniumhq.webdriver:webdriver-common;version=0.9.7376,\
-    io.openliberty.faces.fat.selenium.util.internal;version=latest,\
     xml-apis:xml-apis;version=1.4.01

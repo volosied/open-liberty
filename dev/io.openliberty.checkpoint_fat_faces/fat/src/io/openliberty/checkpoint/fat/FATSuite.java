@@ -28,20 +28,11 @@ import componenttest.topology.impl.LibertyServer;
 @RunWith(Suite.class)
 @SuiteClasses({
                 AlwaysPassesTest.class,
-                MailSessionInjectionTest.class,
-                IMAPTest.class
+                JSF22ClientWindowTests.class,
+                JSF23CDIGeneralTests.class
 
 })
 
 public class FATSuite {
-
-    static void configureEnvVariable(LibertyServer server, Map<String, String> newEnv) throws Exception {
-        Properties serverEnvProperties = new Properties();
-        serverEnvProperties.putAll(newEnv);
-        File serverEnvFile = new File(server.getFileFromLibertyServerRoot("server.env").getAbsolutePath());
-        try (OutputStream out = new FileOutputStream(serverEnvFile)) {
-            serverEnvProperties.store(out, "");
-        }
-    }
 
 }

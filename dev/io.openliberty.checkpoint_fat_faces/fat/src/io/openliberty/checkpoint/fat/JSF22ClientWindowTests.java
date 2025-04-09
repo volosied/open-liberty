@@ -8,9 +8,10 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  */
-package com.ibm.ws.jsf22.fat.tests;
+package io.openliberty.checkpoint.fat;
 
 import static componenttest.annotation.SkipForRepeat.EE10_FEATURES;
+import static componenttest.annotation.SkipForRepeat.EE10_OR_LATER_FEATURES;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -29,7 +30,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.html.HtmlTextInput;
 import com.ibm.websphere.simplicity.ShrinkHelper;
-import com.ibm.ws.jsf22.fat.JSFUtils;
+import io.openliberty.checkpoint.fat.JSFUtils;
 
 import componenttest.annotation.Server;
 import componenttest.annotation.SkipForRepeat;
@@ -42,7 +43,7 @@ import io.openliberty.checkpoint.spi.CheckpointPhase;
 import junit.framework.Assert;
 
 /**
- * Tests to execute on the jsfTestServer2 that use HtmlUnit.
+ * Tests to execute on the jsfClientWindowServer that use HtmlUnit.
  */
 @Mode(TestMode.FULL)
 @RunWith(FATRunner.class)
@@ -57,8 +58,8 @@ public class JSF22ClientWindowTests {
 
     protected static final Class<?> c = JSF22ClientWindowTests.class;
 
-    @Server("jsfTestServer2")
-    public static LibertyServer jsfTestServer2;
+    @Server("jsfClientWindowServer")
+    public static LibertyServer server;
 
     @BeforeClass
     public static void setup() throws Exception {
@@ -66,23 +67,23 @@ public class JSF22ClientWindowTests {
         isEE10 = JakartaEEAction.isEE10OrLaterActive();
 
         if (isEE10) {
-            ShrinkHelper.defaultDropinApp(jsfTestServer2, APP_NAME_FACES40 + ".war",
+            ShrinkHelper.defaultDropinApp(server, APP_NAME_FACES40 + ".war",
                                           "com.ibm.ws.jsf22.fat.clientwindow.faces40");
         } else {
-            ShrinkHelper.defaultDropinApp(jsfTestServer2, APP_NAME + ".war",
+            ShrinkHelper.defaultDropinApp(server, APP_NAME + ".war",
                                           "com.ibm.ws.jsf22.fat.clientwindow.jsf22");
         }
 
         server.setCheckpoint(CheckpointPhase.AFTER_APP_START, true, null);
 
-        jsfTestServer2.startServer(JSF22ClientWindowTests.class.getSimpleName() + ".log");
+        server.startServer(JSF22ClientWindowTests.class.getSimpleName() + ".log");
     }
 
     @AfterClass
     public static void tearDown() throws Exception {
         // Stop the server
-        if (jsfTestServer2 != null && jsfTestServer2.isStarted()) {
-            jsfTestServer2.stopServer();
+        if (server != null && server.isStarted()) {
+            server.stopServer();
         }
     }
 
@@ -98,7 +99,7 @@ public class JSF22ClientWindowTests {
 
             String contextRoot = isEE10 ? APP_NAME_FACES40 : APP_NAME;
             
-            URL url = JSFUtils.createHttpUrl(jsfTestServer2, contextRoot, "index.jsf");
+            URL url = JSFUtils.createHttpUrl(server, contextRoot, "index.jsf");
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
             if (page == null) {
@@ -134,7 +135,7 @@ public class JSF22ClientWindowTests {
 
             String contextRoot = isEE10 ? APP_NAME_FACES40 : APP_NAME;
 
-            URL url = JSFUtils.createHttpUrl(jsfTestServer2, contextRoot, "index.jsf");
+            URL url = JSFUtils.createHttpUrl(server, contextRoot, "index.jsf");
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
             if (page == null) {
@@ -169,7 +170,7 @@ public class JSF22ClientWindowTests {
 
             String contextRoot = isEE10 ? APP_NAME_FACES40 : APP_NAME;
 
-            URL url = JSFUtils.createHttpUrl(jsfTestServer2, contextRoot, "index.jsf");
+            URL url = JSFUtils.createHttpUrl(server, contextRoot, "index.jsf");
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
             if (page == null) {
@@ -201,7 +202,7 @@ public class JSF22ClientWindowTests {
 
             String contextRoot = APP_NAME;
 
-            URL url = JSFUtils.createHttpUrl(jsfTestServer2, contextRoot, "index.jsf");
+            URL url = JSFUtils.createHttpUrl(server, contextRoot, "index.jsf");
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
             if (page == null) {
@@ -249,7 +250,7 @@ public class JSF22ClientWindowTests {
 
             String contextRoot = isEE10 ? APP_NAME_FACES40 : APP_NAME;
 
-            URL url = JSFUtils.createHttpUrl(jsfTestServer2, contextRoot, "index.jsf");
+            URL url = JSFUtils.createHttpUrl(server, contextRoot, "index.jsf");
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
             if (page == null) {
@@ -296,7 +297,7 @@ public class JSF22ClientWindowTests {
 
             String contextRoot = isEE10 ? APP_NAME_FACES40 : APP_NAME;
 
-            URL url = JSFUtils.createHttpUrl(jsfTestServer2, contextRoot, "index.jsf");
+            URL url = JSFUtils.createHttpUrl(server, contextRoot, "index.jsf");
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
             if (page == null) {
@@ -343,7 +344,7 @@ public class JSF22ClientWindowTests {
 
             String contextRoot = isEE10 ? APP_NAME_FACES40 : APP_NAME;
 
-            URL url = JSFUtils.createHttpUrl(jsfTestServer2, contextRoot, "index.jsf");
+            URL url = JSFUtils.createHttpUrl(server, contextRoot, "index.jsf");
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
             if (page == null) {
@@ -383,7 +384,7 @@ public class JSF22ClientWindowTests {
 
             String contextRoot = isEE10 ? APP_NAME_FACES40 : APP_NAME;
 
-            URL url = JSFUtils.createHttpUrl(jsfTestServer2, contextRoot, "index.jsf");
+            URL url = JSFUtils.createHttpUrl(server, contextRoot, "index.jsf");
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
             if (page == null) {
@@ -417,7 +418,7 @@ public class JSF22ClientWindowTests {
             String contextRoot = isEE10 ? APP_NAME_FACES40 : APP_NAME;
 
             //index.xhtml link
-            URL url = JSFUtils.createHttpUrl(jsfTestServer2, contextRoot, "index.jsf");
+            URL url = JSFUtils.createHttpUrl(server, contextRoot, "index.jsf");
             HtmlPage page = (HtmlPage) webClient.getPage(url);
 
             if (page == null) {
@@ -431,7 +432,7 @@ public class JSF22ClientWindowTests {
             HtmlElement output1 = (HtmlElement) page.getElementById("testFormPage2:windowIdParam");
 
             //index2.xhtml link
-            url = JSFUtils.createHttpUrl(jsfTestServer2, contextRoot, "index2.jsf");
+            url = JSFUtils.createHttpUrl(server, contextRoot, "index2.jsf");
             HtmlPage page2 = (HtmlPage) webClient.getPage(url);
 
             if (page2 == null) {
