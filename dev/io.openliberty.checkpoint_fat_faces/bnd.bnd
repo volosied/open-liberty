@@ -23,8 +23,7 @@ src: \
 	test-applications/ELImplicitObjectsViaCDI.war/src, \
 	test-applications/ELImplicitObjectsViaCDI.war/src, \
 	test-applications/ELImplicitObjectsViaCDIErrorApp.war/src, \
-	test-applications/JSF22ClientWindow.war/src, \
-	test-applications/JSF22ClientWindowFaces40.war/src, \
+	test-applications/UIRepeatConditionCheck.war/src, \
 	test-applications/PostRenderViewEvent.war/src
 
 fat.project: true
