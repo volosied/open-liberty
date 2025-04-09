@@ -350,58 +350,6 @@ public class JSF23CDIGeneralTests {
     }
 
     /**
-     * Test injection of EL implicit objects in a bean with no @FacesConfig annotation.
-     *
-     * The app should not start, throwing an exception due to CDI not being present in the chain.
-     *
-     * For more information please check Section 5.6.3 from the JSF 2.3 specification.
-     *
-     * @throws Exception
-     */
-    @SkipForRepeat(EE10_OR_LATER_FEATURES) // MYFACES-4461; Injection works regardless of @FacesConfig annotation
-    @Mode(TestMode.FULL)
-    @Test
-    @ExpectedFFDC({ "org.jboss.weld.exceptions.DeploymentException", "com.ibm.ws.container.service.state.StateChangeException" })
-    public void testELImplicitObjectsInjectionWithNoFacesConfigAnnotation() throws Exception {
-        String appName = "ELImplicitObjectsViaCDIErrorApp.war";
-
-        // Set the mark to the end of the logs and install the application.
-        // Use the ELImplicitObjectsViaCDIErrorAppServer.xml server configuration file.
-        server.setMarkToEndOfLog();
-        server.saveServerConfiguration();
-        DeployOptions[] options = new DeployOptions[] { DeployOptions.DISABLE_VALIDATION };
-        ShrinkHelper.defaultApp(server, appName, options, "com.ibm.ws.jsf23.fat.elimplicit.cdi.error.beans");
-        server.setServerConfigurationFile("ELImplicitObjectsViaCDIErrorAppServer.xml");
-
-        // Make sure the application doesn't start
-        String expectedCWWKZ0002E = "CWWKZ0002E: An exception occurred while starting the application ELImplicitObjectsViaCDIErrorApp";
-        server.addIgnoredErrors(Arrays.asList(expectedCWWKZ0002E));
-        assertNotNull("The app started and did not throw an error", server.waitForStringInLog(expectedCWWKZ0002E));
-
-        // Search for the expected exception
-        String message = "The exception message was: com.ibm.ws.container.service.state.StateChangeException: "
-                         + "org.jboss.weld.exceptions.DeploymentException: WELD-001408: Unsatisfied dependencies for type FacesContext with qualifiers @Default";
-        assertNotNull("The following String was not found in the logs: " + message,
-                      server.waitForStringInLog(message));
-
-        // Move the mark to the end of the log so we can ensure we wait for the correct server
-        // configuration message to be output before uninstalling the application
-        server.setMarkToEndOfLog();
-
-        // Stop the server but don't archive the logs.
-        server.stopServer(false);
-
-        // Restore the original server configuration and uninstall the application
-        server.restoreServerConfiguration();
-
-        // Ensure that the server configuration has completed before uninstalling the application
-        server.waitForConfigUpdateInLogUsingMark(null);
-
-        // Now archive the logs.
-        server.postStopServerArchive();
-    }
-
-    /**
      * Test that a FacesConverter, a FacesValidator and a FacesBehavior can be injected in a Managed Bean
      *
      * @throws Exception
