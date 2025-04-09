@@ -97,6 +97,8 @@ public class JSF23CDIGeneralTests {
         // Start the server and use the class name so we can find logs easily.
         // Many tests use the same server
         server.startServer(c.getSimpleName() + ".log");
+
+        server.checkpointRestore();
     }
 
     @Before

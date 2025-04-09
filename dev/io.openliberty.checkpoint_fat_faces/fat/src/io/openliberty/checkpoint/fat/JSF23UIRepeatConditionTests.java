@@ -49,6 +49,8 @@ public class JSF23UIRepeatConditionTests {
 
     private static final Class<?> c = JSF23UIRepeatConditionTests.class;
 
+    private final String APP_NAME = "bvalCDIApp";
+
     @Rule
     public TestName name = new TestName();
 
@@ -57,13 +59,20 @@ public class JSF23UIRepeatConditionTests {
 
     @BeforeClass
     public static void setup() throws Exception {
-        ShrinkHelper.defaultDropinApp(server, "UIRepeatConditionCheck.war", "com.ibm.ws.jsf23.fat.uirepeat");
+        ShrinkHelper.defaultDropinApp(server, APP_NAME+".war", "com.ibm.ws.jsf23.fat.uirepeat");
 
-        server.setCheckpoint(CheckpointPhase.AFTER_APP_START, true, null);
+        server.setCheckpoint(CheckpointPhase.AFTER_APP_START, false,
+        server -> {
+            assertNotNull("'SRVE0169I: Loading Web Module: " + APP_NAME + "' message not found in log before rerstore",
+                          server.waitForStringInLogUsingMark("SRVE0169I: .*" + APP_NAME, 0));
+            assertNotNull("'CWWKZ0001I: Application " + APP_NAME + " started' message not found in log.",
+                          server.waitForStringInLogUsingMark("CWWKZ0001I: .*" + APP_NAME, 0));
+        });
 
         // Start the server and use the class name so we can find logs easily.
         // Many tests use the same server.
         server.startServer(c.getSimpleName() + ".log");
+        server.checkpointRestore();
     }
 
     @AfterClass
