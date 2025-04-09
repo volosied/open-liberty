@@ -45,7 +45,7 @@ import junit.framework.Assert;
 /**
  * Tests to execute on the jsfClientWindowServer that use HtmlUnit.
  */
-@Mode(TestMode.FULL)
+@CheckpointTest
 @RunWith(FATRunner.class)
 public class JSF22ClientWindowTests {
     @Rule
