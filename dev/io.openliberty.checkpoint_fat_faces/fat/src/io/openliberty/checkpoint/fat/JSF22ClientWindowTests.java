@@ -42,6 +42,8 @@ import componenttest.topology.impl.LibertyServer;
 import io.openliberty.checkpoint.spi.CheckpointPhase;
 import junit.framework.Assert;
 
+import componenttest.annotation.CheckpointTest;
+
 /**
  * Tests to execute on the jsfClientWindowServer that use HtmlUnit.
  */
