@@ -10,6 +10,7 @@
 package io.openliberty.checkpoint.fat;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotNull;
 
 import java.net.URL;
 import java.util.Arrays;
@@ -49,7 +50,7 @@ public class JSF23UIRepeatConditionTests {
 
     private static final Class<?> c = JSF23UIRepeatConditionTests.class;
 
-    private final String APP_NAME = "bvalCDIApp";
+    static final String APP_NAME = "UIRepeatConditionCheck";
 
     @Rule
     public TestName name = new TestName();
