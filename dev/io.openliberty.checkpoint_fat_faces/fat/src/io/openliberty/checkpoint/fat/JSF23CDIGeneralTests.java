@@ -66,6 +66,12 @@ public class JSF23CDIGeneralTests {
 
     private static boolean isEE10;
 
+    static final String PostRenderViewEvent_APP_NAME = "PostRenderViewEvent";
+    static final String CDIManagedProperty_APP_NAME = "CDIManagedProperty";
+    static final String ConvertDateTime_APP_NAME = "ConvertDateTime";
+    static final String ConverterValidatorBehaviorInjectionTarget_APP_NAME = "ConverterValidatorBehaviorInjectionTarget";
+    static final String CDIIntegrationTest_APP_NAME = "CDIIntegrationTest";
+
     @Rule
     public TestName name = new TestName();
 
@@ -92,7 +98,33 @@ public class JSF23CDIGeneralTests {
                                   "test-applications/" + "ELImplicitObjectsViaCDI.war" + (isEE10 ? "/resourcesFaces40" : "/resourcesJSF23"));
         ShrinkHelper.exportDropinAppToServer(server, elImplicitObjectsViaCDIApp);
 
-        server.setCheckpoint(CheckpointPhase.AFTER_APP_START, true, null);
+        server.setCheckpoint(CheckpointPhase.AFTER_APP_START, false,
+        server -> {
+            assertNotNull("'SRVE0169I: Loading Web Module: " + PostRenderViewEvent_APP_NAME + "' message not found in log before rerstore",
+                          server.waitForStringInLogUsingMark("SRVE0169I: .*" + PostRenderViewEvent_APP_NAME, 0));
+            assertNotNull("'CWWKZ0001I: Application " + PostRenderViewEvent_APP_NAME + " started' message not found in log.",
+                          server.waitForStringInLogUsingMark("CWWKZ0001I: .*" + PostRenderViewEvent_APP_NAME, 0));
+            
+            assertNotNull("'SRVE0169I: Loading Web Module: " + CDIManagedProperty_APP_NAME + "' message not found in log before rerstore",
+                          server.waitForStringInLogUsingMark("SRVE0169I: .*" + CDIManagedProperty_APP_NAME, 0));
+            assertNotNull("'CWWKZ0001I: Application " + CDIManagedProperty_APP_NAME + " started' message not found in log.",
+                          server.waitForStringInLogUsingMark("CWWKZ0001I: .*" + CDIManagedProperty_APP_NAME, 0));
+
+            assertNotNull("'SRVE0169I: Loading Web Module: " + ConvertDateTime_APP_NAME + "' message not found in log before rerstore",
+                          server.waitForStringInLogUsingMark("SRVE0169I: .*" + ConvertDateTime_APP_NAME, 0));
+            assertNotNull("'CWWKZ0001I: Application " + ConvertDateTime_APP_NAME + " started' message not found in log.",
+                          server.waitForStringInLogUsingMark("CWWKZ0001I: .*" + ConvertDateTime_APP_NAME, 0));
+
+            assertNotNull("'SRVE0169I: Loading Web Module: " + ConverterValidatorBehaviorInjectionTarget_APP_NAME + "' message not found in log before rerstore",
+                          server.waitForStringInLogUsingMark("SRVE0169I: .*" + ConverterValidatorBehaviorInjectionTarget_APP_NAME, 0));
+            assertNotNull("'CWWKZ0001I: Application " + ConverterValidatorBehaviorInjectionTarget_APP_NAME + " started' message not found in log.",
+                          server.waitForStringInLogUsingMark("CWWKZ0001I: .*" + ConverterValidatorBehaviorInjectionTarget_APP_NAME, 0));
+            
+            assertNotNull("'SRVE0169I: Loading Web Module: " + CDIIntegrationTest_APP_NAME + "' message not found in log before rerstore",
+                          server.waitForStringInLogUsingMark("SRVE0169I: .*" + CDIIntegrationTest_APP_NAME, 0));
+            assertNotNull("'CWWKZ0001I: Application " + CDIIntegrationTest_APP_NAME + " started' message not found in log.",
+                          server.waitForStringInLogUsingMark("CWWKZ0001I: .*" + CDIIntegrationTest_APP_NAME, 0));
+        });
 
         // Start the server and use the class name so we can find logs easily.
         // Many tests use the same server
