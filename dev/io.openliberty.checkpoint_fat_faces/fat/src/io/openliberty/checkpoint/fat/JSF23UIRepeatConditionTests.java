@@ -62,7 +62,7 @@ public class JSF23UIRepeatConditionTests {
     public static void setup() throws Exception {
         ShrinkHelper.defaultDropinApp(server, APP_NAME+".war", "com.ibm.ws.jsf23.fat.uirepeat");
 
-        server.setCheckpoint(CheckpointPhase.AFTER_APP_START, false,
+        server.setCheckpoint(CheckpointPhase.BEFORE_APP_START, false,
         server -> {
             assertNotNull("'SRVE0169I: Loading Web Module: " + APP_NAME + "' message not found in log before rerstore",
                           server.waitForStringInLogUsingMark("SRVE0169I: .*" + APP_NAME, 0));
