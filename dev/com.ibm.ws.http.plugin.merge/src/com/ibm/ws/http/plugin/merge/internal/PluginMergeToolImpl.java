@@ -81,14 +81,14 @@ public class PluginMergeToolImpl implements PluginMergeTool {
     private static final TraceComponent traceComponent = Tr.register(PluginMergeToolImpl.class);
     private static final String NO_MERGE_ERR = "Error encountered, no merged file was written";
 
-    private static boolean isXdOnly = true;
-    private static boolean debug = false;
-    private static int seqNum = 0;
+    private boolean isXdOnly = true;
+    private boolean debug = false;
+    private int seqNum = 0;
     private static final boolean failOver = true; /* 654526 */
     private static boolean precedence = false;
     private static Element mergeConfigNode;
     private static Element mergeConfigNode2; //PI07230
-    private static PluginInfo[] plugins;
+    private PluginInfo[] plugins;
     private static ArrayList<PluginInfo> sharedPlugins = new ArrayList<PluginInfo>();
     private static HashSet<String> emptyServerClusters = new HashSet<String>();
     private static String encoding = null;
@@ -98,6 +98,7 @@ public class PluginMergeToolImpl implements PluginMergeTool {
     public ArrayList<String> G_backupServers = new ArrayList<String>(); //720290
     private boolean setMatchUriAppVhost = false; //PM64667
     private static boolean matchUriAppVhost = false;
+
     /*
      * JVM prop "com.ibm.ws.pluginmerge.match.appname"
      * if set to "true" the uniqueness test for a shared app will be (uri, appName, vhost)
@@ -105,13 +106,16 @@ public class PluginMergeToolImpl implements PluginMergeTool {
      *
      * NOTE: This will only ever work for ODC generated plugin-cfg.xml files
      */
-    public PluginMergeToolImpl() {}
+    public PluginMergeToolImpl() {
+    }
 
     @Activate
-    protected void activate(ComponentContext cc) {}
+    protected void activate(ComponentContext cc) {
+    }
 
     @Deactivate
-    protected void deactivate(ComponentContext cc) {}
+    protected void deactivate(ComponentContext cc) {
+    }
 
     private void info(String content) {
         if (!traceComponent.isAnyTracingEnabled())
@@ -121,26 +125,28 @@ public class PluginMergeToolImpl implements PluginMergeTool {
     }
 
     private void debug(String content) {
-        if (debug) info(content);
-        else Tr.debug(traceComponent, content);
+        if (debug)
+            info(content);
+        else
+            Tr.debug(traceComponent, content);
     }
 
     /**
      * Resets the static fields so that state from previous merge operations is cleared.
      */
-    private static void resetStaticState() {
-        isXdOnly = true;
-        debug = false;
-        seqNum = 0;
-        precedence = false;
-        mergeConfigNode = null;
-        mergeConfigNode2 = null;
-        plugins = null;
-        sharedPlugins = new ArrayList<PluginInfo>();
-        emptyServerClusters = new HashSet<String>();
-        encoding = null;
-        matchUriAppVhost = false;
-    }
+    // private static void resetStaticState() {
+    //     isXdOnly = true;
+    //     debug = false;
+    //     seqNum = 0;
+    //     precedence = false;
+    //     mergeConfigNode = null;
+    //     mergeConfigNode2 = null;
+    //     plugins = null;
+    //     sharedPlugins = new ArrayList<PluginInfo>();
+    //     emptyServerClusters = new HashSet<String>();
+    //     encoding = null;
+    //     matchUriAppVhost = false;
+    // }
 
     /**
      * Removes all comments from the document except for the Properties comment.
@@ -521,6 +527,7 @@ public class PluginMergeToolImpl implements PluginMergeTool {
     private void loadData(String[] files) throws SAXException, IOException, ParserConfigurationException {
         tc = "loadData - ";
         debug(tc + "Loading files");
+        plugins = new PluginInfo[files.length];
         for (int i = 0; i < files.length; i++) {
             debug(tc + "Processing file:  " + files[i]);
             File f = new File(files[i]);
@@ -530,6 +537,7 @@ public class PluginMergeToolImpl implements PluginMergeTool {
             //Using factory get an instance of document builder
             DocumentBuilder db = dbf.newDocumentBuilder();
             Document dom = db.parse(new InputSource(fis));
+            Thread.dumpStack();
             plugins[i] = new PluginInfo(i, dom.getDocumentElement(), files[i]);
             seqNum++;
             encoding = dom.getXmlEncoding();
@@ -676,7 +684,8 @@ public class PluginMergeToolImpl implements PluginMergeTool {
                     break;
                 }
             }
-            if (!passFail) break;
+            if (!passFail)
+                break;
         }
         return passFail;
     }
@@ -692,7 +701,8 @@ public class PluginMergeToolImpl implements PluginMergeTool {
      * @throws TransformerConfigurationException
      * @throws TransformerException
      */
-    private boolean tryLfMerge(PluginMergeToolImpl tool, String[] inputs, String output) throws IOException, ParserConfigurationException, TransformerConfigurationException, TransformerException {
+    private boolean tryLfMerge(PluginMergeToolImpl tool, String[] inputs,
+                               String output) throws IOException, ParserConfigurationException, TransformerConfigurationException, TransformerException {
         boolean done = false;
         if (tool.lfMerge()) {
             tool.printMergedCopy(output);
@@ -701,10 +711,14 @@ public class PluginMergeToolImpl implements PluginMergeTool {
         return done;
     }
 
+    protected PluginInfo[] getPluginsInfo() {
+        return this.plugins;
+    }
+
     @Override
     public void merge(String argv[]) {
         // Reset the static state before each merge invocation.
-        resetStaticState();
+        // resetStaticState();
 
         if (argv.length < 2)
             throw new IllegalArgumentException("Please provide at least 1 plugin-cfg.xml file to merge.");
@@ -713,7 +727,9 @@ public class PluginMergeToolImpl implements PluginMergeTool {
         List<String> filesList = toolInstance.loadParms(argv);
         String mergeFileName = filesList.remove(filesList.size() - 1);
         String[] fileList = filesList.toArray(new String[filesList.size()]);
-        plugins = new PluginInfo[fileList.length];
+        // plugins = new PluginInfo[fileList.length];
+        System.out.println("DEBUG plugins " + plugins);
+        Thread.dumpStack();
         try {
             Tr.info(traceComponent, "Merging...");
             fileList = toolInstance.sortFiles(fileList, FILEINFO_SMALL_TO_LARGE_COMPARATOR);
@@ -751,7 +767,7 @@ public class PluginMergeToolImpl implements PluginMergeTool {
                         done = tryLfMerge(toolInstance, fileList, mergeFileName);
                         attempts = 1;
                     }
-                    while (!done && attempts < plugins.length) {
+                    while (!done && attempts < toolInstance.getPluginsInfo().length) {
                         attempts++;
                         debug("\nReorder and reprocess " + attempts);
                         sharedPlugins = new ArrayList<PluginInfo>();
@@ -895,9 +911,12 @@ public class PluginMergeToolImpl implements PluginMergeTool {
         @SuppressWarnings("unchecked")
         @FFDCIgnore(ArrayIndexOutOfBoundsException.class)
         public PluginInfo(int seqNum, Element config, String fileLoc) {
+            System.out.println("DEBUG: seq " + seqNum);
+            System.out.println("DEBUG: con " + config);
+            System.out.println("DEBUG: file " + fileLoc);
             // marks the order in which the plugin-cfg.xml were read in
             this.seqNum = seqNum;
-             // Begin PM38369 - new code to preserve primary and backupserver designation from input files
+            // Begin PM38369 - new code to preserve primary and backupserver designation from input files
             Stack<Node> stack = new Stack<Node>();
             NodeList nodeList1 = config.getElementsByTagName("PrimaryServers");
             debug("Storing Primary Server information");
@@ -932,12 +951,12 @@ public class PluginMergeToolImpl implements PluginMergeTool {
             }
             //need to remove primary/backup definitions
             NodeList nl = config.getElementsByTagName("PrimaryServers");
-            for (int i = 0; i < nl.getLength(); ) {
+            for (int i = 0; i < nl.getLength();) {
                 Node n = nl.item(i);
                 n.getParentNode().removeChild(n);
             }
             nl = config.getElementsByTagName("BackupServers");
-            for (int i = 0; i < nl.getLength(); ) {
+            for (int i = 0; i < nl.getLength();) {
                 Node n = nl.item(i);
                 n.getParentNode().removeChild(n);
             }
@@ -1088,7 +1107,7 @@ public class PluginMergeToolImpl implements PluginMergeTool {
                 String scName = sc.getAttribute("Name");
                 if (!emptyServerClusters.contains(scName)) {
                     debug("ServerCluster element '" + scName.substring(0, scName.lastIndexOf("_")) + "' from " + sc.getBaseURI()
-                                            + " does not contain any Server elements");
+                          + " does not contain any Server elements");
                     emptyServerClusters.add(scName);
                 }
             }
@@ -1654,13 +1673,13 @@ public class PluginMergeToolImpl implements PluginMergeTool {
         private Element addRoute(Element route) {
             Element rtn = null;
             String key = route.getAttribute("ServerCluster") + "::" +
-                    route.getAttribute("VirtualHostGroup") + "::" + route.getAttribute("UriGroup");
+                         route.getAttribute("VirtualHostGroup") + "::" + route.getAttribute("UriGroup");
 
-            if(!routes.containsKey(key)) {
-                rtn = (Element)route.cloneNode(true);
-                routes.put(key,rtn);
+            if (!routes.containsKey(key)) {
+                rtn = (Element) route.cloneNode(true);
+                routes.put(key, rtn);
             } else {
-                rtn = (Element)routes.get(key);
+                rtn = (Element) routes.get(key);
             }
 
             return rtn;
@@ -1691,7 +1710,7 @@ public class PluginMergeToolImpl implements PluginMergeTool {
 
         @Override
         protected Object clone() throws CloneNotSupportedException {
-            this.route = (Element)route.cloneNode(true);
+            this.route = (Element) route.cloneNode(true);
             return super.clone();
         }
 
