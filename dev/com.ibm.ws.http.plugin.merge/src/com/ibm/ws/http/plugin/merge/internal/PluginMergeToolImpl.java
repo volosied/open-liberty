@@ -84,14 +84,14 @@ public class PluginMergeToolImpl implements PluginMergeTool {
     private boolean isXdOnly = true;
     private boolean debug = false;
     private int seqNum = 0;
-    private static final boolean failOver = true; /* 654526 */
+    private final boolean failOver = true; /* 654526 */
     private static boolean precedence = false;
-    private static Element mergeConfigNode;
+    private Element mergeConfigNode;
     private static Element mergeConfigNode2; //PI07230
     private PluginInfo[] plugins;
-    private static ArrayList<PluginInfo> sharedPlugins = new ArrayList<PluginInfo>();
-    private static HashSet<String> emptyServerClusters = new HashSet<String>();
-    private static String encoding = null;
+    private ArrayList<PluginInfo> sharedPlugins = new ArrayList<PluginInfo>();
+    private HashSet<String> emptyServerClusters = new HashSet<String>();
+    private String encoding = null;
     private String tc = null; //PM25128
     private boolean sortVhostGrp = false; //PM25128
     public ArrayList<String> G_primaryServers = new ArrayList<String>(); //PM38368
@@ -537,7 +537,6 @@ public class PluginMergeToolImpl implements PluginMergeTool {
             //Using factory get an instance of document builder
             DocumentBuilder db = dbf.newDocumentBuilder();
             Document dom = db.parse(new InputSource(fis));
-            Thread.dumpStack();
             plugins[i] = new PluginInfo(i, dom.getDocumentElement(), files[i]);
             seqNum++;
             encoding = dom.getXmlEncoding();
@@ -728,8 +727,6 @@ public class PluginMergeToolImpl implements PluginMergeTool {
         String mergeFileName = filesList.remove(filesList.size() - 1);
         String[] fileList = filesList.toArray(new String[filesList.size()]);
         // plugins = new PluginInfo[fileList.length];
-        System.out.println("DEBUG plugins " + plugins);
-        Thread.dumpStack();
         try {
             Tr.info(traceComponent, "Merging...");
             fileList = toolInstance.sortFiles(fileList, FILEINFO_SMALL_TO_LARGE_COMPARATOR);
@@ -911,9 +908,6 @@ public class PluginMergeToolImpl implements PluginMergeTool {
         @SuppressWarnings("unchecked")
         @FFDCIgnore(ArrayIndexOutOfBoundsException.class)
         public PluginInfo(int seqNum, Element config, String fileLoc) {
-            System.out.println("DEBUG: seq " + seqNum);
-            System.out.println("DEBUG: con " + config);
-            System.out.println("DEBUG: file " + fileLoc);
             // marks the order in which the plugin-cfg.xml were read in
             this.seqNum = seqNum;
             // Begin PM38369 - new code to preserve primary and backupserver designation from input files
