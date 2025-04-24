@@ -334,6 +334,8 @@ public class PluginMergeToolImpl implements PluginMergeTool {
      * map to a shared server cluster that only contain servers that actually host that uri.
      */
     private boolean lfMerge() throws ParserConfigurationException {
+        System.out.println("DEBUG lfMERGE");
+        sharedPlugins = new ArrayList<PluginInfo>();
         tc = "lfMerge - ";
         debug(tc + "Merging plugins.");
         Iterator<PluginInfo> itrShared = null;
@@ -525,6 +527,7 @@ public class PluginMergeToolImpl implements PluginMergeTool {
     }
 
     private void loadData(String[] files) throws SAXException, IOException, ParserConfigurationException {
+        System.out.println("DEBUG loadData");
         tc = "loadData - ";
         debug(tc + "Loading files");
         plugins = new PluginInfo[files.length];
@@ -746,7 +749,7 @@ public class PluginMergeToolImpl implements PluginMergeTool {
                     shuffles++;
                     if (shuffles == 2) {
                         debug("\nLarge to small.");
-                        sharedPlugins = new ArrayList<PluginInfo>();
+                        // sharedPlugins = new ArrayList<PluginInfo>();
                         emptyServerClusters = new HashSet<String>();
                         fileList = toolInstance.sortFiles(fileList, FILEINFO_LARGE_TO_SMALL_COMPARATOR);
                         toolInstance.loadData(fileList);
@@ -754,7 +757,7 @@ public class PluginMergeToolImpl implements PluginMergeTool {
                         attempts = 1;
                     } else if (shuffles == 3) {
                         debug("\nRandom shuffle.");
-                        sharedPlugins = new ArrayList<PluginInfo>();
+                        // sharedPlugins = new ArrayList<PluginInfo>();
                         emptyServerClusters = new HashSet<String>();
                         List<String> shuffle = new ArrayList<String>();
                         shuffle.addAll(Arrays.asList(fileList));
@@ -767,7 +770,7 @@ public class PluginMergeToolImpl implements PluginMergeTool {
                     while (!done && attempts < toolInstance.getPluginsInfo().length) {
                         attempts++;
                         debug("\nReorder and reprocess " + attempts);
-                        sharedPlugins = new ArrayList<PluginInfo>();
+                        // sharedPlugins = new ArrayList<PluginInfo>();
                         emptyServerClusters = new HashSet<String>();
                         List<String> reorder = new ArrayList<String>(Arrays.asList(fileList));
                         reorder.add(reorder.remove(0));
