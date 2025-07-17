@@ -310,6 +310,7 @@ public class RuntimeUpdateManagerImpl implements RuntimeUpdateManager, Synchrono
                 // NICE / NORMAL STOP
                 // Find all ServerQueisceListeners and notify them
                 try {
+                        System.out.println(bundleCtx.getServiceReferences(ServerQuiesceListener.class, null));
                     quiesceListeners(bundleCtx.getServiceReferences(ServerQuiesceListener.class, null));
                 } catch (InvalidSyntaxException e) {
                     // not going to happen with a null filter.
@@ -409,6 +410,24 @@ public class RuntimeUpdateManagerImpl implements RuntimeUpdateManager, Synchrono
 
             return;
         } else {
+            System.out.println("DEBUG START");
+                    try {
+            ServiceReference<?>[] services = bundleCtx.getAllServiceReferences(null, null);
+            if (services != null) {
+                for (ServiceReference<?> ref : services) {
+                    Object service = bundleCtx.getService(ref);
+                    System.out.println("Service: " + service.getClass().getName());
+                    for (String key : ref.getPropertyKeys()) {
+                        System.out.println("  " + key + ": " + ref.getProperty(key));
+                    }
+                }
+            } else {
+                System.out.println("No services found.");
+            }
+            System.out.println("DEBUG END");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
             if (tc.isDebugEnabled()) {
                 // If debug is enabled we will dump threads so that we can determine what was still running
