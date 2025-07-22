@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014, 2024 IBM Corporation and others.
+ * Copyright (c) 2014, 2025 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -209,6 +209,12 @@ public class UpgradeReadWriteTimeoutHttpUnit {
             //At this point we just want to not read for a long while. The reasoning for this
             //is the TCP receive buffers should get full and eventually trigger an async write
             //at the server side.
+
+            // In case this test doesn't make sense to new eyes, when the server writes the data and it's flushed, it is sent to the client's receive buffer.
+            // However, the receive buffer has a limit ( can be viewed/set via "net.inet.tcp.recvspace" on a Mac)
+            // Once the buffer is full, it will send a zero window frame telling the server to stop writing.  Once this occurs, the server will stop writing.
+            // However, as there is more data to be written, the timeout will kick in. 
+            // If the timeout doesn't occur, it's possible the receive buffer is too large. Either reduce the data size or increase the post data size.
 
             String stringInLogs = readWriteUpgradeTimeoutServer
                             .waitForStringInLogUsingMark("test_Timeout_UpgradeWL : Timeout occurred during the test",

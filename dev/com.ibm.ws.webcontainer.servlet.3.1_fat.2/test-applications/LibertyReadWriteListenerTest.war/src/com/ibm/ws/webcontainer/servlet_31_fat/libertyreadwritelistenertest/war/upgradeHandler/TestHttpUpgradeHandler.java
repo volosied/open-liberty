@@ -312,7 +312,7 @@ public class TestHttpUpgradeHandler implements HttpUpgradeHandler {
         } else if (getTestSet().equals("test_Timeout_UpgradeWL")) {
             try {
                 LOG.info("\n RUNNING TEST| test_Timeout_UpgradeWL | In init method of TestHttpUpgradeHandler");
-                String postDataSize = "1000000";
+                String postDataSize = "2500000";
                 StringBuilder sb = new StringBuilder();
                 LOG.info("In TestHttpUpgradeHandler UpgradeHandler postDataSize is for test_LargeDataInChunks_UpgradeWL " + postDataSize);
                 if (postDataSize != null) {
