@@ -12,7 +12,10 @@
  *******************************************************************************/
 package com.ibm.ws.app.manager.springboot.util;
 
+import java.util.jar.Attributes;
 import java.util.jar.Manifest;
+
+
 
 /**
  * Relevant Spring Boot information contained in the Spring Boot JAR
@@ -116,6 +119,20 @@ public class SpringBootManifest {
     }
 
     public SpringBootManifest(Manifest mf) {
+        System.out.println("ENTERING SpringBootManifest constructor");
+        Thread.dumpStack();
+
+        try {
+            Attributes attributes = mf.getMainAttributes();
+            for (Object key : attributes.keySet()) {
+                String keyStr = key.toString();
+                String value = attributes.getValue((Attributes.Name) key);
+                System.out.println(keyStr + ": " + value);
+            }
+        } catch(Exception e) {
+            System.out.println(" Error readign manifest : " + e.getMessage());
+        }
+
         String mainClass = mf.getMainAttributes().getValue(JAR_MAIN_CLASS);
         SpringLauncher launcher = SpringLauncher.fromMainClass(mainClass);
         springStartClass = mf.getMainAttributes().getValue(SPRING_START_CLASS_HEADER);
