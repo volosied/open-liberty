@@ -214,6 +214,7 @@ public abstract class SingleThreadEventExecutor extends AbstractScheduledEventEx
         for (;;) {
             Runnable task = taskQueue.poll();
             if (task != WAKEUP_TASK) {
+                System.out.println("DEBUG: Returning task: " + task + " from queue with size: " + taskQueue.size());
                 return task;
             }
         }
@@ -272,6 +273,7 @@ public abstract class SingleThreadEventExecutor extends AbstractScheduledEventEx
                     if (task == WAKEUP_TASK) {
                         return null;
                     }
+                    System.out.println("DEBUG: (takeTask) Returning task: " + task + " from queue with size: " + taskQueue.size());
                     return task;
                 }
             }
@@ -440,6 +442,7 @@ public abstract class SingleThreadEventExecutor extends AbstractScheduledEventEx
      */
     private boolean runExistingTasksFrom(Queue<Runnable> taskQueue) {
         Runnable task = pollTaskFrom(taskQueue);
+        System.out.println("DEBUG (runExistingTasksFrom) Running Task: " + task);
         if (task == null) {
             return false;
         }
@@ -448,6 +451,7 @@ public abstract class SingleThreadEventExecutor extends AbstractScheduledEventEx
         // Use taskQueue.poll() directly rather than pollTaskFrom() since the latter may
         // silently consume more than one item from the queue (skips over WAKEUP_TASK instances)
         while (remaining-- > 0 && (task = taskQueue.poll()) != null) {
+            System.out.println("DEBUG: (runExistingTasksFrom) Running task: " + task);
             safeExecute(task);
         }
         return true;
@@ -460,6 +464,7 @@ public abstract class SingleThreadEventExecutor extends AbstractScheduledEventEx
     protected boolean runAllTasks(long timeoutNanos) {
         fetchFromScheduledTaskQueue();
         Runnable task = pollTask();
+        System.out.println("DEBUG (runAllTasks) Running Task: " + task);
         if (task == null) {
             afterRunningAllTasks();
             return false;
@@ -783,6 +788,7 @@ public abstract class SingleThreadEventExecutor extends AbstractScheduledEventEx
         final long nanoTime = getCurrentTimeNanos();
 
         if (isShutdown() || nanoTime - gracefulShutdownStartTime > gracefulShutdownTimeout) {
+             System.out.println("DEBUG: 7 confirmShutdown returned true");
             return true;
         }
 
@@ -1080,6 +1086,7 @@ public abstract class SingleThreadEventExecutor extends AbstractScheduledEventEx
         int numTasks = 0;
         for (;;) {
             Runnable runnable = taskQueue.poll();
+            System.out.println("DEBUG (drainTasks) " + runnable);
             if (runnable == null) {
                 break;
             }
@@ -1089,6 +1096,7 @@ public abstract class SingleThreadEventExecutor extends AbstractScheduledEventEx
                 numTasks++;
             }
         }
+        System.out.println("DEBUG (drainTasks) numTasks: " + numTasks);
         return numTasks;
     }
 
