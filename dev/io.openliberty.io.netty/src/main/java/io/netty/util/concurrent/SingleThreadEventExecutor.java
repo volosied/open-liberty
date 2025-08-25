@@ -746,7 +746,9 @@ public abstract class SingleThreadEventExecutor extends AbstractScheduledEventEx
      * Confirm that the shutdown if the instance should be done now!
      */
     protected boolean confirmShutdown() {
+        System.out.println("DEBUG: entered confirmShutdown");
         if (!isShuttingDown()) {
+             System.out.println("DEBUG: 1 confirmShutdown returned false");
             return false;
         }
 
@@ -763,6 +765,7 @@ public abstract class SingleThreadEventExecutor extends AbstractScheduledEventEx
         if (runAllTasks() || runShutdownHooks()) {
             if (isShutdown()) {
                 // Executor shut down - no new tasks anymore.
+                 System.out.println("DEBUG:  2 confirmShutdown returned true");
                 return true;
             }
 
@@ -770,6 +773,7 @@ public abstract class SingleThreadEventExecutor extends AbstractScheduledEventEx
             // terminate if the quiet period is 0.
             // See https://github.com/netty/netty/issues/4241
             if (gracefulShutdownQuietPeriod == 0) {
+                 System.out.println("DEBUG: 3 confirmShutdown returned true");
                 return true;
             }
             taskQueue.offer(WAKEUP_TASK);
@@ -787,16 +791,18 @@ public abstract class SingleThreadEventExecutor extends AbstractScheduledEventEx
             // TODO: Change the behavior of takeTask() so that it returns on timeout.
             taskQueue.offer(WAKEUP_TASK);
             try {
+                System.out.println("DEBUG: confirmShutdown sleeping...");
                 Thread.sleep(100);
             } catch (InterruptedException e) {
                 // Ignore
             }
-
+             System.out.println("DEBUG: 5 confirmShutdown returned false");
             return false;
         }
 
         // No tasks were added for last quiet period - hopefully safe to shut down.
         // (Hopefully because we really cannot make a guarantee that there will be no execute() calls by a user.)
+         System.out.println("DEBUG: 6 confirmShutdown returned true");
         return true;
     }
 
