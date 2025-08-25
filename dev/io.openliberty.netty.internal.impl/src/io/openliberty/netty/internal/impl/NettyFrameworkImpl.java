@@ -295,6 +295,7 @@ public class NettyFrameworkImpl implements ServerQuiesceListener, NettyFramework
     
 
     private void stopEventLoops() {
+        System.out.println("DEBUG: stopEventLoops");
     	Future<?> parent = null;
     	Future<?> child = null;
     	Future<?> global = null;
