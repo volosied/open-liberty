@@ -539,6 +539,8 @@ public abstract class SingleThreadEventExecutor extends AbstractScheduledEventEx
      */
     protected void updateLastExecutionTime() {
         lastExecutionTime = getCurrentTimeNanos();
+        System.out.println("lastExecutionTime: " + lastExecutionTime);
+        Thread.dumpStack();
     }
 
     /**
@@ -752,6 +754,7 @@ public abstract class SingleThreadEventExecutor extends AbstractScheduledEventEx
      */
     protected boolean confirmShutdown() {
         System.out.println("DEBUG: entered confirmShutdown");
+        Thread.dumpStack();
         if (!isShuttingDown()) {
              System.out.println("DEBUG: 1 confirmShutdown returned false");
             return false;
