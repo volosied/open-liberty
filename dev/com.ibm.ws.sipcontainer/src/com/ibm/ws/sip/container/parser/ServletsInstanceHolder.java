@@ -83,6 +83,7 @@ public class ServletsInstanceHolder implements ServletInstanceHolderInterface{
 	 * @param instance
 	 */
 	public void addSipletInstance(String appName,String className,Object servletInstance){
+		System.out.println("DEBUG: addSipletInstance" + appName);
 		if(c_logger.isTraceDebugEnabled()){
 			c_logger.traceDebug(this,"addSipletInstance","appName["+appName+"] class["+className+"] instance["+servletInstance+"]");	
 		}
@@ -147,6 +148,7 @@ public class ServletsInstanceHolder implements ServletInstanceHolderInterface{
 	 * @param instance
 	 */
 	public void removeSipletInstance(String appName,String className){
+		System.out.println("DEBUG: removeSipletInstance" + appName);
 		if(c_logger.isTraceDebugEnabled()){
 			c_logger.traceDebug(this,"removeSipletInstance","appName["+appName+"] class["+className+"] ");	
 		}
@@ -245,12 +247,15 @@ public class ServletsInstanceHolder implements ServletInstanceHolderInterface{
 		
 		InitMembers members = new InitMembers(sipApp, sipServlet, sipletContext);
 		sipServletThreadLocal.set(members);
+		System.out.println("DEBUG: saveSipletReference" + sipServletThreadLocal);
 	}
 
 	/**
 	 * @see ServletsInstanceHolder#triggerSipletInitServlet()
 	 */
 	public void triggerSipletInitServlet(int appQueueIndex) {
+		System.out.println("DEBUG: triggerSipletInitServlet" + sipServletThreadLocal);
+
 		InitMembers members = sipServletThreadLocal.get();
 		sipServletThreadLocal.set(null);
 		
@@ -274,5 +279,7 @@ public class ServletsInstanceHolder implements ServletInstanceHolderInterface{
 				c_logger.traceDebug(this,"saveOnStartupServlet","members is null");	
 			}
 		}
+		System.out.println("DEBUG: saveOnStartupServlet called remove" );
+		sipServletThreadLocal.remove();
 	}
 }
