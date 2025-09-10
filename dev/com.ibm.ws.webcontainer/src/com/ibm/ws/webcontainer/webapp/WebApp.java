@@ -1413,6 +1413,8 @@ public abstract class WebApp extends BaseContainer implements ServletContext, IS
 
         WebExtensionProcessor jspProcessor = (WebExtensionProcessor) requestMapper.map("/dummyPath.jsp");
 
+        System.out.println("DEBUG: createServletWrappers jspProcessor:" + jspProcessor);
+
         if (jspProcessor == null) {
             // No extension processor present to handle this kind of
             // target. Hence warn, skip.
@@ -1545,6 +1547,7 @@ public abstract class WebApp extends BaseContainer implements ServletContext, IS
     
     private IServletWrapper jspAwareCreateServletWrapper(
                                                          WebExtensionProcessor jspProcessor, IServletConfig servletConfig, String servletName) {
+        System.out.println("DEBUG: jspAwareCreateServletWrapper jspProcessor: " +  jspProcessor);
         IServletWrapper wrapper = null;
         if (!servletConfig.isJsp()) {
             try {
@@ -2155,6 +2158,7 @@ public abstract class WebApp extends BaseContainer implements ServletContext, IS
                     logger.logp(Level.FINE, CLASS_NAME, "initializeExtensionProcessors", "Add factory mappings =" + mapping);
                 }
                 try {
+                    System.out.println("Adding " + mapping + " for " + processor);
                     requestMapper.addMapping(mapping, processor);
                     mapStr.append(mapping);
                     mapStr.append(' ');
@@ -2162,6 +2166,7 @@ public abstract class WebApp extends BaseContainer implements ServletContext, IS
                     // TODO:
                     // processor already exists for specified pattern
                     // pk435011
+                    System.out.println("ERROR FOR " + mapping + " for " + processor);
                     logger.logp(Level.SEVERE, CLASS_NAME, "initializeExtensionProcessors", "request.processor.already.present.for.mapping", mapping);
                 }
             }

@@ -148,6 +148,9 @@ public abstract class AbstractJSPExtensionProcessor extends com.ibm.ws.webcontai
         this.webapp = (IServletContextExtended) webapp;
         this.jspOptions = webAppConfig.getJspOptions();
 
+        System.out.println("DEBUG: init JSPExtensionProcessor for webapp: " + webapp);
+        System.out.println("DEBUG: init JSPExtensionProcessor for webAppConfig: " + webAppConfig);
+
         //497716.2
         //always adding the lifecycle listener so we can cleanup the AnnotationHandler
         //doing logic for using ThreadTagPool within listener

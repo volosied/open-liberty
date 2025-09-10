@@ -1349,6 +1349,7 @@ public class WebContainer extends com.ibm.ws.webcontainer.WebContainer implement
     @Reference(cardinality=ReferenceCardinality.MULTIPLE, policy=ReferencePolicy.DYNAMIC)
     protected void setExtensionFactory(ExtensionFactory ef) {
         synchronized (lock) {
+            System.out.println("DEBUG: adding ExtensionFactory: " + ef);
             extensionFactories.add(ef);
 
             if (vhostManager != null) {
