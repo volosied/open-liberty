@@ -238,12 +238,14 @@ public class DomainResolverImpl implements DomainResolver, SipStackDomainResolve
 		        if (m_nettyfw == null) {
 		            throw new RuntimeException("NettyFramework service was null!");
 		        }
+				System.out.println("DEBUG: USING NETTY");
 	            com.ibm.ws.sip.channel.resolver.impl.netty.SipResolverService.initialize(dsProps, m_nettyfw);
 
 		    } else {
 	            if (m_chfw == null) {
 	                throw new RuntimeException("ChannelFramework service was null!");
 	            }
+				System.out.println("DEBUG: USING CHFW");
                 com.ibm.ws.sip.channel.resolver.impl.chfw.SipResolverService.initialize(dsProps, m_chfw);
 		    }
 			
@@ -455,8 +457,10 @@ public class DomainResolverImpl implements DomainResolver, SipStackDomainResolve
 	
     private SipURILookup getSipURILookup(SipURILookupCallbackImpl callback, SIPUri uri) {
         if (_useNetty) {
+			System.out.println("DEBUG: USING NETTY");
             return com.ibm.ws.sip.channel.resolver.impl.netty.SipResolverService.getInstance(callback, uri);
         } else {
+			System.out.println("DEBUG: USING CHFW");
             return com.ibm.ws.sip.channel.resolver.impl.chfw.SipResolverService.getInstance(callback, uri);
         }
     }

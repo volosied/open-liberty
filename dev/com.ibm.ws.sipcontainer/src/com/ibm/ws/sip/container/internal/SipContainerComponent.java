@@ -555,6 +555,7 @@ public class SipContainerComponent {
      * @return true if Netty should be used (instead of the channel framework)
      */
     public static boolean useNetty() {
+		System.out.println("DEBUG: useNetty -> " + useNetty);
         return useNetty;
     }
 

@@ -297,10 +297,12 @@ public class GenericEndpointImpl {
 
 		// switch between chfw and netty implementations
 		if (useNetty()) {
+			System.out.println("DEBUG: USING NETTY");
    	            _genericTCPChain = new com.ibm.ws.sip.stack.transport.netty.GenericTCPChain(this, false);
 	            _genericUDPChain = new com.ibm.ws.sip.stack.transport.netty.GenericUDPChain(this);
 	            _genericTLSChain = new com.ibm.ws.sip.stack.transport.netty.GenericTCPChain(this, true);
 		} else {
+			System.out.println("DEBUG: USING CHFW");
                 _genericTCPChain = new com.ibm.ws.sip.stack.transport.chfw.GenericTCPChain(this, false);
                 _genericUDPChain = new com.ibm.ws.sip.stack.transport.chfw.GenericUDPChain(this);
                 _genericTLSChain = new com.ibm.ws.sip.stack.transport.chfw.GenericTCPChain(this, true);
@@ -333,6 +335,7 @@ public class GenericEndpointImpl {
 			}
 			
 		    if (useNetty()) {
+				System.out.println("DEBUG: USING NETTY");
 		            if (udpOptions != null) {
 		                ((com.ibm.ws.sip.stack.transport.netty.GenericChain)_genericUDPChain).init(name, cid, m_nettyBundle, "InboundUDPChain");
 		            }
@@ -345,6 +348,7 @@ public class GenericEndpointImpl {
 		                ((com.ibm.ws.sip.stack.transport.netty.GenericChain)_genericTLSChain).init(name, cid, m_nettyBundle, "InboundTLSChain");
 		            }
     	    } else {
+				System.out.println("DEBUG: USING CHFW");
     	            if (udpOptions != null) {
     	                ((com.ibm.ws.sip.stack.transport.chfw.GenericChain)_genericUDPChain).init(name, cid, m_chfw, "InboundUDPChain");
     	            }
@@ -1101,6 +1105,7 @@ public class GenericEndpointImpl {
 	 * @return true if netty should be used for this endpoint
 	 */
 	public static boolean useNetty() {
+		System.out.println("DEBUG: USING NETTY - > " + SipContainerComponent.useNetty());
 	    return SipContainerComponent.useNetty();
 	}
 	
