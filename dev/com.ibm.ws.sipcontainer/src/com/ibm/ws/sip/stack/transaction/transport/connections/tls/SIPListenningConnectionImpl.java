@@ -83,6 +83,7 @@ public class SIPListenningConnectionImpl
 	
 	public synchronized void listen() throws IOException
 	{
+		System.out.println("SIPListenningConnectionImpl LISTENING!");
 		if( c_logger.isTraceDebugEnabled())
 		{
 		c_logger.traceDebug(this,"listen","tring to listen on " + m_lp);
@@ -98,7 +99,7 @@ public class SIPListenningConnectionImpl
 		//then we should set back the port to the Listenning Point Object.
 		//if the port was not 0 , it will just set the same port 
 		m_lp.setPort( m_sock.getLocalPort() );
-		
+		Thread.dumpStack();
 		Thread thread = new Thread( new ConnectionsListener( this ),"TLS Connections Listener on " + m_lp.getPort() );
 		isRunning = true;
 		thread.start();
@@ -180,6 +181,8 @@ public class SIPListenningConnectionImpl
 					SIPConnectionImpl connection = new SIPConnectionImpl(m_parent, sock);					
 					connection.setKey(key);
 					notifyConnectionCreated(connection);
+					System.out.println("NEW connection made! conn " + connection);
+					System.out.println("NEW connection made! address" + address + " " + " port " + port);
 				}
 				catch (IOException ex)
 				{
