@@ -313,8 +313,6 @@ public abstract class SipConnLink extends BaseConnection implements ChannelFutur
 		if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
 			Tr.debug(tc,  "writeComplete", "exit");
 		}
-		Thread.dumpStack();
-		throw new RuntimeException("Within SipConnLink#writeComplete block");
 	}
 
 	/**
