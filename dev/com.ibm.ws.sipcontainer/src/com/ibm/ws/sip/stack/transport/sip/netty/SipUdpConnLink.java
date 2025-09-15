@@ -310,7 +310,7 @@ public class SipUdpConnLink implements UdpSender, ChannelFutureListener {
 		if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
 			Tr.debug(this, tc, "<connect>", "outboundChainName = " + outboundChainName);
 		}
-		
+		throw new RuntimeException("Within SipUdpConnLink#connect!");
 		// TODO connect async?
 	}
 
