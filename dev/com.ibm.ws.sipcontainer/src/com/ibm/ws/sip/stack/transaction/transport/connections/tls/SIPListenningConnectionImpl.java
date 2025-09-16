@@ -183,6 +183,8 @@ public class SIPListenningConnectionImpl
 					notifyConnectionCreated(connection);
 					System.out.println("NEW connection made! conn " + connection);
 					System.out.println("NEW connection made! address" + address + " " + " port " + port);
+					System.out.println("port: " + port + " add: " + address);
+					throw new RuntimeException("ERROR within ConnectionsListener");
 				}
 				catch (IOException ex)
 				{
@@ -199,6 +201,7 @@ public class SIPListenningConnectionImpl
 						c_logger.traceDebug(this,"run",t.getMessage());
 					}
 					stopListen();
+					throw new RuntimeException("ERROR within ConnectionsListener #2");
 				}
 			}
 		}		
