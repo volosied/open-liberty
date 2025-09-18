@@ -187,6 +187,7 @@ public class SIPListenningConnectionImpl
 			DatagramPacket packet = new DatagramPacket(buf, packetSize);
 			m_isRunning = true;
 			
+			
 			while (m_isRunning) {
 				// wait for incoming data
 				m_sock.receive(packet);
@@ -213,9 +214,13 @@ public class SIPListenningConnectionImpl
 					connection.setRemoteHost(peerHost);
 					connection.setRemotePort(peerPort);
 					connection.setConnected();
+
+					System.out.println("NEW connection made! conn " + connection);
+					System.out.println("NEW connection made! peerHost" + peerHost + " " + " peerPort " + peerPort);
 	
 					dispatch.queueConnectionAcceptedEvent(this, connection);
 					dispatch.queueIncomingDataEvent(byteBuffer, connection);
+					throw new RuntimeException("ERROR within UDP ConnectionsListener");
 				}
 			}
 		}

@@ -170,7 +170,9 @@ public class SIPListenningConnectionImpl
 					Hop key = new Hop(SipStackUtil.TCP, InetAddressCache.getHostAddress(address), port);
 					SIPConnectionImpl connection = new SIPConnectionImpl(m_parent, sock);
 					connection.setKey(key);
-					notifyConnectionCreated(connection);														
+					notifyConnectionCreated(connection);
+					
+					throw new RuntimeException("ERROR within TCP ConnectionsListener");
 				}
 				catch (IOException ex)
 				{
