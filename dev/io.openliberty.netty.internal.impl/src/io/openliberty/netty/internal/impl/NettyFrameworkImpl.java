@@ -120,10 +120,13 @@ public class NettyFrameworkImpl implements ServerQuiesceListener, NettyFramework
         // Compared to channelfw, quiesce is hit every time because
         // connections are lazy cleaned on deactivate
         if (Epoll.isAvailable()) {
+            System.out.println("Using EpollEventLoopGroup");
             parentGroup = new EpollEventLoopGroup(1);
         } else if (KQueue.isAvailable()) {
+            System.out.println("Using KQueueEventLoopGroup");
             parentGroup = new KQueueEventLoopGroup(1);
         } else {
+            System.out.println("Using NioEventLoopGroup");
             parentGroup = new NioEventLoopGroup(1);
         }
         // specify 0 for the "default" number of threads,
@@ -146,8 +149,14 @@ public class NettyFrameworkImpl implements ServerQuiesceListener, NettyFramework
         }
         if (threadNumber < 0)
             threadNumber = 0;
-
-        childGroup = new NioEventLoopGroup(threadNumber);
+            
+        if (Epoll.isAvailable()) {
+            childGroup = new EpollEventLoopGroup(1);
+        } else if (KQueue.isAvailable()) {
+            childGroup = new KQueueEventLoopGroup(1);
+        } else {
+            childGroup = new NioEventLoopGroup(1);
+        }
     }
 
     @Deactivate
