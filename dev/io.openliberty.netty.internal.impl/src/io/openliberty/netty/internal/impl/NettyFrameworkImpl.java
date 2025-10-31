@@ -68,6 +68,15 @@ import io.openliberty.netty.internal.tcp.TCPConfigurationImpl;
 import io.openliberty.netty.internal.tcp.TCPUtils;
 import io.openliberty.netty.internal.udp.UDPUtils;
 
+import io.netty.channel.epoll.Epoll;
+import io.netty.channel.epoll.EpollEventLoopGroup;
+import io.netty.channel.kqueue.KQueue;
+import io.netty.channel.kqueue.KQueueEventLoopGroup;
+
+import io.netty.channel.epoll.EpollServerSocketChannel;
+import io.netty.channel.kqueue.KQueueServerSocketChannel;
+import io.netty.channel.epoll.EpollSocketChannel;
+import io.netty.channel.kqueue.KQueueSocketChannel;
 /**
  * Liberty NettyFramework implementation bundle
  */
@@ -112,7 +121,16 @@ public class NettyFrameworkImpl implements ServerQuiesceListener, NettyFramework
         // Ideally use the executor service provided by Liberty
         // Compared to channelfw, quiesce is hit every time because
         // connections are lazy cleaned on deactivate
-        parentGroup = new NioEventLoopGroup(1);
+        if (Epoll.isAvailable()) {
+            System.out.println("Using EpollEventLoopGroup");
+            parentGroup = new EpollEventLoopGroup(1);
+        } else if (KQueue.isAvailable()) {
+            System.out.println("Using KQueueEventLoopGroup");
+            parentGroup = new KQueueEventLoopGroup(1);
+        } else {
+            System.out.println("Using NioEventLoopGroup");
+            parentGroup = new NioEventLoopGroup(1);
+        }
         // specify 0 for the "default" number of threads,
         // (java.lang.Runtime.availableProcessors() * 2)
         String eventloopThreadNumberProperty;
@@ -133,8 +151,24 @@ public class NettyFrameworkImpl implements ServerQuiesceListener, NettyFramework
         }
         if (threadNumber < 0)
             threadNumber = 0;
+            System.out.println("Using " + threadNumber + " threads for child EventLoopGroup");
+        if (Epoll.isAvailable()) {
+            childGroup = new EpollEventLoopGroup(threadNumber);
+        } else if (KQueue.isAvailable()) {
+            childGroup = new KQueueEventLoopGroup(threadNumber);
+        } else {
+            childGroup = new NioEventLoopGroup(threadNumber);
+        }
+    }
 
-        childGroup = new NioEventLoopGroup(threadNumber);
+    public Class getDatagramClass(){
+        if (Epoll.isAvailable()) {
+            return io.netty.channel.epoll.EpollDatagramChannel.class;
+        } else if (KQueue.isAvailable()) {
+            return io.netty.channel.kqueue.KQueueDatagramChannel.class;
+        } else {
+            return io.netty.channel.socket.nio.NioDatagramChannel.class;
+        }
     }
 
     @Deactivate
@@ -168,6 +202,32 @@ public class NettyFrameworkImpl implements ServerQuiesceListener, NettyFramework
     @Reference(name = "chfwBundle")
     protected void setChfwBundle(CHFWBundle bundle) {
         chfw = bundle;
+    }
+
+    public Class getServerSocketChannelClass() {
+        if(Epoll.isAvailable()){
+            System.out.println("Using EpollServerSocketChannel");
+            return EpollServerSocketChannel.class;
+        } else if (KQueue.isAvailable()) {
+            System.out.println("Using KQueueServerSocketChannel");
+            return KQueueServerSocketChannel.class;
+        } else {
+            System.out.println("Using NioServerSocketChannel");
+            return NioServerSocketChannel.class;
+        }
+    }
+
+    public Class getClientSocketChannelClass() {
+        if(Epoll.isAvailable()){
+            System.out.println("Using EpollSocketChannel");
+            return EpollSocketChannel.class;
+        } else if (KQueue.isAvailable()) {
+            System.out.println("Using KQueueSocketChannel");
+            return KQueueSocketChannel.class;
+        } else {
+            System.out.println("Using NioSocketChannel");
+            return NioSocketChannel.class;
+        }
     }
 
     /**
@@ -677,7 +737,11 @@ public class NettyFrameworkImpl implements ServerQuiesceListener, NettyFramework
     }
 
     private void logChannelStopped(Channel channel) {
-        if (channel instanceof NioServerSocketChannel || channel instanceof NioSocketChannel) {
+        System.out.println("Stopping channel " + channel);
+        if (channel instanceof NioServerSocketChannel || 
+            channel instanceof NioSocketChannel ||
+            channel instanceof EpollServerSocketChannel ||
+            channel instanceof KQueueServerSocketChannel) {
             TCPUtils.logChannelStopped(channel);
         } else if (channel instanceof NioDatagramChannel) {
             UDPUtils.logChannelStopped(channel);
