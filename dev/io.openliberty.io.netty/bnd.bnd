@@ -65,5 +65,6 @@ instrument.disabled: true
   ./lib/netty-transport-classes-epoll-4.1.126.Final.jar;version=file,\
   ./lib/netty-transport-native-epoll-4.1.126.Final.jar;version=file,\
   ./lib/netty-transport-classes-kqueue-4.1.126.Final.jar;version=file,\
-  ./lib/netty-transport-native-kqueue-4.1.126.Final-osx-aarch_64.jar;version=file
+  ./lib/netty-transport-native-kqueue-4.1.126.Final-osx-aarch_64.jar;version=file,\
+  ./lib/netty-transport-native-kqueue-4.1.126.Final-osx-x86_64.jar;version=file
   
