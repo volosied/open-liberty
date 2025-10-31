@@ -66,7 +66,12 @@ instrument.disabled: true
   io.netty:netty-transport-native-unix-common;version=${nettyVersion},\
   ./lib/netty-transport-classes-epoll-4.1.126.Final.jar;version=file,\
   ./lib/netty-transport-native-epoll-4.1.126.Final.jar;version=file,\
-  ./lib/netty-transport-classes-kqueue-4.1.126.Final.jar;version=file,\
-  ./lib/netty-transport-native-kqueue-4.1.126.Final-osx-aarch_64.jar;version=file,\
-  ./lib/netty-transport-native-kqueue-4.1.126.Final-osx-x86_64.jar;version=file
+  ./lib/netty-transport-classes-kqueue-4.1.126.Final.jar;version=file
+
+ # Only so / jnilib files are needed, but they are added via include resources above
+  Comment:  ./lib/netty-transport-native-kqueue-4.1.126.Final-osx-aarch_64.jar;version=file,\
+  Comment:  ./lib/netty-transport-native-kqueue-4.1.126.Final-osx-x86_64.jar;version=file
+  Comment:  ./lib/netty-transport-native-epoll-4.1.126.Final-linux-aarch_64.jar;version=file,\
+  Comment:  ./lib/netty-transport-native-epoll-4.1.126.Final-linux-x86_64.jar;version=file
+
   
