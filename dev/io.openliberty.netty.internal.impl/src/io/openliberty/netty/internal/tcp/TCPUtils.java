@@ -54,10 +54,12 @@ public class TCPUtils {
      */
     public static ServerBootstrapExtended createTCPBootstrap(NettyFrameworkImpl framework,
                                                              Map<String, Object> tcpOptions) throws NettyException {
+
+
         BootstrapConfiguration config = new TCPConfigurationImpl(tcpOptions, true);
         ServerBootstrapExtended bs = new ServerBootstrapExtended();
         bs.group(framework.getParentGroup(), framework.getChildGroup());
-        bs.channel(NioServerSocketChannel.class);
+        bs.channel(framework.getServerSocketChannelClass());
         // apply the existing user config to the Netty TCP channel
         bs.applyConfiguration(config);
         ChannelInitializerWrapper tcpInitializer = new TCPChannelInitializerImpl(config, framework);
