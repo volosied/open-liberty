@@ -159,6 +159,16 @@ public class NettyFrameworkImpl implements ServerQuiesceListener, NettyFramework
         }
     }
 
+    public Class getDatagramClass(){
+        if (Epoll.isAvailable()) {
+            return io.netty.channel.epoll.EpollDatagramChannel.class;
+        } else if (KQueue.isAvailable()) {
+            return io.netty.channel.kqueue.KQueueDatagramChannel.class;
+        } else {
+            return io.netty.channel.socket.nio.NioDatagramChannel.class;
+        }
+    }
+
     @Deactivate
     protected void deactivate(ComponentContext context, Map<String, Object> properties) {
         if (!ProductInfo.getBetaEdition()) {
