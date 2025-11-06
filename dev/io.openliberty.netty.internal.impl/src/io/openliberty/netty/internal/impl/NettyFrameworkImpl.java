@@ -151,13 +151,13 @@ public class NettyFrameworkImpl implements ServerQuiesceListener, NettyFramework
         }
         if (threadNumber < 0)
             threadNumber = 0;
-            
+            System.out.println("Using " + threadNumber + " threads for child EventLoopGroup");
         if (Epoll.isAvailable()) {
-            childGroup = new EpollEventLoopGroup(1);
+            childGroup = new EpollEventLoopGroup(threadNumber);
         } else if (KQueue.isAvailable()) {
-            childGroup = new KQueueEventLoopGroup(1);
+            childGroup = new KQueueEventLoopGroup(threadNumber);
         } else {
-            childGroup = new NioEventLoopGroup(1);
+            childGroup = new NioEventLoopGroup(threadNumber);
         }
     }
 
