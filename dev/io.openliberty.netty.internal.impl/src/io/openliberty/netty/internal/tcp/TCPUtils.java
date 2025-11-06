@@ -80,7 +80,7 @@ public class TCPUtils {
         BootstrapConfiguration config = new TCPConfigurationImpl(tcpOptions, false);
         BootstrapExtended bs = new BootstrapExtended();
         bs.group(framework.getChildGroup());
-        bs.channel(framework.getServerSocketChannelClass());
+        bs.channel(framework.getClientSocketChannelClass());
         // apply the existing user config to the Netty TCP channel
         bs.applyConfiguration(config);
         ChannelInitializerWrapper tcpInitializer = new TCPChannelInitializerImpl(config, framework);

@@ -75,6 +75,8 @@ import io.netty.channel.kqueue.KQueueEventLoopGroup;
 
 import io.netty.channel.epoll.EpollServerSocketChannel;
 import io.netty.channel.kqueue.KQueueServerSocketChannel;
+import io.netty.channel.epoll.EpollSocketChannel;
+import io.netty.channel.kqueue.KQueueSocketChannel;
 /**
  * Liberty NettyFramework implementation bundle
  */
@@ -212,6 +214,19 @@ public class NettyFrameworkImpl implements ServerQuiesceListener, NettyFramework
         } else {
             System.out.println("Using NioServerSocketChannel");
             return NioServerSocketChannel.class;
+        }
+    }
+
+    public Class getClientSocketChannelClass() {
+        if(Epoll.isAvailable()){
+            System.out.println("Using EpollSocketChannel");
+            return EpollSocketChannel.class;
+        } else if (KQueue.isAvailable()) {
+            System.out.println("Using KQueueSocketChannel");
+            return KQueueSocketChannel.class;
+        } else {
+            System.out.println("Using NioSocketChannel");
+            return NioSocketChannel.class;
         }
     }
 
