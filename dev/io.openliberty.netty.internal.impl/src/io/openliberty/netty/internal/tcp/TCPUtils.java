@@ -57,7 +57,7 @@ public class TCPUtils {
         BootstrapConfiguration config = new TCPConfigurationImpl(tcpOptions, true);
         ServerBootstrapExtended bs = new ServerBootstrapExtended();
         bs.group(framework.getParentGroup(), framework.getChildGroup());
-        bs.channel(NioServerSocketChannel.class);
+        bs.channel(framework.getServerSocketChannelClass());
         // apply the existing user config to the Netty TCP channel
         bs.applyConfiguration(config);
         ChannelInitializerWrapper tcpInitializer = new TCPChannelInitializerImpl(config, framework);
@@ -78,7 +78,7 @@ public class TCPUtils {
         BootstrapConfiguration config = new TCPConfigurationImpl(tcpOptions, false);
         BootstrapExtended bs = new BootstrapExtended();
         bs.group(framework.getChildGroup());
-        bs.channel(NioSocketChannel.class);
+        bs.channel(framework.getSocketChannelClass());
         // apply the existing user config to the Netty TCP channel
         bs.applyConfiguration(config);
         ChannelInitializerWrapper tcpInitializer = new TCPChannelInitializerImpl(config, framework);

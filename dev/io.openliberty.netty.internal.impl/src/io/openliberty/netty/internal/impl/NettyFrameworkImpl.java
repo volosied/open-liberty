@@ -51,6 +51,14 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.MultiThreadIoEventLoopGroup;
+import io.netty.channel.epoll.EpollIoHandler;
+import io.netty.channel.epoll.EpollServerSocketChannel;
+import io.netty.channel.epoll.EpollSocketChannel;
+import io.netty.channel.epoll.EpollDatagramChannel;
+import io.netty.channel.kqueue.KQueueIoHandler;
+import io.netty.channel.kqueue.KQueueServerSocketChannel;
+import io.netty.channel.kqueue.KQueueSocketChannel;
+import io.netty.channel.kqueue.KQueueDatagramChannel;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -124,9 +132,22 @@ public class NettyFrameworkImpl implements ServerQuiesceListener, NettyFramework
                 }
             });
         }
+        IoHandler handler;
+        if (Epoll.isAvailable()) {
+            handler = new EpollIoHandler();
+        } else if (KQueue.isAvailable()) {
+            handler = new KQueueIoHandler();
+        } else {
+            handler = new NioIoHandler();
+        }
+
+        if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
+            Tr.debug(tc, "Created IoHandler -> " + handler);
+        }
+
         // Compared to channelfw, quiesce is hit every time because
         // connections are lazy cleaned on deactivate
-        parentGroup = new MultiThreadIoEventLoopGroup(1, NioIoHandler.newFactory());
+        parentGroup = new MultiThreadIoEventLoopGroup(1, handler.newFactory());
         // Attempt to get the properties from the passed configuration but give priority to
         // the system properties if set
         int maxThreads;
@@ -150,7 +171,7 @@ public class NettyFrameworkImpl implements ServerQuiesceListener, NettyFramework
             });
         }
         AutoScalingEventExecutorChooserFactory scaler = createThreadScaler();
-        childGroup = new MultiThreadIoEventLoopGroup(maxThreads, null, scaler, NioIoHandler.newFactory());
+        childGroup = new MultiThreadIoEventLoopGroup(maxThreads, null, scaler, handler.newFactory());
         if (metricsWindow > 0) {
             scheduledExecutorService.scheduleAtFixedRate(() -> {
                 StringBuilder sb = new StringBuilder("Getting metrics from MultiThreadIoEventLoopGroup with active threads " + ((MultiThreadIoEventLoopGroup)childGroup).activeExecutorCount() + " : ");
@@ -289,6 +310,45 @@ public class NettyFrameworkImpl implements ServerQuiesceListener, NettyFramework
             // used in Netty 4.1. We switch to the pooled allocator for the moment until these issues
             // are addressed
             System.setProperty("io.netty.allocator.type", "pooled");
+        }
+    }
+
+    /*
+     * Used for server sockets - based on platform.
+     */
+    public Class getServerSocketChannelClass() {
+        if(Epoll.isAvailable()){
+            return EpollServerSocketChannel.class;
+        } else if (KQueue.isAvailable()) {
+            return KQueueServerSocketChannel.class;
+        } else {
+            return NioServerSocketChannel.class;
+        }
+    }
+
+    /*
+     * Used for client sockets - based on platform.
+     */
+    public Class getSocketChannelClass() {
+        if(Epoll.isAvailable()){
+            return EpollSocketChannel.class;
+        } else if (KQueue.isAvailable()) {
+            return KQueueSocketChannel.class;
+        } else {
+            return NioSocketChannel.class;
+        }
+    }
+
+    /*
+     * Used in UDP channels - based on platform.
+     */
+    public Class getDatagramClass() {
+        if (Epoll.isAvailable()) {
+            return EpollDatagramChannel.class;
+        } else if (KQueue.isAvailable()) {
+            return KQueueDatagramChannel.class;
+        } else {
+            return NioDatagramChannel.class;
         }
     }
 
