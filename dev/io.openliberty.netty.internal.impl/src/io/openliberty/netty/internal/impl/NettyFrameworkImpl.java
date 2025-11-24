@@ -176,6 +176,7 @@ public class NettyFrameworkImpl implements ServerQuiesceListener, NettyFramework
         }
         AutoScalingEventExecutorChooserFactory scaler = createThreadScaler();
         childGroup = new MultiThreadIoEventLoopGroup(maxThreads, null, scaler, childFactory);
+        outboundConnections = new DefaultChannelGroup(childGroup.next());
         if (metricsWindow > 0) {
             scheduledExecutorService.scheduleAtFixedRate(() -> {
                 StringBuilder sb = new StringBuilder("Getting metrics from MultiThreadIoEventLoopGroup with active threads " + ((MultiThreadIoEventLoopGroup)childGroup).activeExecutorCount() + " : ");
