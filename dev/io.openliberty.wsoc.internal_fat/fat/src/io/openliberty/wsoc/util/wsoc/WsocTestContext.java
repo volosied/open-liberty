@@ -104,7 +104,7 @@ public class WsocTestContext {
         _curMessage++;
         // log the six messages of each test, for better debugging
         if (_curMessage <= 6) {
-            LOG.info("Adding message to test results, message #: " + _curMessage + " " + msg);
+            LOG.info(this.toString() + " Adding message to test results, message #: " + _curMessage + " " + msg);
         }
         if (!_messageCountOnly) {
             _messages.add(msg);

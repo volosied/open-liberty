@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014, 2021 IBM Corporation and others.
+ * Copyright (c) 2014, 2025 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -110,7 +110,7 @@ public class TraceEnabledTest {
      */
     public void testAsyncAnnotatedTextSuccess() throws Exception {
 
-        String[] textValues = { "WEREWR", "ERERE" };
+        String[] textValues = { "ASYNC_1", "ASYNC_2" };
         wsocTest.runEchoTest(new AnnotatedClientEP.AsyncTextTest(textValues), "/trace/annotatedAsyncText", textValues);
 
     }
@@ -144,7 +144,7 @@ public class TraceEnabledTest {
      */
     public void testMultipleClientsPublishingandReceivingToThemselvesTextSuccess() throws Exception {
 
-        String[] textValues = { "WEREWR", "ERERE", "ERWEREW", "ADSFSDFDS", "WERWEREWR", "33423423423432" };
+        String[] textValues = { "MULTI_1", "MULTI_2", "MULTI_3", "MULTI_4", "MULTI_5", "MULTI_6" };
         int numClients = 100;
         Object[] receivers = new TestHelper[numClients];
         for (int x = 0; x < numClients; x++) {
@@ -159,7 +159,7 @@ public class TraceEnabledTest {
      */
     public void testSinglePublisherMultipleReciverTextSuccess() throws Exception {
 
-        final String[] textValues = { "WEREWR", "ERERE", "ERWEREW", "ADSFSDFDS", "WERWEREWR", "33423423423432" };
+        final String[] textValues = { "SINGLE_1", "SINGLE_2", "SINGLE_3", "SINGLE_4", "SINGLE_5", "SINGLE_6" };
 
         int numClients = Constants.getClientsCount();
 
