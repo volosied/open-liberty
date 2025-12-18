@@ -195,6 +195,11 @@ public class TraceEnabledTest {
         for (WsocTestContext wtc : mctr.getReceivers()) {
             wtc.reThrowException();
             LOG.log(Level.INFO, "Actual message array  " + wtc, wtc.getMessage().toArray());
+            LOG.log(Level.INFO, "Actual array length " + wtc.getMessage().toArray().length);
+            String[] arr = wtc.getMessage().toArray(new String[0]);
+            for (int i = 0; i < arr.length; i++) {
+                System.out.println("DEBUG: " + arr[i]);
+            }
             Assert.assertArrayEquals(textValues, wtc.getMessage().toArray());
         }
     }
