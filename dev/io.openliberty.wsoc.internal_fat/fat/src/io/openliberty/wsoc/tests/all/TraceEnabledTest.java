@@ -53,7 +53,7 @@ public class TraceEnabledTest {
 
         for (WsocTestContext wtc : mctr.getReceivers()) {
             wtc.reThrowException();
-            LOG.log(Level.INFO, "Actual message array", wtc.getMessage().toArray());
+            LOG.log(Level.INFO, "Actual message array  " + wtc, wtc.getMessage().toArray());
             Assert.assertArrayEquals(data, wtc.getMessage().toArray());
         }
     }
@@ -194,6 +194,7 @@ public class TraceEnabledTest {
                                                                       true);
         for (WsocTestContext wtc : mctr.getReceivers()) {
             wtc.reThrowException();
+            LOG.log(Level.INFO, "Actual message array  " + wtc, wtc.getMessage().toArray());
             Assert.assertArrayEquals(textValues, wtc.getMessage().toArray());
         }
     }

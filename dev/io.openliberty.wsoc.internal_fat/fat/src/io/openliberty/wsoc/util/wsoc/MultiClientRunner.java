@@ -103,15 +103,22 @@ public class MultiClientRunner {
      */
     public MultiClientTestContext runTest(int numMsgsExpected, int runTime, int connectTimeout, boolean messageCountOnly) throws Exception {
 
+        LOG.info("=== MultiClientRunner.runTest START ===");
+        LOG.info("Parameters: numMsgsExpected=" + numMsgsExpected + ", runTime=" + runTime +
+                 ", connectTimeout=" + connectTimeout + ", messageCountOnly=" + messageCountOnly);
+        LOG.info("URI: " + _uri);
+
         WebSocketContainer c = TestWsocContainer.getRef();
 
         int numClients = _receiveEndpoints.length;
+        LOG.info("Number of receiver clients: " + numClients);
 
         WsocTestContext.connectLatch = new CountDownLatch(numClients);
 
         int total = numClients;
         if (_publishEndpoint != null) {
             total++;
+            LOG.info("Publisher endpoint present, total clients: " + total);
         }
         WsocTestContext.completeLatch = new CountDownLatch(total);
 
@@ -120,14 +127,20 @@ public class MultiClientRunner {
         _receiveClients = new WsocTestContext[numClients];
         mctr.setReceiverContexts(_receiveClients);
 
+        LOG.info("Connecting " + numClients + " receiver clients...");
         for (int x = 0; x < _receiveEndpoints.length; x++) {
+            LOG.info("Connecting receiver client #" + x + " of type: " + _receiveEndpoints[x].getClass().getName());
             _receiveClients[x] = connectClient(_receiveEndpoints[x], c, numMsgsExpected, messageCountOnly);
+            LOG.info("Receiver client #" + x + " connected with context: " + _receiveClients[x]);
         }
 
         if (connectTimeout > 0) {
+            LOG.info("Waiting for receiver clients to connect (timeout: " + connectTimeout + "ms)...");
             if (!WsocTestContext.connectLatch.await(connectTimeout, TimeUnit.MILLISECONDS)) {
+                LOG.severe("TIMEOUT: Not all receiver clients connected within " + connectTimeout + " milliseconds!");
                 throw new IOException("Websocket Exception, all receiver clients did not connect within " + connectTimeout + " milliseconds.");
             }
+            LOG.info("All receiver clients connected successfully");
         }
 
         WsocTestContext.connectLatch = new CountDownLatch(1);
@@ -135,49 +148,133 @@ public class MultiClientRunner {
         ExecutorService publishExecutor = null;
 
         if (_publishEndpoint != null) {
+            LOG.info("Connecting publisher client of type: " + _publishEndpoint.getClass().getName());
             _publishClient = connectClient(_publishEndpoint, c, numMsgsExpected, messageCountOnly);
             mctr.setPublisherContext(_publishClient);
+            LOG.info("Publisher client connected with context: " + _publishClient);
 
             if (connectTimeout > 0) {
+                LOG.info("Waiting for publisher client to connect (timeout: " + connectTimeout + "ms)...");
                 if (!WsocTestContext.connectLatch.await(connectTimeout, TimeUnit.MILLISECONDS)) {
+                    LOG.severe("TIMEOUT: Publisher client did not connect within " + connectTimeout + " milliseconds!");
                     throw new IOException("Websocket Exception, publisher client did not connect within " + connectTimeout + " milliseconds.");
                 }
+                LOG.info("Publisher client connected successfully");
             }
 
             // Wait for onOpen call to complete on the other endpoint (_uri side)
+            LOG.info("Waiting 50ms for onOpen to complete on server side...");
             java.lang.Thread.sleep(50);
 
             if (_publishTask != null) {
+                LOG.info("Starting publisher task: " + _publishTask.getClass().getName());
                 _publishTask.setMultiTestContext(mctr);
                 publishExecutor = Executors.newSingleThreadExecutor();
                 publishExecutor.execute(_publishTask);
             }
         }
 
-        LOG.info("Waiting for wsoc test to finish");
+        LOG.info("Waiting for wsoc test to finish (timeout: " + runTime + "ms, completeLatch count: " +
+                 WsocTestContext.completeLatch.getCount() + ")");
 
         if (!WsocTestContext.completeLatch.await(runTime, TimeUnit.MILLISECONDS)) {
+            LOG.severe("TEST TIMEOUT: Test did not complete within " + runTime + " milliseconds!");
+            LOG.severe("Remaining completeLatch count: " + WsocTestContext.completeLatch.getCount());
+            
+            // Count and log clients by message count
+            int[] messageCounts = new int[numMsgsExpected + 1];
+            int clientsWithZeroMessages = 0;
+            int clientsWithPartialMessages = 0;
+            int clientsWithAllMessages = 0;
+            
+            for (int x = 0; x < numClients; x++) {
+                int msgCount = _receiveClients[x].getMessageCount();
+                if (msgCount >= 0 && msgCount <= numMsgsExpected) {
+                    messageCounts[msgCount]++;
+                }
+                
+                if (msgCount == 0) {
+                    clientsWithZeroMessages++;
+                } else if (msgCount < numMsgsExpected) {
+                    clientsWithPartialMessages++;
+                    // Log details for first 10 clients with partial messages
+                    if (clientsWithPartialMessages <= 10) {
+                        LOG.severe("Client #" + x + " received only " + msgCount + "/" + numMsgsExpected +
+                                  " messages, limit reached: " + _receiveClients[x].limitReached() +
+                                  ", session open: " + (_receiveClients[x].getSession() != null &&
+                                                       _receiveClients[x].getSession().isOpen()));
+                    }
+                } else {
+                    clientsWithAllMessages++;
+                }
+            }
+            
+            LOG.severe("=== MESSAGE COUNT SUMMARY ===");
+            LOG.severe("Clients with 0 messages: " + clientsWithZeroMessages);
+            LOG.severe("Clients with partial messages (1-" + (numMsgsExpected-1) + "): " + clientsWithPartialMessages);
+            LOG.severe("Clients with all " + numMsgsExpected + " messages: " + clientsWithAllMessages);
+            LOG.severe("Message count distribution:");
+            for (int i = 0; i <= numMsgsExpected; i++) {
+                if (messageCounts[i] > 0) {
+                    LOG.severe("  " + messageCounts[i] + " clients received " + i + " messages");
+                }
+            }
+            
+            if (_publishClient != null) {
+                LOG.severe("Publisher client message count: " + _publishClient.getMessageCount());
+            }
+            
             mctr.setTestTimedout(true);
             while (WsocTestContext.completeLatch.getCount() > 0) {
                 WsocTestContext.completeLatch.countDown();
+            }
+        } else {
+            LOG.info("Test completed successfully within timeout");
+            
+            // Log success summary
+            int clientsCompleted = 0;
+            for (int x = 0; x < numClients; x++) {
+                if (_receiveClients[x].getMessageCount() >= numMsgsExpected) {
+                    clientsCompleted++;
+                }
+            }
+            LOG.info("All " + clientsCompleted + " clients completed successfully");
+        }
+
+        // Log final message counts before closing (only if there were issues)
+        if (mctr.getTestTimedout()) {
+            LOG.info("=== Final Message Counts (First 20 clients) ===");
+            for (int x = 0; x < Math.min(20, numClients); x++) {
+                LOG.info("Receiver client #" + x + ": " + _receiveClients[x].getMessageCount() +
+                        " messages (expected: " + numMsgsExpected + ")");
+            }
+            if (numClients > 20) {
+                LOG.info("... (" + (numClients - 20) + " more clients not shown)");
+            }
+            if (_publishClient != null) {
+                LOG.info("Publisher client: " + _publishClient.getMessageCount() + " messages");
             }
         }
 
         // We'll close the publisher first
         if (_publishEndpoint != null) {
             if (_publishTask != null) {
+                LOG.info("Shutting down publisher executor");
                 //       java.lang.Thread.sleep(1000);
                 publishExecutor.shutdownNow();
             }
+            LOG.info("Closing publisher session");
             closeSession(_publishClient);
             //  java.lang.Thread.sleep(1000);
 
         }
 
+        LOG.info("Closing receiver sessions");
         for (int x = 0; x < numClients; x++) {
             closeSession(_receiveClients[x]);
         }
 
+        LOG.info("=== MultiClientRunner.runTest END ===");
         return mctr;
 
     }
@@ -186,28 +283,34 @@ public class MultiClientRunner {
         Session sess = wtc.getSession();
         if (sess != null) {
             if (sess.isOpen()) {
-                LOG.info("Reached max messages or test timeout, closing wsoc session");
+                LOG.info("Reached max messages or test timeout, closing wsoc session for " + wtc);
                 sess.close();
             }
         }
     }
 
     private WsocTestContext connectClient(Object endpoint, WebSocketContainer c, int maxMessages, boolean messagesCountOnly) throws Exception {
-        WsocTestContext wct = new WsocTestContext(maxMessages);
+        LOG.info("connectClient: Creating WsocTestContext with maxMessages=" + maxMessages +
+                ", messagesCountOnly=" + messagesCountOnly);
+        WsocTestContext wct = new WsocTestContext(maxMessages, messagesCountOnly);
 
         if (!(endpoint instanceof TestHelper)) {
-            throw new WsocTestException("Test class does not implement TestHelper,   can't run this test.");
+            LOG.severe("ERROR: Endpoint does not implement TestHelper: " + endpoint.getClass().getName());
+            throw new WsocTestException("Test class does not implement TestHelper, can't run this test.");
         }
         TestHelper th = (TestHelper) endpoint;
         th.addTestResponse(wct);
-//        LOG.info("Client " + x + " connecting to wsoc server...");
+        LOG.info("TestHelper.addTestResponse called for endpoint: " + endpoint.getClass().getName());
 
         if (endpoint instanceof Endpoint) {
+            LOG.info("Connecting programmatic endpoint to: " + _uri);
             wct.addSession(c.connectToServer((Endpoint) endpoint, _cfg, _uri));
         }
         else {
+            LOG.info("Connecting annotated endpoint to: " + _uri);
             wct.addSession(c.connectToServer(endpoint, _uri));
         }
+        LOG.info("Client connected successfully, session: " + wct.getSession());
         return wct;
 
     }
