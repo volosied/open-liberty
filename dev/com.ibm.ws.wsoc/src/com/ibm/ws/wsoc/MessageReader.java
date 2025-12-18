@@ -131,6 +131,10 @@ public class MessageReader {
                                        boolean anticipatingCloseFrame) throws FrameFormatException, WsocBufferException, MaxMessageException {
         // return true if a full message has been read in, otherwise false
 
+        System.out.println("MessageReader.processRead: ENTRY - txtPartialAvailable=" + txtPartialAvailable +
+                ", binaryPartialAvailable=" + binaryPartialAvailable +
+                ", anticipatingCloseFrame=" + anticipatingCloseFrame);
+
         WsByteBuffer currentBuf = null;
         if (rrc != null) {
             currentBuf = rrc.getBuffer();
@@ -141,13 +145,14 @@ public class MessageReader {
         } else {
             currentBuf.flip();
         }
+        
+        System.out.println("MessageReader.processRead: currentBuf=" + (currentBuf != null ? "present, remaining=" + currentBuf.remaining() : "null"));
+        
         int nextMessagePosition;
         FrameState frameState;
 
         if (needNewFrameProcessor) {
-            if (tc.isDebugEnabled()) {
-                Tr.debug(tc, "creating a new FrameReadProcessor");
-            }
+            System.out.println("MessageReader.processRead: creating a new FrameReadProcessor");
             frameProcessor = new FrameReadProcessor();
             frameProcessor.initialize(shouldReadMaskedData);
             needNewFrameProcessor = false;
@@ -155,9 +160,7 @@ public class MessageReader {
 
         nextMessagePosition = frameProcessor.processNextBuffer(currentBuf);
         frameState = frameProcessor.getFrameState();
-        if (tc.isDebugEnabled()) {
-            Tr.debug(tc, "frame state is: " + frameState + " frameSequenceState is: " + frameSequenceState + " nextMessagePosition is: " + nextMessagePosition);
-        }
+        System.out.println("MessageReader.processRead: frame state is: " + frameState + " frameSequenceState is: " + frameSequenceState + " nextMessagePosition is: " + nextMessagePosition);
 
         if (nextMessagePosition >= 0) {
             // the buffer contains the last part of the current message, and at least the start of the next,
@@ -200,6 +203,9 @@ public class MessageReader {
         }
 
         if (frameState == FrameState.PAYLOAD_COMPLETE) {
+            System.out.println("MessageReader.processRead: PAYLOAD_COMPLETE - payloadLength=" + frameProcessor.getPayloadLength() +
+                    ", controlFrame=" + frameProcessor.getControlFrame());
+            
             // if we have read in all the payload for this frame, then unmask the data
             if (shouldReadMaskedData) {
                 frameProcessor.unmaskPayload();
@@ -223,6 +229,8 @@ public class MessageReader {
                 if ((frameSequenceState == FSeqState.FIRST_AND_LAST) || (frameSequenceState == FSeqState.LAST_OF_MULTIPLE)) {
                     // if this is the last frame for this message, then get the array of byte buffers that hold the payload data for all the frames
                     gatherUpAllFramesAndPayload();
+                    System.out.println("MessageReader.processRead: Returning COMPLETE message, opcodeType=" + firstFrameOpcodeType +
+                            ", payloadSize=" + messageCompletePayloadSize);
                     MessageReadInfo info = new MessageReadInfo(MessageReadInfo.State.COMPLETE, firstFrameOpcodeType, (nextMessagePosition >= 0));
                     return info;
 
@@ -234,6 +242,7 @@ public class MessageReader {
                         } else if ((firstFrameOpcodeType == OpcodeType.BINARY_WHOLE) && binaryPartialAvailable) {
                             gatherUpAllFramesAndPayload();
                         }
+                        System.out.println("MessageReader.processRead: Returning PARTIAL_COMPLETE message, opcodeType=" + firstFrameOpcodeType);
                         MessageReadInfo info = new MessageReadInfo(MessageReadInfo.State.PARTIAL_COMPLETE, firstFrameOpcodeType, (nextMessagePosition >= 0));
                         return info;
                     }

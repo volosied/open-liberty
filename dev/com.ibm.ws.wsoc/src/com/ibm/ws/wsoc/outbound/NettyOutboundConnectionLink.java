@@ -75,6 +75,10 @@ public class NettyOutboundConnectionLink implements ConnectionLink {
 
     @Override
     public void close(VirtualConnection vc, Exception e) {
+        System.out.println("NettyOutboundConnectionLink.close: closing connection, exception=" + (e != null ? e.getMessage() : "null"));
+        if (e != null) {
+            e.printStackTrace();
+        }
         connection.close();
     }
 

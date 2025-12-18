@@ -134,12 +134,16 @@ public class NettyHttpRequestorWsoc10 implements HttpRequestor {
         InetSocketAddress remoteAddress = endpointAddress.getRemoteAddress();
         String host = remoteAddress.getHostString();
         int port = remoteAddress.getPort();
+        System.out.println("NettyHttpRequestorWsoc10.startConnection: connecting to " + host + ":" + port);
         factory.handler(new WsocClientInitializer(factory.getBaseInitializer(), this));
         activeChannelLatch = new CountDownLatch(1);
         final AtomicBoolean connectSucceded = new AtomicBoolean(true);
         connection = WsocOutboundChain.getNettyFramework().startOutbound(factory, host, port, future -> {
             if (!future.isSuccess()) {
+                System.out.println("NettyHttpRequestorWsoc10.startConnection: connection FAILED");
                 connectSucceded.set(false);
+            } else {
+                System.out.println("NettyHttpRequestorWsoc10.startConnection: connection SUCCESS");
             }
             activeChannelLatch.countDown();
         });
@@ -148,6 +152,7 @@ public class NettyHttpRequestorWsoc10 implements HttpRequestor {
         if(!connectSucceded.get()) {
             throw new NettyException("Unable to connect to the specified endpoint!");
         }
+        System.out.println("NettyHttpRequestorWsoc10.startConnection: connection established");
     }
 
     @Override
@@ -157,12 +162,14 @@ public class NettyHttpRequestorWsoc10 implements HttpRequestor {
 
     @Override
     public void sendRequest(ParametersOfInterest poi) throws IOException, MessageSentException {
+        System.out.println("NettyHttpRequestorWsoc10.sendRequest: ENTRY");
         access.setTCPConnectionContext(new NettyTCPConnectionContext(connection, null));
         access.setDeviceConnLink(new NettyOutboundConnectionLink(connection));
 
         String uriPath = endpointAddress.getURI().getPath();
         String queryString = endpointAddress.getURI().getQuery();
         String finalUri = uriPath + (queryString != null && !queryString.isEmpty() ? "?" + queryString : "");
+        System.out.println("NettyHttpRequestorWsoc10.sendRequest: finalUri=" + finalUri);
 
         FullHttpRequest request = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, finalUri);
         HttpUtil.setContentLength(request, 0);
@@ -241,7 +248,9 @@ public class NettyHttpRequestorWsoc10 implements HttpRequestor {
         }
 
         // Send HTTP Upgrade request here
+        System.out.println("NettyHttpRequestorWsoc10.sendRequest: sending HTTP Upgrade request");
         connection.writeAndFlush(request);
+        System.out.println("NettyHttpRequestorWsoc10.sendRequest: HTTP Upgrade request sent");
 
         // PH10279
         // client side needs to store query string and path parameters for later retrieval from the session object
@@ -263,16 +272,21 @@ public class NettyHttpRequestorWsoc10 implements HttpRequestor {
 
     @Override
     public WsByteBuffer completeResponse() throws IOException {
+        System.out.println("NettyHttpRequestorWsoc10.completeResponse: waiting for response");
         try {
             responsePromise.get(HttpOption.READ_TIMEOUT.parse(httpOptions), TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutException e1) {
+            System.out.println("NettyHttpRequestorWsoc10.completeResponse: TIMEOUT waiting for response: " + e1.getMessage());
             // This most probably means we timed out waiting for a response and so
             // we throw a socket timeout exception to wrap around the exception reached
             throw new SocketTimeoutException(e1.getMessage());
         }
+        System.out.println("NettyHttpRequestorWsoc10.completeResponse: response received");
         if (resp == null) {
+            System.out.println("NettyHttpRequestorWsoc10.completeResponse: ERROR - resp is null");
             throw new IOException("Don't have a response yet!");
         }
+        System.out.println("NettyHttpRequestorWsoc10.completeResponse: response status=" + resp.status().code());
         if (StatusCodes.SWITCHING_PROTOCOLS.getIntCode() != resp.status().code()) {
             String msg = Tr.formatMessage(tc, "client.invalid.returncode", resp.status().code(),
                                           endpointAddress.getURI().toString());
