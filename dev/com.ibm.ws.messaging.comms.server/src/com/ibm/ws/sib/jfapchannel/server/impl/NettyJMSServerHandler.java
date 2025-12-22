@@ -222,7 +222,7 @@ public class NettyJMSServerHandler extends SimpleChannelInboundHandler<WsByteBuf
 	}
 
     /* 
-     * Inactive channel means it's closed.  (No need)
+     * Inactive channel means it's closed. Just invaliate the connection.
      */
 	@Override
 	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
