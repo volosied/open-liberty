@@ -93,7 +93,7 @@ public class NettyNetworkConnection implements NetworkConnection{
 		this.isInbound = isInbound;
 		this.tlsProvider = tlsProvider;
 		this.nettyBundle = nettyBundle;
-		this.bootstrap = bootstrap.clone();
+		this.bootstrap = bootstrap.clone(); // Cloned for Thread Safety
 
 		if (TraceComponent.isAnyTracingEnabled() && tc.isEntryEnabled()) SibTr.exit(tc, "<init>", new Object[] {bootstrap, chainName});
 	}
