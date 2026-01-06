@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2021 IBM Corporation and others.
+ * Copyright (c) 2021, 2026 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -52,4 +52,24 @@ public class BootstrapExtended extends Bootstrap {
         return this.initializer;
     }
 
+    /**
+     *  Clone this bootstrap
+     *
+     * @return BootstrapExtended
+     */
+    @Override
+    @SuppressWarnings("deprecation")
+    public BootstrapExtended clone() {
+
+        Bootstrap parentClone = super.clone();
+        BootstrapExtended clone = new BootstrapExtended();
+        
+        clone.group(parentClone.config().group());
+        clone.channelFactory(parentClone.config().channelFactory());
+        
+        clone.config = this.config;
+        clone.initializer = this.initializer;
+        
+        return clone;
+    }
 }

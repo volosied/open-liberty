@@ -89,12 +89,10 @@ public class NettyNetworkConnection implements NetworkConnection{
 		if (TraceComponent.isAnyTracingEnabled() && tc.isEntryEnabled()) SibTr.entry(this, tc, "<init>" ,new Object[] {bootstrap, chainName});
 
 		this.chainName = chainName;
-		// TODO: Check if this is the best way to do this for SSL options https://github.com/OpenLiberty/open-liberty/issues/24813
 		this.sslOptions = sslOptions == null ? null : new HashMap<String, Object>((Map)sslOptions);
 		this.isInbound = isInbound;
 		this.tlsProvider = tlsProvider;
 		this.nettyBundle = nettyBundle;
-		// TODO Check if we need to clone this https://github.com/OpenLiberty/open-liberty/issues/24813
 		this.bootstrap = bootstrap;
 
 		if (TraceComponent.isAnyTracingEnabled() && tc.isEntryEnabled()) SibTr.exit(tc, "<init>", new Object[] {bootstrap, chainName});
@@ -228,12 +226,13 @@ public class NettyNetworkConnection implements NetworkConnection{
 		}
 		else {
 			try {
-
-				bootstrap.handler(new NettyJMSClientInitializer(bootstrap.getBaseInitializer(), target, listener));
+				// Clone bootstrap object to avoid using a shared instance across multiple connections
+				BootstrapExtended connectionBootstrap = bootstrap.clone();
+				connectionBootstrap.handler(new NettyJMSClientInitializer(bootstrap.getBaseInitializer(), target, listener));
 
 				NettyNetworkConnection parent = this;
 
-				nettyBundle.startOutbound(this.bootstrap, target.getRemoteAddress().getAddress().getHostAddress(), target.getRemoteAddress().getPort(), f -> {
+				nettyBundle.startOutbound(connectionBootstrap, target.getRemoteAddress().getAddress().getHostAddress(), target.getRemoteAddress().getPort(), f -> {
 					if (f.isCancelled() || !f.isSuccess()) {
 						SibTr.debug(this, tc, "Channel exception during connect: " + f.cause().getMessage());
 						if (TraceComponent.isAnyTracingEnabled() && tc.isEntryEnabled()) SibTr.entry(parent, tc, "destroy", f.cause());
