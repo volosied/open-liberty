@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2021, 2025 IBM Corporation and others.
+ * Copyright (c) 2021, 2026 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -135,26 +135,22 @@ public class NettyFrameworkImpl implements ServerQuiesceListener, NettyFramework
                 }
             });
         }
-        IoHandlerFactory parentFactory;
-        IoHandlerFactory childFactory;
+        IoHandlerFactory factory;
         if (Epoll.isAvailable()) {
-            parentFactory = EpollIoHandler.newFactory();
-            childFactory = EpollIoHandler.newFactory();
+            factory = EpollIoHandler.newFactory();
         } else if (KQueue.isAvailable()) {
-            parentFactory = KQueueIoHandler.newFactory();
-            childFactory = KQueueIoHandler.newFactory();
+            factory = KQueueIoHandler.newFactory();
         } else {
-            parentFactory = NioIoHandler.newFactory();
-            childFactory = NioIoHandler.newFactory();
+            factory = NioIoHandler.newFactory();
         }
 
         if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
-            Tr.debug(tc, "Created IoHandlerFactories -> parent: " + parentFactory + ", child: " + childFactory);
+            Tr.debug(tc, "Created IoHandlerFactory -> factory: " + factory);
         }
 
         // Compared to channelfw, quiesce is hit every time because
         // connections are lazy cleaned on deactivate
-        parentGroup = new MultiThreadIoEventLoopGroup(1, parentFactory);
+        parentGroup = new MultiThreadIoEventLoopGroup(1, factory);
         // Attempt to get the properties from the passed configuration but give priority to
         // the system properties if set
         int maxThreads;
@@ -178,7 +174,7 @@ public class NettyFrameworkImpl implements ServerQuiesceListener, NettyFramework
             });
         }
         AutoScalingEventExecutorChooserFactory scaler = createThreadScaler();
-        childGroup = new MultiThreadIoEventLoopGroup(maxThreads, null, scaler, childFactory);
+        childGroup = new MultiThreadIoEventLoopGroup(maxThreads, null, scaler, factory);
         outboundConnections = new DefaultChannelGroup(childGroup.next());
         
         if (metricsWindow > 0) {
