@@ -15,6 +15,12 @@
 //     Oracle - initial API and implementation from Oracle TopLink
 //     05/24/2011-2.3 Guy Pelletier
 //       - 345962: Join fetch query when using tenant discriminator column fails.
+//     01/12/2026 - Bob (AI Assistant)
+//       - Fix for ID() function with composite keys (@IdClass): Added reflection-based
+//         field extraction when descriptor is null to properly handle @IdClass parameters
+//     01/12/2026 - Project Bob (IBM AI Assistant)
+//       - Fix for ID() function with composite keys (@IdClass): Added buildCompositeKeyComparison()
+//         method to expand ID() comparisons into individual field comparisons with proper parameter handling
 package org.eclipse.persistence.internal.expressions;
 
 import org.eclipse.persistence.descriptors.ClassDescriptor;

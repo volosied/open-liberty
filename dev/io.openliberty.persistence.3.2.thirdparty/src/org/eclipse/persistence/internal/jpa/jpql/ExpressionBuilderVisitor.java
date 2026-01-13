@@ -29,6 +29,9 @@
 //       - Issue 1885: Implement new JPQLGrammar for upcoming Jakarta Persistence 3.2
 //     07/24/2024: Ondro Mihalyi
 //       - Issues 2197, 2198, and 2199: JPQL query incorrectly parsed when "this" variable used explicitly in path expressions
+//     01/12/2026 - Project Bob (IBM AI Assistant)
+//       - Fix for ID() function with composite keys (@IdClass): Added buildCompositeKeyComparison()
+//         method to expand ID() comparisons into individual field comparisons with proper parameter handling
 package org.eclipse.persistence.internal.jpa.jpql;
 
 import org.eclipse.persistence.descriptors.ClassDescriptor;
@@ -809,7 +812,7 @@ final class ExpressionBuilderVisitor extends JPQLFunctionsAbstractBuilder implem
 
     /**
      * Builds a comparison expression for composite keys by creating individual field comparisons
-     * and combining them with AND/OR operators.
+     * and combining them with AND/OR operators. Created to address Eclipse Issue 2211.
      *
      * @param stateFieldPaths The collection of field paths from the ID() expression
      * @param parameterExpression The parameter expression (e.g., ?1)
@@ -824,9 +827,6 @@ final class ExpressionBuilderVisitor extends JPQLFunctionsAbstractBuilder implem
             ComparisonExpressionVisitor visitor) {
 
         Expression result = null;
-
-        // Check if parameter expression is a ParameterExpression
-        boolean isParameter = parameterExpression instanceof ParameterExpression;
 
         for (StateFieldPathExpression fieldPath : stateFieldPaths) {
             // Build expression for this field: e.g., c.name
