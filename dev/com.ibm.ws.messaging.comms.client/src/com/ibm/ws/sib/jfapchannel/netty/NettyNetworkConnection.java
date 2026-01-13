@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2022, 2025 IBM Corporation and others.
+ * Copyright (c) 2022, 2026 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -158,18 +158,19 @@ public class NettyNetworkConnection implements NetworkConnection{
 			throw new NettyException("Haven't registered channel to set timeout");
 		}
 		ChannelPipeline pipeline = this.chan.pipeline();
-		if(getHearbeatInterval() != timeout * 1000) {
-			if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled())
-				SibTr.debug(this, tc, "setHearbeatInterval", "Replacing Heartbeat Interval for Channel: "+this.chan+" from: " + getHearbeatInterval() + " to: "+timeout);
-			pipeline.replace(
-					NettyNetworkConnectionFactory.HEARTBEAT_HANDLER_KEY, 
-					NettyNetworkConnectionFactory.HEARTBEAT_HANDLER_KEY, 
-					new NettyJMSHeartbeatHandler(timeout));
-			if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled())
-				SibTr.debug(this, tc, "setHearbeatInterval", "Heartbeat Interval set for Channel: "+this.chan+" pipeline names" + pipeline.names());
-			
+		synchronized (pipeline) {
+			if(getHearbeatInterval() != timeout * 1000) {
+				if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled())
+					SibTr.debug(this, tc, "setHearbeatInterval", "Replacing Heartbeat Interval for Channel: "+this.chan+" from: " + getHearbeatInterval() + " to: "+timeout);
+				pipeline.replace(
+						NettyNetworkConnectionFactory.HEARTBEAT_HANDLER_KEY, 
+						NettyNetworkConnectionFactory.HEARTBEAT_HANDLER_KEY, 
+						new NettyJMSHeartbeatHandler(timeout));
+				if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled())
+					SibTr.debug(this, tc, "setHearbeatInterval", "Heartbeat Interval set for Channel: "+this.chan+" pipeline names" + pipeline.names());
+				
+			}
 		}
-			
 		if (TraceComponent.isAnyTracingEnabled() && tc.isEntryEnabled()) SibTr.exit(this, tc, "setHearbeatInterval");
 	}
 
