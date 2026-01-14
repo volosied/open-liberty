@@ -168,6 +168,13 @@ public class InboundTransmissionParser
    {
       if (TraceComponent.isAnyTracingEnabled() && tc.isEntryEnabled()) SibTr.entry(this, tc, "<init>", new Object[] {connection, acceptListener, ""+onClientSide});
 
+      // DEBUG: Log parser creation to track parser-to-connection mapping
+      System.out.println("RACE_DEBUG: Parser created - Thread=" + Thread.currentThread().getName() +
+                         " ThreadId=" + Thread.currentThread().getId() +
+                         " ParserInstance=" + System.identityHashCode(this) +
+                         " ConnectionInstance=" + System.identityHashCode(connection) +
+                         " OnClientSide=" + onClientSide);
+
       this.connection = connection;
       this.acceptListener = acceptListener;
       this.onClientSide = onClientSide;
@@ -203,6 +210,12 @@ public class InboundTransmissionParser
    {
       if (TraceComponent.isAnyTracingEnabled() && tc.isEntryEnabled()) SibTr.entry(this, tc, "parse", transmissionData);
       if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) JFapUtils.debugTraceWsByteBufferInfo(this, tc, transmissionData, "transmissionBuffer");
+
+      // DEBUG: Log thread and parser instance info to detect race conditions
+      System.out.println("RACE_DEBUG: parse() entered - Thread=" + Thread.currentThread().getName() +
+                         " ThreadId=" + Thread.currentThread().getId() +
+                         " ParserInstance=" + System.identityHashCode(this) +
+                         " ExpectedPacket=" + expectedPacketNumber);
 
       needMoreData = false;
       boolean encounteredError = false;
@@ -312,6 +325,13 @@ public class InboundTransmissionParser
                primaryHeaderFields.packetNumber = parseHeaderBuffer.get();
                if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) SibTr.debug(tc, "packet number: "+primaryHeaderFields.packetNumber+" expected: "+expectedPacketNumber);
 
+               // DEBUG: Enhanced logging for packet validation to detect race conditions
+               System.out.println("RACE_DEBUG: Packet validation - Thread=" + Thread.currentThread().getName() +
+                                  " ThreadId=" + Thread.currentThread().getId() +
+                                  " ParserInstance=" + System.identityHashCode(this) +
+                                  " ReceivedPacket=" + primaryHeaderFields.packetNumber +
+                                  " ExpectedPacket=" + expectedPacketNumber +
+                                  " Connection=" + System.identityHashCode(connection));
               
                if (primaryHeaderFields.packetNumber != expectedPacketNumber)
                {
@@ -319,9 +339,23 @@ public class InboundTransmissionParser
                   throwable = new SIConnectionLostException(nls.getFormattedMessage("TRANSPARSER_PROTOCOLERROR_SICJ0053", new Object[] {connection.remoteHostAddress, connection.chainName}, "TRANSPARSER_PROTOCOLERROR_SICJ0053"));   // D226223
                   // This FFDC was generated because our peer sent us a transmission containing
                   // a sequence number that did not match the one we expected.
+                  
+                  // DEBUG: Enhanced FFDC data and console output for race condition diagnosis
+                  System.err.println("!!! RACE_DEBUG: PACKET MISMATCH DETECTED !!!");
+                  System.err.println("    Thread=" + Thread.currentThread().getName());
+                  System.err.println("    ThreadId=" + Thread.currentThread().getId());
+                  System.err.println("    ParserInstance=" + System.identityHashCode(this));
+                  System.err.println("    Expected=" + expectedPacketNumber);
+                  System.err.println("    Received=" + primaryHeaderFields.packetNumber);
+                  System.err.println("    Connection=" + System.identityHashCode(connection));
+                  
                   final Object[] ffdcData = new Object[] {
                         "expected packet number="+expectedPacketNumber,
                         "received packet number="+primaryHeaderFields.packetNumber,
+                        "thread name=" + Thread.currentThread().getName(),
+                        "thread id=" + Thread.currentThread().getId(),
+                        "parser instance=" + System.identityHashCode(this),
+                        "connection instance=" + System.identityHashCode(connection),
                         getFormattedBytes(contextBuffer)
                   };
                   FFDCFilter.processException(throwable,
@@ -332,6 +366,10 @@ public class InboundTransmissionParser
                }
                else
                {
+                  // DEBUG: Log successful packet acceptance
+                  System.out.println("RACE_DEBUG: Packet ACCEPTED - Thread=" + Thread.currentThread().getName() +
+                                     " Packet=" + primaryHeaderFields.packetNumber +
+                                     " NextExpected=" + (byte)(expectedPacketNumber + 1));
                   ++expectedPacketNumber;
                   primaryHeaderFields.segmentType = parseHeaderBuffer.get();
                   if (primaryHeaderFields.segmentType < 0) primaryHeaderFields.segmentType += 256;
