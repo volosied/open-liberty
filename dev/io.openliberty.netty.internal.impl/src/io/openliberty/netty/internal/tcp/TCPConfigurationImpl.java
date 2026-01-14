@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2021, 2025 IBM Corporation and others.
+ * Copyright (c) 2021, 2026 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -23,6 +23,7 @@ import com.ibm.ws.ffdc.FFDCSelfIntrospectable;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.AdaptiveRecvByteBufAllocator;
 import io.netty.channel.ChannelException;
 import io.netty.channel.ChannelOption;
 import io.openliberty.accesslists.AccessListKeysFacade;
@@ -148,6 +149,11 @@ public class TCPConfigurationImpl implements BootstrapConfiguration, TCPConfigCo
     public void applyConfiguration(ServerBootstrap bootstrap) {
         bootstrap.option(ChannelOption.SO_REUSEADDR, getSoReuseAddress());
         bootstrap.childOption(ChannelOption.SO_LINGER, getSoLinger());
+        bootstrap.option(
+            ChannelOption.RCVBUF_ALLOCATOR,
+            // initial buffer to 2048 over 1024
+            new AdaptiveRecvByteBufAllocator(64, 2048, 65536)
+        );
     }
 
     /**
@@ -160,6 +166,12 @@ public class TCPConfigurationImpl implements BootstrapConfiguration, TCPConfigCo
     public void applyConfiguration(Bootstrap bootstrap) {
         bootstrap.option(ChannelOption.SO_REUSEADDR, getSoReuseAddress());
         bootstrap.option(ChannelOption.SO_LINGER, getSoLinger());
+        bootstrap.option(
+            ChannelOption.RCVBUF_ALLOCATOR,
+            // initial buffer to 2048 over 1024
+            new AdaptiveRecvByteBufAllocator(64, 2048, 65536)
+        );
+
     }
 
     public AddressAndHostNameAccessLists getAccessLists() {
