@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2024,2025 IBM Corporation and others.
+ * Copyright (c) 2024, 2026 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -934,8 +934,8 @@ public class JakartaDataRecreateServlet extends FATServlet {
         assertEquals("Minnesota", rochesters.get(1).getStateName());
     }
 
-    @Test
-    @Ignore("Reference issue: https://github.com/OpenLiberty/open-liberty/issues/29073")
+    @Test // Reference issue: https://github.com/OpenLiberty/open-liberty/issues/29073
+    // @SkipIfSysProp(DB_Postgres) <--- TODO - -Is this needed for this test? 
     public void testOLGH29073_WHERECLAUSE() throws Exception {
         deleteAllEntities(City.class);
 
@@ -951,17 +951,12 @@ public class JakartaDataRecreateServlet extends FATServlet {
 
         tx.begin();
         try {
-            //This one failed
             long version1 = em.createQuery("SELECT VERSION(c) FROM City c WHERE ID(c) = ?1", Long.class)
                             .setParameter(1, new CityId("Rochester", "Minnesota"))
                             .getSingleResult();
 
-            //This one failed
             long version2 = em.createQuery("SELECT VERSION(THIS) FROM City  WHERE ID(THIS) = ?1", Long.class)
                             .setParameter(1, new CityId("Rochester", "Minnesota"))
-                            .getSingleResult();
-            //This one passed
-            long rochesters = em.createQuery("SELECT VERSION(THIS) FROM City", Long.class)
                             .getSingleResult();
         } catch (Exception e) {
             tx.rollback();
