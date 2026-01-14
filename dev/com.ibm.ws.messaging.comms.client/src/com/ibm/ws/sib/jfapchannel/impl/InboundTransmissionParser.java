@@ -199,7 +199,7 @@ public class InboundTransmissionParser
     * is dispatched to the appropriate method for processing.
     * @param transmissionData A chunk of transmission data to be parsed.
     */
-   public void parse(WsByteBuffer transmissionData)
+   public synchronized void parse(WsByteBuffer transmissionData)
    {
       if (TraceComponent.isAnyTracingEnabled() && tc.isEntryEnabled()) SibTr.entry(this, tc, "parse", transmissionData);
       if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) JFapUtils.debugTraceWsByteBufferInfo(this, tc, transmissionData, "transmissionBuffer");
