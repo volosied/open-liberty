@@ -52,7 +52,7 @@ public class NettyJMSHeartbeatHandler extends IdleStateHandler{
 	}
 
 	public NettyJMSHeartbeatHandler(int heartbeatTimeSeconds) {
-		super(heartbeatTimeSeconds, 0, 0);
+		super(0, 0, heartbeatTimeSeconds); // reader, writer, all timeouts
 		if (tc.isEntryEnabled())
 			SibTr.entry(this, tc, "<init>", heartbeatTimeSeconds);
 		if (tc.isEntryEnabled())
