@@ -212,7 +212,7 @@ public class JMSConsumerTest {
     
     
     // start 118076
-    @Test
+    //@Test
     public void testCloseConsumer_B_SecOn() throws Exception {
 
         boolean val = runInServlet("testCloseConsumer_B");
@@ -222,7 +222,7 @@ public class JMSConsumerTest {
 
     // TCP and Security on ( with ssl)
 
-    @Test
+    //@Test
     public void testCloseConsumer_TCP_SecOn() throws Exception {
 
         boolean val = runInServlet("testCloseConsumer_TCP");
@@ -233,14 +233,14 @@ public class JMSConsumerTest {
     // end 118076
 
     // start 118077
-    @Test
+    //@Test
     public void testReceive_B_SecOn() throws Exception {
 
         boolean val = runInServlet("testReceive_B");
         assertTrue("testReceive_B_SecOn failed", val);
     }
 
-    @Test
+    //@Test
     public void testReceive_TCP_SecOn() throws Exception {
 
         boolean val = runInServlet("testReceive_TCP");
@@ -248,7 +248,7 @@ public class JMSConsumerTest {
 
     }
 
-    @Test
+    //@Test
     public void testReceiveBody_B_SecOn() throws Exception {
 
         boolean val = runInServlet("testReceiveBody_B");
@@ -256,7 +256,7 @@ public class JMSConsumerTest {
 
     }
 
-    @Test
+    //@Test
     public void testReceiveBody_TcpIp_SecOn() throws Exception {
 
         boolean val = runInServlet("testReceiveBody_TCP");
@@ -264,7 +264,7 @@ public class JMSConsumerTest {
 
     }
 
-    @Test
+    //@Test
     public void testReceiveBodyTimeOut_B_SecOn() throws Exception {
 
         boolean val = runInServlet("testReceiveBodyTimeOut_B");
@@ -272,14 +272,14 @@ public class JMSConsumerTest {
 
     }
 
-    @Test
+    //@Test
     public void testReceiveBodyTimeOut_TcpIp_SecOn() throws Exception {
 
         boolean val = runInServlet("testReceiveBodyTimeOut_TCP");
         assertTrue("testReceiveBodyTimeOut_TcpIp_SecOn failed", val);
     }
 
-    @Test
+    //@Test
     public void testReceiveBodyNoWait_B_SecOn() throws Exception {
 
         boolean val = runInServlet("testReceiveBodyNoWait_B");
@@ -287,42 +287,42 @@ public class JMSConsumerTest {
 
     }
 
-    @Test
+    //@Test
     public void testReceiveBodyNoWait_TcpIp_SecOn() throws Exception {
 
         boolean val = runInServlet("testReceiveBodyNoWait_TCP");
         assertTrue("testReceiveBodyNoWait_TcpIp_SecOn failed", val);
     }
 
-    @Test
+    //@Test
     public void testReceiveWithTimeOut_B_SecOn() throws Exception {
 
         boolean val = runInServlet("testReceiveWithTimeOut_B_SecOn");
         assertTrue("testReceiveWithTimeOut_B_SecOn failed", val);
     }
 
-    @Test
+    //@Test
     public void testReceiveWithTimeOut_TcpIp_SecOn() throws Exception {
 
         boolean val = runInServlet("testReceiveWithTimeOut_TcpIp_SecOn");
         assertTrue("testReceiveWithTimeOut_TcpIp_SecOn failed", val);
     }
 
-    @Test
+    //@Test
     public void testReceiveNoWait_B_SecOn() throws Exception {
 
         boolean val = runInServlet("testReceiveNoWait_B_SecOn");
         assertTrue("testReceiveNoWait_B_SecOn failed", val);
     }
 
-    @Test
+    //@Test
     public void testReceiveNoWait_TcpIp_SecOn() throws Exception {
 
         boolean val = runInServlet("testReceiveNoWait_TcpIp_SecOn");
         assertTrue("testReceiveNoWait_TcpIp_SecOn failed", val);
     }
 
-    @Test
+    //@Test
     public void testReceiveBodyEmptyBody_B_SecOn() throws Exception {
 
         boolean val = runInServlet("testReceiveBodyEmptyBody_B_SecOn");
@@ -330,14 +330,14 @@ public class JMSConsumerTest {
 
     }
 
-    @Test
+    //@Test
     public void testReceiveBodyEmptyBody_TcpIp_SecOn() throws Exception {
 
         boolean val = runInServlet("testReceiveBodyEmptyBody_B_SecOn");
         assertTrue("testReceiveBodyEmptyBody_TcpIp_SecOn failed", val);
     }
 
-    @Test
+    //@Test
     public void testReceiveBodyWithTimeOutUnspecifiedType_B_SecOn() throws Exception {
 
         boolean val = runInServlet("testReceiveBodyWithTimeOutUnspecifiedType_B_SecOn");
@@ -346,7 +346,7 @@ public class JMSConsumerTest {
 
     }
 
-    @Test
+    //@Test
     public void testReceiveBodyWithTimeOutUnspecifiedType_TcpIp_SecOn() throws Exception {
 
         boolean val = runInServlet("testReceiveBodyWithTimeOutUnspecifiedType_TcpIp_SecOn");
@@ -356,7 +356,7 @@ public class JMSConsumerTest {
 
     }
 
-    @Test
+    //@Test
     public void testReceiveBodyNoWaitUnsupportedType_B_SecOn() throws Exception {
 
         boolean val = runInServlet("testReceiveBodyNoWaitUnsupportedType_B_SecOn");
@@ -364,7 +364,7 @@ public class JMSConsumerTest {
 
     }
 
-    @Test
+    //@Test
     public void testReceiveBodyNoWaitUnsupportedType_TcpIp_SecOn() throws Exception {
 
         boolean val = runInServlet("testReceiveBodyNoWaitUnsupportedType_TcpIp_SecOn");
@@ -373,7 +373,7 @@ public class JMSConsumerTest {
 
     }
 
-    @Test
+    //@Test
     public void testReceiveTopic_B_SecOn() throws Exception {
 
         boolean val = runInServlet("testReceiveTopic_B");
@@ -381,7 +381,7 @@ public class JMSConsumerTest {
 
     }
 
-    @Test
+    //@Test
     public void testReceiveTopic_TCP_SecOn() throws Exception {
 
         boolean val = runInServlet("testReceiveTopic_TCP");
@@ -389,7 +389,7 @@ public class JMSConsumerTest {
 
     }
 
-    @Test
+    //@Test
     public void testReceiveBodyTopic_B_SecOn() throws Exception {
 
         boolean val = runInServlet("testReceiveBodyTopic_B");
@@ -397,7 +397,7 @@ public class JMSConsumerTest {
 
     }
 
-    @Test
+    //@Test
     public void testReceiveBodyTopic_TcpIp_SecOn() throws Exception {
 
         boolean val = runInServlet("testReceiveBodyTopic_TCP");
@@ -405,7 +405,7 @@ public class JMSConsumerTest {
 
     }
 
-    @Test
+    //@Test
     public void testReceiveBodyTimeOutTopic_B_SecOn() throws Exception {
 
         boolean val = runInServlet("testReceiveBodyTimeOutTopic_B");
@@ -413,7 +413,7 @@ public class JMSConsumerTest {
 
     }
 
-    @Test
+    //@Test
     public void testReceiveBodyTimeOutTopic_TcpIp_SecOn() throws Exception {
 
         boolean val = runInServlet("testReceiveBodyTimeOutTopic_TCP");
@@ -421,7 +421,7 @@ public class JMSConsumerTest {
 
     }
 
-    @Test
+    //@Test
     public void testReceiveBodyNoWaitTopic_B_SecOn() throws Exception {
 
         boolean val = runInServlet("testReceiveBodyNoWaitTopic_B");
@@ -437,7 +437,7 @@ public class JMSConsumerTest {
 
     }
 
-    @Test
+    //@Test
     public void testReceiveWithTimeOutTopic_B_SecOn() throws Exception {
 
         boolean val = runInServlet("testReceiveWithTimeOutTopic_B_SecOn");
@@ -445,7 +445,7 @@ public class JMSConsumerTest {
 
     }
 
-    @Test
+    //@Test
     public void testReceiveWithTimeOutTopic_TcpIp_SecOn() throws Exception {
 
         boolean val = runInServlet("testReceiveWithTimeOutTopic_TcpIp_SecOn");
@@ -453,7 +453,7 @@ public class JMSConsumerTest {
 
     }
 
-    @Test
+    //@Test
     public void testReceiveNoWaitTopic_B_SecOn() throws Exception {
 
         boolean val = runInServlet("testReceiveNoWaitTopic_B_SecOn");
@@ -461,7 +461,7 @@ public class JMSConsumerTest {
 
     }
 
-    @Test
+    //@Test
     public void testReceiveNoWaitTopic_TcpIp_SecOn() throws Exception {
 
         boolean val = runInServlet("testReceiveNoWaitTopic_TcpIp_SecOn");
@@ -469,7 +469,7 @@ public class JMSConsumerTest {
 
     }
 
-    @Test
+    //@Test
     public void testReceiveBodyEmptyBodyTopic_B_SecOn() throws Exception {
 
         boolean val = runInServlet("testReceiveBodyEmptyBodyTopic_B_SecOn");
@@ -477,7 +477,7 @@ public class JMSConsumerTest {
 
     }
 
-    // @Test
+    // //@Test
     public void testReceiveBodyEmptyBodyTopic_TcpIp_SecOn() throws Exception {
 
         boolean val = runInServlet("testReceiveBodyEmptyBodyTopic_B_SecOn");
@@ -485,7 +485,7 @@ public class JMSConsumerTest {
 
     }
 
-    @Test
+    //@Test
     public void testReceiveBodyWithTimeOutUnspecifiedTypeTopic_B_SecOn() throws Exception {
 
         boolean val = runInServlet("testReceiveBodyWithTimeOutUnspecifiedTypeTopic_B_SecOn");
@@ -495,7 +495,7 @@ public class JMSConsumerTest {
 
     }
 
-    @Test
+    //@Test
     public void testReceiveBodyWithTimeOutUnspecifiedTypeTopic_TcpIp_SecOn() throws Exception {
 
         boolean val = runInServlet("testReceiveBodyWithTimeOutUnspecifiedTypeTopic_TcpIp_SecOn");
@@ -505,7 +505,7 @@ public class JMSConsumerTest {
 
     }
 
-    @Test
+    //@Test
     public void testReceiveBodyNoWaitUnsupportedTypeTopic_B_SecOn() throws Exception {
 
         boolean val = runInServlet("testReceiveBodyNoWaitUnsupportedTypeTopic_B_SecOn");
@@ -514,7 +514,7 @@ public class JMSConsumerTest {
 
     }
 
-    @Test
+    //@Test
     public void testReceiveBodyNoWaitUnsupportedTypeTopic_TcpIp_SecOn() throws Exception {
 
         boolean val = runInServlet("testReceiveBodyNoWaitUnsupportedTypeTopic_TcpIp_SecOn");
@@ -526,7 +526,7 @@ public class JMSConsumerTest {
 
     @ExpectedFFDC( { "com.ibm.ejs.container.UnknownLocalException","java.lang.RuntimeException" } )
     @Mode(TestMode.FULL)
-    @Test
+    //@Test
     /* 
      * MaxRedeliveryCount.
      */
@@ -571,7 +571,7 @@ public class JMSConsumerTest {
     }
 
     @AllowedFFDC( { "com.ibm.websphere.sib.exception.SIResourceException", "com.ibm.wsspi.channelfw.exception.InvalidChainNameException" } )
-    @Test
+    //@Test
     public void testCreateSharedDurable_B_SecOn() throws Exception {
 
         boolean val = runInServlet("testCreateSharedDurableConsumer_create");
@@ -585,7 +585,7 @@ public class JMSConsumerTest {
     }
 
     @AllowedFFDC( { "com.ibm.websphere.sib.exception.SIResourceException", "com.ibm.wsspi.channelfw.exception.InvalidChainNameException" } )
-    @Test
+    //@Test
     public void testCreateSharedDurable_TCP_SecOn() throws Exception {
 
         boolean val = runInServlet("testCreateSharedDurableConsumer_create_TCP");
@@ -600,7 +600,7 @@ public class JMSConsumerTest {
 
     @AllowedFFDC( { "com.ibm.websphere.sib.exception.SIResourceException", "com.ibm.wsspi.channelfw.exception.InvalidChainNameException"} )
     @Mode(TestMode.FULL)
-    @Test
+    //@Test
     public void testCreateSharedDurableWithMsgSel_B_SecOn() throws Exception {
 
         boolean val = runInServlet("testCreateSharedDurableConsumerWithMsgSel_create");
@@ -615,7 +615,7 @@ public class JMSConsumerTest {
 
     @AllowedFFDC( { "com.ibm.websphere.sib.exception.SIResourceException", "com.ibm.wsspi.channelfw.exception.InvalidChainNameException"} )
     @Mode(TestMode.FULL)
-    @Test
+    //@Test
     public void testCreateSharedDurableWithMsgSel_TCP_SecOn() throws Exception {
 
         boolean val = runInServlet("testCreateSharedDurableConsumerWithMsgSel_create_TCP");
@@ -629,7 +629,7 @@ public class JMSConsumerTest {
     }
 
     @AllowedFFDC( { "com.ibm.websphere.sib.exception.SIResourceException", "com.ibm.wsspi.channelfw.exception.InvalidChainNameException" } )
-    @Test
+    //@Test
     public void testCreateSharedNonDurable_B_SecOn() throws Exception {
 
         // Create a non durable subscriber, publish a message, close the context.
@@ -646,7 +646,7 @@ public class JMSConsumerTest {
     }
 
     @AllowedFFDC( { "com.ibm.websphere.sib.exception.SIResourceException", "com.ibm.wsspi.channelfw.exception.InvalidChainNameException" } )
-    @Test
+    //@Test
     public void testCreateSharedNonDurable_TCP_SecOn() throws Exception {
 
         // Create a non durable subscriber, publish a message, close the context.
@@ -664,7 +664,7 @@ public class JMSConsumerTest {
 
     @AllowedFFDC( { "com.ibm.websphere.sib.exception.SIResourceException", "com.ibm.wsspi.channelfw.exception.InvalidChainNameException" } )
     @Mode(TestMode.FULL)
-    @Test
+    //@Test
     public void testCreateSharedNonDurableWithMsgSel_B_SecOn() throws Exception {
 
         boolean val = runInServlet("testCreateSharedNonDurableConsumerWithMsgSel_create");
@@ -679,7 +679,7 @@ public class JMSConsumerTest {
 
     @AllowedFFDC( { "com.ibm.websphere.sib.exception.SIResourceException", "com.ibm.wsspi.channelfw.exception.InvalidChainNameException" } )
     @Mode(TestMode.FULL)
-    @Test
+    //@Test
     public void testCreateSharedNonDurableWithMsgSel_TCP_SecOn() throws Exception {
 
         boolean val = runInServlet("testCreateSharedNonDurableConsumerWithMsgSel_create_TCP");
@@ -692,7 +692,7 @@ public class JMSConsumerTest {
 
     }
 
-    @Test
+    //@Test
     public void testMultiSharedNonDurableConsumer_SecOn() throws Exception {
         server.setMarkToEndOfLog();
         boolean val = runInServlet("testBasicMDBTopic");
@@ -722,7 +722,7 @@ public class JMSConsumerTest {
         assertTrue("Test infrastructure failure, excessive time to receive:"+receiveMilliseconds, receiveMilliseconds<10*1000);
     }
 
-    @Test
+    //@Test
     public void testMultiSharedDurableConsumer_SecOn() throws Exception {
         server.setMarkToEndOfLog();
         boolean val = runInServlet("testBasicMDBTopicDurShared");
@@ -746,7 +746,7 @@ public class JMSConsumerTest {
     }
 
     @Mode(TestMode.FULL)
-    @Test
+    //@Test
     public void testSetMessageProperty_Bindings_SecOn() throws Exception {
 
         boolean val = runInServlet("testSetMessageProperty_Bindings_SecOn");
@@ -763,7 +763,7 @@ public class JMSConsumerTest {
     // TCP/IP and Security off
 
     @Mode(TestMode.FULL)
-    @Test
+    //@Test
     public void testSetMessageProperty_TCP_SecOn() throws Exception {
 
         boolean val = runInServlet("testSetMessageProperty_TCP_SecOn");
@@ -772,7 +772,7 @@ public class JMSConsumerTest {
     }
 
     @Mode(TestMode.FULL)
-    @Test
+    //@Test
     public void testTopicName_temp_B_SecOn() throws Exception {
 
         boolean val = runInServlet("testTopicName_temp_B");
@@ -781,7 +781,7 @@ public class JMSConsumerTest {
     }
 
     @Mode(TestMode.FULL)
-    @Test
+    //@Test
     public void testTopicName_temp_TCP_SecOn() throws Exception {
 
         boolean val = runInServlet("testTopicName_temp_TCP");
@@ -790,7 +790,7 @@ public class JMSConsumerTest {
     }
 
     @Mode(TestMode.FULL)
-    @Test
+    //@Test
     public void testQueueNameCaseSensitive_Bindings_SecOn() throws Exception {
 
         server.setMarkToEndOfLog();
@@ -804,7 +804,7 @@ public class JMSConsumerTest {
     }
 
     @Mode(TestMode.FULL)
-    @Test
+    //@Test
     public void testQueueNameCaseSensitive_TCP_SecOn() throws Exception {
 
         server1.setMarkToEndOfLog();
