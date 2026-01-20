@@ -52,4 +52,16 @@ public class BootstrapExtended extends Bootstrap {
         return this.initializer;
     }
 
+    /**
+     *  Clone this bootstrap
+     *
+     * @return BootstrapExtended
+     */
+    @Override
+    public BootstrapExtended clone() {
+        BootstrapExtended clone = new BootstrapExtended();
+        clone.applyConfiguration(config);
+        clone.setBaseInitializer(initializer);
+        return clone;
+    }
 }
