@@ -42,8 +42,8 @@ import componenttest.topology.impl.LibertyServerFactory;
 @Mode(TestMode.FULL)
 public class JMSDefaultConnectionFactorySecurityTest {
 
-    private static final LibertyServer client_server = LibertyServerFactory.getLibertyServer("TestServer");
-    private static final LibertyServer consumer_server = LibertyServerFactory.getLibertyServer("TestServer1");
+    private static final LibertyServer client_server = LibertyServerFactory.getLibertyServer("ClientServer");
+    private static final LibertyServer consumer_server = LibertyServerFactory.getLibertyServer("ConsumerServer");
 
 
     private static final int PORT = client_server.getHttpDefaultPort();

@@ -39,7 +39,7 @@ import componenttest.topology.impl.LibertyServerFactory;
 @RunWith(FATRunner.class)
 public class JMSMDBTest {
 
-    private static final LibertyServer client_server = LibertyServerFactory.getLibertyServer("TestServer");
+    private static final LibertyServer client_server = LibertyServerFactory.getLibertyServer("ClientServer");
 
     private static final int PORT = client_server.getHttpDefaultPort();
     private static final String HOST = client_server.getHostname();

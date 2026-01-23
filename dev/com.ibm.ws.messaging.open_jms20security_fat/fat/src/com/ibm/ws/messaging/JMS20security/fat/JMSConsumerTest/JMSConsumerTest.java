@@ -54,8 +54,8 @@ import componenttest.topology.impl.LibertyServerFactory;
 @RunWith(FATRunner.class)
 public class JMSConsumerTest {
 
-    private static final LibertyServer client_server = LibertyServerFactory.getLibertyServer("TestServer");
-    private static final LibertyServer consumer_server = LibertyServerFactory.getLibertyServer("TestServer1");
+    private static final LibertyServer client_server = LibertyServerFactory.getLibertyServer("ClientServer");
+    private static final LibertyServer consumer_server = LibertyServerFactory.getLibertyServer("ConsumerServer");
 
     private static int SERVER_ID_RUN = 0;
 
