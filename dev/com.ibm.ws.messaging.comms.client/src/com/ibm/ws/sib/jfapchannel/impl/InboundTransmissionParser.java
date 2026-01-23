@@ -204,41 +204,54 @@ public class InboundTransmissionParser
       if (TraceComponent.isAnyTracingEnabled() && tc.isEntryEnabled()) SibTr.entry(this, tc, "parse", transmissionData);
       if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) JFapUtils.debugTraceWsByteBufferInfo(this, tc, transmissionData, "transmissionBuffer");
 
+      System.out.println("DEBUG: InboundTransmissionParser[" + this + "].parse() - Entry, state=" + state + ", transmissionData=" + transmissionData);
+
       needMoreData = false;
       boolean encounteredError = false;
 
       while(!needMoreData && !encounteredError)
       {
+         System.out.println("DEBUG: InboundTransmissionParser[" + this + "].parse() - Loop iteration, state=" + state + ", needMoreData=" + needMoreData);
          switch(state)
          {
             case(STATE_PARSING_PRIMARY_HEADER):
+               System.out.println("DEBUG: InboundTransmissionParser[" + this + "].parse() - Calling parsePrimaryHeader");
                parsePrimaryHeader(transmissionData);
                break;
             case(STATE_PARSING_CONVERSATION_HEADER):
+               System.out.println("DEBUG: InboundTransmissionParser[" + this + "].parse() - Calling parseConversationHeader");
                parseConversationHeader(transmissionData);
                break;
             case(STATE_PARSING_SEGMENT_START_HEADER):
+               System.out.println("DEBUG: InboundTransmissionParser[" + this + "].parse() - Calling parseSegmentStartHeader");
                parseSegmentStartHeader(transmissionData);
                break;
             case(STATE_PARSING_PRIMARY_ONLY_PAYLOAD):
+               System.out.println("DEBUG: InboundTransmissionParser[" + this + "].parse() - Calling parsePrimaryOnlyPayload");
                parsePrimaryOnlyPayload(transmissionData);
                break;
             case(STATE_PARSE_CONVERSATION_PAYLOAD):
+               System.out.println("DEBUG: InboundTransmissionParser[" + this + "].parse() - Calling parseConversationPayload");
                parseConversationPayload(transmissionData);
                break;
             case(STATE_PARSE_SEGMENT_START_PAYLOAD):
+               System.out.println("DEBUG: InboundTransmissionParser[" + this + "].parse() - Calling parseSegmentStartPayload");
                parseSegmentStartPayload(transmissionData);
                break;
             case(STATE_PARSE_SEGMENT_MIDDLE_PAYLOAD):
+               System.out.println("DEBUG: InboundTransmissionParser[" + this + "].parse() - Calling parseSegmentMiddlePayload");
                parseSegmentMiddlePayload(transmissionData);
                break;
             case(STATE_PARSE_SEGMENT_END_PAYLOAD):
+               System.out.println("DEBUG: InboundTransmissionParser[" + this + "].parse() - Calling parseSegmentEndPayload");
                parseSegmentEndPayload(transmissionData);
                break;
             case(STATE_ERROR):
+               System.out.println("DEBUG: InboundTransmissionParser[" + this + "].parse() - STATE_ERROR encountered");
                encounteredError = true;
                break;
             default:
+               System.out.println("DEBUG: InboundTransmissionParser[" + this + "].parse() - DEFAULT case, invalid state=" + state);
                if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) SibTr.debug(this, tc, "got into default branch of parse() method case statement");
                throwable = new SIErrorException("Should not have entered default branch of parse() method case statement");
                FFDCFilter.processException(throwable, "com.ibm.ws.sib.jfapchannel.impl.InboundTransmissionParser", JFapChannelConstants.INBOUNDXMITPARSER_PARSE_01);
@@ -249,10 +262,12 @@ public class InboundTransmissionParser
 
       if (encounteredError)
       {
+         System.out.println("DEBUG: InboundTransmissionParser[" + this + "].parse() - Error encountered, throwable=" + throwable);
          if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) SibTr.debug(this, tc, "encountered error parsing");
          if (TraceComponent.isAnyTracingEnabled() && tc.isEventEnabled()) SibTr.exception(this, tc, throwable);
          connection.invalidate(false, throwable, "parse error while parsing transmission");  // D224570
       }
+      System.out.println("DEBUG: InboundTransmissionParser[" + this + "].parse() - Exit, state=" + state + ", needMoreData=" + needMoreData);
       if (TraceComponent.isAnyTracingEnabled() && tc.isEntryEnabled()) SibTr.exit(this, tc, "parse");
    }
 
@@ -269,17 +284,22 @@ public class InboundTransmissionParser
       if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) JFapUtils.debugTraceWsByteBufferInfo(this, tc, contextBuffer, "contextBuffer");
       if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) JFapUtils.debugTraceWsByteBufferInfo(this, tc, unparsedPrimaryHeader, "unparsedPrimaryHeader");
 
+      System.out.println("DEBUG: InboundTransmissionParser[" + this + "].parsePrimaryHeader() - Entry");
+
       int initialPrimaryHeaderPosition = unparsedPrimaryHeader.position();
       WsByteBuffer parseHeaderBuffer = readData(contextBuffer, unparsedPrimaryHeader);
 
       if (parseHeaderBuffer != null)
       {
          if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) SibTr.debug(this, tc, "parse header buffer not null");
+         System.out.println("DEBUG: InboundTransmissionParser[" + this + "].parsePrimaryHeader() - parseHeaderBuffer not null");
 
          short eyecatcher = parseHeaderBuffer.getShort();
+         System.out.println("DEBUG: InboundTransmissionParser[" + this + "].parsePrimaryHeader() - eyecatcher=" + String.format("0x%04X", eyecatcher));
          if (eyecatcher != (short)0xBEEF)
          {
             // bad eyecatcher
+            System.out.println("DEBUG: InboundTransmissionParser[" + this + "].parsePrimaryHeader() - BAD EYECATCHER, expected 0xBEEF");
             state = STATE_ERROR;
             throwable = new SIConnectionLostException(nls.getFormattedMessage("TRANSPARSER_PROTOCOLERROR_SICJ0053", new Object[] {connection.remoteHostAddress, connection.chainName}, "TRANSPARSER_PROTOCOLERROR_SICJ0053"));   // D226223
             // This FFDC was generated because our peer sent us an invalid eyecatcher.
@@ -290,10 +310,12 @@ public class InboundTransmissionParser
          {
             primaryHeaderFields.segmentLength = parseHeaderBuffer.getInt();
             if (primaryHeaderFields.segmentLength < 0) primaryHeaderFields.segmentLength += 4294967296L;
+            System.out.println("DEBUG: InboundTransmissionParser[" + this + "].parsePrimaryHeader() - segmentLength=" + primaryHeaderFields.segmentLength);
 
             // Reject lengths greater than our maximum transmission length.
             if (primaryHeaderFields.segmentLength > connection.getMaxTransmissionSize())
             {
+               System.out.println("DEBUG: InboundTransmissionParser[" + this + "].parsePrimaryHeader() - MAX TRANSMISSION SIZE EXCEEDED");
                state = STATE_ERROR;
                throwable = new SIConnectionLostException(nls.getFormattedMessage("TRANSPARSER_PROTOCOLERROR_SICJ0053", new Object[] {connection.remoteHostAddress, connection.chainName}, "TRANSPARSER_PROTOCOLERROR_SICJ0053"));   // D226223
                // This FFDC was generated because our peer has exceeded the maximum segment size
@@ -313,8 +335,10 @@ public class InboundTransmissionParser
                if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) SibTr.debug(tc, "packet number: "+primaryHeaderFields.packetNumber+" expected: "+expectedPacketNumber);
 
               
+               System.out.println("DEBUG: InboundTransmissionParser[" + this + "].parsePrimaryHeader() - packetNumber=" + primaryHeaderFields.packetNumber + ", expected=" + expectedPacketNumber);
                if (primaryHeaderFields.packetNumber != expectedPacketNumber)
                {
+                  System.out.println("DEBUG: InboundTransmissionParser[" + this + "].parsePrimaryHeader() - PACKET NUMBER MISMATCH");
                   state = STATE_ERROR;
                   throwable = new SIConnectionLostException(nls.getFormattedMessage("TRANSPARSER_PROTOCOLERROR_SICJ0053", new Object[] {connection.remoteHostAddress, connection.chainName}, "TRANSPARSER_PROTOCOLERROR_SICJ0053"));   // D226223
                   // This FFDC was generated because our peer sent us a transmission containing
@@ -337,10 +361,12 @@ public class InboundTransmissionParser
                   if (primaryHeaderFields.segmentType < 0) primaryHeaderFields.segmentType += 256;
 
                   transmissionLayout = JFapChannelConstants.segmentToLayout(primaryHeaderFields.segmentType);
+                  System.out.println("DEBUG: InboundTransmissionParser[" + this + "].parsePrimaryHeader() - segmentType=" + primaryHeaderFields.segmentType + ", layout=" + transmissionLayout);
 
                   if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) SibTr.debug(this, tc, "layout = "+transmissionLayout);
                   if (transmissionLayout == JFapChannelConstants.XMIT_PRIMARY_ONLY)
                   {
+                     System.out.println("DEBUG: InboundTransmissionParser[" + this + "].parsePrimaryHeader() - Transitioning to STATE_PARSING_PRIMARY_ONLY_PAYLOAD");
                      transmissionPayloadDataLength = primaryHeaderFields.segmentLength - JFapChannelConstants.SIZEOF_PRIMARY_HEADER;
                      state = STATE_PARSING_PRIMARY_ONLY_PAYLOAD;
                   }
@@ -349,6 +375,7 @@ public class InboundTransmissionParser
                             (transmissionLayout == JFapChannelConstants.XMIT_SEGMENT_MIDDLE) ||
                             (transmissionLayout == JFapChannelConstants.XMIT_SEGMENT_END))
                   {
+                     System.out.println("DEBUG: InboundTransmissionParser[" + this + "].parsePrimaryHeader() - Transitioning to STATE_PARSING_CONVERSATION_HEADER");
                      state = STATE_PARSING_CONVERSATION_HEADER;
                   }
                   else if (transmissionLayout == JFapChannelConstants.XMIT_LAYOUT_UNKNOWN)
@@ -409,10 +436,12 @@ public class InboundTransmissionParser
          if (state != STATE_ERROR)
          {
             if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) SibTr.debug(this, tc, "need more data");
+            System.out.println("DEBUG: InboundTransmissionParser[" + this + "].parsePrimaryHeader() - Need more data");
             needMoreData = true;
          }
       }
 
+      System.out.println("DEBUG: InboundTransmissionParser[" + this + "].parsePrimaryHeader() - Exit, state=" + state);
       if (TraceComponent.isAnyTracingEnabled() && tc.isEntryEnabled()) SibTr.exit(this, tc, "parsePrimaryHeader");
    }
 
@@ -428,6 +457,8 @@ public class InboundTransmissionParser
       if (TraceComponent.isAnyTracingEnabled() && tc.isEntryEnabled()) SibTr.entry(this, tc, "parseConversationHeader", contextBuffer);
       if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) JFapUtils.debugTraceWsByteBufferInfo(this, tc, contextBuffer, "contextBuffer");
 
+      System.out.println("DEBUG: InboundTransmissionParser[" + this + "].parseConversationHeader() - Entry");
+
       WsByteBuffer parseConversationBuffer = readData(contextBuffer, unparsedConversationHeader);
 
       if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) JFapUtils.debugTraceWsByteBufferInfo(this, tc, parseConversationBuffer, "parseConversationBuffer");
@@ -438,11 +469,13 @@ public class InboundTransmissionParser
          conversationHeaderFields.requestNumber = parseConversationBuffer.getShort();
          transmissionPayloadRemaining -= JFapChannelConstants.SIZEOF_CONVERSATION_HEADER;
 
+         System.out.println("DEBUG: InboundTransmissionParser[" + this + "].parseConversationHeader() - conversationId=" + conversationHeaderFields.conversationId + ", requestNumber=" + conversationHeaderFields.requestNumber);
          if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) SibTr.debug(this, tc, "conversationId:"+conversationHeaderFields.conversationId+" requestNumber:"+conversationHeaderFields.requestNumber);
          if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) SibTr.debug(this, tc, "transmissionLayout:"+transmissionLayout);
 
          if (transmissionLayout == JFapChannelConstants.XMIT_CONVERSATION)
          {
+            System.out.println("DEBUG: InboundTransmissionParser[" + this + "].parseConversationHeader() - Transitioning to STATE_PARSE_CONVERSATION_PAYLOAD");
             transmissionPayloadDataLength = primaryHeaderFields.segmentLength -
                (JFapChannelConstants.SIZEOF_PRIMARY_HEADER + JFapChannelConstants.SIZEOF_CONVERSATION_HEADER);
             state = STATE_PARSE_CONVERSATION_PAYLOAD;
