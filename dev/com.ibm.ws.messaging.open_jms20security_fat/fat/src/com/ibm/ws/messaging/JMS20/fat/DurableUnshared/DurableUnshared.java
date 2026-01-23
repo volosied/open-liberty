@@ -40,11 +40,11 @@ import componenttest.topology.impl.LibertyServerFactory;
 @RunWith(FATRunner.class)
 public class DurableUnshared {
 
-    private static LibertyServer server = LibertyServerFactory.getLibertyServer("TestServer");
-    private static LibertyServer server1 = LibertyServerFactory.getLibertyServer("TestServer1");
+    private static final LibertyServer client_server = LibertyServerFactory.getLibertyServer("TestServer");
+    private static final LibertyServer consumer_server = LibertyServerFactory.getLibertyServer("TestServer1");
 
-    private static final int PORT = server.getHttpDefaultPort();
-    private static final String HOST = server.getHostname();
+    private static final int PORT = client_server.getHttpDefaultPort();
+    private static final String HOST = client_server.getHostname();
 
     private boolean runInServlet(String test) throws IOException {
         boolean result = false;
@@ -85,22 +85,22 @@ public class DurableUnshared {
     @BeforeClass
     public static void testConfigFileChange() throws Exception {
 
-        server1.copyFileToLibertyInstallRoot("lib/features",
+        consumer_server.copyFileToLibertyInstallRoot("lib/features",
                                              "features/testjmsinternals-1.0.mf");
-        server1.copyFileToLibertyServerRoot("resources/security",
+        consumer_server.copyFileToLibertyServerRoot("resources/security",
                                             "serverLTPAKeys/cert.der");
-        server1.copyFileToLibertyServerRoot("resources/security",
+        consumer_server.copyFileToLibertyServerRoot("resources/security",
                                             "serverLTPAKeys/ltpa.keys");
-        server1.copyFileToLibertyServerRoot("resources/security",
+        consumer_server.copyFileToLibertyServerRoot("resources/security",
                                             "serverLTPAKeys/ltpaFIPS.keys");
-        server1.copyFileToLibertyServerRoot("resources/security",
+        consumer_server.copyFileToLibertyServerRoot("resources/security",
                                             "serverLTPAKeys/mykey.jks");
-        server.copyFileToLibertyInstallRoot("lib/features",
+        client_server.copyFileToLibertyInstallRoot("lib/features",
                                             "features/testjmsinternals-1.0.mf");
-        server.copyFileToLibertyServerRoot("resources/security",
+        client_server.copyFileToLibertyServerRoot("resources/security",
                                            "clientLTPAKeys/mykey.jks");
 
-        TestUtils.addDropinsWebApp(server, "DurableUnshared", "web");
+        TestUtils.addDropinsWebApp(client_server, "DurableUnshared", "web");
 
         startAppServers();
     }
@@ -111,27 +111,27 @@ public class DurableUnshared {
      * @throws Exception
      */
     private static void startAppServers() throws Exception {
-        server.setServerConfigurationFile("JMSContext_ssl.xml");
-        server1.setServerConfigurationFile("TestServer1_ssl.xml");
-        server.startServer("DurableUnShared_Client.log");
-        server1.startServer("DurableUnShared_Server.log");
+        client_server.setServerConfigurationFile("JMSContext_ssl.xml");
+        consumer_server.setServerConfigurationFile("TestServer1_ssl.xml");
+        client_server.startServer("DurableUnShared_Client.log");
+        consumer_server.startServer("DurableUnShared_Server.log");
 
-        // CWWKF0011I: The TestServer1 server is ready to run a smarter planet. The TestServer1 server started in 6.435 seconds.
-        // CWSID0108I: JMS server has started.
+        // CWWKF0011I: The TestServer1 client_server is ready to run a smarter planet. The TestServer1 client_server started in 6.435 seconds.
+        // CWSID0108I: JMS client_server has started.
         // CWWKS4105I: LTPA configuration is ready after 4.028 seconds.
         for (String messageId : new String[] { "CWWKF0011I.*", "CWSID0108I.*", "CWWKS4105I.*" }) {
-            String waitFor = server.waitForStringInLog(messageId, server.getMatchingLogFile("messages.log"));
+            String waitFor = client_server.waitForStringInLog(messageId, client_server.getMatchingLogFile("messages.log"));
             assertNotNull("Server message " + messageId + " not found", waitFor);
-            waitFor = server1.waitForStringInLog(messageId, server1.getMatchingLogFile("messages.log"));
+            waitFor = consumer_server.waitForStringInLog(messageId, consumer_server.getMatchingLogFile("messages.log"));
             assertNotNull("Server1 message " + messageId + " not found", waitFor);
         }
         
-        // The following FFDC may be thrown at server startup because the channel framework does not become active until the CWWKF0011I message is seen, whereas MDB initialisation takes place beforehand.
+        // The following FFDC may be thrown at client_server startup because the channel framework does not become active until the CWWKF0011I message is seen, whereas MDB initialisation takes place beforehand.
         // FFDC1015I: An FFDC Incident has been created: "com.ibm.wsspi.channelfw.exception.InvalidChainNameException: Chain configuration not found in framework, BootstrapSecureMessaging com.ibm.ws.sib.jfapchannel.richclient.framework.impl.RichClientTransportFactory.getOutboundNetworkConnectionFactoryByName 00280001" at ffdc_21.09.27_15.21.46.0.log
         
         // Ignore failed connection attempts between the two servers.
         // CWSIV0782W: The creation of a connection for destination RedeliveryQueue1 on bus defaultBus for endpoint activation jmsapp/jmsmdb/RDC2MessageDrivenBean failed with exception javax.resource.ResourceException: 
-        server.addIgnoredErrors(Arrays.asList("CWSIV0782W"));
+        client_server.addIgnoredErrors(Arrays.asList("CWSIV0782W"));
     }
     
     private static void stopAppServers() throws Exception {
@@ -142,10 +142,10 @@ public class DurableUnshared {
             // [24/03/21 16:57:09:781 GMT] 0000004b com.ibm.ws.config.xml.internal.ConfigEvaluator               W CWWKG0032W: Unexpected value specified for property [destinationType], value = [javax.jms.Topic]. Expected value(s) are: [jakarta.jms.Queue][jakarta.jms.Topic]. Default value in use: [jakarta.jms.Queue].
             // [24/03/21 16:57:09:781 GMT] 0000004b com.ibm.ws.config.xml.internal.ConfigEvaluator               W CWWKG0032W: Unexpected value specified for property [destinationType], value = [javax.jms.Topic]. Expected value(s) are: [jakarta.jms.Queue][jakarta.jms.Topic]. Default value in use: [jakarta.jms.Queue].
             // [24/03/21 16:57:16:336 GMT] 0000004b com.ibm.ws.jca.service.EndpointActivationService             E J2CA8802E: The message endpoint activation failed for resource adapter wasJms due to exception: jakarta.resource.spi.InvalidPropertyException: CWSJR1181E: The JMS activation specification has invalid values - the reason(s) for failing to validate the JMS       
-            server.addIgnoredErrors(Arrays.asList("CWWKG0032W","J2CA8802E"));
+            client_server.addIgnoredErrors(Arrays.asList("CWWKG0032W","J2CA8802E"));
         }
-        server.stopServer();
-        server1.stopServer();  
+        client_server.stopServer();
+        consumer_server.stopServer();  
     }
 
     @AllowedFFDC( { "jakarta.resource.spi.InvalidPropertyException"} )

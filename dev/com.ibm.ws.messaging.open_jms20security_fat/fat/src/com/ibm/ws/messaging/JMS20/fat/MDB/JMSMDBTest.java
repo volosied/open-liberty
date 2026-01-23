@@ -39,10 +39,10 @@ import componenttest.topology.impl.LibertyServerFactory;
 @RunWith(FATRunner.class)
 public class JMSMDBTest {
 
-    private static LibertyServer server = LibertyServerFactory.getLibertyServer("TestServer");
+    private static final LibertyServer client_server = LibertyServerFactory.getLibertyServer("TestServer");
 
-    private static final int PORT = server.getHttpDefaultPort();
-    private static final String HOST = server.getHostname();
+    private static final int PORT = client_server.getHttpDefaultPort();
+    private static final String HOST = client_server.getHostname();
 
     boolean val = false;
 
@@ -85,23 +85,23 @@ public class JMSMDBTest {
     @BeforeClass
     public static void testConfigFileChange() throws Exception {
 
-        server.copyFileToLibertyInstallRoot("lib/features",
+        client_server.copyFileToLibertyInstallRoot("lib/features",
                                             "features/testjmsinternals-1.0.mf");
-        server.copyFileToLibertyServerRoot("resources/security",
+        client_server.copyFileToLibertyServerRoot("resources/security",
                                            "clientLTPAKeys/mykey.jks");
-        server.setServerConfigurationFile("EJBMDB_server.xml");
-        TestUtils.addDropinsWebApp(server, "JMSContextInject", "web");
-        TestUtils.addDropinsWebApp(server, "mdbapp", "mdb");
-        server.startServer("JMSConsumerTestClient.log");
-        String waitFor = server.waitForStringInLog("CWWKF0011I.*", server.getMatchingLogFile("messages.log"));
+        client_server.setServerConfigurationFile("EJBMDB_server.xml");
+        TestUtils.addDropinsWebApp(client_server, "JMSContextInject", "web");
+        TestUtils.addDropinsWebApp(client_server, "mdbapp", "mdb");
+        client_server.startServer("JMSConsumerTestClient.log");
+        String waitFor = client_server.waitForStringInLog("CWWKF0011I.*", client_server.getMatchingLogFile("messages.log"));
         assertNotNull("Server ready message not found", waitFor);
     }
 
     @org.junit.AfterClass
     public static void tearDown() {
         try {
-            System.out.println("Stopping server");
-            server.stopServer();
+            System.out.println("Stopping client_server");
+            client_server.stopServer();
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -116,7 +116,7 @@ public class JMSMDBTest {
         val = runInServlet("testQueueMDB");
         assertTrue("testQueueMDB failed ", val);
 
-        String msg = server.waitForStringInLog(
+        String msg = client_server.waitForStringInLog(
                                                "Message received on Annotated MDB: testQueueMDB", 5000);
         assertNotNull("Test testQueueMDB failed", msg);
 

@@ -42,12 +42,12 @@ import componenttest.topology.impl.LibertyServerFactory;
 @Mode(TestMode.FULL)
 public class JMSDefaultConnectionFactorySecurityTest {
 
-    private static LibertyServer server = LibertyServerFactory.getLibertyServer("TestServer");
+    private static final LibertyServer client_server = LibertyServerFactory.getLibertyServer("TestServer");
+    private static final LibertyServer consumer_server = LibertyServerFactory.getLibertyServer("TestServer1");
 
-    private static LibertyServer server1 = LibertyServerFactory.getLibertyServer("TestServer1");
 
-    private static final int PORT = server.getHttpDefaultPort();
-    private static final String HOST = server.getHostname();
+    private static final int PORT = client_server.getHttpDefaultPort();
+    private static final String HOST = client_server.getHostname();
 
     boolean val = false;
 
@@ -90,24 +90,24 @@ public class JMSDefaultConnectionFactorySecurityTest {
     @BeforeClass
     public static void testConfigFileChange() throws Exception {
 
-        server1.copyFileToLibertyInstallRoot("lib/features",
+        consumer_server.copyFileToLibertyInstallRoot("lib/features",
                                              "features/testjmsinternals-1.0.mf");
-        server1.copyFileToLibertyServerRoot("resources/security",
+        consumer_server.copyFileToLibertyServerRoot("resources/security",
                                             "serverLTPAKeys/cert.der");
-        server1.copyFileToLibertyServerRoot("resources/security",
+        consumer_server.copyFileToLibertyServerRoot("resources/security",
                                             "serverLTPAKeys/ltpa.keys");
-        server1.copyFileToLibertyServerRoot("resources/security",
+        consumer_server.copyFileToLibertyServerRoot("resources/security",
                                             "serverLTPAKeys/ltpaFIPS.keys");
-        server1.copyFileToLibertyServerRoot("resources/security",
+        consumer_server.copyFileToLibertyServerRoot("resources/security",
                                             "serverLTPAKeys/mykey.jks");
 
-        server.copyFileToLibertyInstallRoot("lib/features",
+        client_server.copyFileToLibertyInstallRoot("lib/features",
                                             "features/testjmsinternals-1.0.mf");
-        server.copyFileToLibertyServerRoot("resources/security",
+        client_server.copyFileToLibertyServerRoot("resources/security",
                                            "clientLTPAKeys/mykey.jks");
 
-        TestUtils.addDropinsWebApp(server, "JMSDCFSecurity", "web");
-        TestUtils.addDropinsWebApp(server, "JMSContextInject", "web");
+        TestUtils.addDropinsWebApp(client_server, "JMSDCFSecurity", "web");
+        TestUtils.addDropinsWebApp(client_server, "JMSContextInject", "web");
 
         startAppservers();
     }
@@ -118,18 +118,18 @@ public class JMSDefaultConnectionFactorySecurityTest {
      * @throws Exception
      */
     private static void startAppservers() throws Exception {
-        server.setServerConfigurationFile("DCFResSecurityClient.xml");
-        server1.setServerConfigurationFile("TestServer1_ssl.xml");
-        server.startServer("DCFTestClient.log");
-        server1.startServer("DCFServer.log");
+        client_server.setServerConfigurationFile("DCFResSecurityClient.xml");
+        consumer_server.setServerConfigurationFile("TestServer1_ssl.xml");
+        client_server.startServer("DCFTestClient.log");
+        consumer_server.startServer("DCFServer.log");
 
-        // CWWKF0011I: The TestServer1 server is ready to run a smarter planet. The TestServer1 server started in 6.435 seconds.
-        // CWSID0108I: JMS server has started.
+        // CWWKF0011I: The TestServer1 client_server is ready to run a smarter planet. The TestServer1 client_server started in 6.435 seconds.
+        // CWSID0108I: JMS client_server has started.
         // CWWKS4105I: LTPA configuration is ready after 4.028 seconds.
         for (String messageId : new String[] { "CWWKF0011I.*", "CWSID0108I.*", "CWWKS4105I.*" }) {
-            String waitFor = server.waitForStringInLog(messageId, server.getMatchingLogFile("messages.log"));
+            String waitFor = client_server.waitForStringInLog(messageId, client_server.getMatchingLogFile("messages.log"));
             assertNotNull("Server message " + messageId + " not found", waitFor);
-            waitFor = server1.waitForStringInLog(messageId, server1.getMatchingLogFile("messages.log"));
+            waitFor = consumer_server.waitForStringInLog(messageId, consumer_server.getMatchingLogFile("messages.log"));
             assertNotNull("Server1 message " + messageId + " not found", waitFor);
         }
     }
@@ -137,15 +137,15 @@ public class JMSDefaultConnectionFactorySecurityTest {
     @org.junit.AfterClass
     public static void tearDown() {
         try {
-            System.out.println("Stopping client server");
-            server.stopServer();
+            System.out.println("Stopping client client_server");
+            client_server.stopServer();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         try {
-            System.out.println("Stopping engine server");
-            server1.stopServer();
+            System.out.println("Stopping engine client_server");
+            consumer_server.stopServer();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -180,20 +180,20 @@ public class JMSDefaultConnectionFactorySecurityTest {
     @Mode(TestMode.FULL)
     @Test
     public void testP2PMQ_TCP_SecOn() throws Exception {
-        server.stopServer();
-        server1.stopServer();
-        server.setServerConfigurationFile("DCFResSecurityClientMQ.xml");
-        server1.startServer();
-        String waitFor = server1.waitForStringInLog("CWWKF0011I.*", server1.getMatchingLogFile("messages.log"));
+        client_server.stopServer();
+        consumer_server.stopServer();
+        client_server.setServerConfigurationFile("DCFResSecurityClientMQ.xml");
+        consumer_server.startServer();
+        String waitFor = consumer_server.waitForStringInLog("CWWKF0011I.*", consumer_server.getMatchingLogFile("messages.log"));
         assertNotNull("Server ready message not found", waitFor);
-        server.startServer();
-        waitFor = server.waitForStringInLog("CWWKF0011I.*", server.getMatchingLogFile("messages.log"));
+        client_server.startServer();
+        waitFor = client_server.waitForStringInLog("CWWKF0011I.*", client_server.getMatchingLogFile("messages.log"));
         assertNotNull("Server ready message not found", waitFor);
         val = runInServlet("testP2PMQ_TCP_SecOn");
         assertTrue("testP2PMQ_TCP_SecOn failed ", val);
 
-        server.stopServer();
-        server1.stopServer();
+        client_server.stopServer();
+        consumer_server.stopServer();
         startAppservers();
     }
 }

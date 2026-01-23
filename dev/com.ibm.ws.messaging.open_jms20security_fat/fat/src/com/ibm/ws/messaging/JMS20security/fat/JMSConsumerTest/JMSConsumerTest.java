@@ -54,11 +54,13 @@ import componenttest.topology.impl.LibertyServerFactory;
 @RunWith(FATRunner.class)
 public class JMSConsumerTest {
 
-    private static final LibertyServer server = LibertyServerFactory.getLibertyServer("TestServer");
-    private static final LibertyServer server1 = LibertyServerFactory.getLibertyServer("TestServer1");
+    private static final LibertyServer client_server = LibertyServerFactory.getLibertyServer("TestServer");
+    private static final LibertyServer consumer_server = LibertyServerFactory.getLibertyServer("TestServer1");
 
-    private static final int PORT = server.getHttpDefaultPort();
-    private static final String HOST = server.getHostname();
+    private static int SERVER_ID_RUN = 0;
+
+    private static final int PORT = client_server.getHttpDefaultPort();
+    private static final String HOST = client_server.getHostname();
 
     private static final Class<?> c = JMSConsumerTest.class;
     
@@ -105,25 +107,25 @@ public class JMSConsumerTest {
     @BeforeClass
     public static void testConfigFileChange() throws Exception {
 
-        server1.copyFileToLibertyInstallRoot("lib/features",
+        consumer_server.copyFileToLibertyInstallRoot("lib/features",
                                              "features/testjmsinternals-1.0.mf");
-        server1.copyFileToLibertyServerRoot("resources/security",
+        consumer_server.copyFileToLibertyServerRoot("resources/security",
                                             "serverLTPAKeys/cert.der");
-        server1.copyFileToLibertyServerRoot("resources/security",
+        consumer_server.copyFileToLibertyServerRoot("resources/security",
                                             "serverLTPAKeys/ltpa.keys");
-        server1.copyFileToLibertyServerRoot("resources/security",
+        consumer_server.copyFileToLibertyServerRoot("resources/security",
                                               "serverLTPAKeys/ltpaFIPS.keys");
-        server1.copyFileToLibertyServerRoot("resources/security",
+        consumer_server.copyFileToLibertyServerRoot("resources/security",
                                             "serverLTPAKeys/mykey.jks");
-        server.copyFileToLibertyInstallRoot("lib/features",
+        client_server.copyFileToLibertyInstallRoot("lib/features",
                                             "features/testjmsinternals-1.0.mf");
-        server.copyFileToLibertyServerRoot("resources/security",
+        client_server.copyFileToLibertyServerRoot("resources/security",
                                            "clientLTPAKeys/mykey.jks");
         
         // Add the client servlet application to the client appserver.
-        TestUtils.addDropinsWebApp(server, "JMSConsumer", "web");
+        TestUtils.addDropinsWebApp(client_server, "JMSConsumer", "web");
         // Add the client side jmsConsumer.mdb's to the client appserver. 
-        TestUtils.addDropinsWebApp(server, "jmsapp", "jmsConsumer.mdb");
+        TestUtils.addDropinsWebApp(client_server, "jmsapp", "jmsConsumer.mdb");
         
         transformServerXml("JMSContext_ssl.xml");
         
@@ -177,37 +179,38 @@ public class JMSConsumerTest {
     }
     
     private static void startAppServers(String clientConfigFile, String remoteConfigFile) throws Exception {
-        server.setServerConfigurationFile(clientConfigFile);
-        server1.setServerConfigurationFile(remoteConfigFile);
-        // Start the remote server first to increase the odds of the client making contact at the first attempt.
-        server1.startServer("JMSConsumerServer.log");
-        server.startServer("JMSConsumerTestClient.log");
+        client_server.setServerConfigurationFile(clientConfigFile);
+        consumer_server.setServerConfigurationFile(remoteConfigFile);
+        // Start the remote client_server first to increase the odds of the client making contact at the first attempt.
+        consumer_server.startServer(SERVER_ID_RUN + "_JMSConsumerServer.log");
+        client_server.startServer(SERVER_ID_RUN + "_JMSConsumerTestClient.log");
+        SERVER_ID_RUN++;
      
-        // CWWKF0011I: The TestServer1 server is ready to run a smarter planet. The TestServer1 server started in 6.435 seconds.
-        // CWSID0108I: JMS server has started.
+        // CWWKF0011I: The TestServer1 client_server is ready to run a smarter planet. The TestServer1 client_server started in 6.435 seconds.
+        // CWSID0108I: JMS client_server has started.
         // CWWKS4105I: LTPA configuration is ready after 4.028 seconds.
         for (String messageId : new String[] { "CWWKF0011I.*", "CWSID0108I.*", "CWWKS4105I.*" }) {
-            String waitFor = server.waitForStringInLog(messageId, server.getMatchingLogFile("messages.log"));
+            String waitFor = client_server.waitForStringInLog(messageId, client_server.getMatchingLogFile("messages.log"));
             assertNotNull("Server message " + messageId + " not found", waitFor);
-            waitFor = server1.waitForStringInLog(messageId, server1.getMatchingLogFile("messages.log"));
+            waitFor = consumer_server.waitForStringInLog(messageId, consumer_server.getMatchingLogFile("messages.log"));
             assertNotNull("Server1 message " + messageId + " not found", waitFor);
         }
         
         // Wait for CWSIV0556I: Connection to the Messaging Engine was successful. The message-driven bean with activation specification jmsapp/RDC2MessageDrivenBean will now be able to receive the messages from destination RedeliveryQueue1.
-        String waitFor = server.waitForStringInLog("CWSIV0556I:.*jmsapp/RDC2MessageDrivenBean.*", server.getMatchingLogFile("messages.log"));
-        assertNotNull("Client Server contact remote server1 message CWSIV0556I: not found", waitFor);
+        String waitFor = client_server.waitForStringInLog("CWSIV0556I:.*jmsapp/RDC2MessageDrivenBean.*", client_server.getMatchingLogFile("messages.log"));
+        assertNotNull("Client Server contact remote consumer_server message CWSIV0556I: not found", waitFor);
         
-        // The following FFDC may be thrown at server startup because the channel framework does not become active until the CWWKF0011I message is seen, whereas MDB initialisation takes place beforehand.
+        // The following FFDC may be thrown at client_server startup because the channel framework does not become active until the CWWKF0011I message is seen, whereas MDB initialisation takes place beforehand.
         // FFDC1015I: An FFDC Incident has been created: "com.ibm.wsspi.channelfw.exception.InvalidChainNameException: Chain configuration not found in framework, BootstrapSecureMessaging com.ibm.ws.sib.jfapchannel.richclient.framework.impl.RichClientTransportFactory.getOutboundNetworkConnectionFactoryByName 00280001" at ffdc_21.09.27_15.21.46.0.log
         
         // Ignore failed connection attempts between the two servers.
         // CWSIV0782W: The creation of a connection for destination RedeliveryQueue1 on bus defaultBus for endpoint activation jmsapp/jmsmdb/RDC2MessageDrivenBean failed with exception javax.resource.ResourceException: 
-        server.addIgnoredErrors(Arrays.asList("CWSIV0782W"));
+        client_server.addIgnoredErrors(Arrays.asList("CWSIV0782W"));
     }
 
     private static void stopAppServers() throws Exception {
-        server.stopServer();
-        server1.stopServer();  
+        client_server.stopServer();
+        consumer_server.stopServer();  
     }
     
     
@@ -534,37 +537,37 @@ public class JMSConsumerTest {
         
         // Ignore the RuntimeException that is thrown by the MDB that causes message re delivery. 
         // CNTR0020E: EJB threw an unexpected (non-declared) exception during invocation of method "onMessage" on bean "BeanId"
-        server.addIgnoredErrors(Arrays.asList("CNTR0020E"));
+        client_server.addIgnoredErrors(Arrays.asList("CNTR0020E"));
         
-        server.setMarkToEndOfLog();
+        client_server.setMarkToEndOfLog();
         // Send one message to <queue id="RedeliveryQueue1" maxRedeliveryCount="2" />
         boolean val = runInServlet("testRDC_B");        
         assertTrue("testRDC bindings servlet failed", val);
         
         String mdbOutput;
-        mdbOutput = server.waitForStringInLogUsingMark("Message=1,JMSXDeliveryCount=1,JMSRedelivered=false,text=testRDC_B");
+        mdbOutput = client_server.waitForStringInLogUsingMark("Message=1,JMSXDeliveryCount=1,JMSRedelivered=false,text=testRDC_B");
         Log.debug(c, "testRDC bindings mdbOutput="+mdbOutput);
         assertNotNull("testRDC_B failed, first redelivery not seen mdbOutput="+mdbOutput, mdbOutput);   
-        mdbOutput = server.waitForStringInLogUsingMark("Message=2,JMSXDeliveryCount=2,JMSRedelivered=true,text=testRDC_B");
+        mdbOutput = client_server.waitForStringInLogUsingMark("Message=2,JMSXDeliveryCount=2,JMSRedelivered=true,text=testRDC_B");
         Log.debug(c, "testRDC bindings mdbOutput="+mdbOutput);
         assertNotNull("testRDC_B failed, second redelivery not seen mdbOutput="+mdbOutput, mdbOutput);  
-        mdbOutput = server.waitForStringInLogUsingMark("Message=3,JMSXDeliveryCount=3,JMSRedelivered=true,text=testRDC_B",1000);
+        mdbOutput = client_server.waitForStringInLogUsingMark("Message=3,JMSXDeliveryCount=3,JMSRedelivered=true,text=testRDC_B",1000);
         Log.debug(c, "testRDC bindings mdbOutput="+mdbOutput);
         assertNull("testRDC_B failed, third redelivery unexpectedly seen mdbOutput="+mdbOutput, mdbOutput);
 //TODO Validate that the message is now in the exception destination. 
 
-        server.setMarkToEndOfLog();
+        client_server.setMarkToEndOfLog();
         // Send one message to remote <queue id="RedeliveryQueue1" maxRedeliveryCount="2" />
         val = runInServlet("testRDC_TcpIp");
         assertTrue("testRDC bindings servlet failed", val);
         
-        mdbOutput = server.waitForStringInLogUsingMark("Message=1,JMSXDeliveryCount=1,JMSRedelivered=false,text=testRDC_TcpIp");
+        mdbOutput = client_server.waitForStringInLogUsingMark("Message=1,JMSXDeliveryCount=1,JMSRedelivered=false,text=testRDC_TcpIp");
         Log.debug(c, "testRDC TcpIp mdbOutput="+mdbOutput);
         assertNotNull("testRDC_TcpIp failed, first redelivery not seen mdbOutput="+mdbOutput, mdbOutput);   
-        mdbOutput = server.waitForStringInLogUsingMark("Message=2,JMSXDeliveryCount=2,JMSRedelivered=true,text=testRDC_TcpIp");
+        mdbOutput = client_server.waitForStringInLogUsingMark("Message=2,JMSXDeliveryCount=2,JMSRedelivered=true,text=testRDC_TcpIp");
         Log.debug(c, "testRDC TcpIp mdbOutput="+mdbOutput);
         assertNotNull("testRDC_TcpIp failed, second redelivery not seen mdbOutput="+mdbOutput, mdbOutput);  
-        mdbOutput = server.waitForStringInLogUsingMark("Message=3,JMSXDeliveryCount=3,JMSRedelivered=true,text=testRDC_TcpIp",1000);
+        mdbOutput = client_server.waitForStringInLogUsingMark("Message=3,JMSXDeliveryCount=3,JMSRedelivered=true,text=testRDC_TcpIp",1000);
         Log.debug(c, "testRDC TcpIp mdbOutput="+mdbOutput);
         assertNull("testRDC_TcpIp failed, third redelivery unexpectedly seen mdbOutput="+mdbOutput, mdbOutput);  
 //TODO Validate that the message is now in the exception destination. 
@@ -694,7 +697,7 @@ public class JMSConsumerTest {
 
     @Test
     public void testMultiSharedNonDurableConsumer_SecOn() throws Exception {
-        server.setMarkToEndOfLog();
+        client_server.setMarkToEndOfLog();
         boolean val = runInServlet("testBasicMDBTopic");
         assertTrue(methodName()+" Failed to send messages", val);
         
@@ -704,18 +707,18 @@ public class JMSConsumerTest {
         // although normally there should be minimal delay and anything more that 10 seconds means that the test infrastructure is not 
         // providing enough resources.
         long receiveStartMilliseconds = System.currentTimeMillis();
-        int count = server.waitForMultipleStringsInLogUsingMark(3, "Received in MDB[1-2]: testBasicMDBTopic:");
+        int count = client_server.waitForMultipleStringsInLogUsingMark(3, "Received in MDB[1-2]: testBasicMDBTopic:");
         Log.debug(c, "Bindings count="+count);
         assertEquals("Incorrect number of messages:"+count, count, 3);
         long receiveMilliseconds = System.currentTimeMillis()-receiveStartMilliseconds;
         assertTrue("Test infrastructure failure, excessive time to receive:"+receiveMilliseconds, receiveMilliseconds<10*1000);
        
-        server.setMarkToEndOfLog();
+        client_server.setMarkToEndOfLog();
         val = runInServlet("testBasicMDBTopic_TCP");
         assertTrue("testMultiSharedNonDurableConsumer_SecOn Failed to send messages", val);
         
         receiveStartMilliseconds = System.currentTimeMillis();
-        count = server.waitForMultipleStringsInLogUsingMark(3, "Received in MDB[1-2]: testBasicMDBTopic_TCP:");
+        count = client_server.waitForMultipleStringsInLogUsingMark(3, "Received in MDB[1-2]: testBasicMDBTopic_TCP:");
         Log.debug(c, "TCP count="+count);
         assertEquals("Incorrect number of messages:"+count, count, 3);
         receiveMilliseconds = System.currentTimeMillis()-receiveStartMilliseconds;
@@ -724,21 +727,21 @@ public class JMSConsumerTest {
 
     @Test
     public void testMultiSharedDurableConsumer_SecOn() throws Exception {
-        server.setMarkToEndOfLog();
+        client_server.setMarkToEndOfLog();
         boolean val = runInServlet("testBasicMDBTopicDurShared");
         assertTrue(methodName()+" Failed to send messages", val);
         
         long receiveStartMilliseconds = System.currentTimeMillis();
-        int count = server.waitForMultipleStringsInLogUsingMark(3, "Received in MDB[1-2]: testBasicMDBTopic:");
+        int count = client_server.waitForMultipleStringsInLogUsingMark(3, "Received in MDB[1-2]: testBasicMDBTopic:");
         Log.debug(c, "Bindings count="+count);
         assertEquals("Incorrect number of messages:"+count, count, 3);
         long receiveMilliseconds = System.currentTimeMillis()-receiveStartMilliseconds;
         assertTrue("Test infrastructure failure, excessive time to receive:"+receiveMilliseconds, receiveMilliseconds<10*1000);
               
-        server.setMarkToEndOfLog();
+        client_server.setMarkToEndOfLog();
         val = runInServlet("testBasicMDBTopicDurShared_TCP");
         receiveStartMilliseconds = System.currentTimeMillis();
-        count = server.waitForMultipleStringsInLogUsingMark(3, "Received in MDB[1-2]: testBasicMDBTopic_TCP:");
+        count = client_server.waitForMultipleStringsInLogUsingMark(3, "Received in MDB[1-2]: testBasicMDBTopic_TCP:");
         Log.debug(c, "TCP count="+count);
         assertEquals("Incorrect number of messages:"+count, count, 3);
         receiveMilliseconds = System.currentTimeMillis()-receiveStartMilliseconds;
@@ -793,13 +796,13 @@ public class JMSConsumerTest {
     @Test
     public void testQueueNameCaseSensitive_Bindings_SecOn() throws Exception {
 
-        server.setMarkToEndOfLog();
+        client_server.setMarkToEndOfLog();
         boolean val = runInServlet("testQueueNameCaseSensitive_Bindings");
         assertTrue("testQueueNameCaseSensitive_Bindings_SecOn failed", val);
         // We should see CWSIK0015E: The destination queue1 was not found on messaging engine defaultME.
-        String waitFor = server.waitForStringInLogUsingMark("CWSIK0015E.*queue1.*");
+        String waitFor = client_server.waitForStringInLogUsingMark("CWSIK0015E.*queue1.*");
         assertNotNull("Server CWSIK0015E message not found", waitFor);
-        server.addIgnoredErrors(Arrays.asList("CWSIK0015E"));       
+        client_server.addIgnoredErrors(Arrays.asList("CWSIK0015E"));       
 
     }
 
@@ -807,13 +810,13 @@ public class JMSConsumerTest {
     @Test
     public void testQueueNameCaseSensitive_TCP_SecOn() throws Exception {
 
-        server1.setMarkToEndOfLog();
+        consumer_server.setMarkToEndOfLog();
         boolean val = runInServlet("testQueueNameCaseSensitive_TCP");
         assertTrue("testQueueNameCaseSensitive_TCP_SecOn failed", val);
         // We should see CWSIK0015E: The destination queue1 was not found on messaging engine defaultME.
-        String waitFor = server1.waitForStringInLogUsingMark("CWSIK0015E.*queue1.*");
+        String waitFor = consumer_server.waitForStringInLogUsingMark("CWSIK0015E.*queue1.*");
         assertNotNull("Server CWSIK0015E message not found", waitFor);
-        server1.addIgnoredErrors(Arrays.asList("CWSIK0015E"));
+        consumer_server.addIgnoredErrors(Arrays.asList("CWSIK0015E"));
 
     }
 
