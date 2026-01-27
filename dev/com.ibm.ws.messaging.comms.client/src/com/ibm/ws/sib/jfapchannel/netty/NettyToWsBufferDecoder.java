@@ -14,6 +14,7 @@ import java.util.List;
 
 import com.ibm.websphere.ras.TraceComponent;
 import com.ibm.ws.sib.jfapchannel.JFapChannelConstants;
+import com.ibm.ws.sib.jfapchannel.buffer.WsByteBuffer;
 import com.ibm.ws.sib.jfapchannel.buffer.WsByteBufferPool;
 import com.ibm.ws.sib.utils.ras.SibTr;
 
@@ -60,16 +61,32 @@ public class NettyToWsBufferDecoder extends ByteToMessageDecoder {
 		int offset;
 		int length = temp.readableBytes();
 
+		System.out.println("FIX_V4: NettyToWsBufferDecoder.decode() length=" + length);
+
 		if (temp.hasArray()) {
 			bytes = temp.array();
-			offset = temp.arrayOffset();
+			offset = temp.arrayOffset() + temp.readerIndex();
+			System.out.println("FIX_V4: Using backing array, offset=" + offset);
 		} else {
 			bytes = new byte[length];
 			temp.getBytes(temp.readerIndex(), bytes);
 			offset = 0;
+			System.out.println("FIX_V4: Copied to new array, offset=" + offset);
 		}
 
-		out.add(WsByteBufferPool.getInstance().wrap(bytes).position(in.readerIndex()));
+		WsByteBuffer wsBuffer = WsByteBufferPool.getInstance().wrap(bytes, offset, length);
+		System.out.println("FIX_V5: Created WsByteBuffer with wrap(bytes, " + offset + ", " + length + ")");
+		System.out.println("FIX_V5: Initial state - pos=" + wsBuffer.position() + ", lim=" + wsBuffer.limit() + ", cap=" + wsBuffer.capacity());
+		
+		// CRITICAL: NettyConnectionReadCompletedCallback calls flip() on the buffer!
+		// We need to set it to "write mode" so flip() converts it to correct read mode
+		// Write mode: pos=length, lim=capacity
+		// After flip(): pos=0, lim=length (correct for reading)
+		wsBuffer.position(length);
+		wsBuffer.limit(wsBuffer.capacity());
+		
+		System.out.println("FIX_V5: Before flip (write mode) - pos=" + wsBuffer.position() + ", lim=" + wsBuffer.limit() + ", cap=" + wsBuffer.capacity());
+		out.add(wsBuffer);
 		temp.release();
 
 
@@ -102,3 +119,5 @@ public class NettyToWsBufferDecoder extends ByteToMessageDecoder {
 	}
 
 }
+
+// Made with Bob
