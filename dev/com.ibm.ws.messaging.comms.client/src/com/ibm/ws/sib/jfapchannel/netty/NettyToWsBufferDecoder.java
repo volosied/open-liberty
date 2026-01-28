@@ -53,30 +53,29 @@ public class NettyToWsBufferDecoder extends ByteToMessageDecoder {
 			SibTr.debug(this, tc, "decode", ctx.channel().remoteAddress() + " decoding message [ " + in.toString(StandardCharsets.UTF_8) + " ] from Netty ByteBuf to WSByteBuffer");
 		}
 
-		// TODO: Verify if this is the most effective way to do this. See https://github.com/OpenLiberty/open-liberty/issues/24816
-
-		ByteBuf temp = in.readBytes(in.readableBytes());
-
-		byte[] bytes;
-		int offset;
-		int length = temp.readableBytes();
-
-		System.out.println("FIX_V4: NettyToWsBufferDecoder.decode() length=" + length);
-
-		if (temp.hasArray()) {
-			bytes = temp.array();
-			offset = temp.arrayOffset() + temp.readerIndex();
-			System.out.println("FIX_V4: Using backing array, offset=" + offset);
-		} else {
-			bytes = new byte[length];
-			temp.getBytes(temp.readerIndex(), bytes);
-			offset = 0;
-			System.out.println("FIX_V4: Copied to new array, offset=" + offset);
+		// Read all available bytes from the input buffer
+		int length = in.readableBytes();
+		
+		// Skip empty buffers
+		if (length == 0) {
+			if (tc.isEntryEnabled())
+				SibTr.exit(this, tc, "decode", "empty buffer, skipping");
+			return;
 		}
 
-		WsByteBuffer wsBuffer = WsByteBufferPool.getInstance().wrap(bytes, offset, length);
-		System.out.println("FIX_V5: Created WsByteBuffer with wrap(bytes, " + offset + ", " + length + ")");
-		System.out.println("FIX_V5: Initial state - pos=" + wsBuffer.position() + ", lim=" + wsBuffer.limit() + ", cap=" + wsBuffer.capacity());
+		System.out.println("FIX_V6: NettyToWsBufferDecoder.decode() length=" + length);
+
+		// Always copy to a new byte array to avoid buffer lifecycle issues
+		// This ensures the data is preserved even after the ByteBuf is released by Netty
+		byte[] bytes = new byte[length];
+		in.readBytes(bytes);
+		
+		System.out.println("FIX_V6: Copied " + length + " bytes to new array");
+
+		// Wrap the byte array in a WsByteBuffer
+		WsByteBuffer wsBuffer = WsByteBufferPool.getInstance().wrap(bytes, 0, length);
+		System.out.println("FIX_V6: Created WsByteBuffer with wrap(bytes, 0, " + length + ")");
+		System.out.println("FIX_V6: Initial state - pos=" + wsBuffer.position() + ", lim=" + wsBuffer.limit() + ", cap=" + wsBuffer.capacity());
 		
 		// CRITICAL: NettyConnectionReadCompletedCallback calls flip() on the buffer!
 		// We need to set it to "write mode" so flip() converts it to correct read mode
@@ -85,10 +84,8 @@ public class NettyToWsBufferDecoder extends ByteToMessageDecoder {
 		wsBuffer.position(length);
 		wsBuffer.limit(wsBuffer.capacity());
 		
-		System.out.println("FIX_V5: Before flip (write mode) - pos=" + wsBuffer.position() + ", lim=" + wsBuffer.limit() + ", cap=" + wsBuffer.capacity());
+		System.out.println("FIX_V6: Before flip (write mode) - pos=" + wsBuffer.position() + ", lim=" + wsBuffer.limit() + ", cap=" + wsBuffer.capacity());
 		out.add(wsBuffer);
-		temp.release();
-
 
 		if (tc.isEntryEnabled())
 			SibTr.exit(this, tc, "decode", ctx.channel());
