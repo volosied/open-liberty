@@ -46,6 +46,9 @@ public class NettyToWsBufferDecoder extends ByteToMessageDecoder {
 	@Override
 	protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
 
+		long startTime = System.nanoTime();
+		String threadName = Thread.currentThread().getName();
+		
 		if (tc.isEntryEnabled())
 			SibTr.entry(this, tc, "decode", ctx.channel());
 
@@ -53,29 +56,62 @@ public class NettyToWsBufferDecoder extends ByteToMessageDecoder {
 			SibTr.debug(this, tc, "decode", ctx.channel().remoteAddress() + " decoding message [ " + in.toString(StandardCharsets.UTF_8) + " ] from Netty ByteBuf to WSByteBuffer");
 		}
 
+		// Capture ByteBuf state BEFORE any operations
+		int readerIndexBefore = in.readerIndex();
+		int writerIndexBefore = in.writerIndex();
+		int readableBefore = in.readableBytes();
+		
+		System.out.println("FIX_V6: [" + threadName + "] ENTRY - Channel: " + ctx.channel().id().asShortText() +
+		                   ", ByteBuf state: readerIdx=" + readerIndexBefore +
+		                   ", writerIdx=" + writerIndexBefore +
+		                   ", readable=" + readableBefore +
+		                   ", refCnt=" + in.refCnt());
+
 		// Read all available bytes from the input buffer
 		int length = in.readableBytes();
 		
 		// Skip empty buffers
 		if (length == 0) {
+			System.out.println("FIX_V6: [" + threadName + "] EMPTY BUFFER - skipping");
 			if (tc.isEntryEnabled())
 				SibTr.exit(this, tc, "decode", "empty buffer, skipping");
 			return;
 		}
 
-		System.out.println("FIX_V6: NettyToWsBufferDecoder.decode() length=" + length);
+		System.out.println("FIX_V6: [" + threadName + "] Decoding " + length + " bytes");
 
 		// Always copy to a new byte array to avoid buffer lifecycle issues
 		// This ensures the data is preserved even after the ByteBuf is released by Netty
 		byte[] bytes = new byte[length];
-		in.readBytes(bytes);
 		
-		System.out.println("FIX_V6: Copied " + length + " bytes to new array");
+		try {
+			in.readBytes(bytes);
+			
+			// Capture ByteBuf state AFTER readBytes
+			int readerIndexAfter = in.readerIndex();
+			int readableAfter = in.readableBytes();
+			
+			System.out.println("FIX_V6: [" + threadName + "] AFTER readBytes - readerIdx=" + readerIndexAfter +
+			                   ", readable=" + readableAfter +
+			                   ", advanced=" + (readerIndexAfter - readerIndexBefore));
+			
+			// Log first few bytes for debugging (eyecatcher should be 0xBEEF)
+			if (length >= 2) {
+				int eyecatcher = ((bytes[0] & 0xFF) << 8) | (bytes[1] & 0xFF);
+				System.out.println("FIX_V6: [" + threadName + "] First 2 bytes (eyecatcher): 0x" +
+				                   Integer.toHexString(eyecatcher).toUpperCase());
+			}
+			
+		} catch (Exception e) {
+			System.err.println("FIX_V6: [" + threadName + "] ERROR during readBytes: " + e.getMessage());
+			e.printStackTrace();
+			throw e;
+		}
 
 		// Wrap the byte array in a WsByteBuffer
 		WsByteBuffer wsBuffer = WsByteBufferPool.getInstance().wrap(bytes, 0, length);
-		System.out.println("FIX_V6: Created WsByteBuffer with wrap(bytes, 0, " + length + ")");
-		System.out.println("FIX_V6: Initial state - pos=" + wsBuffer.position() + ", lim=" + wsBuffer.limit() + ", cap=" + wsBuffer.capacity());
+		System.out.println("FIX_V6: [" + threadName + "] Created WsByteBuffer - pos=" + wsBuffer.position() +
+		                   ", lim=" + wsBuffer.limit() + ", cap=" + wsBuffer.capacity());
 		
 		// CRITICAL: NettyConnectionReadCompletedCallback calls flip() on the buffer!
 		// We need to set it to "write mode" so flip() converts it to correct read mode
@@ -84,8 +120,14 @@ public class NettyToWsBufferDecoder extends ByteToMessageDecoder {
 		wsBuffer.position(length);
 		wsBuffer.limit(wsBuffer.capacity());
 		
-		System.out.println("FIX_V6: Before flip (write mode) - pos=" + wsBuffer.position() + ", lim=" + wsBuffer.limit() + ", cap=" + wsBuffer.capacity());
+		System.out.println("FIX_V6: [" + threadName + "] Before flip (write mode) - pos=" + wsBuffer.position() +
+		                   ", lim=" + wsBuffer.limit() + ", cap=" + wsBuffer.capacity());
+		
 		out.add(wsBuffer);
+		
+		long duration = System.nanoTime() - startTime;
+		System.out.println("FIX_V6: [" + threadName + "] EXIT - Duration: " + (duration / 1000) + " microseconds, " +
+		                   "Output list size: " + out.size());
 
 		if (tc.isEntryEnabled())
 			SibTr.exit(this, tc, "decode", ctx.channel());
