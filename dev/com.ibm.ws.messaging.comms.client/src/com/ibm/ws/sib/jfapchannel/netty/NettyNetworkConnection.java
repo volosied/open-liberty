@@ -316,6 +316,8 @@ public class NettyNetworkConnection implements NetworkConnection{
 					return;
 				}
 				pipeline.addFirst(NettyNetworkConnectionFactory.SSL_HANDLER_KEY, handler);
+				// Add debug handler to inspect SSL output before it reaches the decoder
+				pipeline.addLast("sslDebug", new DebugSSLOutputHandler());
 			}
 			pipeline.addLast(NettyNetworkConnectionFactory.DECODER_HANDLER_KEY, new NettyToWsBufferDecoder());
 			pipeline.addLast(NettyNetworkConnectionFactory.ENCODER_HANDLER_KEY, new WsBufferToNettyEncoder());
