@@ -61,7 +61,7 @@ public class NettyToWsBufferDecoder extends ByteToMessageDecoder {
 		int writerIndexBefore = in.writerIndex();
 		int readableBefore = in.readableBytes();
 		
-		System.out.println("FIX_V6: [" + threadName + "] ENTRY - Channel: " + ctx.channel().id().asShortText() +
+		System.out.println("FIX_V7: [" + threadName + "] ENTRY - Channel: " + ctx.channel().id().asShortText() +
 		                   ", ByteBuf state: readerIdx=" + readerIndexBefore +
 		                   ", writerIdx=" + writerIndexBefore +
 		                   ", readable=" + readableBefore +
@@ -72,45 +72,108 @@ public class NettyToWsBufferDecoder extends ByteToMessageDecoder {
 		
 		// Skip empty buffers
 		if (length == 0) {
-			System.out.println("FIX_V6: [" + threadName + "] EMPTY BUFFER - skipping");
+			System.out.println("FIX_V7: [" + threadName + "] EMPTY BUFFER - skipping");
 			if (tc.isEntryEnabled())
 				SibTr.exit(this, tc, "decode", "empty buffer, skipping");
 			return;
 		}
 
-		System.out.println("FIX_V6: [" + threadName + "] Decoding " + length + " bytes");
+		System.out.println("FIX_V7: [" + threadName + "] Decoding " + length + " bytes");
+		
+		// FIX_V7: Detailed ByteBuf inspection for Epoll debugging
+		System.out.println("FIX_V7: [" + threadName + "] ByteBuf class: " + in.getClass().getName());
+		System.out.println("FIX_V7: [" + threadName + "] ByteBuf isDirect: " + in.isDirect());
+		System.out.println("FIX_V7: [" + threadName + "] ByteBuf hasArray: " + in.hasArray());
+		System.out.println("FIX_V7: [" + threadName + "] ByteBuf nioBufferCount: " + in.nioBufferCount());
+		
+		// Check if this is an Epoll-specific buffer
+		if (in.getClass().getName().contains("Epoll")) {
+			System.out.println("FIX_V7: [" + threadName + "] EPOLL BUFFER DETECTED: " + in.getClass().getName());
+			if (in.hasMemoryAddress()) {
+				System.out.println("FIX_V7: [" + threadName + "] Buffer memoryAddress: " + in.memoryAddress());
+			}
+		}
+		
+		// Check if this is a composite/wrapped buffer
+		if (in.getClass().getName().contains("Composite") ||
+		    in.getClass().getName().contains("Wrapped")) {
+			System.out.println("FIX_V7: [" + threadName + "] WARNING: Composite/Wrapped buffer detected!");
+		}
+		
+		// Peek at first 2 bytes WITHOUT advancing reader index to check for corruption BEFORE copy
+		if (length >= 2) {
+			short peekEyecatcher = in.getShort(in.readerIndex());
+			System.out.println("FIX_V7: [" + threadName + "] Peek eyecatcher BEFORE readBytes: 0x" +
+			                   Integer.toHexString(peekEyecatcher & 0xFFFF).toUpperCase());
+			
+			// If eyecatcher is already wrong in ByteBuf, corruption happened before decoder
+			if (peekEyecatcher != (short)0xBEEF && length >= 14) {
+				System.err.println("FIX_V7: [" + threadName + "] CORRUPTION DETECTED IN BYTEBUF BEFORE COPY!");
+				System.err.println("FIX_V7: Expected 0xBEEF, got 0x" +
+				                   Integer.toHexString(peekEyecatcher & 0xFFFF).toUpperCase());
+				System.err.println("FIX_V7: ByteBuf: " + in.getClass().getName());
+				System.err.println("FIX_V7: isDirect: " + in.isDirect());
+				
+				// Dump first 32 bytes for analysis
+				int dumpSize = Math.min(32, length);
+				byte[] dump = new byte[dumpSize];
+				in.getBytes(in.readerIndex(), dump);
+				StringBuilder hexDump = new StringBuilder();
+				for (int i = 0; i < dumpSize; i++) {
+					hexDump.append(String.format("%02X ", dump[i]));
+					if ((i + 1) % 16 == 0) hexDump.append("\n");
+				}
+				System.err.println("FIX_V7: First " + dumpSize + " bytes:\n" + hexDump.toString());
+			}
+		}
 
 		// Always copy to a new byte array to avoid buffer lifecycle issues
 		// This ensures the data is preserved even after the ByteBuf is released by Netty
 		byte[] bytes = new byte[length];
 		
 		try {
-			in.readBytes(bytes);
+			// FIX_V7: Use different copy method for Epoll/Direct buffers to avoid zero-copy issues
+			if (in.isDirect() || in.getClass().getName().contains("Epoll")) {
+				// For direct/Epoll buffers, use getBytes which is safer
+				in.getBytes(in.readerIndex(), bytes);
+				in.readerIndex(in.readerIndex() + length);
+				System.out.println("FIX_V7: [" + threadName + "] Used getBytes() for Epoll/Direct buffer");
+			} else {
+				in.readBytes(bytes);
+				System.out.println("FIX_V7: [" + threadName + "] Used readBytes() for heap buffer");
+			}
 			
 			// Capture ByteBuf state AFTER readBytes
 			int readerIndexAfter = in.readerIndex();
 			int readableAfter = in.readableBytes();
 			
-			System.out.println("FIX_V6: [" + threadName + "] AFTER readBytes - readerIdx=" + readerIndexAfter +
+			System.out.println("FIX_V7: [" + threadName + "] AFTER readBytes - readerIdx=" + readerIndexAfter +
 			                   ", readable=" + readableAfter +
 			                   ", advanced=" + (readerIndexAfter - readerIndexBefore));
 			
-			// Log first few bytes for debugging (eyecatcher should be 0xBEEF)
+			// Verify the copy was successful
 			if (length >= 2) {
-				int eyecatcher = ((bytes[0] & 0xFF) << 8) | (bytes[1] & 0xFF);
-				System.out.println("FIX_V6: [" + threadName + "] First 2 bytes (eyecatcher): 0x" +
-				                   Integer.toHexString(eyecatcher).toUpperCase());
+				int copiedEyecatcher = ((bytes[0] & 0xFF) << 8) | (bytes[1] & 0xFF);
+				System.out.println("FIX_V7: [" + threadName + "] Eyecatcher in copied array: 0x" +
+				                   Integer.toHexString(copiedEyecatcher).toUpperCase());
+				
+				// Check if ByteBuf still has correct data at position 0
+				if (readerIndexAfter >= 2) {
+					short bufferEyecatcher = in.getShort(readerIndexBefore);
+					System.out.println("FIX_V7: [" + threadName + "] Eyecatcher still in ByteBuf at original pos: 0x" +
+					                   Integer.toHexString(bufferEyecatcher & 0xFFFF).toUpperCase());
+				}
 			}
 			
 		} catch (Exception e) {
-			System.err.println("FIX_V6: [" + threadName + "] ERROR during readBytes: " + e.getMessage());
+			System.err.println("FIX_V7: [" + threadName + "] ERROR during readBytes: " + e.getMessage());
 			e.printStackTrace();
 			throw e;
 		}
 
 		// Wrap the byte array in a WsByteBuffer
 		WsByteBuffer wsBuffer = WsByteBufferPool.getInstance().wrap(bytes, 0, length);
-		System.out.println("FIX_V6: [" + threadName + "] Created WsByteBuffer - pos=" + wsBuffer.position() +
+		System.out.println("FIX_V7: [" + threadName + "] Created WsByteBuffer - pos=" + wsBuffer.position() +
 		                   ", lim=" + wsBuffer.limit() + ", cap=" + wsBuffer.capacity());
 		
 		// CRITICAL: NettyConnectionReadCompletedCallback calls flip() on the buffer!
@@ -120,13 +183,13 @@ public class NettyToWsBufferDecoder extends ByteToMessageDecoder {
 		wsBuffer.position(length);
 		wsBuffer.limit(wsBuffer.capacity());
 		
-		System.out.println("FIX_V6: [" + threadName + "] Before flip (write mode) - pos=" + wsBuffer.position() +
+		System.out.println("FIX_V7: [" + threadName + "] Before flip (write mode) - pos=" + wsBuffer.position() +
 		                   ", lim=" + wsBuffer.limit() + ", cap=" + wsBuffer.capacity());
 		
 		out.add(wsBuffer);
 		
 		long duration = System.nanoTime() - startTime;
-		System.out.println("FIX_V6: [" + threadName + "] EXIT - Duration: " + (duration / 1000) + " microseconds, " +
+		System.out.println("FIX_V7: [" + threadName + "] EXIT - Duration: " + (duration / 1000) + " microseconds, " +
 		                   "Output list size: " + out.size());
 
 		if (tc.isEntryEnabled())
