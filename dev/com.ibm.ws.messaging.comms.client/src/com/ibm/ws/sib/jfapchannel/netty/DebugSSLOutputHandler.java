@@ -32,8 +32,13 @@ public class DebugSSLOutputHandler extends ChannelInboundHandlerAdapter {
             String threadName = Thread.currentThread().getName();
             StringBuilder output = new StringBuilder(512);
             
+            // Capture buffer identity for tracking across handlers
+            String bufferIdentity = System.identityHashCode(buf) + "@" +
+                                    (buf.hasMemoryAddress() ? "0x" + Long.toHexString(buf.memoryAddress()) : "no-addr");
+            
             output.append("SSL_DEBUG: [").append(threadName).append("] ========== SSL HANDLER OUTPUT ==========\n");
             output.append("SSL_DEBUG: [").append(threadName).append("] Channel: ").append(ctx.channel().id().asShortText()).append("\n");
+            output.append("SSL_DEBUG: [").append(threadName).append("] Buffer Identity: ").append(bufferIdentity).append("\n");
             output.append("SSL_DEBUG: [").append(threadName).append("] ByteBuf class: ").append(buf.getClass().getName()).append("\n");
             output.append("SSL_DEBUG: [").append(threadName).append("] readerIndex: ").append(buf.readerIndex()).append("\n");
             output.append("SSL_DEBUG: [").append(threadName).append("] writerIndex: ").append(buf.writerIndex()).append("\n");

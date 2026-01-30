@@ -127,6 +127,18 @@ public class NettyToWsBufferDecoder extends ByteToMessageDecoder {
 			}
 		}
 
+		// RACE_DEBUG: Capture buffer identity and state BEFORE copying
+		String bufferIdentity = System.identityHashCode(in) + "@" +
+		                        (in.hasMemoryAddress() ? "0x" + Long.toHexString(in.memoryAddress()) : "no-addr");
+		int refCountBefore = in.refCnt();
+		int eyecatcherBefore = (length >= 2) ? in.getUnsignedShort(in.readerIndex()) : -1;
+		
+		System.out.println("RACE_DEBUG: [" + threadName + "] ========== BEFORE BUFFER COPY ==========");
+		System.out.println("RACE_DEBUG: [" + threadName + "] Buffer Identity: " + bufferIdentity);
+		System.out.println("RACE_DEBUG: [" + threadName + "] refCnt BEFORE: " + refCountBefore);
+		System.out.println("RACE_DEBUG: [" + threadName + "] Eyecatcher BEFORE: 0x" +
+		                   (eyecatcherBefore >= 0 ? Integer.toHexString(eyecatcherBefore).toUpperCase() : "N/A"));
+
 		// Always copy to a new byte array to avoid buffer lifecycle issues
 		// This ensures the data is preserved even after the ByteBuf is released by Netty
 		byte[] bytes = new byte[length];
@@ -142,6 +154,54 @@ public class NettyToWsBufferDecoder extends ByteToMessageDecoder {
 				in.readBytes(bytes);
 				System.out.println("FIX_V7: [" + threadName + "] Used readBytes() for heap buffer");
 			}
+			
+			// RACE_DEBUG: Check if buffer state changed DURING copy
+			int refCountAfter = in.refCnt();
+			int eyecatcherAfter = (length >= 2) ? ((bytes[0] & 0xFF) << 8) | (bytes[1] & 0xFF) : -1;
+			
+			System.out.println("RACE_DEBUG: [" + threadName + "] refCnt AFTER: " + refCountAfter);
+			System.out.println("RACE_DEBUG: [" + threadName + "] Eyecatcher AFTER (in array): 0x" +
+			                   (eyecatcherAfter >= 0 ? Integer.toHexString(eyecatcherAfter).toUpperCase() : "N/A"));
+			
+			// Detect race condition: eyecatcher changed or buffer was released
+			if (eyecatcherBefore >= 0 && eyecatcherAfter >= 0 && eyecatcherBefore != eyecatcherAfter) {
+				System.err.println("RACE_DEBUG: [" + threadName + "] ⚠️⚠️⚠️  RACE CONDITION DETECTED! ⚠️⚠️⚠️");
+				System.err.println("RACE_DEBUG: [" + threadName + "] Eyecatcher CHANGED during copy!");
+				System.err.println("RACE_DEBUG: [" + threadName + "] Before: 0x" + Integer.toHexString(eyecatcherBefore).toUpperCase() +
+				                   " → After: 0x" + Integer.toHexString(eyecatcherAfter).toUpperCase());
+				System.err.println("RACE_DEBUG: [" + threadName + "] Buffer: " + bufferIdentity);
+				System.err.println("RACE_DEBUG: [" + threadName + "] RefCount: " + refCountBefore + " → " + refCountAfter);
+				
+				// Check current buffer state
+				if (refCountAfter > 0) {
+					int currentEyecatcher = in.getUnsignedShort(readerIndexBefore);
+					System.err.println("RACE_DEBUG: [" + threadName + "] Current buffer eyecatcher: 0x" +
+					                   Integer.toHexString(currentEyecatcher).toUpperCase());
+					
+					// Dump current buffer state
+					int dumpSize = Math.min(32, in.readableBytes() + (in.readerIndex() - readerIndexBefore));
+					if (dumpSize > 0) {
+						byte[] currentState = new byte[dumpSize];
+						in.getBytes(readerIndexBefore, currentState);
+						StringBuilder hex = new StringBuilder();
+						for (int i = 0; i < dumpSize; i++) {
+							hex.append(String.format("%02X ", currentState[i]));
+							if ((i + 1) % 16 == 0) hex.append("\n                                    ");
+						}
+						System.err.println("RACE_DEBUG: [" + threadName + "] Current buffer state (first " + dumpSize + " bytes):");
+						System.err.println("                                    " + hex.toString());
+					}
+				} else {
+					System.err.println("RACE_DEBUG: [" + threadName + "] ⚠️  Buffer was RELEASED (refCnt=0)!");
+				}
+				System.err.println("RACE_DEBUG: [" + threadName + "] ==========================================");
+			} else if (refCountBefore != refCountAfter) {
+				System.err.println("RACE_DEBUG: [" + threadName + "] ⚠️  RefCount changed: " +
+				                   refCountBefore + " → " + refCountAfter);
+			} else {
+				System.out.println("RACE_DEBUG: [" + threadName + "] ✓ No race detected, buffer stable");
+			}
+			System.out.println("RACE_DEBUG: [" + threadName + "] ==========================================");
 			
 			// Capture ByteBuf state AFTER readBytes
 			int readerIndexAfter = in.readerIndex();
