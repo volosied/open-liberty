@@ -233,14 +233,16 @@ public class NettyConnectionWriteCompletedCallback extends BaseConnectionWriteCa
 
 				hasWritten = false;
 				hasMoreWork = false;
+				final WsByteBuffer;
 				synchronized (priorityQueue) {
 					synchronized (this) {
 						if (!isWorkAvailable()) break;
+
+						writeBuffer = getWriteContextBuffer(); // avoid race condition which causes java.nio.BufferOverflowException
+						writeBuffer.clear();
 					}
 				}
 
-				final WsByteBuffer writeBuffer = getWriteContextBuffer();
-				writeBuffer.clear();
 				if (dequeueTransmissionData(writeBuffer)) {
 					synchronized (connectionClosedLock) {
 						if (!connectionClosed) {
