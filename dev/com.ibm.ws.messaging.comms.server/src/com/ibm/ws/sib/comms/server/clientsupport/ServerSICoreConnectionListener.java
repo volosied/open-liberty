@@ -406,6 +406,11 @@ public class ServerSICoreConnectionListener implements SICoreConnectionListener 
 
                 if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled())
                     SibTr.debug(tc, e.getMessage(), e);
+            } else if (conversation.isClosed()) {
+                // Conversation is already closed (e.g., during server shutdown when TCP channels
+                // have already been stopped). Skip sending notification to avoid unnecessary FFDC.
+                if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled())
+                    SibTr.debug(this, tc, "Conversation is closed - skipping notification for event", eventId);
             } else {
                 // Otherwise inform the client
                 ConversationState convState = (ConversationState) conversation.getAttachment();
@@ -420,7 +425,7 @@ public class ServerSICoreConnectionListener implements SICoreConnectionListener 
 
                 //in case if event id is EVENTID_ME_QUIESCING or EVENTID_ME_TERMINATED then dont block the thread because
                 //this may function may get executed in the context of SCR thread and should not get blocked..
-                //but it is very rare foo this function (i.e send)d to get blocked.. however those rare cases can be 
+                //but it is very rare foo this function (i.e send)d to get blocked.. however those rare cases can be
                 //avoided by setting the ThrottlingPolicy to DISCARD_TRANSMISSION. In the event of ME termination/Quiescing, this should
                 // be harmless
                 if (eventId == CommsConstants.EVENTID_ME_TERMINATED || eventId == CommsConstants.EVENTID_ME_QUIESCING) {
