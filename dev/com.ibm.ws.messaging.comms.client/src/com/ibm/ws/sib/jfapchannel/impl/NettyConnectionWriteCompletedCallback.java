@@ -233,7 +233,7 @@ public class NettyConnectionWriteCompletedCallback extends BaseConnectionWriteCa
 
 				hasWritten = false;
 				hasMoreWork = false;
-				final WsByteBuffer;
+				final WsByteBuffer writeBuffer;
 				synchronized (priorityQueue) {
 					synchronized (this) {
 						if (!isWorkAvailable()) break;
