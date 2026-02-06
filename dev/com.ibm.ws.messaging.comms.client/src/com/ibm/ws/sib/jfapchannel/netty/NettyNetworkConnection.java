@@ -320,9 +320,9 @@ public class NettyNetworkConnection implements NetworkConnection{
 				pipeline.addLast("sslDebug", new DebugSSLOutputHandler());
 			}
 			pipeline.addLast(NettyNetworkConnectionFactory.DECODER_HANDLER_KEY, new NettyToWsBufferDecoder());
-			pipeline.addLast(NettyNetworkConnectionFactory.ENCODER_HANDLER_KEY, new WsBufferToNettyEncoder());
-			// Add debug handler to log all outbound writes (after encoder, before SSL)
+			// Add debug handler to log all outbound writes BEFORE encoder to see WsByteBuffer objects
 			pipeline.addLast("writeDebug", new DebugWriteHandler());
+			pipeline.addLast(NettyNetworkConnectionFactory.ENCODER_HANDLER_KEY, new WsBufferToNettyEncoder());
 			pipeline.replace(NettyConstants.INACTIVITY_TIMEOUT_HANDLER_NAME, NettyNetworkConnectionFactory.HEARTBEAT_HANDLER_KEY, new NettyJMSHeartbeatHandler(0));
 			pipeline.addLast(NettyNetworkConnectionFactory.JMS_CLIENT_HANDLER_KEY, new NettyJMSClientHandler());
 		}
