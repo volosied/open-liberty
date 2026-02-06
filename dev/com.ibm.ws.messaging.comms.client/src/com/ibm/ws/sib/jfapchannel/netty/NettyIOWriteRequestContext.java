@@ -69,19 +69,40 @@ public class NettyIOWriteRequestContext extends NettyIOBaseContext implements IO
 		
 		if(chan.isActive()) {
 			
-			ChannelFuture future = chan.writeAndFlush(buffer, chan.newPromise().addListener(f -> {
-				if (f.isDone() && f.isSuccess()) {
-					if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) SibTr.debug(this, tc, "Succesful write for "+chan);
-					completionCallback.complete(getNetworkConnectionInstance(chan), me);
-				} else {
-					if (TraceComponent.isAnyTracingEnabled() && tc.isEntryEnabled()) SibTr.entry(this, tc, "Unsuccesful write", new Object[]{chan, f.cause()});
-					completionCallback.error(getNetworkConnectionInstance(chan), me, new IOException(f.cause()));
-					if (TraceComponent.isAnyTracingEnabled() && tc.isEntryEnabled()) SibTr.exit(this, tc, "Unsuccesful write");
-				}
-			}));
+			// FIX: Ensure writes are serialized through the EventLoop to prevent packet reordering
+			// This is critical for Epoll which can have concurrent writes from multiple threads
+			if (chan.eventLoop().inEventLoop()) {
+				// Already in the EventLoop thread, write directly
+				ChannelFuture future = chan.writeAndFlush(buffer, chan.newPromise().addListener(f -> {
+					if (f.isDone() && f.isSuccess()) {
+						if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) SibTr.debug(this, tc, "Succesful write for "+chan);
+						completionCallback.complete(getNetworkConnectionInstance(chan), me);
+					} else {
+						if (TraceComponent.isAnyTracingEnabled() && tc.isEntryEnabled()) SibTr.entry(this, tc, "Unsuccesful write", new Object[]{chan, f.cause()});
+						completionCallback.error(getNetworkConnectionInstance(chan), me, new IOException(f.cause()));
+						if (TraceComponent.isAnyTracingEnabled() && tc.isEntryEnabled()) SibTr.exit(this, tc, "Unsuccesful write");
+					}
+				}));
 
-			if(future.isDone()) {
-				retConn = getNetworkConnectionInstance(chan);
+				if(future.isDone()) {
+					retConn = getNetworkConnectionInstance(chan);
+				}
+			} else {
+				// Not in EventLoop thread, submit write to EventLoop to ensure ordering
+				chan.eventLoop().execute(() -> {
+					chan.writeAndFlush(buffer, chan.newPromise().addListener(f -> {
+						if (f.isDone() && f.isSuccess()) {
+							if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) SibTr.debug(this, tc, "Succesful write for "+chan);
+							completionCallback.complete(getNetworkConnectionInstance(chan), me);
+						} else {
+							if (TraceComponent.isAnyTracingEnabled() && tc.isEntryEnabled()) SibTr.entry(this, tc, "Unsuccesful write", new Object[]{chan, f.cause()});
+							completionCallback.error(getNetworkConnectionInstance(chan), me, new IOException(f.cause()));
+							if (TraceComponent.isAnyTracingEnabled() && tc.isEntryEnabled()) SibTr.exit(this, tc, "Unsuccesful write");
+						}
+					}));
+				});
+				// When submitting to EventLoop, we can't return a connection synchronously
+				// The write will complete asynchronously via the callback
 			}
 			
 		}else {
