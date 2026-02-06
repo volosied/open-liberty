@@ -16,6 +16,7 @@ import com.ibm.ws.sib.jfapchannel.buffer.WsByteBuffer;
 import com.ibm.ws.sib.jfapchannel.framework.IOWriteCompletedCallback;
 import com.ibm.ws.sib.jfapchannel.framework.IOWriteRequestContext;
 import com.ibm.ws.sib.jfapchannel.framework.NetworkConnection;
+import com.ibm.ws.sib.jfapchannel.impl.Connection;
 import com.ibm.ws.sib.jfapchannel.impl.NettyConnectionWriteCompletedCallback;
 import com.ibm.ws.sib.utils.ras.SibTr;
 
@@ -80,11 +81,41 @@ public class NettyIOWriteRequestContext extends NettyIOBaseContext implements IO
 			}));
 
 			if(future.isDone()) {
-				retConn = getNetworkConnectionInstance(chan); 
+				retConn = getNetworkConnectionInstance(chan);
 			}
 			
 		}else {
-			completionCallback.error(getNetworkConnectionInstance(chan), me, new IOException("Write was attempted on a channel that is not active!! " + chan));
+			// Channel is not active - this can happen during normal shutdown when TCP channels
+			// are stopped before messaging engine completes shutdown.
+			// During shutdown, the channel may be closed before the Connection is linked to it,
+			// or the connection may already be closed. In either case, don't generate FFDC.
+			Connection connection = chan.attr(NettyNetworkConnectionFactory.CONNECTION).get();
+			
+			// Debug logging to understand the state
+			if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
+				SibTr.debug(this, tc, "Channel is not active. Channel: " + chan +
+					", Connection: " + connection +
+					", Connection.isClosed(): " + (connection != null ? connection.isClosed() : "N/A"));
+			}
+			
+			// Check if this is a shutdown scenario:
+			// 1. Connection is null (channel closed during shutdown before connection was linked)
+			// 2. Connection exists and is closed (normal shutdown sequence)
+			if (connection == null || connection.isClosed()) {
+				// This is expected during shutdown - just log at debug level
+				if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
+					SibTr.debug(this, tc, "Write skipped - channel is not active during shutdown. " +
+						"Connection: " + (connection == null ? "null (not yet linked)" : "closed") +
+						", Channel: " + chan);
+				}
+				// Don't call error callback to avoid FFDC during normal shutdown
+			} else {
+				// Unexpected inactive channel during normal operation - report the error
+				if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
+					SibTr.debug(this, tc, "Reporting error - connection exists but is not closed (unexpected state)");
+				}
+				completionCallback.error(getNetworkConnectionInstance(chan), me, new IOException("Write was attempted on a channel that is not active!! " + chan));
+			}
 		}
 
 		if (TraceComponent.isAnyTracingEnabled() && tc.isEntryEnabled()) SibTr.exit(this, tc, "write", retConn);
