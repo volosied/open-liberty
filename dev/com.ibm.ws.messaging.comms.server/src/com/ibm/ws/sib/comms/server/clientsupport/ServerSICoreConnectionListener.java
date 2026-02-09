@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2026 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -406,6 +406,10 @@ public class ServerSICoreConnectionListener implements SICoreConnectionListener 
 
                 if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled())
                     SibTr.debug(tc, e.getMessage(), e);
+            } else if(conversation.isClosed()) {
+                //conversation closed,  no-op
+                if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled())
+                     SibTr.debug(this, tc, "Conversation is closed! Skipping notification for event -> ", eventId);
             } else {
                 // Otherwise inform the client
                 ConversationState convState = (ConversationState) conversation.getAttachment();
