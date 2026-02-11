@@ -22,9 +22,9 @@ instrument.classesExcludes: \
   org/**/*.class
 
 
-#@${repo;io.openliberty.jakarta.faces.3.0}!/META-INF/resources/**, \
-#@${repo;io.openliberty.jakarta.faces.3.0}!/META-INF/internal-resources/**, \
 Include-Resource: \
+  @${repo;io.openliberty.jakarta.faces.3.0}!/META-INF/resources/**, \
+  @${repo;io.openliberty.jakarta.faces.3.0}!/META-INF/internal-resources/**, \
   META-INF=@src/META-INF
 
 Service-Component: \
