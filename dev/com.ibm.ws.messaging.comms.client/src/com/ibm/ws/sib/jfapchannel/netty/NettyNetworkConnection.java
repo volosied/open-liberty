@@ -206,55 +206,68 @@ public class NettyNetworkConnection implements NetworkConnection{
 	@SuppressWarnings("unchecked")
 	public void connectAsynch(final NetworkConnectionTarget target, final ConnectRequestListener listener)
 	{
-		if (TraceComponent.isAnyTracingEnabled() && tc.isEntryEnabled()) SibTr.entry(this, tc, "connectAsynch", new Object[]{target, listener});
+		throw new RuntimeException("Hey! this method was entered!");
+		// if (TraceComponent.isAnyTracingEnabled() && tc.isEntryEnabled()) SibTr.entry(this, tc, "connectAsynch", new Object[]{target, listener});
 
-		final NettyNetworkConnection readyConnection = this;
+		// final NettyNetworkConnection readyConnection = this;
 
 
-		if(this.isInbound) {
-			listener.connectRequestFailedNotification(new NettyException("Can't start outbound connection with an inbound channel"));
-			return;
-		}
+		// if(this.isInbound) {
+		// 	listener.connectRequestFailedNotification(new NettyException("Can't start outbound connection with an inbound channel"));
+		// 	return;
+		// }
 
-		if (FrameworkState.isStopping()) {
-			// Drive the callback directly here.
-			if (TraceComponent.isAnyTracingEnabled() && tc.isEntryEnabled())
-				SibTr.debug(this, tc, "Framework.isStopping() == true");
-			listener.connectRequestFailedNotification(new IllegalStateException("Framework stopped"));
+		// if (FrameworkState.isStopping()) {
+		// 	// Drive the callback directly here.
+		// 	if (TraceComponent.isAnyTracingEnabled() && tc.isEntryEnabled())
+		// 		SibTr.debug(this, tc, "Framework.isStopping() == true");
+		// 	listener.connectRequestFailedNotification(new IllegalStateException("Framework stopped"));
 
-		}
-		else {
-			try {
-				// Clone bootstrap object to avoid using a shared instance across multiple connections
-				BootstrapExtended connectionBootstrap = bootstrap.clone();
-				connectionBootstrap.handler(new NettyJMSClientInitializer(bootstrap.getBaseInitializer(), target, listener));
+		// }
+		// else {
+		// 	try {
+		// 		// Clone bootstrap object to avoid using a shared instance across multiple connections
+		// 		System.out.println("[NettyNetworkConnection] BEFORE CLONE - Original bootstrap: " + System.identityHashCode(bootstrap) +
+		// 				", handler: " + bootstrap.config().handler());
+				
+		// 		BootstrapExtended connectionBootstrap = bootstrap.clone();
+				
+		// 		System.out.println("[NettyNetworkConnection] AFTER CLONE - Cloned bootstrap: " + System.identityHashCode(connectionBootstrap) +
+		// 				", cloned handler: " + connectionBootstrap.config().handler() +
+		// 				", original handler: " + bootstrap.config().handler());
+				
+		// 		connectionBootstrap.handler(new NettyJMSClientInitializer(bootstrap.getBaseInitializer(), target, listener));
+				
+		// 		System.out.println("[NettyNetworkConnection] AFTER SET HANDLER - Cloned handler: " +
+		// 				connectionBootstrap.config().handler() +
+		// 				", original handler: " + bootstrap.config().handler());
 
-				NettyNetworkConnection parent = this;
+		// 		NettyNetworkConnection parent = this;
 
-				nettyBundle.startOutbound(connectionBootstrap, target.getRemoteAddress().getAddress().getHostAddress(), target.getRemoteAddress().getPort(), f -> {
-					if (f.isCancelled() || !f.isSuccess()) {
-						SibTr.debug(this, tc, "Channel exception during connect: " + f.cause().getMessage());
-						if (TraceComponent.isAnyTracingEnabled() && tc.isEntryEnabled()) SibTr.entry(parent, tc, "destroy", f.cause());
-						listener.connectRequestFailedNotification((Exception) f.cause());
-						if (TraceComponent.isAnyTracingEnabled() && tc.isEntryEnabled()) SibTr.exit(parent, tc, "destroy");
-					}else {
-						if (TraceComponent.isAnyTracingEnabled() && tc.isEntryEnabled()) SibTr.entry(parent, tc, "ready", f);
-						parent.chan = f.channel();
-						listener.connectRequestSucceededNotification(readyConnection);
-						if (TraceComponent.isAnyTracingEnabled() && tc.isEntryEnabled()) SibTr.exit(parent, tc, "ready");
-					}
+		// 		nettyBundle.startOutbound(connectionBootstrap, target.getRemoteAddress().getAddress().getHostAddress(), target.getRemoteAddress().getPort(), f -> {
+		// 			if (f.isCancelled() || !f.isSuccess()) {
+		// 				SibTr.debug(this, tc, "Channel exception during connect: " + f.cause().getMessage());
+		// 				if (TraceComponent.isAnyTracingEnabled() && tc.isEntryEnabled()) SibTr.entry(parent, tc, "destroy", f.cause());
+		// 				listener.connectRequestFailedNotification((Exception) f.cause());
+		// 				if (TraceComponent.isAnyTracingEnabled() && tc.isEntryEnabled()) SibTr.exit(parent, tc, "destroy");
+		// 			}else {
+		// 				if (TraceComponent.isAnyTracingEnabled() && tc.isEntryEnabled()) SibTr.entry(parent, tc, "ready", f);
+		// 				parent.chan = f.channel();
+		// 				listener.connectRequestSucceededNotification(readyConnection);
+		// 				if (TraceComponent.isAnyTracingEnabled() && tc.isEntryEnabled()) SibTr.exit(parent, tc, "ready");
+		// 			}
 
-				});
+		// 		});
 
-			} catch (Exception e) {
-				if (TraceComponent.isAnyTracingEnabled() && tc.isEntryEnabled()) SibTr.entry(this, tc, "destroy", e);
-				listener.connectRequestFailedNotification(e);
-				if (TraceComponent.isAnyTracingEnabled() && tc.isEntryEnabled()) SibTr.exit(this, tc, "destroy");
+		// 	} catch (Exception e) {
+		// 		if (TraceComponent.isAnyTracingEnabled() && tc.isEntryEnabled()) SibTr.entry(this, tc, "destroy", e);
+		// 		listener.connectRequestFailedNotification(e);
+		// 		if (TraceComponent.isAnyTracingEnabled() && tc.isEntryEnabled()) SibTr.exit(this, tc, "destroy");
 
-			}
-		}
+		// 	}
+		// }
 
-		if (TraceComponent.isAnyTracingEnabled() && tc.isEntryEnabled()) SibTr.exit(this, tc, "connectAsynch");
+		// if (TraceComponent.isAnyTracingEnabled() && tc.isEntryEnabled()) SibTr.exit(this, tc, "connectAsynch");
 	}
 
 	/**
