@@ -137,31 +137,7 @@ public class RichClientFramework extends Framework
     @Override
     public Map getOutboundConnectionProperties(Object ep)
     {
-        if (TraceComponent.isAnyTracingEnabled() && tc.isEntryEnabled())
-            SibTr.entry(this, tc, "getOutboundConnectionProperties", ep);
-        
-     // TODO: Check if this data path is even used see https://github.com/OpenLiberty/open-liberty/issues/22692
-
-        Map properties = null;
-        if (ep instanceof CFEndPoint)
-        {
-        	
-        	String chainName = ((CFEndPoint) ep).getName();
-        	CommsOutboundChain chain = CommsOutboundChain.getChainDetails(chainName);
-            if(chain != null && chain.useNetty())
-            {
-            	throw new SIErrorException(new NettyException("Chain " + chainName + "was set up to use Netty but code path has not been updated to allow Netty."));
-            }
-        	
-            OutboundChannelDefinition[] channelDefinitions = (OutboundChannelDefinition[]) ((CFEndPoint) ep).getOutboundChannelDefs().toArray();
-            if (channelDefinitions.length < 1)
-                throw new SIErrorException(nls.getFormattedMessage("OUTCONNTRACKER_INTERNAL_SICJ0064", null, "OUTCONNTRACKER_INTERNAL_SICJ0064"));
-            properties = channelDefinitions[0].getOutboundChannelProperties();
-        }
-
-        if (TraceComponent.isAnyTracingEnabled() && tc.isEntryEnabled())
-            SibTr.exit(this, tc, "getOutboundConnectionProperties", properties);
-        return properties;
+        throw new RuntimeException("DEBUG: getOutboundConnectionProperties");
     }
 
     /**

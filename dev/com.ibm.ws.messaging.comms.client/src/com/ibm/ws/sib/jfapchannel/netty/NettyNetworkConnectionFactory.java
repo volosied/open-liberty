@@ -104,11 +104,7 @@ public class NettyNetworkConnectionFactory implements NetworkConnectionFactory{
 	@Override
 	public NetworkConnection createConnection(Object endpoint) throws FrameworkException
 	{
-		if (tc.isEntryEnabled())
-			SibTr.entry(this, tc, "createConnection", endpoint);
-		// TODO: Verify if this is used. See https://github.com/OpenLiberty/open-liberty/issues/22692
-		throw new FrameworkException("Not implemented yet for Netty. Currently only used on tWAS not Liberty.");
-
+		throw new RuntimeException("DEBUG: Not implemented yet for Netty. Currently only used on tWAS not Liberty.");
 	}
 
 	/**

@@ -256,7 +256,6 @@ public class CommsOutboundChain implements ApplicationPrereq {
             }
         }else {
         	// Use Netty Framework for transport
-        	// TODO: Verify Dynamic updates with SSL on Netty
         	try {
         		if (null == secureFacet) throw new ChainException(new Throwable(nls.getFormattedMessage("missingSslOptions.ChainNotStarted", new Object[] { chainName }, "Chain not started " + chainName)));
             	if (isAnyTracingEnabled() && tc.isDebugEnabled()) debug(this, tc, "JFAP Outbound secure chain" + chainName + " successfully started ");
