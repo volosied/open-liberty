@@ -99,38 +99,59 @@ public class NettyNetworkConnectionContext implements NetworkConnectionContext{
 	@Override
 	public void close(NetworkConnection networkConnection, Throwable throwable)
 	{
-		throw new RuntimeException("DEBUG: NettyNetworkConnectionContext#close called!");
-		// if (TraceComponent.isAnyTracingEnabled() && tc.isEntryEnabled())
-		// 	SibTr.entry(this, tc, "close", new Object[] { networkConnection, throwable });
+		if (TraceComponent.isAnyTracingEnabled() && tc.isEntryEnabled())
+			SibTr.entry(this, tc, "close", new Object[] { networkConnection, throwable });
 
-		// // TODO: This needs to be verified and implemented is not. https://github.com/OpenLiberty/open-liberty/issues/24814
-		// // If the server is stopping, all connections will be closed/flushed by netty bundle? Verify
+		// TODO: This needs to be verified and implemented is not. https://github.com/OpenLiberty/open-liberty/issues/24814
+		// If the server is stopping, all connections will be closed/flushed by netty bundle? Verify
+		Thread.dumpStack();
+		System.out.println("========================================");
+		System.out.println("DEBUG: NettyNetworkConnectionContext.close() called");
+		System.out.println("  FrameworkState.isStopping(): " + FrameworkState.isStopping());
+		System.out.println("  NetworkConnection: " + networkConnection);
+		System.out.println("  Throwable: " + throwable);
+		if (throwable != null) {
+			System.out.println("  Throwable Message: " + throwable.getMessage());
+			System.out.println("  Throwable Class: " + throwable.getClass().getName());
+		}
+		System.out.println("  Connection: " + conn);
+		Channel chan = conn.getVirtualConnection();
+		if (chan != null) {
+			System.out.println("  Channel: " + chan);
+			System.out.println("  Channel isActive: " + chan.isActive());
+			System.out.println("  Channel isOpen: " + chan.isOpen());
+			System.out.println("  Channel remoteAddress: " + chan.remoteAddress());
+			System.out.println("  Channel localAddress: " + chan.localAddress());
+		} else {
+			System.out.println("  Channel: NULL");
+		}
+		System.out.println("========================================");
 		// if (FrameworkState.isStopping()) {
 		// 	if (TraceComponent.isAnyTracingEnabled() && tc.isEntryEnabled())
 		// 		SibTr.exit(this, tc, "close");
 		// 	return;
 		// }
-		// Exception exception = null;
-		// if (throwable instanceof Exception)
-		// {
-		// 	exception = (Exception) throwable;
-		// }
-		// else
-		// {
-		// 	exception = new Exception(throwable);
-		// }
-		// Channel chan = conn.getVirtualConnection();
-		// if(chan != null) {
-		// 	if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled())
-		// 		SibTr.debug(this, tc, "close: Found Netty Channel to close: ", new Object[] {chan, chan.isActive(), chan.isOpen()});
-		// 	chan.close();
-		// }else {
-		// 	if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled())
-		// 		SibTr.debug(this, tc, "close", "Found NULL Netty Channel to close");
-		// }
+		Exception exception = null;
+		if (throwable instanceof Exception)
+		{
+			exception = (Exception) throwable;
+		}
+		else
+		{
+			exception = new Exception(throwable);
+		}
+		chan = conn.getVirtualConnection();
+		if(chan != null) {
+			if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled())
+				SibTr.debug(this, tc, "close: Found Netty Channel to close: ", new Object[] {chan, chan.isActive(), chan.isOpen()});
+			chan.close();
+		}else {
+			if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled())
+				SibTr.debug(this, tc, "close", "Found NULL Netty Channel to close");
+		}
 
-		// if (TraceComponent.isAnyTracingEnabled() && tc.isEntryEnabled())
-		// 	SibTr.exit(this, tc, "close", new Object[] { networkConnection, throwable });
+		if (TraceComponent.isAnyTracingEnabled() && tc.isEntryEnabled())
+			SibTr.exit(this, tc, "close", new Object[] { networkConnection, throwable });
 	}
 
 	/**
