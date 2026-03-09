@@ -136,7 +136,7 @@ if (!myfaces._impl.core._EvalHandlers) {
                     continue;
                 }
                 var src = scriptNode.getAttribute("src") || "";
-                if(src && !src.match(/jsf\.js\?ln\=javax\.faces/gi)) {
+                if(src && !src.match(/jsf\.js\?ln\=jakarta\.faces/gi)) {
                     jsf_js = scriptNode;
                     //the first one is the one we have our code in
                     //subsequent ones do not overwrite our code
@@ -2770,7 +2770,7 @@ _MF_SINGLTN(_PFX_UTIL + "_Lang", Object, /** @lends myfaces._impl._util._Lang.pr
              * @constructor
              */
             this.FormDataDecoratorOther = function (theFormData) {
-                this._valBuf = theFormData;
+                this._valBuf = theFormData || [];
                 this._idx = {};
 
             };
@@ -3649,16 +3649,10 @@ _MF_SINGLTN(_PFX_UTIL + "_Dom", Object, /** @lends myfaces._impl._util._Dom.prot
                         //we have to move this into an inner if because chrome otherwise chokes
                         //due to changing the and order instead of relying on left to right
                         //if jsf.js is already registered we do not replace it anymore
-                        if ((
-                                src.indexOf("ln=scripts") == -1 &&
-                                src.indexOf("ln=javax.faces") == -1 &&
-                                src.indexOf("ln=jakarta.faces") == -1
-                            ) || (
-                                src.indexOf("/jsf.js") == -1 &&
-                                src.indexOf("/faces.js") == -1 &&
-                                src.indexOf("/jsf-uncompressed.js") == -1 &&
-                                src.indexOf("/jsf-development.js") == -1 &&
-                                src.indexOf("/faces-development.js") == -1
+                        if ((src.indexOf("ln=scripts") == -1 && src.indexOf("ln=jakarta.faces") == -1) ||
+                            (src.indexOf("/jsf.js") == -1
+                            && (src.indexOf("/jsf-uncompressed.js") == -1)
+                            && (src.indexOf("/jsf-development.js") == -1)
                             )) {
                             finalScripts = evalCollectedScripts(finalScripts);
                             _RT.loadScriptEval(src, item.getAttribute('type'), false, "UTF-8", false, nonce ? {nonce: nonce} : null );
@@ -5914,6 +5908,9 @@ _MF_SINGLTN(_PFX_XHR+"_AjaxUtils", _MF_OBJECT,
 /** @lends myfaces._impl.xhrCore._AjaxUtils.prototype */
 {
 
+    NAMED_VIEWROOT: "namedViewRoot",
+    NAMING_CONTAINER_ID: "myfaces.partialId",
+
 
     /**
      * determines fields to submit
@@ -6034,6 +6031,88 @@ _MF_SINGLTN(_PFX_XHR+"_AjaxUtils", _MF_OBJECT,
                 }
             }
 
+        }
+    },
+
+    _$ncRemap: function(internalContext, containerId) {
+        var namedVieRoot = internalContext[this.NAMED_VIEWROOT];
+        var namingContainerId = internalContext[this.NAMING_CONTAINER_ID];
+        if(!namedVieRoot || !namingContainerId) {
+            return containerId
+        }
+        if(containerId.indexOf(namingContainerId) == 0) {
+            return containerId;
+        }
+        return [namingContainerId, containerId].join("");
+    },
+
+    /**
+     * determines the current naming container
+     * and assigns it internally
+     *
+     * @param internalContext
+     * @param formElement
+     * @private
+     */
+    _assignNamingContainerData: function(internalContext, formElement, separatorChar) {
+        const viewRootId = this._resolveViewRootId(formElement, separatorChar);
+
+        if(!!viewRootId) {
+            internalContext[this.NAMED_VIEWROOT] = true;
+            internalContext[this.NAMING_CONTAINER_ID] = viewRootId;
+        }
+    },
+
+    /**
+     * resolve the viewRoot id in a naming container situation
+     * (aka ViewState element name is prefixed)
+     * @param form
+     * @return a string (never null) which is either emtpy or contains the prefix for the ViewState
+     * (including the separator)
+     */
+    _resolveViewRootId: function(form, separatorChar) /*string*/ {
+        form = this._Dom.byId(form);
+        var _t = this;
+        var foundNames = this._Dom.findAll(form, function(node) {
+            var name = null;
+            if(node.getAttribute && node.getAttribute("name")) {
+                name = node.getAttribute("name");
+            }
+            if(!name || name.indexOf(_t.P_VIEWSTATE)) {
+                return false;
+            }
+            return node;
+        }, true);
+        if(!foundNames.length) {
+            return "";
+        }
+        return foundNames[0].name.split(separatorChar, 2)[0];
+    },
+
+    /**
+     * as per jsdoc before the request it must be ensured that every post argument
+     * is prefixed with the naming container id (there is an exception in mojarra with
+     * the element=element param, which we have to follow here as well.
+     * (inputs are prefixed by name anyway normally this only affects our standard parameters)
+     * @private
+     */
+    _resoveConfigNamingContainerMapper: function(myfacesOptions, separatorChar) {
+        var isNamedViewRoot = !!myfacesOptions[this.NAMED_VIEWROOT];
+        if(!isNamedViewRoot) {
+            return;
+        }
+
+        var partialId = myfacesOptions[this.NAMING_CONTAINER_ID];
+        var prefix = partialId + this.getSeparatorChar();
+        return function (data /*assoc array of key value pairs*/) {
+            var ret = {};
+            for(var key in data) {
+                if(!data.hasOwnProperty(key)) {
+                    continue;
+                }
+                ret[prefix + key] = data[key]
+            }
+            return ret;
         }
     }
 });
@@ -7148,7 +7227,7 @@ _MF_CLS(_PFX_XHR + "_AjaxRequest", _MF_OBJECT, /** @lends myfaces._impl.xhrCore.
     /**
      * Spec. 13.3.1
      * Collect and encode input elements.
-     * Additionally the hidden element jakarta/javax.faces.ViewState
+     * Additionally the hidden element jakarta.faces.ViewState
      * Enhancement partial page submit
      *
      * @return  an element of formDataWrapper
@@ -7163,10 +7242,15 @@ _MF_CLS(_PFX_XHR + "_AjaxRequest", _MF_OBJECT, /** @lends myfaces._impl.xhrCore.
             var _AJAXUTIL = this._AJAXUTIL, myfacesOptions = this._context.myfaces;
             return this._Lang.createFormDataDecorator(jsf.getViewState(this._sourceForm));
         } else {
+            // we need to check for
+            /*
+             *  const eventType = formData.getIf($nsp(P_BEHAVIOR_EVENT)).value?.[0]
+             *  const isBehaviorEvent = (!!eventType) && eventType != 'click';
+             */
+
             //now this is less performant but we have to call it to allow viewstate decoration
             ret = this._Lang.createFormDataDecorator(new Array());
             _AJAXUTIL.encodeSubmittableFields(ret, this._sourceForm, this._partialIdsArray);
-            // Backported MYFACES-4606
             if (this._source && !this._isBehaviorEvent()) {
                 _AJAXUTIL.appendIssuingItem(this._source, ret);
             }
@@ -7175,9 +7259,6 @@ _MF_CLS(_PFX_XHR + "_AjaxRequest", _MF_OBJECT, /** @lends myfaces._impl.xhrCore.
 
     },
 
-    /**
-     * Check if this is a non-action behavior event 
-     */
     _isBehaviorEvent: function() {
         var eventType = this._passThrough[this.attr("impl").P_BEHAVIOR_EVENT] || null;
         var isBehaviorEvent = (!!eventType) && eventType != 'click';
@@ -7321,8 +7402,7 @@ _MF_CLS(_PFX_XHR + "_AjaxRequestQuirks", myfaces._impl.xhrCore._AjaxRequest, /**
     },
 
     _applyClientWindowId:function () {
-        var _Impl = this.attr("impl");
-        var clientWindow = this._Dom.getNamedElementFromForm(this._sourceForm, _Impl.P_CLIENTWINDOW);
+        var clientWindow = this._Dom.getNamedElementFromForm(this._sourceForm, "jakarta.faces.ClientWindow");
         //pass through if exists already set by _Impl
         if ('undefined' != typeof this._context._mfInternal._clientWindow) {
             this._context._mfInternal._clientWindowOld = clientWindow.value;
@@ -7337,8 +7417,8 @@ _MF_CLS(_PFX_XHR + "_AjaxRequestQuirks", myfaces._impl.xhrCore._AjaxRequest, /**
 
     _restoreClientWindowId:function () {
         //we have to reset the client window back to its original state
-        var _Impl = this.attr("impl");
-        var clientWindow = this._Dom.getNamedElementFromForm(this._sourceForm, _Impl.P_CLIENTWINDOW);
+
+        var clientWindow = this._Dom.getNamedElementFromForm(this._sourceForm, "jakarta.faces.ClientWindow");
         if(!clientWindow) {
             return;
         }
@@ -7450,7 +7530,7 @@ _MF_CLS(_PFX_XHR + "_AjaxRequestQuirks", myfaces._impl.xhrCore._AjaxRequest, /**
     /**
      * Spec. 13.3.1
      * Collect and encode input elements.
-     * Additionally the hidden element jakarta/javax.faces.ViewState
+     * Additionally the hidden element jakarta.faces.ViewState
      *
      *
      * @return  an element of formDataWrapper
@@ -7458,7 +7538,6 @@ _MF_CLS(_PFX_XHR + "_AjaxRequestQuirks", myfaces._impl.xhrCore._AjaxRequest, /**
      */
     getFormData:function () {
         var formDataDecorator = this._Lang.createFormDataDecorator(jsf.getViewState(this._sourceForm));
-        // Backported MYFACES-4606
         if(this._source && !this._isBehaviorEvent()) {
             this._AJAXUTIL.appendIssuingItem(this._source, formDataDecorator);
         }
@@ -7529,69 +7608,6 @@ _MF_CLS(_PFX_XHR + "_AjaxRequestQuirks", myfaces._impl.xhrCore._AjaxRequest, /**
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/**
- * Extendend functionality
- * like issuing element outside of a form
- * and partial page submit
- *
- * Author: Werner Punz (latest modification by $Author: ganeshpuri $)
- * Version: $Revision: 1.4 $ $Date: 2009/05/31 09:16:44 $
- */
-
-//partial extension for the ajax request
-myfaces._impl.xhrCore._AjaxRequest = _MF_CLS(_PFX_XHR + "_ExtAjaxRequest", myfaces._impl.xhrCore._AjaxRequest , /** @lends myfaces._impl.xhrCore._ExtAjaxRequest.prototype */ {
-    constructor_: function(args) {
-        this._callSuper("constructor_", args);
-    },
-
-    /**
-     * Spec. 13.3.1
-     * Collect and encode input elements.
-     * Additionally the hidden element jakarta.faces.ViewState
-     * Enhancement partial page submit
-     *
-     * @return  an element of formDataWrapper
-     * which keeps the final Send Representation of the
-     */
-    getFormData : function() {
-        var _AJAXUTIL = this._AJAXUTIL, myfacesOptions = this._context.myfaces, ret = null;
-
-        //now this is less performant but we have to call it to allow viewstate decoration
-        if (!this._partialIdsArray || !this._partialIdsArray.length) {
-            ret = this._callSuper("getFormData");
-            //just in case the source item is outside of the form
-            //only if the form override is set we have to append the issuing item
-            //otherwise it is an element of the parent form
-            if (this._source && myfacesOptions && myfacesOptions.form)
-                _AJAXUTIL.appendIssuingItem(this._source, ret);
-        } else {
-            ret = this._Lang.createFormDataDecorator(new Array());
-            _AJAXUTIL.encodeSubmittableFields(ret, this._sourceForm, this._partialIdsArray);
-            if (this._source && myfacesOptions && myfacesOptions.form)
-                _AJAXUTIL.appendIssuingItem(this._source, ret);
-
-        }
-        return ret;
-    }
-
-});
-
-/* Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to you under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 /**
  * this method is used only for pure multipart form parts
  * like form data with file uploads.
@@ -7605,12 +7621,13 @@ _MF_CLS(_PFX_XHR+"_FormDataRequest", myfaces._impl.xhrCore._AjaxRequest, {
 
     constructor_: function(arguments) {
         this._callSuper("constructor_", arguments);
+        this._contentType = "multipart/form-data";
     },
 
     /**
      * Spec. 13.3.1
      * Collect and encode input elements.
-     * Additionally, the hidden element javax.faces.ViewState
+     * Additionally, the hidden element jakarta.faces.ViewState
      * Enhancement partial page submit
      *
      * @return  an element of formDataWrapper
@@ -7619,7 +7636,6 @@ _MF_CLS(_PFX_XHR+"_FormDataRequest", myfaces._impl.xhrCore._AjaxRequest, {
     getFormData : function() {
         var _AJAXUTIL = this._AJAXUTIL, myfacesOptions = this._context.myfaces, ret = null;
 
-
         //now this is less performant but we have to call it to allow viewstate decoration
         if (!this._partialIdsArray || !this._partialIdsArray.length) {
             ret = new FormData();
@@ -7627,14 +7643,12 @@ _MF_CLS(_PFX_XHR+"_FormDataRequest", myfaces._impl.xhrCore._AjaxRequest, {
             //just in case the source item is outside of the form
             //only if the form override is set we have to append the issuing item
             //otherwise it is an element of the parent form
-            // Backported MYFACES-4606
             if (this._source && !this._isBehaviorEvent()) {
                 _AJAXUTIL.appendIssuingItem(this._source, ret);
             }
         } else {
             ret = new FormData();
             _AJAXUTIL.encodeSubmittableFields(ret, this._sourceForm, this._partialIdsArray);
-            // Backported MYFACES-4606
             if (this._source && !this._isBehaviorEvent()) {
                 _AJAXUTIL.appendIssuingItem(this._source, ret);
             }
@@ -7648,10 +7662,7 @@ _MF_CLS(_PFX_XHR+"_FormDataRequest", myfaces._impl.xhrCore._AjaxRequest, {
     },
 
     _applyContentType: function(xhr) {
-        //by overriding we let the form data and xhr object
-        //figure it out themselves (auto multipart)
     }
-
 });
 /* Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -7994,7 +8005,7 @@ _MF_SINGLTN(_PFX_XHR + "_AjaxResponse", _MF_OBJECT, /** @lends myfaces._impl.xhr
 
             //per JSF 2.3 spec the identifier of the element must be unique in the dom tree
             //otherwise we will break the html spec here
-            element.innerHTML = ["<input type='hidden'", "id='", this._fetchUniqueId(prefix, identifier), "' name='", identifier, "' value='", value, "' />"].join("");
+            element.innerHTML = ["<input type='hidden'", "id='", this._fetchUniqueId(prefix, identifier), "' name='", this._getNamingContainerPrefix(context) + identifier, "' value='", value, "' />"].join("");
             //now we go to proper dom handling after having to deal with another ie screw-up
             try {
                 theForm.appendChild(element.childNodes[0]);
@@ -8122,6 +8133,12 @@ _MF_SINGLTN(_PFX_XHR + "_AjaxResponse", _MF_OBJECT, /** @lends myfaces._impl.xhr
         if (prefix != "") {
             prefix = prefix + jsf.separatorchar;
         }
+        return prefix;
+    },
+
+    _getNamingContainerPrefix: function(context) {
+        var mfInternal = context._mfInternal;
+        var prefix = myfaces._impl.xhrCore._AjaxUtils._$ncRemap(context._mfInternal, "");
         return prefix;
     },
 
@@ -9370,6 +9387,10 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
     P_WINDOW_ID:"jakarta.faces.ClientWindow",
     P_RESET_VALUES:"jakarta.faces.partial.resetValues",
 
+    //faces std values
+    STD_VALUES: [this.P_PARTIAL_SOURCE, this.P_VIEWSTATE, this.P_CLIENTWINDOW, this.P_AJAX,
+        this.P_EXECUTE, this.P_RENDER, this.P_EVT, this.P_BEHAVIOR_EVENT, this.P_WINDOW_ID, this.P_RESET_VALUES],
+
     /* message types */
     ERROR:"error",
     EVENT:"event",
@@ -9454,7 +9475,8 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
          *all the time
          **/
         var _Lang = this._Lang,
-                _Dom = this._Dom;
+            _Dom = this._Dom,
+            _Utils = myfaces._impl.xhrCore._AjaxUtils;
         /*assert if the onerror is set and once if it is set it must be of type function*/
         _Lang.assertType(options.onerror, "function");
         /*assert if the onevent is set and once if it is set it must be of type function*/
@@ -9464,7 +9486,7 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
         options = options || {};
 
         /**
-         * we cross reference statically hence the mapping here
+         * we cross - reference statically hence the mapping here
          * the entire mapping between the functions is stateless
          */
         //null definitely means no event passed down so we skip the ie specific checks
@@ -9492,6 +9514,7 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
          */
         // this is legacy behavior which is faulty, will be removed if we decide to do it
         // that way
+        // TODO not sure whether we add the naming container prefix to the user params
         var passThrgh = _Lang.mixMaps({}, options, true, this._BLOCKFILTER);
         // jsdoc spec everything under params must be passed through
         if(options.params)  {
@@ -9535,6 +9558,12 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
         context.viewId = this.getViewId(form);
 
         /**
+         * we also now assign the container data to deal with it later
+         */
+        _Utils._assignNamingContainerData(mfInternal, form, jsf.separatorchar);
+
+
+        /**
          * JSF2.2 client window must be part of the issuing form so it is encoded
          * automatically in the request
          */
@@ -9543,7 +9572,7 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
         //in case someone decorates the getClientWindow we reset the value from
         //what we are getting
         if ('undefined' != typeof clientWindow && null != clientWindow) {
-            var formElem = _Dom.getNamedElementFromForm(form, this.P_CLIENTWINDOW);
+            var formElem = _Dom.getNamedElementFromForm(form, _Utils._$ncRemap(mfInternal,  this.P_CLIENTWINDOW));
             if (formElem) {
                 //we store the value for later processing during the ajax phase
                 //job so that we do not get double values
@@ -9625,6 +9654,20 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
         passThrgh[form.id] = form.id;
 
         /* jsf2.2 only: options.delay || */
+
+        // TCK 790 we now have to remap all passthroughs in case of a naming container
+        // thing is the naming container is always prefixed on inputs, and our own
+        // passthroughs are not mapped for now (if we have to do that we we have to add a similar mapping code)
+        var passthroughKeys = Object.keys(passThrgh);
+        for(var key in passthroughKeys) {
+            if(!Object.hasOwnProperty(key) || this.STD_VALUES.indexOf(key) == -1) {
+                continue;
+            }
+            passThrgh[_Utils._$ncRemap(mfInternal, key)] = passThrgh[key];
+            delete passThrgh[key];
+        }
+
+        /* faces2.2 only: options.delay || */
         var delayTimeout = options.delay || this._RT.getLocalOrGlobalConfig(context, "delay", false);
 
         if (!!delayTimeout) {
@@ -10042,7 +10085,7 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
 
             /* run through all script tags and try to find the one that includes jsf.js */
             for (var i = 0; i < scriptTags.length && !found; i++) {
-                if (scriptTags[i].src.search(/\/jakarta\.faces\.resource\/jsf\.js.*ln=jakarta\.faces/) != -1) {
+                if (scriptTags[i] && scriptTags[i].src && scriptTags[i].src.search(/\/jakarta\.faces\.resource\/jsf\.js.*ln=jakarta\.faces/) != -1) {
                     var result = scriptTags[i].src.match(/stage=([^&;]*)/);
                     found = true;
                     if (result) {

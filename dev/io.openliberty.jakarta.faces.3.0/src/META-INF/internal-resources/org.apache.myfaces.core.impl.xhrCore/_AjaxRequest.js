@@ -280,7 +280,7 @@ _MF_CLS(_PFX_XHR + "_AjaxRequest", _MF_OBJECT, /** @lends myfaces._impl.xhrCore.
     /**
      * Spec. 13.3.1
      * Collect and encode input elements.
-     * Additionally the hidden element jakarta/javax.faces.ViewState
+     * Additionally the hidden element jakarta.faces.ViewState
      * Enhancement partial page submit
      *
      * @return  an element of formDataWrapper
@@ -295,10 +295,15 @@ _MF_CLS(_PFX_XHR + "_AjaxRequest", _MF_OBJECT, /** @lends myfaces._impl.xhrCore.
             var _AJAXUTIL = this._AJAXUTIL, myfacesOptions = this._context.myfaces;
             return this._Lang.createFormDataDecorator(jsf.getViewState(this._sourceForm));
         } else {
+            // we need to check for
+            /*
+             *  const eventType = formData.getIf($nsp(P_BEHAVIOR_EVENT)).value?.[0]
+             *  const isBehaviorEvent = (!!eventType) && eventType != 'click';
+             */
+
             //now this is less performant but we have to call it to allow viewstate decoration
             ret = this._Lang.createFormDataDecorator(new Array());
             _AJAXUTIL.encodeSubmittableFields(ret, this._sourceForm, this._partialIdsArray);
-            // Backported MYFACES-4606
             if (this._source && !this._isBehaviorEvent()) {
                 _AJAXUTIL.appendIssuingItem(this._source, ret);
             }
@@ -307,9 +312,6 @@ _MF_CLS(_PFX_XHR + "_AjaxRequest", _MF_OBJECT, /** @lends myfaces._impl.xhrCore.
 
     },
 
-    /**
-     * Check if this is a non-action behavior event
-     */
     _isBehaviorEvent: function() {
         var eventType = this._passThrough[this.attr("impl").P_BEHAVIOR_EVENT] || null;
         var isBehaviorEvent = (!!eventType) && eventType != 'click';
