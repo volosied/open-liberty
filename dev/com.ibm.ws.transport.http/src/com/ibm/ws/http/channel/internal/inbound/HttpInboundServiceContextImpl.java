@@ -31,6 +31,7 @@ import com.ibm.ws.http.channel.internal.HttpResponseMessageImpl;
 import com.ibm.ws.http.channel.internal.HttpServiceContextImpl;
 import com.ibm.ws.http.channel.internal.values.ReturnCodes;
 import com.ibm.ws.http.dispatcher.internal.HttpDispatcher;
+import com.ibm.ws.http.netty.NettyHttpChannelConfig;
 import com.ibm.ws.http.netty.NettyHttpConstants;
 import com.ibm.ws.http.netty.NettyVirtualConnectionImpl;
 import com.ibm.ws.http.netty.inbound.NettyTCPConnectionContext;
@@ -68,6 +69,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.HttpResponse;
 import io.netty.handler.codec.http.HttpUtil;
+import io.openliberty.http.options.TcpOption;
 
 /**
  * Service context specific to an inbound HTTP message.
@@ -119,17 +121,17 @@ public class HttpInboundServiceContextImpl extends HttpServiceContextImpl implem
         init(tsc, link, vc, hcc);
     }
 
-    public HttpInboundServiceContextImpl(ChannelHandlerContext context, VirtualConnection vc) {
+    public HttpInboundServiceContextImpl(ChannelHandlerContext context, VirtualConnection vc, NettyHttpChannelConfig config) {
         super();
         nettyContext = context;
 
-        TCPConnectionContext tsc = new NettyTCPConnectionContext(context.channel(), vc);
+        TCPConnectionContext tsc = new NettyTCPConnectionContext(context.channel(), vc, (int) config.get(TcpOption.INACTIVITY_TIMEOUT));
 
         super.init(tsc, context);
 
         this.setHeadersParsed();
         setVC(vc);
-
+        setHttpConfig(config);
     }
 
     /**

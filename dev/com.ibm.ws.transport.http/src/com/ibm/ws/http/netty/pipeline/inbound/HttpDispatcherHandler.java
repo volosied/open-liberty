@@ -20,6 +20,7 @@ import com.ibm.ws.http.channel.internal.HttpChannelConfig;
 import com.ibm.ws.http.channel.internal.HttpMessages;
 import com.ibm.ws.http.dispatcher.internal.HttpDispatcher;
 import com.ibm.ws.http.dispatcher.internal.channel.HttpDispatcherLink;
+import com.ibm.ws.http.netty.NettyHttpChannelConfig;
 import com.ibm.ws.http.netty.NettyHttpConstants;
 import com.ibm.wsspi.bytebuffer.WsByteBuffer;
 import com.ibm.wsspi.bytebuffer.WsByteBufferUtils;
@@ -32,7 +33,7 @@ import com.ibm.wsspi.http.channel.values.StatusCodes;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import  io.netty.handler.codec.TooLongFrameException;
+import io.netty.handler.codec.TooLongFrameException;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
@@ -58,12 +59,12 @@ public class HttpDispatcherHandler extends SimpleChannelInboundHandler<FullHttpR
 
     public static final String NAME = "httpDispatcherHandler";
 
-    HttpChannelConfig config;
+    NettyHttpChannelConfig config;
     private ChannelHandlerContext context;
     private final DefaultFullHttpResponse errorResponse;
     private static final String MAX_STREAMS_REFUSED_MESSAGE = "too many client-initiated streams have been refused; closing the connection";
 
-    public HttpDispatcherHandler(HttpChannelConfig config) {
+    public HttpDispatcherHandler(NettyHttpChannelConfig config) {
         super(false);
         Objects.requireNonNull(config);
         this.config = config;
