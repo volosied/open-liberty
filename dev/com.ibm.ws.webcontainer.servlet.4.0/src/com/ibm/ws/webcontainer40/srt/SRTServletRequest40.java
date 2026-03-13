@@ -186,9 +186,17 @@ public class SRTServletRequest40 extends SRTServletRequest31 implements HttpServ
                 case EXTENSION:
                     // matchValue is everything before the extension (".") and the pattern is "/*" + the extension including (".") taken from the servletPath.
                     // matchValue should not start with "/"
+                    System.out.println("DEBUG Liberty: EXTENSION mapping case");
+                    System.out.println("  servletPath = " + servletPath);
+                    System.out.println("  pathInfo = " + pathInfo);
+                    System.out.println("  servletName = " + servletName);
+                    
                     matchValue = servletPath.substring(servletPath.startsWith("/") ? 1 : 0, servletPath.indexOf("."));
+                    System.out.println("  matchValue = " + matchValue);
 
                     pattern = "*" + servletPath.substring(servletPath.indexOf("."));
+                    System.out.println("  pattern = " + pattern);
+                    
                     returnMapping = new HttpServletMappingImpl(MappingMatch.EXTENSION, matchValue, pattern, servletName);
                     break;
                 case PATH:
