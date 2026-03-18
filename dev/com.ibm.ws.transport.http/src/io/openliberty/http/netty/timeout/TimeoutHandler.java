@@ -137,6 +137,9 @@ public class TimeoutHandler extends ChannelDuplexHandler{
     
         @Override
         public void channelRead(ChannelHandlerContext context, Object message) throws Exception {
+            long timestamp = System.currentTimeMillis();
+            System.out.println("DEBUG channelRead [" + timestamp + "]: phase=" + phase + " message=" + message.getClass().getSimpleName() + " isRequestStart=" + isRequestStart(message) + " isRequestEnd=" + isRequestEnd(message));
+            
             if(getProtocol(context) == ProtocolName.HTTP2 && !streamOnly){
                 if(phase == Phase.H2_IDLE && h2InactivityTimeout>0){
                     arm(context, Phase.H2_IDLE);
@@ -145,28 +148,40 @@ public class TimeoutHandler extends ChannelDuplexHandler{
                 return;
             }
 
+            Phase phaseBeforeCancel = phase;
+            
             if(isRequestStart(message)){
+                System.out.println("DEBUG channelRead [" + timestamp + "]: Request start detected, phase before cancel: " + phase + ", canceling current timeout");
                 cancel();
                 clientRequestedKeepAlive = shouldKeepAliveRequest(context, message);
             }
 
 
-            switch(phase){
+            switch(phaseBeforeCancel){
                 case TCP_IDLE:
+                    System.out.println("DEBUG channelRead [" + timestamp + "]: Switching from TCP_IDLE to READ phase");
                     arm(context, Phase.READ);
                     break;
                 case READ:
+                    System.out.println("DEBUG channelRead [" + timestamp + "]: In READ phase, calling resetRead to reset timeout");
                     resetRead(context);
                     break;
                 default:
+                    System.out.println("DEBUG channelRead [" + timestamp + "]: In phase " + phaseBeforeCancel + " (no action)");
                 }
 
             super.channelRead(context, message);
     
             if(isRequestEnd(message)){
+                System.out.println("DEBUG channelRead [" + timestamp + "]: Request end detected, canceling timeout. Phase=" + phase);
                 cancel();
                 firstRequest = false;
+                System.out.println("DEBUG channelRead [" + timestamp + "]: Set firstRequest=false");
+            } else {
+                System.out.println("DEBUG channelRead [" + timestamp + "]: Request NOT ended (isRequestEnd=false), firstRequest remains=" + firstRequest);
             }
+            
+            System.out.println("DEBUG channelRead [" + timestamp + "]: Exiting. Current phase=" + phase + " timeout armed=" + (currentTimeout != null) + " firstRequest=" + firstRequest);
         }
     
         @Override
@@ -215,20 +230,30 @@ public class TimeoutHandler extends ChannelDuplexHandler{
         }
     
         private void arm(ChannelHandlerContext context, Phase newPhase){
+            long timestamp = System.currentTimeMillis();
             int timeout = timeoutForPhase(newPhase);
+            System.out.println("DEBUG arm [" + timestamp + "]: newPhase=" + newPhase + " timeout=" + timeout + "ms currentPhase=" + phase);
             if(timeout <=0){
                 phase = Phase.OFF;
+                System.out.println("DEBUG arm [" + timestamp + "]: timeout <= 0, setting phase to OFF");
                 return;
             }
             cancel();
             phase = newPhase;
             currentTimeout = context.executor().schedule(() -> onTimeout(context), timeout, TimeUnit.MILLISECONDS);
+            long scheduledFor = timestamp + timeout;
+            System.out.println("DEBUG arm [" + timestamp + "]: Armed " + newPhase + " phase with " + timeout + "ms timeout. Will fire at " + scheduledFor + " if not reset/canceled");
         }
     
     
         private void resetRead(ChannelHandlerContext context){
+            long timestamp = System.currentTimeMillis();
+            System.out.println("DEBUG resetRead [" + timestamp + "]: Called. Current phase=" + phase);
             if(phase == Phase.READ){
+                System.out.println("DEBUG resetRead [" + timestamp + "]: Phase is READ, re-arming READ timeout");
                 arm(context, Phase.READ);
+            } else {
+                System.out.println("DEBUG resetRead [" + timestamp + "]: Phase is NOT READ (" + phase + "), not re-arming");
             }
         }
     
@@ -247,33 +272,41 @@ public class TimeoutHandler extends ChannelDuplexHandler{
         }
     
         private void onTimeout(ChannelHandlerContext context){
+            System.out.println("DEBUG onTimeout: phase=" + phase + " firstRequest=" + firstRequest + " readRetried=" + readRetried);
             switch (phase) {
                 case TCP_IDLE:
+                    System.out.println("DEBUG onTimeout: TCP_IDLE timeout - falling through to READ");
                     
                 case READ:
                     if (firstRequest && !readRetried) {
+                        System.out.println("DEBUG onTimeout: First request, retrying READ timeout");
                         readRetried = true;
                         arm(context, Phase.READ);
                         return;
                     }
                     if(firstRequest){
+                        System.out.println("DEBUG onTimeout: First request after retry, closing connection");
                         if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
                             Tr.debug(tc, "The connection closed due to idle timeout");
                         }
                         context.close();
                     }else{
+                        System.out.println("DEBUG onTimeout: Not first request, firing ReadTimeoutException");
                         context.fireExceptionCaught(new ReadTimeoutException(readTimeout, LEGACY_UNIT));
                     }
                     break;
                     
                 case PERSIST:
+                    System.out.println("DEBUG onTimeout: PERSIST timeout, firing PersistTimeoutException");
                     context.fireExceptionCaught(new PersistTimeoutException(persistTimeout, LEGACY_UNIT));
                     //context.close();
                     break;
                 case H2_IDLE:
+                    System.out.println("DEBUG onTimeout: H2_IDLE timeout, firing H2IdleTimeoutException");
                     context.fireExceptionCaught(new H2IdleTimeoutException(h2InactivityTimeout, LEGACY_UNIT));
                     break;
                 default:
+                    System.out.println("DEBUG onTimeout: Unknown phase " + phase);
             }
         }
     
@@ -282,22 +315,34 @@ public class TimeoutHandler extends ChannelDuplexHandler{
         }
     
         private static boolean isRequestEnd(Object message){
+            // FullHttpRequest means the entire request (headers + body) is complete
+            if(message instanceof FullHttpRequest){
+                System.out.println("DEBUG isRequestEnd: FullHttpRequest detected - request is complete");
+                return true;
+            }
             if(message instanceof HttpRequest){
                 HttpRequest req = (HttpRequest) message;
                 boolean hasBody = HttpUtil.isTransferEncodingChunked(req) || HttpUtil.isContentLengthSet(req);
+                System.out.println("DEBUG isRequestEnd: HttpRequest with hasBody=" + hasBody + " returning " + !hasBody);
                 return !hasBody;
             }
             if(message instanceof LastHttpContent){
+                System.out.println("DEBUG isRequestEnd: LastHttpContent detected - request is complete");
                 return true;
             }
             if(message instanceof Http2DataFrame){
-                return ((Http2DataFrame)message).isEndStream();
+                boolean endStream = ((Http2DataFrame)message).isEndStream();
+                System.out.println("DEBUG isRequestEnd: Http2DataFrame with endStream=" + endStream);
+                return endStream;
             }
             if(message instanceof Http2HeadersFrame){
-                return ((Http2HeadersFrame)message).isEndStream();
+                boolean endStream = ((Http2HeadersFrame)message).isEndStream();
+                System.out.println("DEBUG isRequestEnd: Http2HeadersFrame with endStream=" + endStream);
+                return endStream;
             }
+            System.out.println("DEBUG isRequestEnd: Unknown message type, returning false");
             return false;
-        } 
+        }
     
         private static boolean isResponseEnd(Object message){
             return message instanceof LastHttpContent
