@@ -31,7 +31,7 @@ import com.ibm.ws.http.channel.internal.HttpChannelConfig;
  */
 public class HeaderValidator {
 
-    private static boolean disabledUntilRFE = true;
+    private static boolean disabledUntilRFE = false;
     
         /**
          * Defines a pattern for valid header names (token characters or "tchars") as specified in 
@@ -82,6 +82,7 @@ public class HeaderValidator {
             String normalized = (token == null) ? "": token.trim();
     
             if(!disabledUntilRFE && type == FieldType.NAME){
+                System.out.println("DEBUG");
             normalized = normalized.toLowerCase();
         }
         

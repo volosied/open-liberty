@@ -69,6 +69,10 @@ public class LibertyHttpObjectAggregator extends SimpleChannelInboundHandler<Htt
                     throw new IllegalArgumentException(longContentLengthNotSupportMsg);
                 }
             }
+            
+            // Forward the HttpRequest to downstream handlers (e.g., TimeoutHandler)
+            // so they can detect request start and switch from TCP_IDLE to READ phase
+            ctx.fireChannelRead(ReferenceCountUtil.retain(msg, 1));
         } else if (msg instanceof HttpContent) {
             CompositeByteBuf content = ctx.channel().attr(COMPOSITE_CONTENT).get();
             if (content != null) {
