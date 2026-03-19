@@ -69,6 +69,7 @@ public class LibertyHttpObjectAggregator extends SimpleChannelInboundHandler<Htt
                     throw new IllegalArgumentException(longContentLengthNotSupportMsg);
                 }
             }
+            ctx.fireChannelRead(ReferenceCountUtil.retain(msg, 1));
         } else if (msg instanceof HttpContent) {
             CompositeByteBuf content = ctx.channel().attr(COMPOSITE_CONTENT).get();
             if (content != null) {
@@ -93,7 +94,7 @@ public class LibertyHttpObjectAggregator extends SimpleChannelInboundHandler<Htt
                 }
             }
         } else {
-            ctx.fireChannelRead(msg);
+             ctx.fireChannelRead(ReferenceCountUtil.retain(msg, 1));
         }
     }
 

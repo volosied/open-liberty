@@ -282,6 +282,9 @@ public class TimeoutHandler extends ChannelDuplexHandler{
         }
     
         private static boolean isRequestEnd(Object message){
+            if(message instanceof FullHttpRequest){
+                return true;
+            }
             if(message instanceof HttpRequest){
                 HttpRequest req = (HttpRequest) message;
                 boolean hasBody = HttpUtil.isTransferEncodingChunked(req) || HttpUtil.isContentLengthSet(req);
