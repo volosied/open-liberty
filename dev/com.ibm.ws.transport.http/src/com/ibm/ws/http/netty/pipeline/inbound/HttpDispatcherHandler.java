@@ -178,6 +178,7 @@ public class HttpDispatcherHandler extends SimpleChannelInboundHandler<FullHttpR
             sendErrorMessage(cause);
             return;
         } else if(cause instanceof TimeoutException){
+            FFDCFilter.processException(cause, getClass().getName() + ".exceptionCaught", "1", context);
             if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
                 Tr.debug(tc, "The connection closed due to idle timeout");
             }
