@@ -81,6 +81,7 @@ public class LibertyHttpObjectAggregator extends SimpleChannelInboundHandler<Htt
                     throw new IllegalArgumentException(longContentLengthNotSupportMsg);
                 }
             }
+            ctx.fireChannelRead(ReferenceCountUtil.retain(msg, 1));
         } else if (msg instanceof HttpContent) {
             CompositeByteBuf content = ctx.channel().attr(COMPOSITE_CONTENT).get();
             if (content != null) {
@@ -103,10 +104,13 @@ public class LibertyHttpObjectAggregator extends SimpleChannelInboundHandler<Htt
 
                     ctx.channel().attr(COMPOSITE_CONTENT).set(null);
                     ctx.channel().attr(CURRENT_REQUEST).set(null);
+                } else {
+                    // Forward intermediate content to allow our timeout handler to reset read timeout!
+                    ctx.fireChannelRead(ReferenceCountUtil.retain(msg, 1));
                 }
             }
         } else {
-            ctx.fireChannelRead(msg);
+             ctx.fireChannelRead(ReferenceCountUtil.retain(msg, 1));
         }
     }
 
