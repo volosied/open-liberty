@@ -137,6 +137,12 @@ public class TimeoutHandler extends ChannelDuplexHandler{
     
         @Override
         public void channelRead(ChannelHandlerContext context, Object message) throws Exception {
+            if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
+                Tr.debug(tc, "channelRead: phase=" + phase + " message=" + message.getClass().getSimpleName() +
+                         " isRequestStart=" + isRequestStart(message) + " isRequestEnd=" + isRequestEnd(message) +
+                         " firstRequest=" + firstRequest);
+            }
+            
             if(getProtocol(context) == ProtocolName.HTTP2 && !streamOnly){
                 if(phase == Phase.H2_IDLE && h2InactivityTimeout>0){
                     arm(context, Phase.H2_IDLE);
@@ -145,27 +151,55 @@ public class TimeoutHandler extends ChannelDuplexHandler{
                 return;
             }
 
+            Phase phaseBeforeCancel = phase;
+            
             if(isRequestStart(message)){
+                if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
+                    Tr.debug(tc, "Request start detected, phase before cancel: " + phase + ", canceling current timeout");
+                }
                 cancel();
                 clientRequestedKeepAlive = shouldKeepAliveRequest(context, message);
-            }
-
-
-            switch(phase){
-                case TCP_IDLE:
-                    arm(context, Phase.READ);
-                    break;
-                case READ:
-                    resetRead(context);
-                    break;
-                default:
+                // Arm READ timeout for any new request
+                if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
+                    Tr.debug(tc, "Arming READ phase for new request (previous phase was " + phaseBeforeCancel + ")");
                 }
+                arm(context, Phase.READ);
+            } else {
+                // Not a request start, handle based on current phase
+                switch(phaseBeforeCancel){
+                    case READ:
+                        if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
+                            Tr.debug(tc, "In READ phase, calling resetRead to reset timeout");
+                        }
+                        resetRead(context);
+                        break;
+                    default:
+                        if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
+                            Tr.debug(tc, "In phase " + phaseBeforeCancel + " (no action for non-request-start message)");
+                        }
+                }
+            }
 
             super.channelRead(context, message);
     
             if(isRequestEnd(message)){
+                if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
+                    Tr.debug(tc, "Request end detected, canceling timeout. Phase=" + phase);
+                }
                 cancel();
                 firstRequest = false;
+                if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
+                    Tr.debug(tc, "Set firstRequest=false");
+                }
+            } else {
+                if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
+                    Tr.debug(tc, "Request NOT ended (isRequestEnd=false), firstRequest remains=" + firstRequest);
+                }
+            }
+            
+            if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
+                Tr.debug(tc, "Exiting channelRead. Current phase=" + phase + " timeout armed=" + (currentTimeout != null) +
+                         " firstRequest=" + firstRequest);
             }
         }
     
@@ -216,19 +250,38 @@ public class TimeoutHandler extends ChannelDuplexHandler{
     
         private void arm(ChannelHandlerContext context, Phase newPhase){
             int timeout = timeoutForPhase(newPhase);
+            if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
+                Tr.debug(tc, "arm: newPhase=" + newPhase + " timeout=" + timeout + "ms currentPhase=" + phase);
+            }
             if(timeout <=0){
                 phase = Phase.OFF;
+                if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
+                    Tr.debug(tc, "arm: timeout <= 0, setting phase to OFF");
+                }
                 return;
             }
             cancel();
             phase = newPhase;
             currentTimeout = context.executor().schedule(() -> onTimeout(context), timeout, TimeUnit.MILLISECONDS);
+            if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
+                Tr.debug(tc, "arm: Armed " + newPhase + " phase with " + timeout + "ms timeout");
+            }
         }
     
     
         private void resetRead(ChannelHandlerContext context){
+            if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
+                Tr.debug(tc, "resetRead: Called. Current phase=" + phase);
+            }
             if(phase == Phase.READ){
+                if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
+                    Tr.debug(tc, "resetRead: Phase is READ, re-arming READ timeout");
+                }
                 arm(context, Phase.READ);
+            } else {
+                if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
+                    Tr.debug(tc, "resetRead: Phase is NOT READ (" + phase + "), not re-arming");
+                }
             }
         }
     
@@ -247,33 +300,54 @@ public class TimeoutHandler extends ChannelDuplexHandler{
         }
     
         private void onTimeout(ChannelHandlerContext context){
+            if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
+                Tr.debug(tc, "onTimeout: phase=" + phase + " firstRequest=" + firstRequest + " readRetried=" + readRetried);
+            }
             switch (phase) {
                 case TCP_IDLE:
+                    if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
+                        Tr.debug(tc, "onTimeout: TCP_IDLE timeout - falling through to READ");
+                    }
                     
                 case READ:
                     if (firstRequest && !readRetried) {
+                        if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
+                            Tr.debug(tc, "onTimeout: First request, retrying READ timeout");
+                        }
                         readRetried = true;
                         arm(context, Phase.READ);
                         return;
                     }
                     if(firstRequest){
                         if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
-                            Tr.debug(tc, "The connection closed due to idle timeout");
+                            Tr.debug(tc, "onTimeout: First request after retry, closing connection due to idle timeout");
                         }
                         context.close();
                     }else{
+                        if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
+                            Tr.debug(tc, "onTimeout: Not first request, firing ReadTimeoutException");
+                        }
                         context.fireExceptionCaught(new ReadTimeoutException(readTimeout, LEGACY_UNIT));
                     }
                     break;
                     
                 case PERSIST:
+                    if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
+                        Tr.debug(tc, "onTimeout: PERSIST timeout, firing PersistTimeoutException");
+                    }
                     context.fireExceptionCaught(new PersistTimeoutException(persistTimeout, LEGACY_UNIT));
                     //context.close();
                     break;
                 case H2_IDLE:
+                    if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
+                        Tr.debug(tc, "onTimeout: H2_IDLE timeout, firing H2IdleTimeoutException");
+                    }
                     context.fireExceptionCaught(new H2IdleTimeoutException(h2InactivityTimeout, LEGACY_UNIT));
                     break;
                 default:
+                    if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
+                        Tr.debug(tc, "onTimeout: Unknown phase " + phase);
+                    }
             }
         }
     
@@ -282,25 +356,46 @@ public class TimeoutHandler extends ChannelDuplexHandler{
         }
     
         private static boolean isRequestEnd(Object message){
+            // FullHttpRequest means the entire request (headers + body) is complete
             if(message instanceof FullHttpRequest){
+                if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
+                    Tr.debug(tc, "isRequestEnd: FullHttpRequest detected - request is complete");
+                }
                 return true;
             }
             if(message instanceof HttpRequest){
                 HttpRequest req = (HttpRequest) message;
                 boolean hasBody = HttpUtil.isTransferEncodingChunked(req) || HttpUtil.isContentLengthSet(req);
+                if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
+                    Tr.debug(tc, "isRequestEnd: HttpRequest with hasBody=" + hasBody + " returning " + !hasBody);
+                }
                 return !hasBody;
             }
             if(message instanceof LastHttpContent){
+                if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
+                    Tr.debug(tc, "isRequestEnd: LastHttpContent detected - request is complete");
+                }
                 return true;
             }
             if(message instanceof Http2DataFrame){
-                return ((Http2DataFrame)message).isEndStream();
+                boolean endStream = ((Http2DataFrame)message).isEndStream();
+                if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
+                    Tr.debug(tc, "isRequestEnd: Http2DataFrame with endStream=" + endStream);
+                }
+                return endStream;
             }
             if(message instanceof Http2HeadersFrame){
-                return ((Http2HeadersFrame)message).isEndStream();
+                boolean endStream = ((Http2HeadersFrame)message).isEndStream();
+                if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
+                    Tr.debug(tc, "isRequestEnd: Http2HeadersFrame with endStream=" + endStream);
+                }
+                return endStream;
+            }
+            if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
+                Tr.debug(tc, "isRequestEnd: Unknown message type, returning false");
             }
             return false;
-        } 
+        }
     
         private static boolean isResponseEnd(Object message){
             return message instanceof LastHttpContent
