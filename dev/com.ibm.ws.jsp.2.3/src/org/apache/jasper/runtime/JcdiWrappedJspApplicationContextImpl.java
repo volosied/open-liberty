@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017, 2021 IBM Corporation and others.
+ * Copyright (c) 2017, 2026 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -62,15 +62,34 @@ public class JcdiWrappedJspApplicationContextImpl extends JspApplicationContextI
         if (context == null) {
             throw new IllegalArgumentException("ServletContext was null");
         }
-        JspApplicationContext appCtx = JspFactory.getDefaultFactory().getJspApplicationContext(context);        
-        JspApplicationContextImpl impl = (JspApplicationContextImpl) appCtx;        
+        
+        // Use context-specific key to avoid cross-module contamination in multi-module EAR applications
+        String contextPath = context.getContextPath();
+        String contextSpecificKey = KEY + "." + contextPath;
+        
+        // Check if we already have a cached instance for this specific context
+        Object cached = context.getAttribute(contextSpecificKey);
+        if (cached instanceof JcdiWrappedJspApplicationContextImpl) {
+            return (JcdiWrappedJspApplicationContextImpl) cached;
+        }
+        
+        // Create a new JspApplicationContextImpl directly instead of using the factory
+        // to avoid classloader conflicts in multi-module EAR applications where
+        // JspFactory.getDefaultFactory() may return an instance from a different bundle
+        JspApplicationContextImpl impl = new JspApplicationContextImpl();
+        
         // PM05903 Start
-        if ( WCCustomProperties.THROW_EXCEPTION_FOR_ADDELRESOLVER 
-            && context.getAttribute("com.ibm.ws.jsp.servletContextListeners.contextInitialized")!= null) {          
-                impl.listenersContextInitialized = true;            
+        if ( WCCustomProperties.THROW_EXCEPTION_FOR_ADDELRESOLVER
+            && context.getAttribute("com.ibm.ws.jsp.servletContextListeners.contextInitialized")!= null) {
+                impl.listenersContextInitialized = true;
         }//PM05903 End
         
-        return new JcdiWrappedJspApplicationContextImpl (impl);
+        JcdiWrappedJspApplicationContextImpl wrapped = new JcdiWrappedJspApplicationContextImpl(impl);
+        
+        // Cache the wrapped instance with context-specific key
+        context.setAttribute(contextSpecificKey, wrapped);
+        
+        return wrapped;
     }
     
 }
