@@ -1,61 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" output="build/classes/java/test" path="test">
+	<classpathentry kind="src" output="bin/main" path="src">
 		<attributes>
-			<attribute name="test" value="true"/>
-			<attribute name="optional" value="true"/>
-			<attribute name="gradle.buildServer" value="true"/>
+			<attribute name="gradle_scope" value="main"/>
+			<attribute name="gradle_used_by_scope" value="main,test"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="src" output="build/classes/java/main" path="src">
-		<attributes>
-			<attribute name="gradle.buildServer" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="src" output="build/classes/java/main" path="build/libs/src/globalize/java">
-		<attributes>
-			<attribute name="optional" value="true"/>
-			<attribute name="gradle.buildServer" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="src" output="build/classes/java/test" path="build/libs/generated/sources/annotationProcessor/java/test">
-		<attributes>
-			<attribute name="test" value="true"/>
-			<attribute name="optional" value="true"/>
-			<attribute name="gradle.buildServer" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="src" output="build/classes/java/main" path="build/libs/generated/sources/annotationProcessor/java/main">
-		<attributes>
-			<attribute name="optional" value="true"/>
-			<attribute name="gradle.buildServer" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.launching.macosx.MacOSXType/IBM Semeru Runtime Open Edition 17 [17.0.15]">
-		<attributes>
-			<attribute name="gradle.buildServer" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="/Users/volosied/libertyGit/open-liberty/dev/io.openliberty.jakarta.faces.4.1/myfaces-api-4.1.2.jar">
-		<attributes>
-			<attribute name="gradle.buildServer" value="true"/>
-			<attribute name="groupId" value="unknown"/>
-			<attribute name="artifactId" value="myfaces-api-4.1.2.jar"/>
-			<attribute name="version" value="unknown"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="/Users/volosied/libertyGit/open-liberty/dev/io.openliberty.jakarta.expressionLanguage.6.0/build/libs/io.openliberty.jakarta.expressionLanguage.6.0.jar">
-		<attributes>
-			<attribute name="gradle.buildServer" value="true"/>
-			<attribute name="groupId" value="unknown"/>
-			<attribute name="artifactId" value="io.openliberty.jakarta.expressionLanguage.6.0.jar"/>
-			<attribute name="version" value="unknown"/>
-		</attributes>
-	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-17/"/>
+	<classpathentry kind="con" path="org.eclipse.buildship.core.gradleclasspathcontainer"/>
 	<classpathentry kind="src" path="/io.openliberty.jakarta.expressionLanguage.6.0">
 		<attributes>
 			<attribute name="gradle.buildServer" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="output" path="bin/default"/>
 </classpath>
