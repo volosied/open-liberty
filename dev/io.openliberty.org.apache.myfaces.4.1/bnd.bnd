@@ -26,8 +26,8 @@ instrument.ffdc: false
 instrument.classesExcludes: \
   org/**/*.class
 
+#   @\${repo;org.apache.myfaces.core:myfaces-impl;${Implementation-Version};EXACT}!/META-INF/**, \
 Include-Resource: \
-  @\${repo;org.apache.myfaces.core:myfaces-impl;${Implementation-Version};EXACT}!/META-INF/**, \
   @\${repo;io.openliberty.jakarta.faces.4.1}!/META-INF/resources/**, \
   @\${repo;io.openliberty.jakarta.faces.4.1}!/META-INF/internal-resources/**, \
   META-INF=@src/META-INF
