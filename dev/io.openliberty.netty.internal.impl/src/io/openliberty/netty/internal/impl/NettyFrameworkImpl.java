@@ -689,7 +689,16 @@ public class NettyFrameworkImpl implements ServerQuiesceListener, NettyFramework
                         }
                     });
                 }
-                activeChannelMap.remove(channel);
+                // Remove from map only after the channel has actually closed to prevent
+                // "Address already in use" errors when rebinding to the same port
+                closeFuture.addListener(future -> {
+                    synchronized (activeChannelMap) {
+                        activeChannelMap.remove(channel);
+                        if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
+                            Tr.debug(tc, "Removed channel " + channel + " from activeChannelMap after close completed");
+                        }
+                    }
+                });
             }
             return closeFuture;
         }
