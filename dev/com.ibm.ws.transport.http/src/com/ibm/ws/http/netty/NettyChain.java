@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2023, 2025 IBM Corporation and others.
+ * Copyright (c) 2023, 2026 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -397,12 +397,13 @@ public class NettyChain extends HttpChain {
 
     public VirtualConnection processNewConnection() {
         VirtualConnectionFactory factory = new NettyVirtualConnectionFactoryImpl();
-        VirtualConnection vc;
 
         try {
             return factory.createConnection();
         } catch (Exception e) {
-            e.printStackTrace();
+            if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
+                Tr.debug(this, tc, "Failed to create virtual connection: " + e);
+            }
         }
         return null;
     }
