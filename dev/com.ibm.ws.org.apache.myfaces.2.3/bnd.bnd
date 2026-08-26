@@ -1,5 +1,5 @@
 #*******************************************************************************
-# Copyright (c) 2020, 2026 IBM Corporation and others.
+# Copyright (c) 2017, 2026 IBM Corporation and others.
 # All rights reserved. This program and the accompanying materials
 # are made available under the terms of the Eclipse Public License 2.0
 # which accompanies this distribution, and is available at
@@ -10,38 +10,35 @@
 -include= ~../cnf/resources/bnd/bundle.props
 bVersion=1.0
 
-Bundle-SymbolicName: io.openliberty.org.apache.myfaces.3.0
-Bundle-Description:  Jakarta Server Faces, MyFaces 3.0 Implementation
+Bundle-Name: WAS JSF 2.3
+Bundle-SymbolicName: com.ibm.ws.org.apache.myfaces.2.3
+Bundle-Description: WAS JSF 2.3, version ${bVersion}
+Implementation-Version: 2.3.12
 
-Implementation-Version: 3.0.4
-
--fixupmessages.missingexport: "Used bundle version * for exported package";is:=ignore
-
-instrument.ffdc: false
-instrument.classesExcludes: \
-  org/**/*.class
-
-Include-Resource: \
-  @${repo;io.openliberty.jakarta.faces.3.0}!/META-INF/resources/**, \
-  @${repo;io.openliberty.jakarta.faces.3.0}!/META-INF/internal-resources/**, \
-  META-INF=@src/META-INF
+app-resources= \
+  META-INF/services/org.apache.myfaces.config.annotation.LifecycleProviderFactory | \
+  META-INF/services/org.apache.myfaces.config.annotation.LifecycleProvider | \
+  META-INF/services/org.apache.myfaces.spi.AnnotationProvider | \
+  META-INF/services/org.apache.myfaces.spi.InjectionProvider | \
+  META-INF/services/org.apache.myfaces.spi.FaceletConfigResourceProvider | \
+  META-INF/services/javax.faces.application.ApplicationFactory
 
 Service-Component: \
-  io.openliberty.faces_3_0.taglib; \
-    implementation:=com.ibm.ws.faces.taglibconfig.FacesGlobalTagLibConfig; \
+  com.ibm.ws.jsf_2_3.taglib; \
+    implementation:=com.ibm.ws.jsf.taglibconfig.JSFGlobalTagLibConfig; \
     provide:='com.ibm.wsspi.jsp.taglib.config.GlobalTagLibConfig'; \
     properties:="service.vendor=IBM", \
-  io.openliberty.faces_3_0.cdiextension; \
+  com.ibm.ws.jsf_2_3.cdiextension; \
     implementation:=com.ibm.ws.jsf.shared.ext.CdiExtension; \
     provide:='com.ibm.ws.cdi.extension.WebSphereCDIExtension'; \
     properties:="service.vendor=IBM,\
-    bean.defining.annotations=jakarta.faces.flow.FlowScoped;jakarta.faces.view.ViewScoped,\
-    api.classes=jakarta.faces.flow.builder.FlowDefinition;jakarta.faces.flow.builder.FlowBuilderParameter,\
-    extension.classes.only=true",\
-  io.openliberty.faces_30.dd; \
+                 bean.defining.annotations=javax.faces.flow.FlowScoped;javax.faces.view.ViewScoped,\
+                 api.classes=javax.faces.flow.builder.FlowDefinition;javax.faces.flow.builder.FlowBuilderParameter,\
+                 extension.classes.only=true", \
+  com.ibm.ws.jsf_23.dd; \
     implementation:=com.ibm.ws.javaee.version.FacesVersion; \
     provide:=com.ibm.ws.javaee.version.FacesVersion; \
-    properties:="version:Integer=30"
+    properties:="version:Integer=23"
 
 # Not used directly, so these packages needs to be dynamically imported
 DynamicImport-Package: \
@@ -52,9 +49,20 @@ DynamicImport-Package: \
   com.ibm.ws.jsf.extprocessor, \
   com.ibm.ws.jsf.spi.impl
 
-# Don't export the org.apache.myfaces.buildtools package as that is only needed for compilation.  The jar that contains the
-# org.apache.myfaces.buildtools package is myfaces-builder-annotations-1.0.9.jar
-# Additionally, a subset of these org.apache.myfaces packages are exported by the thirdparty.faces-3.0 bundle - so we exclude them here.
+-fixupmessages.missingexport: "Used bundle version * for exported package";is:=ignore
+
+instrument.ffdc: false
+instrument.classesExcludes: \
+  org/**/*.class
+
+Include-Resource: \
+  @${repo;com.ibm.websphere.javaee.jsf.2.3}!/META-INF/resources/**, \
+  @${repo;com.ibm.websphere.javaee.jsf.2.3}!/META-INF/internal-resources/**, \
+  META-INF=@src/META-INF
+
+# Don't export the org.apache.myfaces.buildtools package as that is only needed for compilation.  The jar that contains the 
+# org.apache.myfaces.buildtools package is javax.j2ee.jsf-2.2/lib/myfaces-builder-annotations-1.0.9.jar
+# Additionally, a subset of these org.apache.myfaces packages are exported by the thirdparty.jsf-2.3 bundle - so we exclude them here.
 Export-Package: \
   !org.apache.myfaces.buildtools.*, \
   !org.apache.myfaces.renderkit.html, \
@@ -62,12 +70,12 @@ Export-Package: \
   !org.apache.myfaces.shared.renderkit, \
   !org.apache.myfaces.shared.renderkit.html, \
   !org.apache.myfaces.shared.renderkit.html.util, \
-  com.ibm.ws.faces.taglibconfig, \
+  com.ibm.ws.jsf.taglibconfig, \
   org.apache.myfaces.application;thread-context=true;version=${Implementation-Version}, \
   org.apache.myfaces.application.viewstate;thread-context=true;version=${Implementation-Version}, \
   org.apache.myfaces.cdi.model;thread-context=true;version=${Implementation-Version}, \
-  org.apache.myfaces.cdi.view;thread-context=true;version=${Implementation-Version}, \
   org.apache.myfaces.cdi.util;thread-context=true;version=${Implementation-Version}, \
+  org.apache.myfaces.cdi.view;thread-context=true;version=${Implementation-Version}, \
   org.apache.myfaces.component;thread-context=true;version=${Implementation-Version}, \
   org.apache.myfaces.component.search;thread-context=true;version=${Implementation-Version}, \
   org.apache.myfaces.component.visit;thread-context=true;version=${Implementation-Version}, \
@@ -112,14 +120,16 @@ Export-Package: \
 Import-Package: \
   !com.google.inject, \
   !com.ibm.ws.jsf.ee, \
-  !jakarta.ejb, \
-  !jakarta.persistence, \
+  !javax.ejb, \
+  !javax.persistence, \
   !org.apache.tomcat, \
   *
 
 -buildpath: \
-  myfaces-impl-3.0.4.jar;version=file,\
-  io.openliberty.jakarta.faces.3.0;version=latest,\
+  myfaces-impl-2.3.12.jar;version=file,\
+  org.apache.myfaces.buildtools:myfaces-builder-annotations;version=1.0.9,\
+  com.ibm.ws.jsf.shared;version=latest,\
+  com.ibm.websphere.javaee.jsf.2.3;version=latest,\
   io.openliberty.org.apache.commons.digester;version=latest,\
   com.ibm.ws.classloading;version=latest,\
   com.ibm.ws.webcontainer;version=latest,\
@@ -129,13 +139,11 @@ Import-Package: \
   com.ibm.ws.anno;version=latest,\
   com.ibm.ws.managedobject;version=latest,\
   com.ibm.ws.jsp;version=latest,\
-  io.openliberty.jakarta.expressionLanguage.4.0;version=latest,\
-  io.openliberty.jakarta.servlet.5.0;version=latest, \
-  io.openliberty.jakarta.cdi.3.0;version=latest,\
-  io.openliberty.jakarta.annotation.2.0;version=latest,\
+  com.ibm.websphere.javaee.el.3.0;version=latest,\
+  com.ibm.websphere.javaee.servlet.4.0;version=latest,\
+  com.ibm.websphere.javaee.cdi.2.0;version=latest,\
   com.ibm.ws.logging.core,\
   com.ibm.websphere.appserver.spi.kernel.service,\
   com.ibm.websphere.org.osgi.core;version=latest,\
   com.ibm.websphere.org.osgi.service.component;version=latest,\
-  com.ibm.ws.org.osgi.annotation.versioning;version=latest,\
-  org.apache.myfaces.buildtools:myfaces-builder-annotations;version=1.0.9
+  com.ibm.ws.org.osgi.annotation.versioning;version=latest
