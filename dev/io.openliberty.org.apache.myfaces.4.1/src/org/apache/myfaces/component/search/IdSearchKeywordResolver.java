@@ -18,7 +18,6 @@
  */
 package org.apache.myfaces.component.search;
 
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import jakarta.faces.FacesException;
@@ -122,10 +121,10 @@ public class IdSearchKeywordResolver extends SearchKeywordResolver
         int childCount = base.getChildCount();
         if (childCount > 0)
         {
-            List<UIComponent> children = base.getChildren();
             for (int i = 0; i < childCount; i++)
             {
-                withId(context, id, children.get(i), callback);
+                UIComponent child = base.getChildren().get(i);
+                withId(context, id, child, callback);
             }
         }
     }
