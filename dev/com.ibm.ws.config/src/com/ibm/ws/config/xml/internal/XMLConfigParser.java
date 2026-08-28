@@ -409,7 +409,10 @@ public class XMLConfigParser {
                                         String defaultValue = defaultValues[0];
                                         Long timeout = KernelUtils.evaluateDuration(defaultValue, TimeUnit.MILLISECONDS);
                                         if (timeout != null) {
-                                            config.setQuiesceTimeoutMillis(timeout.longValue());
+                                            // Use setDefaultQuiesceTimeout() path so that
+                                            // quiesceTimeoutExplicitlyConfigured stays false —
+                                            // the user did not set this attribute, the metatype default did.
+                                            config.setDefaultQuiesceTimeout();
                                             return;
                                         }
                                     }
