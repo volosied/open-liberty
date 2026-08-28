@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<server description="Test server verifying chainQuiesceTimeout is respected when no server-level quiesceTimeout is set">
+    <featureManager>
+        <feature>componenttest-1.0</feature>
+        <feature>servlet-3.1</feature>
+    </featureManager>
+
+    <include location="../fatTestPorts.xml"/>
+
+    <!-- No quiesceTimeout on the server element - chainQuiesceTimeout should be used as-is -->
+    <channelfw chainQuiesceTimeout="119s"/>
+</server>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<server description="Test server with chainQuiesceTimeout incorrectly placed on the server element" chainQuiesceTimeout="22s">
+    <featureManager>
+        <feature>componenttest-1.0</feature>
+        <feature>servlet-3.1</feature>
+    </featureManager>
+
+    <include location="../fatTestPorts.xml"/>
+
+    <!-- chainQuiesceTimeout on <server> is not a valid attribute (the correct attribute is quiesceTimeout).
+         The parser silently ignores it. The channelfw setting below should be used. -->
+    <channelfw chainQuiesceTimeout="90s"/>
+</server>

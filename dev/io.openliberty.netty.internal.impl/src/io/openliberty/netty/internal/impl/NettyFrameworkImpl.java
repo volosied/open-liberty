@@ -339,6 +339,10 @@ public class NettyFrameworkImpl implements ServerQuiesceListener, NettyFramework
 
     protected void updatedChannelFWConfig(ChannelFrameworkConfig config) {
         this.channelConfig = config;
+        if (TraceComponent.isAnyTracingEnabled() && tc.isEventEnabled()) {
+            Tr.event(this, tc, "updatedChannelFWConfig: " + config
+                               + " chainQuiesceTimeout=" + config.getDefaultChainQuiesceTimeout());
+        }
     }
 
     public ChannelFrameworkConfig getChannelFWConfig() {

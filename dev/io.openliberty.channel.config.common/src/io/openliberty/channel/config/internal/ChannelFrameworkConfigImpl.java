@@ -222,6 +222,11 @@ public class ChannelFrameworkConfigImpl implements ChannelFrameworkConfig {
         } catch (NumberFormatException e) {
             // Use default value
         }
+        if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
+            Tr.debug(tc, "setDefaultChainQuiesceTimeout: configuredTimeout=" + configuredTimeout + "ms"
+                         + " isQuiesceTimeoutExplicitlyConfigured=" + serverElementConfig.isQuiesceTimeoutExplicitlyConfigured()
+                         + " serverQuiesceTimeout=" + serverElementConfig.getQuiesceTimeoutMillis() + "ms");
+        }
 
         // If quiesceTimeout is explicitly configured on the server element,
         // it overrides chainQuiesceTimeout
@@ -236,6 +241,9 @@ public class ChannelFrameworkConfigImpl implements ChannelFrameworkConfig {
             }
             // override
             chainQuiesceTimeout = serverQuiesceTimeout;
+            if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
+                Tr.debug(tc, "setDefaultChainQuiesceTimeout: server quiesceTimeout override applied, chainQuiesceTimeout=" + chainQuiesceTimeout + "ms");
+            }
             return;
         }
 
@@ -255,9 +263,8 @@ public class ChannelFrameworkConfigImpl implements ChannelFrameworkConfig {
             }
         }
 
-        // Log the final value being used for testing purposes
-        if (TraceComponent.isAnyTracingEnabled() && tc.isEventEnabled()) {
-            Tr.debug(tc, "Final chainQuiesceTimeout value: " + this.chainQuiesceTimeout + "ms");
+        if (TraceComponent.isAnyTracingEnabled() && tc.isDebugEnabled()) {
+            Tr.debug(tc, "setDefaultChainQuiesceTimeout: final chainQuiesceTimeout=" + this.chainQuiesceTimeout + "ms");
         }
     }
 

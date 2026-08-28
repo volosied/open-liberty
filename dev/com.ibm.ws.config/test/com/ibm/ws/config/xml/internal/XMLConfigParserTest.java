@@ -18,6 +18,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
 import java.io.StringReader;
@@ -729,6 +730,9 @@ public class XMLConfigParserTest {
 
         // Value should be default 30 since no quiesceTimeout attribute was present
         assertEquals(30000, config.getQuiesceTimeoutMillis());
+        // Must NOT be flagged as explicitly configured — user did not set the attribute
+        assertFalse("isQuiesceTimeoutExplicitlyConfigured should be false when attribute is absent",
+                    config.isQuiesceTimeoutExplicitlyConfigured());
     }
 
     @Test
@@ -752,6 +756,9 @@ public class XMLConfigParserTest {
         assertTrue("A warning should be issued for quiesceTimeout below minimum", outputMgr.checkForMessages("CWWKG0111W.*"));
         // Verify parser set value to 30 (default) due to below minimum value
         assertEquals(30000, config.getQuiesceTimeoutMillis());
+        // Invalid value was rejected — should NOT be treated as explicitly configured
+        assertFalse("isQuiesceTimeoutExplicitlyConfigured should be false when value is below minimum",
+                    config.isQuiesceTimeoutExplicitlyConfigured());
     }
 
     @Test

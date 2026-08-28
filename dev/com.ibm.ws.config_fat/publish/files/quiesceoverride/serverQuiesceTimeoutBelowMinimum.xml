@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<server description="Test server with quiesceTimeout below the 30s minimum" quiesceTimeout="22s">
+    <featureManager>
+        <feature>componenttest-1.0</feature>
+        <feature>servlet-3.1</feature>
+    </featureManager>
+
+    <include location="../fatTestPorts.xml"/>
+
+    <!-- chainQuiesceTimeout is also set; the server-level quiesceTimeout="22s" is invalid (< 30s min),
+         so it should be rejected with a warning and fall back to the default 30s. The override path
+         in ChannelFrameworkConfigImpl should NOT fire (isQuiesceTimeoutExplicitlyConfigured=false
+         after rejection), so chainQuiesceTimeout="60s" should win. -->
+    <channelfw chainQuiesceTimeout="60s"/>
+</server>
