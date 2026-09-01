@@ -1454,6 +1454,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   APPLIED_VST: () => (/* binding */ APPLIED_VST),
 /* harmony export */   ATTR_ID: () => (/* binding */ ATTR_ID),
 /* harmony export */   ATTR_NAME: () => (/* binding */ ATTR_NAME),
+/* harmony export */   ATTR_NONCE: () => (/* binding */ ATTR_NONCE),
 /* harmony export */   ATTR_URL: () => (/* binding */ ATTR_URL),
 /* harmony export */   ATTR_VALUE: () => (/* binding */ ATTR_VALUE),
 /* harmony export */   BEGIN: () => (/* binding */ BEGIN),
@@ -1696,6 +1697,7 @@ const ATTR_URL = "url";
 const ATTR_NAME = "name";
 const ATTR_VALUE = "value";
 const ATTR_ID = "id";
+const ATTR_NONCE = "nonce";
 /*partial response types*/
 const XML_TAG_PARTIAL_RESP = "partial-response";
 /*partial commands*/
@@ -3834,10 +3836,17 @@ class ResponseProcessor {
     /**
      * Leaf Tag eval... process whatever is in the eval cdata block
      *
+     * if the eval node carries an explicit nonce attribute (Jakarta Faces 5.0 CSP proposal,
+     * see https://github.com/jakartaee/faces/issues/1590) it is used, otherwise this falls
+     * back to the page's own CSP nonce, the same one applied to embedded scripts in update/insert
+     * blocks, so evaluated code is never silently dropped under a strict CSP script-src policy
+     *
      * @param node the node to eval
      */
     eval(node) {
-        _util_ExtDomQuery__WEBPACK_IMPORTED_MODULE_7__.ExtDomQuery.globalEval(node.cDATAAsString);
+        var _a;
+        const nonce = ((_a = node.attr(_core_Const__WEBPACK_IMPORTED_MODULE_6__.ATTR_NONCE).value) !== null && _a !== void 0 ? _a : _util_ExtDomQuery__WEBPACK_IMPORTED_MODULE_7__.ExtDomQuery.nonce.value);
+        _util_ExtDomQuery__WEBPACK_IMPORTED_MODULE_7__.ExtDomQuery.globalEval(node.cDATAAsString, nonce);
     }
     /**
      * processes an incoming error from the response
@@ -5022,7 +5031,7 @@ function append(target, ...accessPath) {
                 if (!Array.isArray(lastPathItem.target[lastPathItem.key])) {
                     lastPathItem.target[lastPathItem.key] = [lastPathItem.target[lastPathItem.key]];
                 }
-                (0,_Es2019Array__WEBPACK_IMPORTED_MODULE_0__.pushChunked)(lastPathItem.target[lastPathItem.key], value);
+                ;(0,_Es2019Array__WEBPACK_IMPORTED_MODULE_0__.pushChunked)(lastPathItem.target[lastPathItem.key], value);
             }
         }
     })();
@@ -5986,14 +5995,45 @@ class DomQuery {
         if (queryRes.length) {
             found.push(queryRes);
         }
-        let shadowRoots = this.querySelectorAll("*").shadowRoot;
+        let shadowRoots = this._collectShadowRoots();
         if (shadowRoots.length) {
-            let shadowRes = shadowRoots.querySelectorAllDeep(queryStr);
+            let shadowRes = new DomQuery(shadowRoots).querySelectorAllDeep(queryStr);
             if (shadowRes.length) {
                 found.push(shadowRes);
             }
         }
         return new DomQuery(found);
+    }
+    /**
+     * Collects the shadow roots hosted by the light-DOM descendants of each root
+     * node in a single pass.
+     *
+     * This replaces the prior `querySelectorAll("*").shadowRoot`, which
+     * materialized a DomQuery wrapping every element on the page and then walked
+     * that throwaway collection a second time through the shadowRoot getter. We
+     * still have to inspect every element - there is no CSS selector for "has a
+     * shadow root", so the cost stays O(number of elements) - but we drop the
+     * intermediate all-elements DomQuery and the redundant second traversal.
+     *
+     * @private
+     */
+    _collectShadowRoots() {
+        var _a, _b;
+        let shadowRoots = [];
+        for (let cnt = 0; cnt < ((_b = (_a = this === null || this === void 0 ? void 0 : this.rootNode) === null || _a === void 0 ? void 0 : _a.length) !== null && _b !== void 0 ? _b : 0); cnt++) {
+            let root = this.rootNode[cnt];
+            if (!(root === null || root === void 0 ? void 0 : root.querySelectorAll)) {
+                continue;
+            }
+            let all = root.querySelectorAll("*");
+            for (let i = 0, len = all.length; i < len; i++) {
+                let shadowRoot = all[i].shadowRoot;
+                if (shadowRoot) {
+                    shadowRoots.push(shadowRoot);
+                }
+            }
+        }
+        return shadowRoots;
     }
     /**
      * disabled flag
@@ -6016,7 +6056,11 @@ class DomQuery {
     get childNodes() {
         let childNodeArr = [];
         this.eachElem((item) => {
-            childNodeArr = childNodeArr.concat(objToArray(item.childNodes));
+            // push the live childNodes list straight into the single target in
+            // chunks instead of concat(objToArray(...)) per root, which both
+            // copied each child list and reallocated the growing accumulator
+            // (O(roots * total children))
+            (0,_Es2019Array__WEBPACK_IMPORTED_MODULE_4__.pushChunked)(childNodeArr, item.childNodes);
         });
         return new DomQuery(childNodeArr);
     }
@@ -6270,6 +6314,11 @@ class DomQuery {
                 .filter(item => id == item.id)
                 .map(item => new DomQuery(item)));
         }
+        // a "deep" id search must collect matches across every scope: ids are
+        // unique only within a single node-tree, so the same id may legitimately
+        // exist in the light DOM and inside one or more shadow roots at once.
+        // We therefore cannot short-circuit on a light-DOM hit and must run the
+        // full deep search.
         let subItems = this.querySelectorAllDeep(`[id="${id}"]`);
         if (subItems.length) {
             res.push(subItems);
@@ -6286,9 +6335,12 @@ class DomQuery {
         var _a;
         let res = [];
         if (includeRoot) {
-            res = (0,_Es2019Array__WEBPACK_IMPORTED_MODULE_4__.Es2019ArrayFrom)((_a = this === null || this === void 0 ? void 0 : this.rootNode) !== null && _a !== void 0 ? _a : [])
-                .filter(element => (element === null || element === void 0 ? void 0 : element.tagName) == tagName)
-                .reduce((reduction, item) => reduction.concat([item]), res);
+            // append the matching roots in a single pass; the prior
+            // reduce(reduction.concat([item])) reallocated the accumulator on
+            // every match (O(matches^2))
+            let matchingRoots = (0,_Es2019Array__WEBPACK_IMPORTED_MODULE_4__.Es2019ArrayFrom)((_a = this === null || this === void 0 ? void 0 : this.rootNode) !== null && _a !== void 0 ? _a : [])
+                .filter(element => (element === null || element === void 0 ? void 0 : element.tagName) == tagName);
+            (0,_Es2019Array__WEBPACK_IMPORTED_MODULE_4__.pushChunked)(res, matchingRoots);
         }
         (deep) ? res.push(this.querySelectorAllDeep(tagName)) : res.push(this.querySelectorAll(tagName));
         return new DomQuery(res);
@@ -6463,7 +6515,7 @@ class DomQuery {
         return this;
     }
     each(func) {
-        (0,_Es2019Array__WEBPACK_IMPORTED_MODULE_4__.Es2019ArrayFrom)(this.rootNode)
+        ;(0,_Es2019Array__WEBPACK_IMPORTED_MODULE_4__.Es2019ArrayFrom)(this.rootNode)
             .forEach((item, cnt) => {
             // we could use a filter, but for the best performance we don´t
             if (item == null) {
@@ -6854,7 +6906,7 @@ class DomQuery {
             return scriptsToProcess;
         };
         let finalScripts = [], allowedItemTypes = ["", "script", "text/javascript", "text/ecmascript", "ecmascript"], execScript = (item) => {
-            var _a, _b, _c, _d;
+            var _a;
             let tagName = item.tagName;
             let itemType = ((_a = item === null || item === void 0 ? void 0 : item.type) !== null && _a !== void 0 ? _a : '').toLowerCase();
             if (tagName &&
@@ -6864,7 +6916,7 @@ class DomQuery {
                 if ('undefined' != typeof src
                     && null != src
                     && src.length > 0) {
-                    let nonce = (_b = item === null || item === void 0 ? void 0 : item.nonce) !== null && _b !== void 0 ? _b : item.getAttribute('nonce').value;
+                    let nonce = (item === null || item === void 0 ? void 0 : item.nonce) || item.getAttribute('nonce');
                     // we have to move this into an inner if because chrome otherwise chokes
                     // due to changing the and order instead of relying on left to right
                     // if jsf.js is already registered we do not replace it anymore
@@ -6903,7 +6955,7 @@ class DomQuery {
                             go = true;
                         }
                     }
-                    let nonce = (_d = (_c = item === null || item === void 0 ? void 0 : item.nonce) !== null && _c !== void 0 ? _c : item.getAttribute('nonce').value) !== null && _d !== void 0 ? _d : '';
+                    let nonce = (item === null || item === void 0 ? void 0 : item.nonce) || item.getAttribute('nonce') || '';
                     // we have to run the script under a global context
                     // we store the script for fewer calls to eval
                     finalScripts.push({
@@ -7148,7 +7200,7 @@ class DomQuery {
                             return;
                         }
                         //checkboxes etc.. need to be appended
-                        (0,_AssocArray__WEBPACK_IMPORTED_MODULE_5__.append)(target, name).value = element.inputValue.value;
+                        ;(0,_AssocArray__WEBPACK_IMPORTED_MODULE_5__.append)(target, name).value = element.inputValue.value;
                     }
                 }
             }
@@ -7388,7 +7440,11 @@ class DomQuery {
                 continue;
             }
             let res = this.rootNode[cnt].querySelectorAll(selector);
-            nodes = nodes.concat(objToArray(res));
+            // push the NodeList straight into the single target array in
+            // argument-stack-safe chunks; this avoids the objToArray copy plus
+            // the concat reallocation, which doubled a large result set (e.g. the
+            // querySelectorAll("*") shadow scan) on every root iteration
+            (0,_Es2019Array__WEBPACK_IMPORTED_MODULE_4__.pushChunked)(nodes, res);
         }
         return new DomQuery(nodes);
     }
@@ -9775,7 +9831,7 @@ if ("undefined" != typeof _Global__WEBPACK_IMPORTED_MODULE_1__._global$) {
         if (void 0 === (0,_Global__WEBPACK_IMPORTED_MODULE_1__._global$)().Reflect || void 0 === (0,_Global__WEBPACK_IMPORTED_MODULE_1__._global$)().customElements || ((0,_Global__WEBPACK_IMPORTED_MODULE_1__._global$)().customElements).polyfillWrapFlushCallback)
             return;
         const a = HTMLElement;
-        (0,_Global__WEBPACK_IMPORTED_MODULE_1__._global$)().HTMLElement = {
+        ;(0,_Global__WEBPACK_IMPORTED_MODULE_1__._global$)().HTMLElement = {
             HTMLElement: function HTMLElement() {
                 return Reflect.construct(a, [], this.constructor);
             }
@@ -9886,7 +9942,7 @@ class TagBuilder {
                     }
                 });
             }
-            (0,_Global__WEBPACK_IMPORTED_MODULE_1__._global$)().customElements.define(this.tagName, this.clazz, this.theOptions || null);
+            ;(0,_Global__WEBPACK_IMPORTED_MODULE_1__._global$)().customElements.define(this.tagName, this.clazz, this.theOptions || null);
         }
         else {
             let _t_ = this;
@@ -10123,17 +10179,17 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 	});
 /************************************************************************/
 /******/ 	// The module cache
-/******/ 	var __webpack_module_cache__ = {};
+/******/ 	const __webpack_module_cache__ = {};
 /******/ 	
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 		const module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
@@ -10142,7 +10198,7 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 		// Execute the module function
 /******/ 		if (!(moduleId in __webpack_modules__)) {
 /******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
 /******/ 			e.code = 'MODULE_NOT_FOUND';
 /******/ 			throw e;
 /******/ 		}
@@ -10155,11 +10211,26 @@ __webpack_require__.r(__webpack_exports__);
 /************************************************************************/
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
-/******/ 		// define getter functions for harmony exports
+/******/ 		// define getter/value functions for harmony exports
 /******/ 		__webpack_require__.d = (exports, definition) => {
-/******/ 			for(var key in definition) {
-/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 			if(Array.isArray(definition)) {
+/******/ 				var i = 0;
+/******/ 				while(i < definition.length) {
+/******/ 					var key = definition[i++];
+/******/ 					var binding = definition[i++];
+/******/ 					if(!__webpack_require__.o(exports, key)) {
+/******/ 						if(binding === 0) {
+/******/ 							Object.defineProperty(exports, key, { enumerable: true, value: definition[i++] });
+/******/ 						} else {
+/******/ 							Object.defineProperty(exports, key, { enumerable: true, get: binding });
+/******/ 						}
+/******/ 					} else if(binding === 0) { i++; }
+/******/ 				}
+/******/ 			} else {
+/******/ 				for(var key in definition) {
+/******/ 					if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 						Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 					}
 /******/ 				}
 /******/ 			}
 /******/ 		};
@@ -10186,7 +10257,7 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
 /******/ 		__webpack_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			if(Symbol.toStringTag) {
 /******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
@@ -10194,7 +10265,7 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 	})();
 /******/ 	
 /************************************************************************/
-var __webpack_exports__ = {};
+let __webpack_exports__ = {};
 // This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
 (() => {
 /*!***************************************!*\
@@ -10250,7 +10321,7 @@ var myfaces = window.myfaces;
 
 })();
 
-var __webpack_export_target__ = window;
+const __webpack_export_target__ = window;
 for(var __webpack_i__ in __webpack_exports__) __webpack_export_target__[__webpack_i__] = __webpack_exports__[__webpack_i__];
 if(__webpack_exports__.__esModule) Object.defineProperty(__webpack_export_target__, "__esModule", { value: true });
 /******/ })()
