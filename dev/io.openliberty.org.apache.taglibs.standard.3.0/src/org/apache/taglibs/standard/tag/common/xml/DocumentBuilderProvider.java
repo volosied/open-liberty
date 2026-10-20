@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.wasp.taglibs.standard.tag.common.xml;
+package org.apache.taglibs.standard.tag.common.xml;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
@@ -52,8 +52,8 @@ public class DocumentBuilderProvider {
     /**
      * Creates a namespace-aware {@link DocumentBuilder} with disabled validation.
      * <p>
-     * Note that {@link DocumentBuilder} instances are not thread-safe and their implementation can be chosen as described
-     * in {@link DocumentBuilderFactory} documentation.
+     * Note that {@link DocumentBuilder} instances are not thread-safe and their implementation can
+     * be chosen as described in {@link DocumentBuilderFactory} documentation.
      *
      * @return new {@link DocumentBuilder} instance.
      */
@@ -69,8 +69,8 @@ public class DocumentBuilderProvider {
      * Creates a namespace-aware {@link DocumentBuilder} with disabled validation and enabled
      * {@link XMLConstants#FEATURE_SECURE_PROCESSING}.
      * <p>
-     * Note that {@link DocumentBuilder} instances are not thread-safe and their implementation can be chosen as described
-     * in {@link DocumentBuilderFactory} documentation.
+     * Note that {@link DocumentBuilder} instances are not thread-safe and their implementation can
+     * be chosen as described in {@link DocumentBuilderFactory} documentation.
      *
      * @return new {@link DocumentBuilder} instance.
      */
