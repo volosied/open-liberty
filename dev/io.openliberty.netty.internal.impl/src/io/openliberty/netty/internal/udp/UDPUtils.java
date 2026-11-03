@@ -119,7 +119,7 @@ public class UDPUtils {
                 if (newHost == NettyConstants.INADDR_ANY) {
                     hostLogString = "*  (" + IPvType + ")";
                 } else {
-                    hostLogString = config.getHostname() + "  (" + IPvType + ": "
+                    hostLogString = newHost + "  (" + IPvType + ": "
                                     + inetAddr.getAddress().getHostAddress() + ")";
                 }
 
